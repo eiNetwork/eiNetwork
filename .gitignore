@@ -1,0 +1,59 @@
+# Specific locations within VuFind #
+####################################
+sites/*
+!sites/default
+vufind/documentation/
+vufind/admin/sql/
+vufind/web/images/fiveStar/*.png
+vufind/web/images/charts/*.png
+vufind/web/interface/cache/
+vufind/web/interface/compile/
+vufind/web/*_strandsCatalog.csv
+vufind/web/phpinfo.php
+vufind/import/src_backup
+vufind/web/images/covers/medium/*
+vufind/web/images/covers/small/*
+vufind/web/images/covers/large/*
+
+# Compiled source #
+###################
+*.com
+*.class
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.log.1
+*.log.2
+*.log.3
+*.log.4
+*.log.5
+*.sqlite
+
+# Eclipse Files #
+#################
+.buildpath
+.project
+.classpath
+org.eclipse.*.prefs
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
