@@ -12,6 +12,8 @@
 	    {css filename="styles.css"}
 	    {css filename="basicHtml.css"}
 	  	{css filename="top-menu.css"}
+		{css filename="xiaolin/center-header.css"}
+		{css filename="xiaolin/right-header.css"}
 	  	{css filename="library-footer.css"}
 	  	{css filename="title-scroller.css"}
 	  	{css filename="my-account.css"}
@@ -84,14 +86,40 @@
     {include file="bookcart.tpl"}
     
     <div id="pageBody" class="{$page_body_style}">
-    
-    {include file="top-menu.tpl"}
-    
-    <div class="searchheader">
-      <div class="searchcontent">
         
-        <a href="{if $homeLink}{$homeLink}{else}{$url}{/if}"><img src="{$path}{$smallLogo}" alt="VuFind" class="alignleft" /></a>
-        {if $pageTemplate != 'advanced.tpl'}
+    {*<div class="searchheader">*}
+    <div class="header">
+      <div class="left-header">
+	<a href="{if $homeLink}{$homeLink}{else}{$url}{/if}">
+	  <img src="{$path}{$smallLogo}" alt="VuFind"  width="160px" height="60px"/>
+	</a>
+      </div>
+      <div class ="center-header">
+	{include file="xiaolin/center-header.tpl"}
+      </div>
+      <div class="right-header">
+	{*{include file="top-menu.tpl"}*}
+	{include file="right-header.tpl"}
+      </div>
+
+    </div>
+    
+    {*
+    <div class="searchcontent">
+       <div id="left-header">
+	<a href="{if $homeLink}{$homeLink}{else}{$url}{/if}">
+	  <img src="{$path}{$smallLogo}" alt="VuFind" class="alignleft" />
+	</a>
+       </div>
+       <div id="center-header">
+	{include file="Search/searchbox.tpl"}
+       </div>
+       <div id="right-header">
+	{include file="top-menu.tpl"} 
+       </div>
+
+	
+	{if $pageTemplate != 'advanced.tpl'}
           {if $module=="Summon"}
             {include file="Summon/searchbox.tpl"}
           {elseif $module=="WorldCat"}
@@ -102,8 +130,12 @@
         {/if}
 
         <div class="clearer">&nbsp;</div>
-      </div>
     </div>
+    *}
+    </div>
+    
+    
+    
     
     {if $showBreadcrumbs}
     <div class="breadcrumbs">

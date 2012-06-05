@@ -39,16 +39,20 @@
       {/if}
     {/if}
  
-    {if $summDate}{translate text='Published'} {$summDate.0|escape}{/if}
+    {*{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if} //szheng: commented*}
   </div>
   
+  {* //szheng:commented
   <div class="resultItemLine3">
     {if !empty($summSnippetCaption)}<b>{translate text=$summSnippetCaption}:</b>{/if}
     {if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
   </div>
-
+  *}
   {if is_array($summFormats)}
     {foreach from=$summFormats item=format}
+      {if $format eq "Print Book"} 
+      <img src="/interface/themes/einetwork/Art/Materialicons/Book.png"/ alt="Print Book">
+      {/if}
       <span class="iconlabel" >{translate text=$format}</span>&nbsp;
     {/foreach}
   {else}

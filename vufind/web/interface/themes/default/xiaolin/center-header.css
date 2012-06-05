@@ -1,0 +1,18 @@
+/**
+   center-header.css towards center-header.tpl
+   create by Xiaolin Lin 2012-06-04
+**/
+
+#search-label,#type,#for-label{
+    color:white;
+    size: 100px;
+}
+#searchbar #type,#searchbar #lookfor {
+	vertical-align: top;
+	padding-left: 5px;
+	margin-top: 7px;
+}
+
+#searchbar #lookfor {
+	width: 300px;
+}

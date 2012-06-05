@@ -7,7 +7,7 @@
 {/if}
 <div id="page-content" class="content">
   {* Narrow Search Options *}
-  <div id="sidebar">
+  <div id="left-bar">
     {if $sideRecommendations}
       {foreach from=$sideRecommendations item="recommendations"}
         {include file=$recommendations}
@@ -16,7 +16,7 @@
   </div>
   {* End Narrow Search Options *}
 
-	<div id="main-content">
+  <div id="main-content">
     
       <div id="searchInfo">
       {* Recommendations *}
@@ -85,5 +85,15 @@
     </div>
     {* End Main Listing *}
   </div>
+	
+  <div id="right-bar">
+    {if $sideRecommendations}
+      {foreach from=$sideRecommendations item="recommendations"}
+        {include file=$recommendations}
+      {/foreach}
+    {/if}
+  </div>
+
+
 </div>
 
