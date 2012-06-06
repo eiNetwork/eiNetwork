@@ -1,0 +1,30 @@
+/**this style sheet created by Xiaolin Lin 2012--06-04**/
+
+.right-header-left{
+	float: left;
+	text-align: left;
+	width: 50%;
+	font-size: 18px;
+	height: inherit;
+}
+
+.right-header-right{
+	float: right;
+	text-align: right;
+	width: 50%;
+	font-size: 15px;	
+}
+.right-header-left #sign-label{
+	color: rgb(255,255,255);
+	
+}
+#right-header{
+	font-size: 15px;
+	width: 20%;
+        height: 60px;
+	color: white;
+	text-align: right;
+	float:left
+}
+
+

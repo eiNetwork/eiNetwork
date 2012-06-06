@@ -8,12 +8,14 @@
     {if $consolidateCss}
       {css filename="consolidated_css.css"}
     {else}
+     <!-- szheng: judge if it is search result page.-->
+      {if isset($isSearch)}{/if}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
       {css filename="basicHtml.css"}
       {css filename="top-menu.css"}
-      {css filename="xiaolin/center-header.css"}
-      {css filename="xiaolin/right-header.css"}
+      {css filename="/ei_css/center-header.css"}
+      {css filename="/ei_css/right-header.css"}
       {css filename="library-footer.css"}
       {css filename="title-scroller.css"}
       {css filename="my-account.css"}
@@ -90,28 +92,19 @@
     {*<div class="searchheader">*}
     <div class="header">
 	  <div class="left-header">
-	    <a href="{if $homeLink}{$homeLink}{else}{$url}{/if}">
+	    {*<a href="{if $homeLink}{$homeLink}{else}{$url}{/if}">
 	      <img src="{$path}{$smallLogo}" alt="VuFind"  width="160px" height="60px"/>
-	    </a>
+	    </a>*}
 	  </div>
 	  <div class ="center-header">
-	    {include file="xiaolin/center-header.tpl"}
+	    {include file="ei_tpl/center-header.tpl"}
 	  </div>
 	  <div class="right-header">
-	    {include file="xiaolin/right-header.tpl"}
+	    {include file="ei_tpl/right-header.tpl"}
 	  </div>
     </div>
   
-    {*
-    {if $showBreadcrumbs}
-    <div class="breadcrumbs">
-      <div class="breadcrumbinner">
-        <a href="{$url}">{translate text="Home"}</a> <span>&gt;</span>
-        {include file="$module/breadcrumbs.tpl"}
-      </div>
-    </div>
-    {/if}
-    *}
+
       {if $useSolr || $useWorldcat || $useSummon}
       <div id="toptab">
         <ul>

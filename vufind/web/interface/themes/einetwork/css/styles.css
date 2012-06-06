@@ -227,27 +227,28 @@ b.bbot b,b.gbot b {
 /**Add add header, left-header, center-header, right-header by Xiaolin Lin**/
 .header {
 	background-color:rgb(51,51,51);
-	height: 60px;
+	height: 76px;
 }
 
 .header .left-header{
 	float: left;
 	width: 20%;
 	height:inherit;
+	background-color: rgb(66,66,66);
 }
 
 .header .right-header{
 	float: left;
 	width: 20%;
 	height: inherit;
+	background-color: rgb(66,66,66);
 }
 
 .header .center-header{
 	float:left;
 	width: 60%;
-	height: inherit;
+	height: 75px;
 }
-
 
 .keepFilters {
 	color: #FDFDFD;
@@ -273,23 +274,15 @@ b.bbot b,b.gbot b {
 	/**float: right;**/
 }
 
+/*center-header style sheet*/
 
-#searchbar #type,#searchbar #lookfor {
-	vertical-align: top;
-	padding-left: 5px;
-	margin-top: 7px;
-}
+
 
 #searchbar #lookfor {
 	width: 300px;
 }
 
 #searchTools {
-	text-align: right;
-	padding-right: 32px;
-}
-
-#shards {
 	text-align: right;
 	padding-right: 32px;
 }

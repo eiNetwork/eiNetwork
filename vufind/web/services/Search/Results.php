@@ -365,6 +365,7 @@ class Results extends Action {
 		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
 		
 		// Done, display the page
+		$interface->assign('isSearch',"isSearch");
 		$interface->display('layout.tpl');
 	} // End launch()
 
