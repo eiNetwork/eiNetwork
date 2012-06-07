@@ -9,7 +9,11 @@
       {css filename="consolidated_css.css"}
     {else}
      <!-- szheng: judge if it is search result page.-->
-      {if isset($isSearch)}{/if}
+      {if isset($isSearch)}
+	{css filename="/ei_css/search_result/search-results.css"}
+      {else}
+	{css filename="search-results.css"}
+      {/if}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
       {css filename="basicHtml.css"}
@@ -25,7 +29,6 @@
       {css filename="jquery.tooltip.css"}
       {css filename="tooltip.css"}
       {css filename="record.css"}
-      {css filename="search-results.css"}
       {css filename="suggestions.css"}
       {css filename="reports.css"}
       {css filename="dcl.css"}

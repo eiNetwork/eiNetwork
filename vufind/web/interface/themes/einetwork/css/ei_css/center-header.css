@@ -10,6 +10,8 @@
 
 .center-header-top{
     height: 20px;
+    min-width:538px;
+    max-width:794px;
 }
 
 .center-header-middle{

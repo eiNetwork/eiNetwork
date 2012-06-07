@@ -63,9 +63,7 @@
       <span class="unknown" style="font-size: 8pt;">{translate text='Loading'}...</span>
     </div>
   </div>
-</div>
-
-<div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
+  <div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
     <div class="view_details">
         <span><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="view_details_img"></span>
         <span><a href="{$url}/Record/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="view_details_a">view details</a></span>
@@ -82,6 +80,9 @@
         {literal} }); {/literal}
     </script>
 </div>
+</div>
+
+
 </div>
 {*<div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
   <div class="rate{if $summShortId}{$summShortId}{else}{$summId|escape}{/if} stat">

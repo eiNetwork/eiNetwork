@@ -16,8 +16,10 @@ html,body {
 /* szheng: modified */
 #pageBody { /*width: 100%; 
 	min-width: 984px;*/
-	width: 1140px;
-	margin: 5px auto 20px auto;
+	max-width: 1280px;
+	min-width: 1024px;
+	width:1190px;
+	margin: 0px auto 20px auto;
 	border: 1px solid #CCCCCC;
 	background-color: white;
 }
@@ -38,7 +40,7 @@ html,body {
 }
 
 #left-bar {
-	width: 20%;
+	width: 232px;
 	display: inline-block;
 	vertical-align: top;
 	
@@ -55,7 +57,9 @@ html,body {
 	height: auto;
 	display: inline-block;
 	vertical-align: top;
-	width: 60%;
+	max-width:794px;
+	min-width:704px;
+	width:538px;
 	/**
 	zoom: 1;
 	margin: 0px;
@@ -67,8 +71,7 @@ html,body {
 /*szheng: modified*/
 #right-bar {
 	/*margin-left: 10px;*/
-	width: 20%;
-	
+	width:254px;
 	display: inline-block;
 	vertical-align: top;
 
@@ -228,26 +231,39 @@ b.bbot b,b.gbot b {
 .header {
 	background-color:rgb(51,51,51);
 	height: 76px;
+	max-width:1280px;
+	min-width:1024px;
+	width:1190px;
+	padding:0px;
+	position:relative;
 }
 
 .header .left-header{
 	float: left;
-	width: 20%;
-	height:inherit;
+	width: 232px;
+	height:76px;
 	background-color: rgb(66,66,66);
+	display:inline-block;
+	margin:0px;
 }
 
 .header .right-header{
 	float: left;
-	width: 20%;
-	height: inherit;
+	width: 254px;
+	height: 76px;
 	background-color: rgb(66,66,66);
+	display:inline-block;
+	margin:0px;
 }
 
 .header .center-header{
 	float:left;
-	width: 60%;
+	min-width:538px;
+	max-width:794px;
+	width:704px;
 	height: 75px;
+	display:inline-block;
+	margin:0px;
 }
 
 .keepFilters {
@@ -397,7 +413,7 @@ ul.menu li {
 .result {
 	border-bottom: 1px solid #eee;
 	padding: 10px 5px 15px 5px;
-	background-color: #EEF2F3;
+	background-color: #FFFFFF;/*szheng: change from #EEF2F3 to #ffffff
 }
 
 div.record {

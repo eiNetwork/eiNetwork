@@ -2,7 +2,7 @@
 
 #right-header{
 	font-size: 15px;
-	width: 20%;
+	width:254px;
         height: 60px;
 	color: rgb(255,255,255);
 	text-align: left;
@@ -12,40 +12,55 @@
 .right-header-left{
 	float: left;
 	text-align: left;
-	font-size: 18px;
+	margin-top:0px;
 	height: inherit;
-	margin-left: 10px;
+	margin-left: 12px;
+	padding-top: 10px;
+	width: 50%;
+}
+
+
+.right-header-left a{
+	text-decoration: underline;
 	color: rgb(255,255,255);
-	padding-top: 5px;
+	font-size: 16px;
+}
+
+#welcome-label{
+	color: rgb(255,255,255);
+	font-size: 13px;
 }
 
 .right-header-right{
 	float: left;
 	text-align: right;
-	margin-right: 5px;
-	margin-left: 10px;
-	font-size: 18px;
-	padding-top: 5px;
+	margin-right: 10px;
+	padding-top: 10px;
 	color: rgb(255,255,255);
 	height: inherit;
-	width:60%;
+	width:40%;
 }
 
-.right-header-right a, .right-header-left a{
+.right-header-right a{
 	text-decoration: underline;
 	color: rgb(255,255,255);
 }
 
-
-.right-header-left #sign-label {
-	color: rgb(255,255,255);
-
-}
-
-.right-header-left #myAccount {
+#account-label {
 	color: rgb(255,255,255);
 	padding-top: 5px;
 }
+
+#sign-label {
+	color: rgb(255,255,255);
+}
+
+#sign-out-label {
+	color: rgb(255,255,255);
+	font-size: 13px;
+}
+
+
 
 
 
