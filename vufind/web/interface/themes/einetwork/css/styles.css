@@ -293,7 +293,6 @@ b.bbot b,b.gbot b {
 /*center-header style sheet*/
 
 
-
 #searchbar #lookfor {
 	width: 300px;
 }
@@ -341,21 +340,7 @@ b.bbot b,b.gbot b {
 	padding-bottom: 3px;
 }
 
-.narrow {
-	
-}
 
-.narrowGroupHidden {
-	display: none;
-}
-
-.narrow_begin {
-	display: block;
-}
-
-.narrow_end {
-	display: none;
-}
 
 .myblock {
 	border: 1px solid #cccccc;
@@ -413,7 +398,7 @@ ul.menu li {
 .result {
 	border-bottom: 1px solid #eee;
 	padding: 10px 5px 15px 5px;
-	background-color: #FFFFFF;/*szheng: change from #EEF2F3 to #ffffff
+	background-color: #FFFFFF;/*szheng: change from #EEF2F3 to #ffffff*/
 }
 
 div.record {
@@ -708,6 +693,7 @@ ul.browse {
 }
 
 
+/*****************left-bar style sheet modified by Xiaolin Lin 2012-06-08******************/
 .sidegroup {
 	margin: 0 0 20px 0;
 	padding-bottom: 10px;
@@ -750,6 +736,23 @@ ul.browse {
 .navmenu dd {
 	border-bottom: 0px solid black;
 }
+
+.narrow {
+	
+}
+
+.narrowGroupHidden {
+	display: none;
+}
+
+.narrowbegin {
+	display: block;
+}
+
+.narrow_end {
+	display: none;
+}
+
 ul.bulleted li {
 	list-style: disc url(/interface/themes/default/images/side_bullet.png)
 		outside;
