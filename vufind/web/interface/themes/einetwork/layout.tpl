@@ -11,8 +11,10 @@
      <!-- szheng: judge if it is search result page.-->
       {if isset($isSearch)}
 	{css filename="/ei_css/search_result/search-results.css"}
+	{css filename="/ei_css/holdingsSummary.css"}
       {else}
 	{css filename="search-results.css"}
+	{css filename="holdingsSummary.css"}
       {/if}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
@@ -23,7 +25,7 @@
       {css filename="library-footer.css"}
       {css filename="title-scroller.css"}
       {css filename="my-account.css"}
-      {css filename="holdingsSummary.css"}
+
       {css filename="ratings.css"}
       {css filename="book-bag.css"}
       {css filename="jquery.tooltip.css"}

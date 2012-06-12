@@ -67,32 +67,36 @@
 			</form>
 			</dl>
 			{else}
-			{*add by Xiaolin Lin 2012-06-08 for customizing the left-bar column for eiNetiwork*}
-			<div class="narrowList navmenu narrowbegin">
-				<div>
-					<span>{translate text=$cluster.label}</span>
-					<span><hr/></span>
-					<span><a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='See all'} </a></span>
-				</div>
-				<div id="filter-name">
-					{translate text=$cluster.label}
-				</div>
-				<div id="line"><hr/></div>
-				<div id="see-all-label">
-					<a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='See all'} </a>
+			{*
+				add by Xiaolin Lin 2012-06-08 for customizing the left-bar column for eiNetiwork
+				modified by Xiaolin Lin 2012-06-11
+			*}
+			<div class="filters">
+				<div class="filter-header">
+					<div class="filter-name">{translate text=$cluster.label}</div>
+					<div class="line" >
+						<hr style="width: auto">
+					</div>
+					<div class="see-all-label">
+						<span style="border:1px solid grey;height:10px;width:20px;border-radius: 10px">
+							<a href="#" onclick="moreFacets('{$title}'); return false;">&nbsp;&nbsp;{translate text='See all'}&nbsp;&nbsp;</a>
+						</span>
+					</div>
 				</div>
 				
-				<div id="filter-list">
+				<div class="filter-list">
 					{foreach from=$cluster.list item=thisFacet name="narrowLoop"}
-						{if $thisFacet.url!=null}
-						<input type="checkbox" name="color" value="{$thisFacet.display|escape}">{$thisFacet.display|escape}({$thisFacet.count})<br/>
-							{*<a href="{$thisFacet.url|escape}"> {/if}{$thisFacet.display|escape}{if $thisFacet.url!=null}</a>
-						{if $thisFacet.count!=' '}({$thisFacet.count}){/if}<br/>*}
+						{if $smarty.foreach.narrowLoop.iteration < 6}
+						{*{if $thisFacet.url!=null}*}
+						<div id="filter-list-item">
+						<div id="checkbox"><input  type="checkbox" name="color" value="{$thisFacet.display|escape}"></div>
+						<div id="name">{$thisFacet.display|escape}({$thisFacet.count})</div>
+						</div>
 						{/if}
 					{/foreach}
-					{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}
+					{*{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}
 						<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} </a>
-					{/if}
+					{/if}*}
 				</div>
 
 			</div>

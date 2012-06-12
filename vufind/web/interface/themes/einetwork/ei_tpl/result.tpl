@@ -1,8 +1,7 @@
 <div id="record{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultsList">
 {*<div class="selectTitle">
   <input type="checkbox" class="titleSelect" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="toggleInBag('{$summId|escape}', '{$summTitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if} />&nbsp;
-</div>*}
-        
+</div>*}        
 <div class="imageColumn">
     {if $user->disableCoverArt != 1}  
     <div id='descriptionPlaceholder{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}' style='display:none'></div>
@@ -17,6 +16,7 @@
 </div>
 
 <div class="resultDetails">
+  <div class="result_middle">
   <div class="resultItemLine1">
   {if $summScore}({$summScore}) {/if}
 	<a href="{$url}/Record/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">{if !$summTitle|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$summTitle|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}{/if}</a>
@@ -29,7 +29,7 @@
 
   <div class="resultItemLine2">
     {if $summAuthor}
-      {translate text='by'}
+      {translate text=''}
       {if is_array($summAuthor)}
         {foreach from=$summAuthor item=author}
           <a href="{$url}/Author/Home?author={$author|escape:"url"}">{$author|highlight:$lookfor}</a>
@@ -37,8 +37,7 @@
       {else}
         <a href="{$url}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
       {/if}
-    {/if}
- 
+    {/if} 
     {*{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if} //szheng: commented*}
   </div>
   
@@ -48,29 +47,40 @@
     {if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
   </div>
   *}
-  {if is_array($summFormats)}
-    {foreach from=$summFormats item=format}
-      {if $format eq "Print Book"} 
-      <img src="/interface/themes/einetwork/images/Art/Materialicons/Book.png"/ alt="Print Book">
-      {/if}
-      <span class="iconlabel" >{translate text=$format}</span>&nbsp;
-    {/foreach}
-  {else}
-    <span class="iconlabel">{translate text=$summFormats}</span>
-  {/if}
+    <div class="Format_type">
+        {if is_array($summFormats)}
+        {foreach from=$summFormats item=format}
+    	{if $format eq "Print Book"} 
+    	<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/Book.png"/ alt="Print Book"></span>
+    	{/if}
+    	<span class="iconlabel" >{translate text=$format}</span>&nbsp;
+        {/foreach}
+        {else}
+    	<span class="iconlabel">{translate text=$summFormats}</span>
+        {/if}
+    </div>
   <div id = "holdingsSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="holdingsSummary">
     <div class="statusSummary" id="statusSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}">
       <span class="unknown" style="font-size: 8pt;">{translate text='Loading'}...</span>
     </div>
   </div>
+  </div>
   <div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
     <div class="view_details">
-        <span><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="view_details_img"></span>
+        <span><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
         <span><a href="{$url}/Record/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="view_details_a">view details</a></span>
     </div>
     <div class="add_to_cart">
-        <span><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="add_to_cart_img"></span>
+        <span><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
         <span class="add_to_cart_span" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="sentToBag('{$summId|escape}', '{$summTitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>add to cart</span>
+    </div>
+    <div class="more_like_this">
+	<span><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
+        <span class="more_like_this_span" name="more_like_this" >more like this</span>
+    </div>
+    <div class="bad_result">
+	<span><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
+        <span class="bad_result_span" name="bad_reuslt_this" >bad result</span>
     </div>
     <script type="text/javascript">
         addRatingId('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}');
@@ -81,8 +91,6 @@
     </script>
 </div>
 </div>
-
-
 </div>
 {*<div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
   <div class="rate{if $summShortId}{$summShortId}{else}{$summId|escape}{/if} stat">

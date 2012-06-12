@@ -24,10 +24,6 @@ html,body {
 	background-color: white;
 }
 
-.filters {
-	background-color: #ddd;
-	padding: .5em
-}
 
 .crumbs {
 	background-color: #000;
@@ -397,8 +393,9 @@ ul.menu li {
 
 .result {
 	border-bottom: 1px solid #eee;
-	padding: 10px 5px 15px 5px;
 	background-color: #FFFFFF;/*szheng: change from #EEF2F3 to #ffffff*/
+	padding-top:15px;
+	padding-bottom:15px;
 }
 
 div.record {
@@ -737,8 +734,8 @@ ul.browse {
 	border-bottom: 0px solid black;
 }
 
-.narrow {
-	
+.narrowList {
+
 }
 
 .narrowGroupHidden {
@@ -762,6 +759,65 @@ ul.bulleted li {
 .sidegroup ul {
 	padding-left: 20px;
 }
+
+
+/************add by Xiaolin Lin 2012-06-11 left-bar filter***********/
+.filter-header{
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+.filter-list{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.filter-list-hidden{
+	display: none;
+}
+
+.filter-header .filter-name{
+	display: inline-block;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.filter-header .line{
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 5px;
+	left: inherit;
+	width: 70px;
+}
+
+.filter-header .see-all-label{
+	display: inline-block;
+	margin-top: 5px;
+	margin-left: 2px;
+	left: inherit;
+}
+
+
+.filter-list #filter-list-item{
+	display: inline-block;
+}
+
+.filter-list #checkbox{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.filter-list #name{
+	display: inline-block;
+	width: 195px;
+	vertical-align: top;
+	
+}
+
+
+
+
 
 /************* Tabs (Record Page) *****************/
 #tabnav {
