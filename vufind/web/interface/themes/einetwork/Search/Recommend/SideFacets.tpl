@@ -1,8 +1,8 @@
 {*commented and modified by Xiaolin Lin 2012-06-05*}
-
+{*original left-bar look*}
 {if $recordCount > 0 || $filterList || ($sideFacetSet && $recordCount > 0)}
 <div class="sidegroup">
-
+	{*<h4>{translate text='Narrow Search11'}</h4>*}
 	{if isset($checkboxFilters) && count($checkboxFilters) > 0}
 	<p>
 	<table>
@@ -38,11 +38,81 @@
 	{if $sideFacetSet && $recordCount > 0}
 		{foreach from=$sideFacetSet item=cluster key=title}
 			{if $title == 'publishDate' || $title == 'birthYear' || $title == 'deathYear'}
-			{*publication date*}
-			{elseif $title == 'rating_facet'}
-			{*rating*}
-			{elseif $title == 'lexile_score' || $title == 'accelerated_reader_reading_level' || $title == 'accelerated_reader_point_value'}
 			
+			
+			<dl class="narrowList navmenu narrow_begin">
+			<dt>{translate text=$cluster.label}</dt>
+			<dd>
+			<form name='{$title}Filter' id='{$title}Filter' action='{$fullPath}'>
+			<div>
+				<label for="{$title}yearfrom" class='yearboxlabel'>From:</label>
+				<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}yearfrom" id="{$title}yearfrom" value="" />
+				<label for="{$title}yearto" class='yearboxlabel'>To:</label>
+				<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}yearto" id="{$title}yearto" value="" />
+				{* To make sure that applying this filter does not remove existing filters we need to copy the get variables as hidden variables *}
+				
+				{foreach from=$smarty.get item=parmValue key=paramName}
+					{if is_array($smarty.get.$paramName)}
+						{foreach from=$smarty.get.$paramName item=parmValue2}
+							
+							{* Do not include the filter that this form is for. *}
+							
+							{if strpos($parmValue2, $title) === FALSE}
+								<input type="hidden" name="{$paramName}[]" value="{$parmValue2|escape}" />
+							{/if}
+						{/foreach}
+					{else}
+						<input type="hidden" name="{$paramName}" value="{$parmValue|escape}" />
+					{/if}
+				{/foreach}
+				<input type="submit" value="Go" class="goButton" />
+				<br/>
+				{if $title == 'publishDate'}
+					<div id='yearDefaultLinks'>
+					<a onclick="$('#{$title}yearfrom').val('2005');$('#{$title}yearto').val('');" href='javascript:void(0);'>since&nbsp;2005</a>
+					&bull;<a onclick="$('#{$title}yearfrom').val('2000');$('#{$title}yearto').val('');" href='javascript:void(0);'>since&nbsp;2000</a>
+					&bull;<a onclick="$('#{$title}yearfrom').val('1995');$('#{$title}yearto').val('');" href='javascript:void(0);'>since&nbsp;1995</a>
+					</div>
+				{/if}
+			</div>
+			</form>
+			</dd>
+			</dl>
+			
+			
+			{elseif $title == 'rating_facet'}
+			
+			<dl class="narrowList navmenu narrow_begin">
+				<dt>{translate text=$cluster.label}</dt>
+				{foreach from=$ratingLabels item=curLabel}
+					{assign var=thisFacet value=$cluster.list.$curLabel}
+					{if $thisFacet.isApplied}
+						{if $curLabel == 'Unrated'}
+							<dd>{$thisFacet.value|escape} <img src="{$path}/images/silk/tick.png" alt="Selected" />
+							<a href="{$thisFacet.removalUrl|escape}" class="removeFacetLink">(remove)</a>
+							</dd>
+						{else}
+							<dd><img src="{$path}/images/{$curLabel}.png" alt="{$curLabel|translate}"/>
+								<img src="{$path}/images/silk/tick.png" alt="Selected" />
+								<a href="{$thisFacet.removalUrl|escape}" class="removeFacetLink">(remove)</a>
+							</dd>
+						{/if}
+					{else}
+						{if $curLabel == 'Unrated'}
+							<dd>{if $thisFacet.url !=null}
+							<a href="{$thisFacet.url|escape}">{/if}{$thisFacet.display|escape}{if $thisFacet.url !=null}</a>{/if} ({$thisFacet.count})
+							</dd>
+						{else}
+							<dd>{if $thisFacet.url !=null}
+							<a href="{$thisFacet.url|escape}">{/if}<img src="{$path}/images/{$curLabel}.png" alt="{$curLabel|translate}"/>{if $thisFacet.url !=null}</a>{/if} ({if $thisFacet.count}{$thisFacet.count}{else}0{/if})
+							</dd>
+						{/if}
+					{/if}
+				{/foreach}
+			</dl>
+			
+			
+			{elseif $title == 'lexile_score' || $title == 'accelerated_reader_reading_level' || $title == 'accelerated_reader_point_value'}
 			<dl class="narrowList navmenu narrowbegin">
 			<dt>{translate text=$cluster.label}</dt>
 			<form id='{$title}Filter' action='{$fullPath}'>
@@ -51,9 +121,11 @@
 					<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}from" id="{$title}from" value="" />
 					<label for="{$title}to" class='yearboxlabel'>To:</label>
 					<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}to" id="{$title}to" value="" />
+					{* To make sure that applying this filter does not remove existing filters we need to copy the get variables as hidden variables *}
 					{foreach from=$smarty.get item=parmValue key=paramName}
 						{if is_array($smarty.get.$paramName)}
 							{foreach from=$smarty.get.$paramName item=parmValue2}
+							{* Do not include the filter that this form is for. *}
 							{if strpos($parmValue2, $title) === FALSE}
 							<input type="hidden" name="{$paramName}[]" value="{$parmValue2|escape}" />
 							{/if}
@@ -67,79 +139,35 @@
 			</form>
 			</dl>
 			{else}
-			{*
-				add by Xiaolin Lin 2012-06-08 for customizing the left-bar column for eiNetiwork
-				modified by Xiaolin Lin 2012-06-11
-			*}
-			<div class="filters">
-				<div class="filter-header">
-					<div class="filter-name">{translate text=$cluster.label}</div>
-					<div class="line" >
-						<hr style="width: auto">
-					</div>
-					<div class="see-all" id="see-all-label-{$title}">
-						{*<a href="#" onclick="moreFacets('{$title}'); return false;">&nbsp;&nbsp;{translate text='See all'}</a>*}
-						<a href="#" onclick="seeAll('popup'); return false;">&nbsp;&nbsp;{translate text='See all'}</a>
-					</div>
-					{*popup box template*}
-					<div id="popup" style="background-color:yellow;border:1px solid black;display:none;width:674px;height:395px;position: relative;z-index: 2;">
-						check it out!!!
-					</div>
-					{include file="Popup.tpl"}
-					
-				</div>
-
-				
-				<div class="filter-list">
-					{foreach from=$cluster.list item=thisFacet name="narrowLoop"}
-						{if $smarty.foreach.narrowLoop.iteration < 6}
-						{*{if $thisFacet.url!=null}*}
-						<div id="filter-list-item">
-						<div id="checkbox"><input  type="checkbox" name="color" value="{$thisFacet.display|escape}"></div>
-						<div id="name">{$thisFacet.display|escape}({$thisFacet.count})</div>
-						</div>
-						{/if}
-					{/foreach}
-					{*{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}
-						<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} </a>
-					{/if}*}
-				</div>
-
-			</div>
-			{*end customizing the left-bar column*}
-			
-			{*
 			<dl class="narrowList navmenu narrowbegin">
 				<dt>{translate text=$cluster.label}</dt>
 				{foreach from=$cluster.list item=thisFacet name="narrowLoop"}
 					{if $smarty.foreach.narrowLoop.iteration == ($cluster.valuesToShow + 1)}
 					<dd id="more{$title}">
-						<a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='See all'} </a>
+						<a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='more'} ...</a>
 					</dd>
 			</dl>
 			<dl class="narrowList navmenu narrowGroupHidden" id="narrowGroupHidden_{$title}">
-					{/if}
-					{if $thisFacet.isApplied}
-					<dd>{$thisFacet.display|escape}
-						<img src="{$path}/images/silk/tick.png" alt="Selected" />
-						<a href="{$thisFacet.removalUrl|escape}" class="removeFacetLink">(remove)</a>
-					</dd>
-					{else}
-					<dd>
-						{if $thisFacet.url !=null}<a href="{$thisFacet.url|escape}">{/if}
-						{$thisFacet.display|escape}
-						{if $thisFacet.url !=null}</a>{/if}
-						{if $thisFacet.count != ''}({$thisFacet.count}){/if}
-					</dd>
+			{/if}
+				{if $thisFacet.isApplied}
+				<dd>{$thisFacet.display|escape}
+					<img src="{$path}/images/silk/tick.png" alt="Selected" />
+					<a href="{$thisFacet.removalUrl|escape}" class="removeFacetLink">(remove)</a>
+				</dd>
+				{else}
+				<dd>
+					{if $thisFacet.url !=null}
+					<a href="{$thisFacet.url|escape}">{/if}{$thisFacet.display|escape}{if $thisFacet.url !=null}</a>{/if}
+					{if $thisFacet.count != ''}({$thisFacet.count}){/if}
+				</dd>
 					{/if}
 				{/foreach}
 				{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}
 				<dd>
-					<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} </a>
+					<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} ...</a>
 				</dd>
 				{/if}
 			</dl>
-			*}
 			{/if}
 		{/foreach}
 	{/if}

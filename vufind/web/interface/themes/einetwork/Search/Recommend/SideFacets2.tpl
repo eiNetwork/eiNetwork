@@ -1,5 +1,5 @@
 {*commented and modified by Xiaolin Lin 2012-06-05*}
-
+{*original backup file*}
 {if $recordCount > 0 || $filterList || ($sideFacetSet && $recordCount > 0)}
 <div class="sidegroup">
 	{*<h4>{translate text='Narrow Search11'}</h4>*}

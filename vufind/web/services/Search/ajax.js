@@ -477,6 +477,7 @@ function moreFacets(name)
 
 function seeAll(name){
 	$("#popup").show();
+	
 }
 
 function lessFacets(name)

@@ -38,12 +38,11 @@
         <a href="{$url}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
       {/if}
     {/if}
- 
     {*{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if} //szheng: commented*}
   </div>
   
   {* //szheng:commented
-  <div class="resultItemLine3">
+  <div class="resultItemLine3"> 
     {if !empty($summSnippetCaption)}<b>{translate text=$summSnippetCaption}:</b>{/if}
     {if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
   </div>
@@ -64,7 +63,6 @@
     </div>
   </div>
 </div>
-
 <div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
   <div class="rate{if $summShortId}{$summShortId}{else}{$summId|escape}{/if} stat">
 	  <div class="statVal">
