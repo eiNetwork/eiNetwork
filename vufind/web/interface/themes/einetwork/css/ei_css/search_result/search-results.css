@@ -28,8 +28,8 @@
 .imageColumn{
 	display: inline-block;
 	vertical-align: top;
-	width: 136px;
-	height:115px;
+	width: 112px;
+	height:94px;
 	text-align: center;
 	zoom: 1;
 	*display: inline;
@@ -38,8 +38,7 @@
 }
 .imageColumn .listResultImage{
 	height:100%;
-	max-width: 136px;
-	padding-bottom: 4px;
+	max-width: 112px;
 	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.20);
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
@@ -86,6 +85,7 @@
 }
 .holdingsInformation{
 	vertical-align:bottom;
+	margin-top:4px;
 }
 #formatCategories{
   min-height: 60px;
@@ -113,4 +113,42 @@
 }
 .resultItemLine2{
 	margin-bottom:38px;
+}
+.view_details{
+	border:1px solid grey;
+	padding-left:10px;
+	padding-top:4px;
+	height:26px;
+	border-radius:8px 8px 0px 0px;
+}
+.add_to_cart{
+	padding-left:10px;
+	padding-top:4px;
+	border-style: solid;
+	border-color:grey;
+	border-width:0px 1px 1px 1px;
+	height:25px;
+}
+.more_like_this{
+	padding-left:10px;
+	padding-top:4px;
+	border-style: solid;
+	border-color:grey;
+	border-width:0px 1px 1px 1px;
+	height:25px;
+}
+.bad_result{
+	padding-left:10px;
+	padding-top:4px;
+	border-style: solid;
+	border-color:grey;
+	border-width:0px 1px 1px 1px;
+	height:26px;
+	border-radius:0px 0px 8px 8px;
+}
+.resultAction_span{
+	vertical-align:middle;
+}
+.resultAction_img_span{
+	vertical-align:middle;
 }

@@ -38,8 +38,7 @@
 	{if $sideFacetSet && $recordCount > 0}
 		{foreach from=$sideFacetSet item=cluster key=title}
 			{if $title == 'publishDate' || $title == 'birthYear' || $title == 'deathYear'}
-			
-			
+			{*
 			<dl class="narrowList navmenu narrow_begin">
 			<dt>{translate text=$cluster.label}</dt>
 			<dd>
@@ -49,13 +48,10 @@
 				<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}yearfrom" id="{$title}yearfrom" value="" />
 				<label for="{$title}yearto" class='yearboxlabel'>To:</label>
 				<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}yearto" id="{$title}yearto" value="" />
-				{* To make sure that applying this filter does not remove existing filters we need to copy the get variables as hidden variables *}
 				
 				{foreach from=$smarty.get item=parmValue key=paramName}
 					{if is_array($smarty.get.$paramName)}
 						{foreach from=$smarty.get.$paramName item=parmValue2}
-							
-							{* Do not include the filter that this form is for. *}
 							
 							{if strpos($parmValue2, $title) === FALSE}
 								<input type="hidden" name="{$paramName}[]" value="{$parmValue2|escape}" />
@@ -78,7 +74,7 @@
 			</form>
 			</dd>
 			</dl>
-			
+			*}
 			
 			{elseif $title == 'rating_facet'}
 			{*
@@ -144,7 +140,7 @@
 				{foreach from=$cluster.list item=thisFacet name="narrowLoop"}
 					{if $smarty.foreach.narrowLoop.iteration == ($cluster.valuesToShow + 1)}
 					<dd id="more{$title}">
-						<a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='more'} ...</a>
+						<a href="#" onclick="moreFacets('{$title}'); return false;">{translate text='See all'} </a>
 					</dd>
 			</dl>
 			<dl class="narrowList navmenu narrowGroupHidden" id="narrowGroupHidden_{$title}">
@@ -164,7 +160,7 @@
 				{/foreach}
 				{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}
 				<dd>
-					<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} ...</a>
+					<a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} </a>
 				</dd>
 				{/if}
 			</dl>

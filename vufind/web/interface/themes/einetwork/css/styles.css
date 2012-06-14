@@ -55,7 +55,8 @@ html,body {
 	vertical-align: top;
 	max-width:794px;
 	min-width:704px;
-	width:538px;
+	width:704px;
+	padding-left:0px;
 	/**
 	zoom: 1;
 	margin: 0px;
@@ -418,10 +419,13 @@ div.record {
 }
 
 .recordcover {
-	padding: 3px;
-	background-color: #eee;
-	border: 1px solid #cfcfcf;
 	position: relative;
+	width:136px;
+	height:115px;
+	border-width:0px;
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.20);
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
 }
 
 .result.unavailable {
@@ -791,11 +795,16 @@ ul.bulleted li {
 	width: 70px;
 }
 
-.filter-header .see-all-label{
+.filter-header .see-all{
 	display: inline-block;
 	margin-top: 5px;
 	margin-left: 2px;
 	left: inherit;
+	vertical-align: middle;
+	border:1px solid grey;
+	height:17px;
+	width:55px;
+	border-radius: 10px;
 }
 
 
@@ -2508,4 +2517,28 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 
 #otherEditionsPopup{
 	min-width: 530px;
+}
+#inner-main-content{
+	width:656px;
+	margin-left:24px;
+	margin-right:24px;
+}
+/*=========== round rectangle button ===========*/
+.round-rectangle-button{
+	padding-left:10px;
+	padding-top:4px;
+	border-style: solid;
+	border-color:grey;
+	border-width:1px 1px 1px 1px;
+	height:25px;
+	border-radius:8px 8px 8px 8px;
+}
+.action-img{
+	vertical-align:middle;
+}
+.action-img-span{
+	vertical-align:middle;
+}
+.action-lable-span{
+	vertical-align:middle;
 }

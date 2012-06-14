@@ -47,18 +47,7 @@
     {if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
   </div>
   *}
-    <div class="Format_type">
-        {if is_array($summFormats)}
-        {foreach from=$summFormats item=format}
-    	{if $format eq "Print Book"} 
-    	<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/Book.png"/ alt="Print Book"></span>
-    	{/if}
-    	<span class="iconlabel" >{translate text=$format}</span>&nbsp;
-        {/foreach}
-        {else}
-    	<span class="iconlabel">{translate text=$summFormats}</span>
-        {/if}
-    </div>
+    {include file="/usr/local/VuFind-Plus/vufind/web/interface/themes/einetwork/ei_tpl/formatType.tpl"}
   <div id = "holdingsSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="holdingsSummary">
     <div class="statusSummary" id="statusSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}">
       <span class="unknown" style="font-size: 8pt;">{translate text='Loading'}...</span>
@@ -66,21 +55,21 @@
   </div>
   </div>
   <div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
-    <div class="view_details">
-        <span><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-        <span><a href="{$url}/Record/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="view_details_a">view details</a></span>
+    <div class="view_details" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+        <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
+        <span class="resultAction_span"><a href="{$url}/Record/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="view_details_a">view details</a></span>
     </div>
-    <div class="add_to_cart">
-        <span><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
-        <span class="add_to_cart_span" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="sentToBag('{$summId|escape}', '{$summTitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>add to cart</span>
+    <div class="add_to_cart" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="sentToBag('{$summId|escape}', '{$summTitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>
+        <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
+        <span class="resultAction_span" >add to cart</span>
     </div>
-    <div class="more_like_this">
-	<span><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-        <span class="more_like_this_span" name="more_like_this" >more like this</span>
+    <div class="more_like_this" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+	<span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
+        <span class="resultAction_span" name="more_like_this" >more like this</span>
     </div>
-    <div class="bad_result">
-	<span><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
-        <span class="bad_result_span" name="bad_reuslt_this" >bad result</span>
+    <div class="bad_result" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+	<span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
+        <span class="resultAction_span" name="bad_reuslt_this" >bad result</span>
     </div>
     <script type="text/javascript">
         addRatingId('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}');

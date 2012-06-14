@@ -94,12 +94,10 @@
   </div>
 	
  
+  
+ 
   <div id="right-bar">
-    {if $sideRecommendations}
-      {foreach from=$sideRecommendations item="recommendations"}
-        {include file=$recommendations}
-      {/foreach}
-    {/if}
+    {include file="ei_tpl/right-bar.tpl"}
   </div>
 
 

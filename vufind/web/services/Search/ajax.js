@@ -472,6 +472,13 @@ function moreFacets(name)
 	$("#narrowGroupHidden_" + name).show();
 }
 
+
+/*add function by Xiaolin Lin 2012-06-13 for the see-all pop up box in the search result page*/
+
+function seeAll(name){
+	$("#popup").show();
+}
+
 function lessFacets(name)
 {
 	$("#more" + name).show();

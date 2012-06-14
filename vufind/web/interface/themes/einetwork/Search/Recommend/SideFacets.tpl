@@ -77,12 +77,18 @@
 					<div class="line" >
 						<hr style="width: auto">
 					</div>
-					<div class="see-all-label">
-						<span style="border:1px solid grey;height:10px;width:20px;border-radius: 10px">
-							<a href="#" onclick="moreFacets('{$title}'); return false;">&nbsp;&nbsp;{translate text='See all'}&nbsp;&nbsp;</a>
-						</span>
+					<div class="see-all" id="see-all-label-{$title}">
+						{*<a href="#" onclick="moreFacets('{$title}'); return false;">&nbsp;&nbsp;{translate text='See all'}</a>*}
+						<a href="#" onclick="seeAll('popup'); return false;">&nbsp;&nbsp;{translate text='See all'}</a>
 					</div>
+					{*popup box template*}
+					<div id="popup" style="background-color:yellow;border:1px solid black;display:none;width:674px;height:395px;position: relative;z-index: 2;">
+						check it out!!!
+					</div>
+					{include file="Popup.tpl"}
+					
 				</div>
+
 				
 				<div class="filter-list">
 					{foreach from=$cluster.list item=thisFacet name="narrowLoop"}

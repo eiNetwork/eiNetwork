@@ -9,6 +9,13 @@
       {css filename="consolidated_css.css"}
     {else}
      <!-- szheng: judge if it is search result page.-->
+      {if isset($pageType)}
+	{if $pageType eq "record"}
+	  {css filename="ei_css/Record/record.css"}
+	{/if}
+	{else}
+	  {css filename="record.css"}
+      {/if}
       {if isset($isSearch)}
 	{css filename="/ei_css/search_result/search-results.css"}
 	{css filename="/ei_css/holdingsSummary.css"}
@@ -22,15 +29,14 @@
       {css filename="top-menu.css"}
       {css filename="/ei_css/center-header.css"}
       {css filename="/ei_css/right-header.css"}
+      {css filename="/ei_css/right-bar.css"}
       {css filename="library-footer.css"}
       {css filename="title-scroller.css"}
       {css filename="my-account.css"}
-
       {css filename="ratings.css"}
       {css filename="book-bag.css"}
       {css filename="jquery.tooltip.css"}
       {css filename="tooltip.css"}
-      {css filename="record.css"}
       {css filename="suggestions.css"}
       {css filename="reports.css"}
       {css filename="dcl.css"}
@@ -51,7 +57,7 @@
       <script type="text/javascript" src="{$path}/js/jquery.plugins.js"></script>
       <script type="text/javascript" src="{$path}/js/scripts.js"></script>
       <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
-	  
+      <script type="text/javascript" src="{$path}/js/ei_js/page.js"></script>
       {if $enableBookCart}
       <script type="text/javascript" src="{$path}/js/bookcart/json2.js"></script>
       <script type="text/javascript" src="{$path}/js/bookcart/bookcart.js"></script>
@@ -100,6 +106,11 @@
 	    {*<a href="{if $homeLink}{$homeLink}{else}{$url}{/if}">
 	      <img src="{$path}{$smallLogo}" alt="VuFind"  width="160px" height="60px"/>
 	    </a>*}
+	    {if isset($lastsearch) and isset($pageType) and $pageType eq "record"}
+	    <div id="returnToSearch">
+		<a href="{$lastsearch|escape}#record{$id|escape:"url"}">{translate text="Return to Search Results"}</a>
+	    </div>
+	    {/if}
 	  </div>
 	  <div class ="center-header">
 	    {include file="ei_tpl/center-header.tpl"}

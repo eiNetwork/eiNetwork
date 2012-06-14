@@ -19,7 +19,7 @@
 	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" class="holdingsImage"></span>
 	    <span  class="holdingsInformation_status">{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people {/if} on waitlist for {$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}</span>
 	{else}
-	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"</span>
+	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png" class="holdingsImage"></span>
 	    <span  class="holdingsInformation_status">{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people {/if} on waitlist for {$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}</span>
 	{/if}
       </div>
