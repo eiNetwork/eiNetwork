@@ -217,7 +217,7 @@ class AJAX extends Action {
 			$itemResults = $record;
 			$interface->assign('holdingsSummary', $record);
 
-			$formattedHoldingsSummary = $interface->fetch('Record/holdingsSummary.tpl');
+			$formattedHoldingsSummary = $interface->fetch('szheng/holdingsSummary.tpl');
 			$itemResults['formattedHoldingsSummary'] = $formattedHoldingsSummary;
 			$result['items'][] = $itemResults;
 

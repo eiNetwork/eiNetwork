@@ -103,8 +103,6 @@ class SearchSources{
 		}
 
 		//Summon Search - later
-
-
 		//Marmot Global search
 		if (isset($library) &&
 		($repeatSearchSetting == 'marmot') &&

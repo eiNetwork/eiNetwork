@@ -120,7 +120,8 @@ class Home extends Record{
 		$timer->logTime('Configure UI for library and location');
 
 		//Build the actual view
-		$interface->setTemplate('view.tpl');
+		$interface->assign('pageType','record');
+		$interface->setTemplate('ei_view.tpl');
 
 		$titleField = $this->marcRecord->getField('245');
 		if ($titleField){
