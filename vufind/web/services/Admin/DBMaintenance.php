@@ -164,6 +164,15 @@ class DBMaintenance extends Admin {
 					"ALTER TABLE `library` ADD `enableMaterialsRequest` TINYINT DEFAULT '1';",
 				),
 			),
+			'library_8' => array(
+				'title' => 'Library 8',
+				'description' => 'Add eContenLinkRules to determine how to load library specific link urls',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `eContentLinkRules` VARCHAR(512) DEFAULT '';",
+				),
+			),
+			
 			'location_1' => array(
 				'title' => 'Location 1',
 				'description' => 'Add fields orginally defined for Marmot',

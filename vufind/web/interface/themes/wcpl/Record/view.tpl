@@ -183,7 +183,7 @@ function redrawSaveStatus() {literal}{{/literal}
     
     <div id="similarAuthorPlaceholder" class="sidegroup" style='display:none'></div>
     
-    {if is_array($editions)}
+    {if is_array($editions) && !$showOtherEditionsPopup}
       <h3><a href="#">{translate text="Other Editions"}</a></h3>
       <div class="sidegroupContents">
         {foreach from=$editions item=edition}
@@ -252,6 +252,12 @@ function redrawSaveStatus() {literal}{{/literal}
         </div>
       </div>  
       
+      {if $showOtherEditionsPopup}
+			<div id="otherEditionCopies">
+				<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
+			</div>
+			{/if}
+      
 
     
       {if $goldRushLink}
@@ -294,10 +300,6 @@ function redrawSaveStatus() {literal}{{/literal}
           <br />
 		  </div>
 		  <div class="recordTools"> 
-          {if !$tabbedDetails}
-            <li><a href="{$url}/Record/{$id|escape:"url"}/Cite" class="cite" onclick='getLightbox("Record", "Cite", "{$id|escape}", null, "{translate text='Cite this'}"); return false;'>{translate text="Cite this"}</a></li>
-          {/if}
-          &nbsp;&nbsp;
           {if $showTextThis == 1}
             <a href="{$url}/Record/{$id|escape:"url"}/SMS" class="sms" onclick="getLightbox('Record', 'SMS', '{$id|escape}', null, '{translate text="Text this"}'); return false;">{translate text="Text this"}</a>
           {/if}

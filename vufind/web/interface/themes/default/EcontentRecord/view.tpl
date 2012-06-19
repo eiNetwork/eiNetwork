@@ -294,9 +294,11 @@ function redrawSaveStatus() {literal}{{/literal}
 	  </div>
 	  
 	  {* Access online link *}
+	  {*
 	  <div class='accessOnlineLink' id="accessOnline{$id|escape:"url"}" style="display:none">
 	    <a href="{$path}/EcontentRecord/{$id|escape:"url"}/Home?detail=holdingstab#detailsTab"><img src="{$path}/interface/themes/default/images/access_online.png" alt="Access Online"/></a>
 	  </div>
+	  *}
 	  
 	  {* Add to Wish List *}
 	  <div class='addToWishListLink' id="addToWishList{$id|escape:"url"}" style="display:none">
@@ -605,9 +607,7 @@ function redrawSaveStatus() {literal}{{/literal}
       
       {if $eContentRecord->marcRecord}
         <div id = "stafftab">
-        	<pre style="overflow:auto">{strip}
-	        {$eContentRecord->marcRecord}
-	        {/strip}</pre>
+        	{include file=$staffDetails}
 	      </div>
       {/if}
     </div> {* End of tabs*}

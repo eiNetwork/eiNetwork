@@ -12,7 +12,11 @@ public class AlphaBrowseProcessor implements IResourceProcessor, IRecordProcesso
 	private Logger logger;
 	private Connection vufindConn;
 	private ProcessorResults results;
-	
+	/*private TreeMap<String, ArrayList<String>> titleBrowseInfo;
+	private TreeMap<String, ArrayList<String>> authorBrowseInfo;
+	private TreeMap<String, ArrayList<String>> callNumberBrowseInfo;
+	private TreeMap<String, ArrayList<String>> subjectBrowseInfo;*/
+
 	public boolean init(Ini configIni, String serverName, long reindexLogId, Connection vufindConn, Connection econtentConn, Logger logger) {
 		this.logger = logger;
 		this.vufindConn = vufindConn;
