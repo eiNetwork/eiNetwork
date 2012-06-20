@@ -57,7 +57,7 @@
     
     {* Files that should not be combined *}
     {if $includeAutoLogoutCode == true}
-      <!-- <script type="text/javascript" src="{$path}/js/autoLogout.js"></script> -->
+      <script type="text/javascript" src="{$path}/js/autoLogout.js"></script>
     {/if}
     
     {if isset($theme_css)}

@@ -11,18 +11,20 @@
      <!-- szheng: judge if it is search result page.-->
       {if isset($pageType)}
 	{if $pageType eq "record"}
-	  {css filename="ei_css/Record/record.css"}
+
 	{/if}
 	{else}
 	  {css filename="record.css"}
       {/if}
       {if isset($isSearch)}
-	{css filename="/ei_css/search_result/search-results.css"}
-	{css filename="/ei_css/holdingsSummary.css"}
+
       {else}
 	{css filename="search-results.css"}
 	{css filename="holdingsSummary.css"}
       {/if}
+      {css filename="ei_css/Record/record.css"}
+      {css filename="/ei_css/search_result/search-results.css"}
+      {css filename="/ei_css/holdingsSummary.css"}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
       {css filename="basicHtml.css"}
