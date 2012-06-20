@@ -1,30 +1,20 @@
 <div id = "holdingsSummary" class="holdingsSummary">
-  {*{if $holdingsSummary.callnumber}
+  {if $holdingsSummary.callnumber}
     <div class='callNumber'>
       Shelved at <a href='{$path}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
     </div>
-  {/if}*}
+  {/if}
   {* Don't show status for non-drm EPUB files*} 
   {if $holdingsSummary.status == 'Available At'}
     <div class="availability">
-      <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" class="holdingsImage"></span>
-      <span>Now Available: </span><span class='availableAtList'>{$holdingsSummary.availableAt}</span> 
+      Now Available: <span class='availableAtList'>{$holdingsSummary.availableAt}</span> 
     </div>
       
   {elseif $holdingsSummary.status != 'Available online'}
-    {*<div class="availability">
+    <div class="availability">
       <a href='{$path}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{translate text=$holdingsSummary.status}</a>
-    </div>*}
-      <div class="holdingsInformation">
-	{if $holdingsSummary.availableCopies > 0}
-	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" class="holdingsImage"></span>
-	    <span  class="holdingsInformation_status">{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}, {$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} on shelf.</span>
-	{else}
-	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png" class="holdingsImage"></span>
-	    <span  class="holdingsInformation_status">{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}, {$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} on shelf.</span>
-	{/if}
-      </div>
-      {*}
+    </div>
+  {/if}
   {if $holdingsSummary.isDownloadable}
     <div>Available Online from <a href='{$holdingsSummary.downloadLink}' {if !(isset($holdingsSummary.localDownload) || $holdingsSummary.localDownload == false )}target='_blank'{/if}>{$holdingsSummary.downloadText}</a></div>
   {else}
@@ -43,7 +33,5 @@
   <div class="otherEditions">
   	<a href="#" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', false)">Other Formats and Languages</a>
   </div>
-  {/if}
-  *}
   {/if}
 </div>
