@@ -134,7 +134,6 @@ class Results extends Action {
 			}
 		}
 
-		
 		// Initialise from the current search globals
 		$searchObject = SearchObjectFactory::initSearchObject();
 		$searchObject->init($searchSource);
@@ -153,17 +152,14 @@ class Results extends Action {
 			exit();
 		}
 
-		
 		// TODO : Investigate this... do we still need
 		// If user wants to print record show directly print-dialog box
 		if (isset($_GET['print'])) {
 			$interface->assign('print', true);
 		}
 
-		
-		
 		// Set Interface Variables
-		//  Those we can construct BEFORE the search is executed
+		//   Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
 		$interface->assign('sortList',   $searchObject->getSortList());
 		$interface->assign('rssLink',    $searchObject->getRSSUrl());
@@ -365,7 +361,6 @@ class Results extends Action {
 		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
 		
 		// Done, display the page
-		$interface->assign('isSearch',"isSearch");
 		$interface->display('layout.tpl');
 	} // End launch()
 

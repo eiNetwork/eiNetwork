@@ -1,4 +1,4 @@
-<div class="right-bar">
+<div id="right-bar">
     <div class="bookcart">
         <div id="cart-image">
             <img src="/interface/themes/einetwork/images/Art/Materialicons/Cart.png"  alt="cart"/>

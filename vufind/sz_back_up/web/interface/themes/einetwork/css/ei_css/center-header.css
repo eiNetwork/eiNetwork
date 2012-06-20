@@ -1,0 +1,57 @@
+/**
+   center-header.css towards center-header.tpl
+   create by Xiaolin Lin 2012-06-04
+**/
+#searchForm {
+	margin-right: 20px;
+	margin-left: 20px;
+	/**float: right;**/
+}
+
+.center-header-top{
+    height: 20px;
+    min-width:538px;
+    max-width:794px;
+}
+
+.center-header-middle{
+    height: 55px;
+}
+
+.center-header-buttom{
+    height: 1px;
+    background-color: rgb(255,255,255);
+    
+}
+
+#search-label{
+	font-size: 15px;
+	font-family: sans-serif;
+	text-align: center;
+	color: rgb(255,255,255);
+	margin-right: 2px;
+}
+#for-label{
+	font-size: 15px;
+	font-family: sans-serif;
+	color: rgb(255,255,255);
+	margin-right: 8px;
+	margin-left: 5px;
+}
+
+#search-type {
+	height: 30px;	
+}
+#search-select{
+	height: 30px;
+	width: auto;
+	font-size: 15px;
+	padding-top: 2px;
+}
+#lookfor{
+	width: 365px;
+	height: 20px;
+	font-size: 15px;
+	padding-top: 2px;
+	
+}

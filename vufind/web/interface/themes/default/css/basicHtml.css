@@ -33,7 +33,6 @@ h4 {
     color:#000;
 }
 body {
-    margin: 0px;
     font-family: "Arial Unicode MS", Arial, Sans-Serif;
     color:#3e3e3e;
     font-size: 12px;
@@ -57,8 +56,4 @@ img {
 }
 li{
 	list-style:none outside none;
-}
-.space {
-    font-size: 0;
-    -webkit-text-size-adjust:none;
 }

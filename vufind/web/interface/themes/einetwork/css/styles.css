@@ -36,15 +36,10 @@ html,body {
 }
 
 #left-bar {
-	width: 232px;
+	/*width: 232px;*/
+	width: 220px;
 	display: inline-block;
 	vertical-align: top;
-	
-	/*border-right: 1px solid #5D8EAC;
-	zoom: 1;
-	padding-right: 10px;
-	margin: 0px;
-	*/
 	*display: inline;
 	float: left;
 }
@@ -54,32 +49,19 @@ html,body {
 	display: inline-block;
 	vertical-align: top;
 	max-width:794px;
-	min-width:704px;
-	width:704px;
+	min-width:680px;
+	width:680px;
 	padding-left:0px;
-	/**
-	zoom: 1;
-	margin: 0px;
-	position: relative;
-	**/
 	*display: inline;
 
 }
 /*szheng: modified*/
 #right-bar {
-	/*margin-left: 10px;*/
-	width:254px;
+	/*width:254px;*/
+	width: 230px;
 	display: inline-block;
 	vertical-align: top;
-
-	/**
-	zoom: 1;
-	margin: 0px;
-	padding-right: 20px;
-	position: relative;
-	**/
 	*display: inline;
-	
 	float: right;
 
 }

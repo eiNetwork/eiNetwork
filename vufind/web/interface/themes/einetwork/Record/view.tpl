@@ -29,10 +29,33 @@ function redrawSaveStatus() {literal}{{/literal}
 
 <div id="page-content" class="content">
 	{if $error}<p class="error">{$error}</p>{/if} 
-	<div id="sidebar">
-		<div class="sidegroup" id="titleDetailsSidegroup">
+	<div id="left-bar">
+		<div class="sidegroup" id="series">
+		{if $series}
+		<div class="left-bar-lable">{translate text='Series'}:</div>
+			{foreach from=$series item=seriesItem name=loop}
+					<div class="left-bar-value"><a href="{$path}/Search/Results?lookfor=%22{$seriesItem|escape:"url"}%22&amp;type=Series">{$seriesItem|escape}</a></div>
+			{/foreach}
+		{/if}
+		</div>
+		<div class="sidegroup" id="subjects">
+		{if $subjects}
+			<div class="left-bar-lable">{translate text='Subjects'}</div>
+				<div class="left-bar-value">
+				{foreach from=$subjects item=subject name=loop}
+					{foreach from=$subject item=subjectPart name=subloop}
+						{if !$smarty.foreach.subloop.first} -- {/if}
+						<a href="{$path}/Search/Results?lookfor=%22{$subjectPart.search|escape:"url"}%22&amp;basicType=Subject">{$subjectPart.title|escape}</a>
+					{/foreach}
+					<br />
+				{/foreach}
+			</div>
+		{/if}
+		</div>
+		
+		<div class="sidegroup" id="titleDetailsSidegroup" style="display:none">
 			<h4>{translate text="Title Details"}</h4>
-			{if $mainAuthor}
+					{if $mainAuthor}
 					<div class="sidebarLabel">{translate text='Main Author'}:</div>
 					<div class="sidebarValue"><a href="{$path}/Author/Home?author={$mainAuthor|trim|escape:"url"}">{$mainAuthor|escape}</a></div>
 					{/if}
@@ -135,7 +158,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		</div>
 		
 		{if $showTagging == 1}
-		<div class="sidegroup" id="tagsSidegroup">
+		<div class="sidegroup" id="tagsSidegroup" style="display:none">
 			<h4>{translate text="Tags"}</h4>
 			<div id="tagList">
 			{if $tagList}
@@ -153,7 +176,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		</div>
 		{/if}
 		
-		<div class="sidegroup" id="similarTitlesSidegroup">
+		<div class="sidegroup" id="similarTitlesSidegroup" style="display:none">
 		 {* Display either similar tiles from novelist or from the catalog*}
 		 <div id="similarTitlePlaceholder"></div>
 		 {if is_array($similarRecords)}
@@ -179,12 +202,12 @@ function redrawSaveStatus() {literal}{{/literal}
 		 {/if}
 		</div>
 		
-		<div class="sidegroup" id="similarAuthorsSidegroup">
+		<div class="sidegroup" id="similarAuthorsSidegroup" style="display:none">
 			<div id="similarAuthorPlaceholder"></div>
 		</div>
 		
 		{if is_array($editions) && !$showOtherEditionsPopup}
-		<div class="sidegroup" id="otherEditionsSidegroup">
+		<div class="sidegroup" id="otherEditionsSidegroup" style="display:none">
 			<h4>{translate text="Other Editions"}</h4>
 				{foreach from=$editions item=edition}
 					<div class="sidebarLabel">
@@ -221,32 +244,106 @@ function redrawSaveStatus() {literal}{{/literal}
 		{if $classicId}
 		<div id = "classicViewLink"><a href ="{$classicUrl}/record={$classicId|escape:"url"}" target="_blank">Classic View</a></div>
 		{/if}
-	</div> {* End sidebar *}
-	
+	</div>
+	{* End sidebar *}
+	</div>
 	<div id="main-content" class="full-result-content">
-		<div id="record-header">
+            <div id="inner-main-content">
+		
+			<div id="record_record">
+			<div id="record_record_up">
+				<div class="recordcoverWrapper">
+
+					<a href="{$bookCoverUrl}">							
+						<img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
+					</a>
+					<div id="goDeeperLink" class="godeeper" style="display:none">
+						<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;">
+						<img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" class="godeeper_img" /></a>
+					</div>
+				</div>
+				<div id="record_record_up_middle">
+						<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape}</div>
+						{* Display more information about the title*}
+						{if $mainAuthor}
+							<div class="recordAuthor">
+								<span class="resultLabel"></span>
+								<span class="resultValue"><a href="{$path}/Author/Home?author={$mainAuthor|escape:"url"}">{$mainAuthor|escape}</a></span>
+							</div>
+						{/if}
+							
+						{if $corporateAuthor}
+							<div class="recordAuthor">
+								<span class="resultLabel">{translate text='Corporate Author'}:</span>
+								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
+							</div>
+						{/if}
+						{if $showOtherEditionsPopup}
+						<div id="otherEditionCopies">
+							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
+						</div>
+						{/if}
+				</div>
+				<div id="record_action_button">
+					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="sentToBag('{$id|escape}', '{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>
+						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
+						<span class="action-lable-span">add to cart</span>
+					</div>
+					<div class="round-rectangle-button" id="request-now">
+						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" /></span>
+						<span class="action-lable-span">request now</span>
+					</div>
+					<div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'VuFind'); return false;">
+						<span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
+						<span class="action-lable-span">add to wish list</span>
+					</div>
+					<div class="round-rectangle-button" id="find-in-library">
+						<span class="action-img-span"><img id="find-in-library-img" alt="find in library" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" /></span>
+						<span class="action-lable-span">find in library</span>
+					</div>
+				</div>
+			</div>	
+			<div id="record_record_down">
+				<div id="book_format_options_lable">
+					<b>Book Format Options</b>
+				</div>
+				<div class="Format_type">
+					{if is_array($recordFormat)}
+					{foreach from=$recordFormat item=format}
+					{if $format eq "Print Book"} 
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/Book.png"/ alt="Print Book"></span>
+					{elseif $format eq "DVD"}
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DVD.png"/ alt="DVD"></span>
+					{elseif $format eq "Music CD"}
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicCD.png"/ alt="Music CD"></span>
+					{elseif $format eq "Blu-Ray"}
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BluRay.png"/ alt="Blu Ray"></span>
+					{elseif $format eq "Video Download"}
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
+					{elseif $format eq "CD-ROM"}
+					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DVD.png"/ alt="Video Download"></span>
+					{/if}
+					<span class="iconlabel" >{translate text=$format}</span>&nbsp;
+					{/foreach}
+					{else}
+					<span class="iconlabel">{translate text=$summFormats}</span>
+					{/if}
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		{*<div id="record-header">
 			{if isset($previousId)}
 				<div id="previousRecordLink"><a href="{$path}/{$previousType}/{$previousId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$previousIndex}&amp;page={if isset($previousPage)}{$previousPage}{else}{$page}{/if}" title="{if !$previousTitle}{translate text='Previous'}{else}{$previousTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/prev.png" alt="Previous Record"/></a></div>
 			{/if}
 			<div id="recordTitleAuthorGroup">
-				{* Display Title *}
-				<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape}</div>
-				{* Display more information about the title*}
-				{if $mainAuthor}
-					<div class="recordAuthor">
-						<span class="resultLabel">by</span>
-						<span class="resultValue"><a href="{$path}/Author/Home?author={$mainAuthor|escape:"url"}">{$mainAuthor|escape}</a></span>
-					</div>
-				{/if}
-					
-				{if $corporateAuthor}
-					<div class="recordAuthor">
-						<span class="resultLabel">{translate text='Corporate Author'}:</span>
-						<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
-					</div>
-				{/if}
+				{* Display Title
+
 			</div>
-			<div id ="recordTitleRight">
+			{*this is for the next button in the original design.
+			{*<div id ="recordTitleRight">
 				{if isset($nextId)}
 					<div id="nextRecordLink"><a href="{$path}/{$nextType}/{$nextId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$nextIndex}&amp;page={if isset($nextPage)}{$nextPage}{else}{$page}{/if}" title="{if !$nextTitle}{translate text='Next'}{else}{$nextTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/next.png" alt="Next Record"/></a></div>
 				{/if}
@@ -255,34 +352,20 @@ function redrawSaveStatus() {literal}{{/literal}
 					<a href="{$lastsearch|escape}#record{$id|escape:"url"}">{translate text="Return to Search Results"}</a>
 				</div>
 				{/if}
-	 		</div>
-	 	</div>
+	 		</div
+	 	</div>>*}
+		{*
 			<div id="image-column">
-			{* Display Book Cover *}
-			{if $user->disableCoverArt != 1}	
-			<div id = "recordcover">	
-			<div class="recordcoverWrapper">
-					
-					<a href="{$bookCoverUrl}">							
-						<img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
-					</a>
-					<div id="goDeeperLink" class="godeeper" style="display:none">
-						<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;">
-						<img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
-					</div>
-				</div>
-			</div>	
+			{* Display Book Cover 
+			{if $user->disableCoverArt != 1}		
+			
 			{/if}
 			
-			{* Place hold link *}
+			{* Place hold link 
 		<div class='requestThisLink' id="placeHold{$id|escape:"url"}" style="display:none">
 			<a href="{$path}/Record/{$id|escape:"url"}/Hold"><img src="{$path}/interface/themes/default/images/place_hold.png" alt="Place Hold"/></a>
 		</div>
-		{if $showOtherEditionsPopup}
-		<div id="otherEditionCopies">
-			<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
-		</div>
-		{/if}
+
 		
 			{if $goldRushLink}
 			<div class ="titledetails">
@@ -305,13 +388,13 @@ function redrawSaveStatus() {literal}{{/literal}
 			);
 				</script>
 			</div>
-		</div> {* End image column *}
-		
+		</div> {* End image column 
+		*}
 		<div id="record-details-column">
 			<div id="record-details-header">
 				<div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord"></div>
 				
-				<div id="recordTools">
+			{*<div id="recordTools">
 				<ul>
 					
 					{if !$tabbedDetails}
@@ -340,7 +423,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<li id="addThis"><a class="addThis addthis_button"" href="https://www.addthis.com/bookmark.php?v=250&amp;pub={$addThis|escape:"url"}">{translate text='Bookmark'}</a></li>
 					{/if}
 				</ul>
-			</div>
+			</div>*}
 			
 					<div class="clearer">&nbsp;</div>
 		</div>
@@ -364,7 +447,7 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
-			
+			{*
 			{if $subjects}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Subjects'}</div>
@@ -379,7 +462,138 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
-			
+			*}
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
+				<div class="recordSubjects">
+					<div id = "staffReviewtab" >
+						{include file="$module/view-staff-reviews.tpl"}
+					</div>
+				</div>
+			</div>
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
+				<div class="recordSubjects">
+					{if $showAmazonReviews || $showStandardReviews}
+						<h4>Professional Reviews</h4>
+						<div id='reviewPlaceholder'></div>
+					{/if}
+				</div>
+			</div>
+			<div class="resultInformation">
+				<div class="resultInformationLabel">Details</div>
+				<div class="recordSubjects">
+					<table>
+					{if $published}
+					<tr>
+						<td class="details_lable">Publish</td>
+						<td>
+							<table>
+								{foreach from=$published item=publish name=loop}
+									<tr><td>{$publish|escape}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $edition}
+					<tr>
+						<td class="details_lable">Edition</td>
+						<td>
+							<table>
+							{foreach from=$editionsThis item=edition name=loop}
+								<tr><td>{$edition|escape}</td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $lang}
+						<tr>
+							<td class="details_lable">{translate text='Language'}</td>
+							<td>
+								<table>
+								{foreach from=$recordLanguage item=lang}
+									<tr><td>{$lang|escape}</td></tr>
+								{/foreach}
+								</table>
+							</td>
+						</tr>
+					{/if}
+					{if $physicalDescription}
+					<tr>
+						<td class="details_lable">Description</td>
+						<td>
+							<table>
+								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
+									<tr><td>{$physicalDescription|escape}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $note}
+					<tr>
+					<td class="details_lable">Note</td>
+					<td>
+						<table>
+							{foreach from=$notes item=note}
+								<tr><td>{$note}</td></tr>
+							{/foreach}
+						</table>
+					</td>
+					</tr>
+					{/if}
+					{if $corporateAuthor}
+					<tr>
+					<td class="details_lable">Addit Author</td>
+					<td>
+						<table>
+							<tr>
+								<a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape}</a>
+							</tr>
+						</table>
+					</td>
+					</tr>
+					{/if}
+					{if $contributors}
+						<td>{translate text='Contributors'}</td>
+						<td>
+							<table>
+							{foreach from=$contributors item=contributor name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape}</a></td></tr>
+							{/foreach}
+							</table>
+						</td>
+					{/if}
+					{if $tmpIsbn}
+						<tr>
+							<td class="details_lable">ISBN</td>
+							<td>
+								<table>
+								{foreach from=$isbns item=tmpIsbn name=loop}
+									<tr><td>{$tmpIsbn|escape}</td></tr>
+								{/foreach}
+								</table>
+							</td>
+						</tr>
+					{/if}
+					{if $issn}
+						<tr>
+						<td class="details_lable">{translate text='ISSN'}</td>
+						
+						<td>{$issn}</td>
+						</tr>
+						{if $goldRushLink}
+						<tr>
+							<td></td>
+							<td><a href='{$goldRushLink}' target='_blank'>Check for online articles</a></td>
+						</tr>
+						{/if}
+					{/if}
+					</table>
+				</div>
+			</div>
 		</div>
 	 
 		{* tabs for series, similar titles, and people who viewed also viewed *}
@@ -587,10 +801,13 @@ function redrawSaveStatus() {literal}{{/literal}
 			});
 		</script>
 		{/literal}
-		
+            </div>
 	</div>
-		
+        <div id="right-bar">
+            {include file="/usr/local/VuFind-Plus/vufind/web/interface/themes/einetwork/ei_tpl/right-bar.tpl"}
+        </div>
 </div>
+
 {if $showStrands}
 {* Strands Tracking *}{literal}
 <!-- Event definition to be included in the body before the Strands js library -->

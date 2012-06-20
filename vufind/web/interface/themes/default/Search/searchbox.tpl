@@ -5,22 +5,18 @@
     <a href="{$url}" class="small">{translate text="Start a new Basic Search"}</a>
     <br />{translate text="Your search terms"} : "<b>{$lookfor|escape:"html"}</b>"
   {else}
-    
-  <form method="get" action="{$path}/Union/Search" id="searchForm" class="search" onsubmit='startSearch();'>
-  
-  <div id="searchbar">
+    <form method="get" action="{$path}/Union/Search" id="searchForm" class="search" onsubmit='startSearch();'>
+      <div id="searchbar">
       <select name="basicType" id="type">
       {foreach from=$basicSearchTypes item=searchDesc key=searchVal}
         <option value="{$searchVal}"{if $searchIndex == $searchVal} selected="selected"{/if}>{translate text=$searchDesc}</option>
       {/foreach}
       </select>
       <input id="lookfor" type="text" name="lookfor" size="30" value="{$lookfor|escape:"html"}" />
-      
-      {*<input type="submit" name="submit" id='searchBarFind' value="{translate text="Find"}" />*}
-      {if $filterList || $hasCheckboxFilters}
+      <input type="submit" name="submit" id='searchBarFind' value="{translate text="Find"}" />
+			{if $filterList || $hasCheckboxFilters}
 	    <div class="keepFilters">
-	      <input id="retainFiltersCheckbox" type="checkbox" onclick="filterAll(this);" />
-	      {translate text="basic_search_keep_filters"}
+	      <input id="retainFiltersCheckbox" type="checkbox" onclick="filterAll(this);" /> {translate text="basic_search_keep_filters"}
 	      <div style="display:none;">
 	        {foreach from=$filterList item=data key=field}
 		        {foreach from=$data item=value}
@@ -36,9 +32,6 @@
 	    </div>
       {/if}
       </div>
-      
-
-      {*comment out by Xiaolin Lin
       <div id="shards">
 			{if isset($shards)}
 				{foreach from=$shards key=shard item=isSelected}
@@ -46,9 +39,6 @@
 				{/foreach}
 			{/if}
       </div>
-      *}
-      
-      <!-- comment out by Xiaolin Lin
       <div id="searchTools">
           <a href="{$path}/Browse/Home">{translate text='Browse the Catalog'}</a>
 	      {if $showAdvancedSearchbox == 1}
@@ -64,9 +54,7 @@
 	        Help <img id='searchHelpIcon' src="{$path}/interface/themes/default/images/help.png" alt="{translate text='Search Tips'}" />
 	      </a>
       </div>
-      -->
-     
-     
+      
       {* Do we have any checkbox filters? *}
       {assign var="hasCheckboxFilters" value="0"}
       {if isset($checkboxFilters) && count($checkboxFilters) > 0}
@@ -78,17 +66,6 @@
       {/if}
       
     </form>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     {if false && strlen($lookfor) > 0 && count($repeatSearchOptions) > 0}
     <div class='repeatSearchBox'>
       <label for='repeatSearchIn'>Repeat Search In: </label>

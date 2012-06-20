@@ -1,4 +1,4 @@
-<div id="search">
+<div id="search"><div id="search-inner">
 {if $searchType == 'advanced'}
   <a href="{$path}/Search/Advanced?edit={$searchId}">{translate text="Edit this Advanced Search"}</a> |
   <a href="{$path}/Search/Advanced">{translate text="Start a new Advanced Search"}</a> |
@@ -13,13 +13,19 @@
     {/foreach}
     </select>
     <div id="search-input-wrapper">
-      <div id="search-input" class="cf">
+      <div id="search-input" class="clearfix">
       <input id="lookfor" type="text" name="lookfor" size="30" value="{$lookfor|escape:"html"}" />
       <input id="lookfor-submit" type="submit" name="submit" value="{translate text='Go'}" />
       </div>
-      <div>
+      <div id="shards">
+        <ul class="inline right"><li><a href="{$path}/Search/Advanced" class="small">{translate text="Advanced Search"}</a></li></ul>
+        {if isset($shards)}
+          {foreach from=$shards key=shard item=isSelected}
+            <input type="checkbox" {if $isSelected}checked="checked" {/if}name="shard[]" value='{$shard|escape}' id="shard-{$shard|replace:' ':''|escape}" /> <label for="shard-{$shard|replace:' ':''|escape}">{$shard|translate}</label>
+          {/foreach}
+        {/if}
         {if $filterList || $hasCheckboxFilters}
-        <div class="keepFilters">
+        <div>
           <input id="retainFiltersCheckbox" type="checkbox" onclick="filterAll(this);" /> <label for="retainFiltersCheckbox">{translate text="basic_search_keep_filters"}</label>
           <div style="display: none;">
             <ul class="inline left">
@@ -36,14 +42,6 @@
             </ul>
           </div>
         </div>
-        {/if}
-      </div>
-      <div id="shards">
-        <ul class="inline right"><li><a href="{$path}/Search/Advanced" class="small">{translate text="Advanced Search"}</a></li></ul>
-        {if isset($shards)}
-          {foreach from=$shards key=shard item=isSelected}
-            <input type="checkbox" {if $isSelected}checked="checked" {/if}name="shard[]" value='{$shard|escape}' id="shard-{$shard|replace:' ':''|escape}" /> <label for="shard-{$shard|replace:' ':''|escape}">{$shard|translate}</label>
-          {/foreach}
         {/if}
       </div>
     </div>
@@ -71,4 +69,4 @@
   </div>
   {/if}
 {/if}
-</div>
+</div></div>

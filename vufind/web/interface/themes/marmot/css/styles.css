@@ -66,6 +66,7 @@ div.yui-b.first {background-color:#fff;}
     border-top:#304c7e 2px solid;
     color: white;
 }
+
 .searchHomeForm a, .searchHomeForm a:hover {color:#fff;}
 .searchHomeBrowse {background-color:#94c632;}
 .searchHomeBrowseInner {    padding:0 25px;font-size:90%;}
@@ -77,6 +78,9 @@ div.yui-b.first {background-color:#fff;}
     padding: 1em 2em 1em 0;
     width:12em;
     min-height:16em;
+}
+.searchHomeForm input,.searchHomeForm select{
+	color: #392529 !important;
 }
 .searchHomeBrowseHeader {background-color:#fff;padding:0 25px;font-size:90%;min-height:3em;}
 #lookfor{
@@ -969,7 +973,7 @@ div.checkedout,span.checkedout{
     margin-right:1em;
 }
 .ebook {
-    background-image:url(/interface/themes/default/images/ebook.png);
+    background-image:url(/interface/themes/default/images/ebook_icon.png);
     background-repeat:no-repeat;
     background-position: left top;
     padding:0 .5em .5em 20px;
@@ -2006,4 +2010,22 @@ ul.hold_items li{
 
 #otherEditionsPopup{
 	min-width: 530px;
+}
+#eContentImportDetails dt{
+	font-weight: bold;
+}
+#eContentImportDetails dd{
+	margin-left: 10px;
+}
+
+.advancedSearchFacetDetails{
+  display: inline-block;
+  margin: 5px;
+}
+.advancedSearchFacetHeader{
+  font-weight: bold;
+}
+.advancedSearchFacetFormatCategory{
+  display: inline-block;
+  margin: 5px;
 }

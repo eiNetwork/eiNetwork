@@ -19,12 +19,13 @@
   <div id="main-content">
     <div id="searchInfo">
       {* Recommendations *}
+      {*
 	{if $topRecommendations}
 		{foreach from=$topRecommendations item="recommendations"}
 		{include file=$recommendations}
 		{/foreach}
 	{/if}
-
+	*}
       {* Listing Options *}
 	<div class="resulthead">
 	<div class="yui-u first">
@@ -91,15 +92,11 @@
       <b class="bbot"><b></b></b>
     </div>
     {* End Main Listing *}
+    
+       {include file="ei_tpl/right-bar.tpl"}
   </div>
 	
- 
-  
- 
-  <div id="right-bar">
-    {include file="ei_tpl/right-bar.tpl"}
-  </div>
 
-
+ 
 </div>
 
