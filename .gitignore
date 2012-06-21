@@ -14,6 +14,7 @@ vufind/import/src_backup
 vufind/web/images/covers/medium/*
 vufind/web/images/covers/small/*
 vufind/web/images/covers/large/*
+vufind/web/webinars/*
 
 # Compiled source #
 ###################
