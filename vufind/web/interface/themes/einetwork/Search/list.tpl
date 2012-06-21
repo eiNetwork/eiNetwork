@@ -28,7 +28,7 @@
 	*}
       {* Listing Options *}
 	<div class="resulthead">
-	<div class="yui-u first">
+		<div class="yui-u first">
 		{if $recordCount}
 		{translate text="Showing"}
 		<b>{$recordStart}</b> - <b>{$recordEnd}</b>
@@ -53,7 +53,7 @@
 		{/if}
         </div>
 
-        <div class="yui-u toggle">
+		<div class="yui-u toggle">
 	        {if $recordCount}
 	          {translate text='Sort'}
 	          <select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
@@ -64,7 +64,7 @@
 	        {/if}
         </div>
 
-      </div>
+	</div>
       {* End Listing Options *}
 
       {if $subpage}
@@ -92,11 +92,10 @@
       <b class="bbot"><b></b></b>
     </div>
     {* End Main Listing *}
-    
-       {include file="ei_tpl/right-bar.tpl"}
   </div>
-	
-
- 
+  {*right-bar template*}
+  {include file="ei_tpl/right-bar.tpl"}
 </div>
+
+
 
