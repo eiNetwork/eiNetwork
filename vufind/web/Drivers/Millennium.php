@@ -1237,13 +1237,15 @@ class MillenniumDriver implements DriverInterface
 		$profile = array_merge($profile, $eContentAccountSummary);
 
 		//Get a count of the materials requests for the user
-		$materialsRequest = new MaterialsRequest();
-		$materialsRequest->createdBy = $user->id;
-		$statusQuery = new MaterialsRequestStatus();
-		$statusQuery->isOpen = 1;
-		$materialsRequest->joinAdd($statusQuery);
-		$materialsRequest->find();
-		$profile['numMaterialsRequests'] = $materialsRequest->N;
+		if ($user){
+			$materialsRequest = new MaterialsRequest();
+			$materialsRequest->createdBy = $user->id;
+			$statusQuery = new MaterialsRequestStatus();
+			$statusQuery->isOpen = 1;
+			$materialsRequest->joinAdd($statusQuery);
+			$materialsRequest->find();
+			$profile['numMaterialsRequests'] = $materialsRequest->N;
+		}
 		
 		$timer->logTime("Got Patron Profile");
 		$this->patronProfiles[$patron['id']] = $profile;
@@ -2205,7 +2207,6 @@ class MillenniumDriver implements DriverInterface
 			curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
 			curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookie);
 			curl_setopt($curl_connection, CURLOPT_COOKIESESSION, true);
-			curl_setopt($curl_connection, CURLOPT_REFERER,$curl_url);
 			curl_setopt($curl_connection, CURLOPT_FORBID_REUSE, false);
 			curl_setopt($curl_connection, CURLOPT_HEADER, false);
 			curl_setopt($curl_connection, CURLOPT_POST, true);
@@ -2213,10 +2214,11 @@ class MillenniumDriver implements DriverInterface
 			if (isset($configArray['Catalog']['loginPriorToPlacingHolds']) && $configArray['Catalog']['loginPriorToPlacingHolds'] = true){
 				//User must be logged in as a separate step to placing holds
 				$curl_url = $configArray['Catalog']['url'] . "/patroninfo";
-				$post_data = $this->_getLoginFormValues($patronInfo);
+				$post_data = $this->_getLoginFormValues($patronDump);
 				$post_data['submit.x']="35";
 				$post_data['submit.y']="21";
 				$post_data['submit']="submit";
+				curl_setopt($curl_connection, CURLOPT_REFERER,$curl_url);
 				curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
 				foreach ($post_data as $key => $value) {
 					$post_items[] = $key . '=' . $value;
@@ -2273,9 +2275,10 @@ class MillenniumDriver implements DriverInterface
 		$matches = array();
 
 		$numMatches = preg_match('/<td.*?class="pageMainArea">(.*)?<\/td>/s', $holdResultPage, $matches);
+		$itemMatches = preg_match('/Choose one item from the list below/', $holdResultPage);
 		
-		if ($numMatches > 0){
-			$logger->log('Place Hold Body Text\n' . $matches[1], PEAR_LOG_INFO);
+		if ($numMatches > 0 && $itemMatches == 0){
+			//$logger->log('Place Hold Body Text\n' . $matches[1], PEAR_LOG_INFO);
 			$cleanResponse = preg_replace("^\n|\r|&nbsp;^", "", $matches[1]);
 			$cleanResponse = preg_replace("^<br\s*/>^", "\n", $cleanResponse);
 			$cleanResponse = trim(strip_tags($cleanResponse));
@@ -2299,9 +2302,9 @@ class MillenniumDriver implements DriverInterface
 				$hold_result['message'] = $reason;
 			}
 		}else{
-			if (preg_match('/Choose one item from the list below/', $sresult)){
+			if ($itemMatches > 0){
 				//Get information about the items that are available for holds
-				preg_match_all('/<tr\\s+class="bibItemsEntry">.*?<input type="radio" name="radio" value="(.*?)".*?>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<\/tr>/s', $sresult, $itemInfo, PREG_PATTERN_ORDER);
+				preg_match_all('/<tr\\s+class="bibItemsEntry">.*?<input type="radio" name="radio" value="(.*?)".*?>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<\/tr>/s', $holdResultPage, $itemInfo, PREG_PATTERN_ORDER);
 				$items = array();
 				for ($i = 0; $i < count($itemInfo[0]); $i++) {
 					$items[] = array(
