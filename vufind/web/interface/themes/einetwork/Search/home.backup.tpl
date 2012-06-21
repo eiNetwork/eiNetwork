@@ -1,7 +1,7 @@
 <div id="catalogHome">
 	<div id="homePageLists">
-   
-	</div>
+    {include file='API/listWidgetTabs.tpl'}
+	</div>	
 	
 	{if $user}
 		{include file="MyResearch/menu.tpl"}

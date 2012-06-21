@@ -35,14 +35,7 @@ html,body {
 	height: auto;
 }
 
-#left-bar {
-	/*width: 232px;*/
-	width: 220px;
-	display: inline-block;
-	vertical-align: top;
-	*display: inline;
-	float: left;
-}
+
 
 #main-content {
 	height: auto;
@@ -63,6 +56,8 @@ html,body {
 	vertical-align: top;
 	*display: inline;
 	float: right;
+	background-image: url("../images/Art/filmgrain.png");
+	background-repeat: repeat;
 
 }
 
@@ -641,7 +636,8 @@ ul.browse {
 	overflow: scroll;
 }
 
-/****** Record Vertical Tabs ******/
+
+/****** Record Vertical  ******/
 .recordtab {
 	background-color: #efefef;
 	padding-bottom: 100em;
@@ -698,10 +694,7 @@ ul.browse {
 	width: 200px;
 }
 .sidegroup {
-	border: 1px solid #949494;
 	margin: 0 0 20px 0;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
 	padding-bottom: 10px;
 }
 .sidegroup h4 {
@@ -748,6 +741,17 @@ ul.bulleted li {
 
 
 /************add by Xiaolin Lin 2012-06-11 left-bar filter***********/
+#left-bar {
+	width: 232px;
+	/*width: 220px;*/
+	display: inline-block;
+	vertical-align: top;
+	*display: inline;
+	float: left;
+	background-image: url("../images/Art/filmgrain.png");
+	background-repeat: repeat;
+}
+
 .filter-header{
 	margin-left: 5px;
 	margin-right: 5px;
@@ -805,8 +809,20 @@ ul.bulleted li {
 	vertical-align: top;
 	
 }
+/*end left filters addition*/
 
 
+/*footer style sheet created by Xiaolin Lin 2012-06-18*/
+#footer{
+	background-color: rgb(51,51,51);
+	color: rgb(255,255,255);
+}
+
+#footer a{
+	color: rgb(176,184,224);
+}
+
+/*end footer style sheet addition*/
 
 
 

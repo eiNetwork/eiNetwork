@@ -30,8 +30,8 @@ $(document).ready(function() {literal} { {/literal}
 		
 		{if $enableMaterialsRequest}
 		<div id="materialsRequestInfo">
-    Can't find what you are looking for? Try our <a href="{$path}/MaterialsRequest/NewRequest">Materials Request Service</a>.</div>
-    {/if}
+			Can't find what you are looking for? Try our <a href="{$path}/MaterialsRequest/NewRequest">Materials Request Service</a>.</div>
+		{/if}
 		
 		{if !$enableBookCart}
 		<input type="submit" name="placeHolds" value="Request Selected Items" class="requestSelectedItems"/>

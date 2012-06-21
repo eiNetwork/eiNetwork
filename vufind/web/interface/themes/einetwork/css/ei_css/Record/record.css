@@ -257,3 +257,7 @@
 	border-radius:0px 0px 8px 8px;
 	border-width:0px 1px 1px 1px;
 }
+.details_lable{
+	font-weight:700;
+	width:120px;
+}
