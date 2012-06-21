@@ -49,9 +49,10 @@
 	    
 	    {* Code for description pop-up and other tooltips.*}
 	    <script type="text/javascript" src="{$path}/js/title-scroller.js"></script>
-	    <script type="text/javascript" src="{$path}/services/Search/ajax.js"></script>
-	    <script type="text/javascript" src="{$path}/services/Record/ajax.js"></script>
-	    <script type="text/javascript" src="{$path}/js/overdrive.js"></script>
+      <script type="text/javascript" src="{$path}/services/Search/ajax.js"></script>
+			<script type="text/javascript" src="{$path}/services/Record/ajax.js"></script>
+			
+			<script type="text/javascript" src="{$path}/js/overdrive.js"></script>
     {/if}
     
     {* Files that should not be combined *}
