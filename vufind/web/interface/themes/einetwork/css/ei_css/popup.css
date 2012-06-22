@@ -1,11 +1,102 @@
-#popup{
+.popup{
     background-color:rgb(46,46,46);
     opacity: 95%;
-    border:1px solid black;
+    border:1px solid rgb(240,240,240);
     border-radius: 8px;
     display:none;
     width:500px;
     height:300px;
     position: relative;
     z-index: 2;
+    color: rgb(240,240,240);
+}
+
+.popup a{
+    text-decoration: underline;
+    color: rgb(176,184,224);
+}
+
+.popup .all-filters{
+    height: 25px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.all-filters{
+    width: inherit;
+    height: 25px;
+}
+.all-filters #filter-name{
+    width: 110px;
+    display: inline-block;
+}
+    
+.all-filters #close{
+    width: 30px;
+    display: inline-block;
+}
+
+.popup .filter-list{
+    width: inherit;
+    height: 274px;
+}
+
+.filter-list div{
+    display: inline-block;
+}
+
+.filter-list #list1{
+    margin: 0px;
+    width: 160px;
+    height: inherit;
+    border-right:1px dotted gray;
+    position: absolute;
+}
+
+.filter-list #list2{
+    margin: 0px;
+    width: 160px;
+    height: inherit;
+    border-right:1px dotted gray;
+    position: absolute;
+    left: 160px;
+}
+
+.filter-list #list3{
+    margin: 0px;
+    width: 160px;
+    display: inline-block;
+    position: absolute;
+    left: 320px; 
+}
+
+.cancel{
+    border: 1px solid rgb(224,224,224);
+    padding-left: 10px;
+    padding-top: 4px;
+    height: 25px;
+    width: 50px;
+    border-radius: 8px;
+    color: rgb(0,0,0);
+    background-color: rgb(252,252,252);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+    
+}
+
+.done{
+    border: 1px solid grey;
+    padding-left: 10px;
+    padding-top: 4px;
+    height: 25px;
+    width: 50px;
+    border-radius: 8px;
+    color: rgb(0,0,0);
+    background-color: rgb(255,230,109);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
 }

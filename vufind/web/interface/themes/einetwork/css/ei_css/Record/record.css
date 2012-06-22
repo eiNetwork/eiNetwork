@@ -257,3 +257,24 @@
 	border-radius:0px 0px 8px 8px;
 	border-width:0px 1px 1px 1px;
 }
+#book_format_options_lable{
+	font-size:15px;
+}
+.iconlabel{
+	vertical-align:middle;
+}
+.format_img_span{
+	vertical-align:middle;
+}
+.iconlabel{
+	vertical-align:middle;
+}
+.details_lable{
+	vertical-align:top;
+	font-weight:700;
+	width:120px;
+}
+.inner-cell{
+	margin:0px;
+	padding:0px;
+}

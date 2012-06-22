@@ -11,18 +11,20 @@
      <!-- szheng: judge if it is search result page.-->
       {if isset($pageType)}
 	{if $pageType eq "record"}
-	  {css filename="ei_css/Record/record.css"}
+
 	{/if}
 	{else}
-	  {css filename="record.css"}
+	  {*{css filename="record.css"}*}
       {/if}
       {if isset($isSearch)}
-	{css filename="/ei_css/search_result/search-results.css"}
-	{css filename="/ei_css/holdingsSummary.css"}
+
       {else}
 	{css filename="search-results.css"}
 	{css filename="holdingsSummary.css"}
       {/if}
+      {css filename="ei_css/Record/record.css"}
+      {css filename="/ei_css/search_result/search-results.css"}
+      {css filename="/ei_css/holdingsSummary.css"}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
       {css filename="basicHtml.css"}
@@ -31,7 +33,7 @@
       {css filename="/ei_css/right-header.css"}
       {css filename="/ei_css/right-bar.css"}
       {css filename="/ei_css/popup.css"}
-      {css filename="library-footer.css"}
+      {css filename="/ei_css/footer.css"}
       {css filename="title-scroller.css"}
       {css filename="my-account.css"}
       {css filename="ratings.css"}
@@ -99,8 +101,8 @@
     
     {include file="bookcart.tpl"}
     
-    <div id="pageBody" class="{$page_body_style}">
-        
+    {*<div id="pageBody" class="{$page_body_style}">*}
+    <div id="pageBody">  
     {*<div class="searchheader">*}
     <div class="header">
 	  <div class="left-header">
@@ -160,12 +162,14 @@
         document.getElementById('popupbox').innerHTML = "{$renew_message|escape:"javascript"}";
         </script>
       {/if}
-
-    {include file="library-footer.tpl"}
+      
+      {include file="ei_tpl/footer.tpl"}
+      
     </div> {* End page body *}
     
     {* add analytics tracking code*}
-	{if $productionServer}{literal}
+	{if $productionServer}
+	{literal}
 	<script type="text/javascript">
 	
 	  var _gaq = _gaq || [];
@@ -180,7 +184,8 @@
 	  })();
 	
 	</script> 
-	{/literal}{/if}  
+	{/literal}
+	{/if}  
   
   {* Strands tracking *}
   {if $user && $user->disableRecommendations == 0 && $strandsAPID}
@@ -204,7 +209,8 @@
   <script type="text/javascript" src="http://bizsolutions.strands.com/sbsstatic/js/sbsLib-1.0.min.js"></script>
   <script type="text/javascript">
     try{ SBS.Worker.go("vFR4kNOW4b"); } catch (e){};
-  </script>{/literal}
+  </script>
+  {/literal}
   {/if} 
   </body>
 </html>{/strip}

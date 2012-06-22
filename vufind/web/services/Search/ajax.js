@@ -473,18 +473,25 @@ function moreFacets(name)
 }
 
 
-/*add function by Xiaolin Lin 2012-06-13 for the see-all pop up box in the search result page*/
-
-function seeAll(name){
-	$("#popup").show();
-	
-}
-
 function lessFacets(name)
 {
 	$("#more" + name).show();
 	$("#narrowGroupHidden_" + name).hide();
 }
+
+/*add function by Xiaolin Lin 2012-06-13 for the see-all pop up box in the search result page*/
+
+function seeAll(name){
+	$("#"+name+" .popup").show();
+	$(".filter-list"+"#"+name).hide();
+}
+
+function closePopup(name){
+	$(".popup").hide();
+	$(".filter-list"+"#"+name).show();
+}
+
+/*end add*/
 
 function getProspectorResults(prospectorNumTitlesToLoad, prospectorSavedSearchId){
 	var url = path + "/Search/AJAX";

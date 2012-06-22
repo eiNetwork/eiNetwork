@@ -5,7 +5,6 @@
 #searchForm {
 	margin-right: 20px;
 	margin-left: 20px;
-	/**float: right;**/
 }
 
 .center-header-top{
@@ -53,5 +52,9 @@
 	height: 20px;
 	font-size: 15px;
 	padding-top: 2px;
+	background: white url(../../images/Art/ActionIcon/go.png) scroll 10px 10px;
+	background-position: right;
+	padding-right: 17px;
+	border: none;
 	
 }
