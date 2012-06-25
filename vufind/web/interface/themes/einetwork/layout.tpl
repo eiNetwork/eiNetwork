@@ -22,19 +22,19 @@
 	{css filename="search-results.css"}
 	{css filename="holdingsSummary.css"}
       {/if}
-      {css filename="ei_css/Record/record.css"}
-      {css filename="/ei_css/search_result/search-results.css"}
-      {css filename="/ei_css/holdingsSummary.css"}
       {css filename="jqueryui.css"}
       {css filename="styles.css"}
       {css filename="basicHtml.css"}
       {css filename="top-menu.css"}
+      {css filename="ei_css/Record/record.css"}
+      {css filename="/ei_css/search_result/search-results.css"}
+      {css filename="/ei_css/holdingsSummary.css"}
       {css filename="/ei_css/center-header.css"}
       {css filename="/ei_css/right-header.css"}
       {css filename="/ei_css/right-bar.css"}
       {css filename="/ei_css/popup.css"}
       {css filename="/ei_css/footer.css"}
-      {css filename="title-scroller.css"}
+      {css filename="/ei_css/login.css"}
       {css filename="my-account.css"}
       {css filename="ratings.css"}
       {css filename="book-bag.css"}

@@ -48,10 +48,11 @@
 	border-radius: 8px;
 	text-align: center;
 	padding-top: 5px;
-	background-color: rgb(242,242,242);
 	cursor: pointer;
 	margin-left: 150px;
-	
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
 .register #registerButton{
@@ -61,11 +62,12 @@
 	border-radius: 8px;
 	text-align: center;
 	padding-top: 5px;
-	background-color: rgb(242,242,242);
 	cursor: pointer;
 	margin-top: 20px;
 	margin-left: 170px;
-
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
 #email{
@@ -86,9 +88,15 @@
 	width: 220px;
 	height: 25px;
 	font-size: 14px;
+	color: #AAAAAA;
 }
 
 
-
-
-
+input.button{
+	display: block;
+	width: 100px;
+	height: 20px;
+	padding: 15px 20px 10px 45px;
+	color:#666666;
+	text-decoration: none;
+}
