@@ -1,27 +1,53 @@
-<div id="catalogHome">
-	<div id="homePageLists">
-   
-	</div>
-	
-	{if $user}
-		{include file="MyResearch/menu.tpl"}
-	{else}
-	<div id="homeLoginForm">
-		<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-			<div id="loginFormContents">
-				<div id="loginTitleHome">Login to view your account, renew books, and more.</div>
-				<div class="loginLabelHome">{translate text='Username'}</div>
-				<input class="loginFormInput" type="text" name="username" value="{$username|escape}" size="15"/>
-				<div class="loginLabelHome">{translate text='Password'}</div>
-				<input class="loginFormInput" type="password" name="password" size="15" id="password"/>
-				<div class="loginLabelHome"><input type="checkbox" id="showPwd" name="showPwd" onclick="return pwdToText('password')"/><label for="showPwd">{translate text="Reveal Password"}</label></div>
-				{if !$inLibrary}
-				<div class="loginLabelHome"><input type="checkbox" id="rememberMe" name="rememberMe"/><label for="rememberMe">{translate text="Remember Me"}</label></div>
-				{/if}
-				<input id="loginButtonHome" type="image" name="submit" value="Login" src='{$path}/interface/themes/default/images/login.png' alt='{translate text="Login"}' />
+<div id="loginHome">
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('input[title]').each(function(i) {
+		if (!$(this).val()) {
+		    $(this).val($(this).attr('title')).addClass('hint');
+		}
+		$(this).focus(function() {
+		    if ($(this).val() == $(this).attr('title')) {
+			$(this).val('').removeClass('hint');
+		    }
+		});
+		$(this).blur( function() {
+		    if ($(this).val() == '') {
+			$(this).val($(this).attr('title')).addClass('hint');
+		    }
+		});
+	    });
+	});
+</script>
+{/literal}
+	<div class="loginHome-left"></div>
+	<div class="loginHome-center">
+		<div class="login">
+			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
+				<div><b>Log In to EINetwork</b></div>
+				<div id="email">
+					<input class="loginFormInput" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
+				</div>
+				<div id="password">
+					<input class="loginFormInput" type="text" title="4 digits PIN number" name="password" size="15" id="password" />
+				</div>
+				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">
+					Login
+				</div>
+			</form>
+		</div>
+		<div class="register">
+			<div><b>Don't have an account?</b></div>
+			<div id="description">
+				With a free catalog acount, you can request items directly from the catalog,
+				view your past searches and get personalized recommendations for items you might like.
+				
 			</div>
-		</form>
+			<div id="registerButton" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')">
+				Register
+			</div>
+		</div>
 	</div>
-	{/if}
+	<div class="loginHome-right"></div>
 </div>
 

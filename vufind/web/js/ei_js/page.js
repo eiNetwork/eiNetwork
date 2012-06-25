@@ -1,20 +1,20 @@
-function mouseOver_normal(event){
+function mouseOver(event,color){
     var target = event.target;
     while(target.nodeName != "DIV")
     {
         target = target.parentNode;
     }
-    var a  = document.createElement("div");
-    target.style.backgroundColor = "#f2f2f2"
+    // target.style.backgroundColor = "rgb(242,242,242)"
+   target.style.backgroundColor = color;
 }
-function mouseOut_normal(event){
+function mouseOut(event,color){
     var target = event.target;
     while(target.nodeName != "DIV")
     {
         target = target.parentNode;
     }
-    var a  = document.createElement("div");
-    target.style.backgroundColor = "#ffffff"
+    //target.style.backgroundColor = "rgb(255,255,255)"
+    target.style.backgroundColor =color;
 }
 function goToLink(url){
     window.navigate(url);

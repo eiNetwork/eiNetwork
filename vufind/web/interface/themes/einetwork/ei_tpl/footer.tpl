@@ -16,10 +16,14 @@
             </span>
         </div>
         <div id="bottom">
-            <img width=103px height=63px alt="RAD" src="/interface/themes/einetwork/images/Art/Logos/RADLogo.png"/>
+            <a href="http://radworkshere.org/">
+                <img width=103px height=63px alt="RAD" src="/interface/themes/einetwork/images/Art/Logos/RADLogo.png"/>
+            </a>
             
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <img width=103px height=63px alt="eiNetwork"src="/interface/themes/einetwork/images/Art/Logos/EINLogo.png"/>
+            <a href="http://www.einetwork.net/">
+                <img width=103px height=63px href="#"  alt="eiNetwork"src="/interface/themes/einetwork/images/Art/Logos/EINLogo.png"/>
+            </a>
         </div>
     </div>
     
