@@ -1,12 +1,8 @@
 @CHARSET "ISO-8859-1";
 
 #searchInfo{
-	padding-right: 20px;
-	padding-left: 20px;
-	padding-bottom: 20px;
-	padding-top: 10px;
 	font-size: 12px; 
-	position: relative;/*szheng:change from absolute to relative*/
+	position: absolute;
 	right:0px;
 }
 .selectTitle{

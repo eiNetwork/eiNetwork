@@ -3,20 +3,14 @@ html,body {
 	background-color: #eee;
 }
 
-.space {
-    font-size: 0;
-    -webkit-text-size-adjust:none;
-}
-
 /* Handle printing tables properly */
 .newpage {
 	page-break-after: always;
 }
 
-/* szheng: modified */
 #pageBody { /*width: 100%; 
 	min-width: 984px;*/
-	width: 1140px;
+	width: 990px;
 	margin: 5px auto 20px auto;
 	border: 1px solid #CCCCCC;
 	background-color: white;
@@ -30,46 +24,29 @@ html,body {
 .crumbs {
 	background-color: #000;
 }
-/*szheng: modified*/
+
 #page-content {
-	/*padding: 10px;*/
+	padding: 10px;
 	text-align: left;
 }
 
-#left-bar {
-	width: 20%;
-	display: inline-block;
-	vertical-align: top;
-	padding-right: 10px;
-	margin: 0px;
-	/*border-right: 1px solid #5D8EAC;*/
-	zoom: 1;
-	*display: inline;
-}
-
-
-#main-content {
-	height: 800px;
-	margin: 0px;
-	display: inline-block;
-	vertical-align: top;
-	width: 55%;
-	zoom: 1;
-	*display: inline;
-	position: relative;
-}
-/*szheng: modified*/
-#right-bar {
-	/*margin-left: 10px;*/
-	width: 20%;
-	margin: 0px;
+#sidebar {
+	width: 200px;
 	display: inline-block;
 	vertical-align: top;
 	padding-right: 20px;
+	border-right: 1px solid #5D8EAC;
+	zoom: 1;
+	*display: inline;
+}
+
+#main-content {
+	display: inline-block;
+	vertical-align: top;
+	width: 738px;
 	zoom: 1;
 	*display: inline;
 	position: relative;
-
 }
 
 /*****************Homepage*******************/
@@ -211,31 +188,11 @@ b.bbot b,b.gbot b {
 }
 
 /******** Main Header *********/
-
-/**Add add header, left-header, center-header, right-header by Xiaolin Lin**/
-.header {
-	background-color:rgb(51,51,51);
-	height: 60px;
+.searchheader {
+	background-color: white;
+	border-bottom: solid 6px #011753;
+	text-align: left;
 }
-
-.header .left-header{
-	float: left;
-	width: 20%;
-	height:inherit;
-}
-
-.header .right-header{
-	float: left;
-	width: 20%;
-	height: inherit;
-}
-
-.header .center-header{
-	float:left;
-	width: 60%;
-	height: inherit;
-}
-
 
 .keepFilters {
 	color: #FDFDFD;
@@ -251,16 +208,13 @@ b.bbot b,b.gbot b {
 }
 
 .searchcontent {
-	margin: 0; 
-}
-
-/* Matches Doc2 */
+	margin: 0;
+}  /* Matches Doc2 */
 .searchform {
 	margin-top: 10px;
 	margin-right: 20px;
-	/**float: right;**/
+	float: right;
 }
-
 
 #searchbar #type,#searchbar #lookfor {
 	vertical-align: top;
@@ -2428,4 +2382,28 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 
 #otherEditionsPopup{
 	min-width: 530px;
+}
+
+.suggestedIdentifier .worldCatTitle {
+	font-weight: bold;
+	font-size: 120%;
+}
+
+#eContentImportDetails dt{
+	font-weight: bold;
+}
+#eContentImportDetails dd{
+	margin-left: 10px;
+}
+
+.advancedSearchFacetDetails{
+  display: inline-block;
+  margin: 5px;
+}
+.advancedSearchFacetHeader{
+  font-weight: bold;
+}
+.advancedSearchFacetFormatCategory{
+  display: inline-block;
+  margin: 5px;
 }

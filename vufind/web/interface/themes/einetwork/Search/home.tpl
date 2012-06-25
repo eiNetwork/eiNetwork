@@ -26,10 +26,10 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input class="loginFormInput" type="text" name="username" title="Username" size="15" value="{$username|escape}"/>
+					<input class="loginFormInput" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
 				</div>
 				<div id="password">
-					<input class="loginFormInput" type="text" title="Library Card Number" name="password" size="15" id="password" />
+					<input class="loginFormInput" type="text" title="4 digits PIN number" name="password" size="15" id="password" />
 				</div>
 				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">
 					Login

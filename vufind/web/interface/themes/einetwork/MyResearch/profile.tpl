@@ -8,7 +8,7 @@
   <div id="main-content">
     {if $user->cat_username}
       <div class="resulthead">
-      <h3>{translate text='Your Profile'}hello</h3></div>
+      <h3>{translate text='Your Profile'}</h3></div>
       
       <div class="page">
       <form action='' method='post'>

@@ -40,8 +40,10 @@ $(document).ready(function() {
 	
 	// print button
 	$("#bag_print_button").click(function() { printBag(); return false; });
+	
 	//view cart button
 	$("#view-cart-button").click(function(){viewCart();return false;});
+	
 	// login button
 	$("#login_bag").click(function() { 
 		$('#bag_actions').height('175px');

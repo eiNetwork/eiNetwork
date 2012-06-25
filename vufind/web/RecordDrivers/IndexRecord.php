@@ -717,7 +717,7 @@ class IndexRecord implements RecordInterface
 		// to turn on AJAX as needed:
 		$interface->assign('summAjaxStatus', false);
 		
-		return 'ei_tpl/result.tpl'; //szheng: modified from 'RecordDrivers/Index/result.tpl' to "ei_tpl/result.tpl"
+		return 'RecordDrivers/Index/result.tpl';
 	}
 	
 	function getBookcoverUrl($id, $isbn, $upc, $formatCategory, $format){

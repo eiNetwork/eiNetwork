@@ -17,7 +17,7 @@
   {* End Narrow Search Options *}
 
   <div id="main-content">
-	<div id="searchInfo">
+    <div id="searchInfo">
       {* Recommendations *}
       {*
 	{if $topRecommendations}
@@ -92,7 +92,10 @@
       <b class="bbot"><b></b></b>
     </div>
     {* End Main Listing *}
-    {*right-bar template*}
-	{include file="ei_tpl/right-bar.tpl"}
+  </div>
+  {*right-bar template*}
+  {include file="ei_tpl/right-bar.tpl"}
 </div>
-	
+
+
+

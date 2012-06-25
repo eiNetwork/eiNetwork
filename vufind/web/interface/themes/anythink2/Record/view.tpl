@@ -53,13 +53,8 @@ function redrawSaveStatus() {
     <div id="image-column">
       {if $user->disableCoverArt != 1}
         <div id="cover">
-          <a href="{$bookCoverUrl}">
-            <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
-          </a>
-          <div id="goDeeperLink" class="godeeper" style="display:none">
-            <a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;">
-            <img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
-          </div>
+          <a id="goDeeperLink" style="display:none" href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightboxAnythink('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;"></a>
+          <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
         </div>
       {/if}
       <div class='requestThisLink' id="placeHold{$id|escape:"url"}" style="display:none">
@@ -67,12 +62,12 @@ function redrawSaveStatus() {
       </div>
       {if $showOtherEditionsPopup}
       <div id="otherEditionCopies">
-        <div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
+        <div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummariesAnythink('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
       </div>
       {/if}
       {if $goldRushLink}
-      <div class ="titledetails">
-        <a href="{$goldRushLink}">Check for online articles</a>
+      <div class="titledetails">
+        <a href="{$goldRushLink}">{translate text="Check for online articles"}</a>
       </div>
       {/if}
       <div id="myrating" class="stat">
@@ -84,8 +79,8 @@ function redrawSaveStatus() {
         <script type="text/javascript">
         $(
          function() {literal} { {/literal}
-             $('#myrating').rater({literal}{ {/literal} module:'Record', recordId: '{$shortId}', rating:'{$ratingData.average}', postHref: '{$path}/Record/{$id}/AJAX?method=RateTitle'{literal} } {/literal});
-           {literal} } {/literal}
+           $('#myrating').rater({literal}{ {/literal} module:'Record', recordId: '{$shortId}', rating:'{$ratingData.average}', postHref: '{$path}/Record/{$id}/AJAX?method=RateTitle'{literal} } {/literal});
+         {literal} } {/literal}
         );
         </script>
       </div>
@@ -237,15 +232,13 @@ function redrawSaveStatus() {
       {foreach from=$similarRecords item=similar}
       <li>
         {if is_array($similar.format)}
-          <span class="{$similar.format[0]|lower|regex_replace:"/[^a-z0-9]/":""}">
+          <span class="icon-{$similar.format[0]|lower|regex_replace:"/[^a-z0-9]/":""}">
         {else}
-          <span class="{$similar.format|lower|regex_replace:"/[^a-z0-9]/":""}">
+          <span class="icon-{$similar.format|lower|regex_replace:"/[^a-z0-9]/":""}">
         {/if}
         <a href="{$path}/Record/{$similar.id|escape:"url"}">{$similar.title|regex_replace:"/(\/|:)$/":""|escape}</a>
         </span>
-        <span style="font-size: 80%">
-        {if $similar.author}<br/>{translate text='By'}: {$similar.author|escape}{/if}
-        </span>
+        {if $similar.author}<div class="fine-print">{translate text='By'}: {$similar.author|escape}</div>{/if}
       </li>
       {/foreach}
     </ul>
@@ -267,10 +260,10 @@ function redrawSaveStatus() {
         <li>
         {if is_array($edition.format)}
           {foreach from=$edition.format item=format}
-            <span class="{$format|lower|regex_replace:"/[^a-z0-9]/":""}">{$format}</span>
+            <span class="icon-{$format|lower|regex_replace:"/[^a-z0-9]/":""}">{$format}</span>
           {/foreach}
         {else}
-          <span class="{$edition.format|lower|regex_replace:"/[^a-z0-9]/":""}">{$edition.format}</span>
+          <span class="icon-{$edition.format|lower|regex_replace:"/[^a-z0-9]/":""}">{$edition.format}</span>
         {/if}
         {$edition.edition|escape}
         {if $edition.publishDate}({$edition.publishDate.0|escape}){/if}
@@ -288,11 +281,10 @@ function redrawSaveStatus() {
 
   {if $linkToAmazon == 1 && $isbn}
   <div class="sidegroup">
-    <h4>Elsewhere:</h4>
+    <h4>{translate text="Elsewhere"}:</h4>
     <ul><li><a href="http://amazon.com/dp/{$isbn|@formatISBN}"> {translate text="View on Amazon"}</a></li></ul>
   </div>
   {/if}
-
   {if $classicId}
   <div id="classicViewLink"><a href ="{$classicUrl}/record={$classicId|escape:"url"}" target="_blank">Classic View</a></div>
   {/if}
@@ -332,7 +324,7 @@ function redrawSaveStatus() {
   </div>
   <div id="tools-column">
     <div class="actions-first">
-      <div class="actions-save" id="saveLink{if $shortId}{$shortId}{else}{$id|escape}{/if}">
+      <div class="actions-save" id="saveLink">
         {if $user}
           <div id="lists{if $shortId}{$shortId}{else}{$id|escape}{/if}"></div>
           <script type="text/javascript">
@@ -340,7 +332,7 @@ function redrawSaveStatus() {
           </script>
         {/if}
         {if $showFavorites == 1}
-          <a class="button" href="{$url}/Resource/Save?id={$id|escape:"url"}&amp;source=VuFind" onclick="getSaveToListForm('{$id}', 'VuFind'); return false;">{translate text='Add to list...'}</a>
+          <a class="button" href="{$url}/Resource/Save?id={$id|escape:"url"}&amp;source=VuFind" onclick="getSaveToListFormAnythink('{$id}', 'VuFind'); return false;">{translate text='Add to list...'}</a>
         {/if}
       </div>
       {if $enableBookCart}
@@ -351,25 +343,25 @@ function redrawSaveStatus() {
     </div>
     <div class="actions-second" id="recordTools">
         {if !$tabbedDetails}
-          <div><a href="{$path}/Record/{$id|escape:"url"}/Cite" class="cite" id="citeLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/Cite?lightbox", "#citeLink"); return false;'>{translate text="Cite this"}</a></div>
+          <div><a href="{$path}/Record/{$id|escape:"url"}/Cite" class="cite" id="citeLink" onclick='ajaxLightboxAnythink("{$path}/Record/{$id|escape}/Cite?lightbox", "#citeLink"); return false;'>{translate text="Cite this"}</a></div>
         {/if}
         {if $showTextThis == 1}
-          <div><a href="{$path}/Record/{$id|escape:"url"}/SMS" class="sms" id="smsLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/SMS?lightbox", "#smsLink"); return false;'>{translate text="Text this"}</a></div>
+          <div><a href="{$path}/Record/{$id|escape:"url"}/SMS" class="sms" id="smsLink" onclick='ajaxLightboxAnythink("{$path}/Record/{$id|escape}/SMS?lightbox", "#smsLink"); return false;'>{translate text="Text this"}</a></div>
         {/if}
         {if $showEmailThis == 1}
-          <div><a href="{$path}/Record/{$id|escape:"url"}/Email" class="mail" id="mailLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/Email?lightbox", "#mailLink"); return false;'>{translate text="Email this"}</a></div>
+          <div><a href="{$path}/Record/{$id|escape:"url"}/Email" class="mail" id="mailLink" onclick='ajaxLightboxAnythink("{$path}/Record/{$id|escape}/Email?lightbox", "#mailLink"); return false;'>{translate text="Email this"}</a></div>
         {/if}
         {if is_array($exportFormats) && count($exportFormats) > 0}
-            <div><a href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormats.0|escape:"url"}" class="export" onclick="toggleMenu('exportMenu'); return false;">{translate text="Export Record"}</a>
-            <ul class="menu" id="exportMenu">
-              {foreach from=$exportFormats item=exportFormat}
-                <li><a {if $exportFormat=="RefWorks"} {/if}href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormat|escape:"url"}">{translate text="Export to"} {$exportFormat|escape}</a></li>
-              {/foreach}
-            </ul></div>
+          <div><a href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormats.0|escape:"url"}" class="export" onclick="toggleMenu('exportMenu'); return false;">{translate text="Export Record"}</a>
+          <ul class="menu" id="exportMenu">
+            {foreach from=$exportFormats item=exportFormat}
+              <li><a {if $exportFormat=="RefWorks"} {/if}href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormat|escape:"url"}">{translate text="Export to"} {$exportFormat|escape}</a></li>
+            {/foreach}
+          </ul></div>
         {/if}
         {*
         {if $showFavorites == 1}
-          <div id="saveLink"><a href="{$path}/Record/{$id|escape:"url"}/Save" class="fav" onclick="getSaveToListForm('{$id|escape}', 'VuFind'); return false;">{translate text="Add to favorites"}</a></div>
+          <div id="saveLink"><a href="{$path}/Record/{$id|escape:"url"}/Save" class="fav" onclick="getSaveToListFormAnythink('{$id|escape}', 'VuFind'); return false;">{translate text="Add to favorites"}</a></div>
         {/if}
         *}
         {if !empty($addThis)}
@@ -390,7 +382,7 @@ function redrawSaveStatus() {
           {translate text='No Tags'}, {translate text='Be the first to tag this record!'}
         {/if}
           <a href="{$path}/Resource/AddTag?id={$id|escape:"url"}&amp;source=VuFind" class="tool add"
-             onclick="GetAddTagForm('{$id|escape}', 'VuFind'); return false;">{translate text="Add Tag"}</a>
+            onclick="GetAddTagFormAnythink('{$id|escape}', 'VuFind'); return false;">{translate text="Add Tag"}</a>
       </div>
     </div>
     {/if}
@@ -418,12 +410,17 @@ function redrawSaveStatus() {
       </div>
     </div>
     {/if}
-    {if $wordThinkHeadings}
+    {if $subjects}
     <div class="resultInformation">
-      <h4>{translate text='Word Think Headings'}</h4>
+      <h4>{translate text='Subjects'}</h4>
       <ul>
-        {foreach from=$wordThinkHeadings item=wordThinkHeading name=loop}
-          <li><a href="{$path}/Search/Results?lookfor=%22{$wordThinkHeading.search|escape:"url"}%22&amp;basicType=Subject">{$wordThinkHeading.title|escape}</a></li>
+        {foreach from=$subjects item=subject name=loop}
+        <li>
+          {foreach from=$subject item=subjectPart name=subloop}
+            {if !$smarty.foreach.subloop.first} &mdash; {/if}
+            <a href="{$path}/Search/Results?lookfor=%22{$subjectPart.search|escape:"url"}%22&amp;basicType=Subject">{$subjectPart.title|escape}</a>
+          {/foreach}
+        </li>
         {/foreach}
       </ul>
     </div>
@@ -545,6 +542,7 @@ function redrawSaveStatus() {
       </div>
     {/if}
 
+
     <div id="moredetails-tabs">
       {* Define tabs for the display *}
       <ul>
@@ -553,16 +551,19 @@ function redrawSaveStatus() {
           <li><a href="#notestab">{translate text="Notes"}</a></li>
         {/if}
         {if $showAmazonReviews || $showStandardReviews}
-          <li><a href="#reviewtab">{translate text="Reviews"}</a></li>
+          <li><a href="#reviewtab">{translate text="Reviews and Trailers"}</a></li>
         {/if}
-        <li><a href="#readertab">{translate text="Reader Comments"}</a></li>
-        <li><a href="#citetab">{translate text="Citation"}</a></li>
+        <li><a href="#readertab">{translate text="Comments"}</a></li>
+        <li><a href="#citetab">{translate text="Citations"}</a></li>
         <li><a href="#stafftab">{translate text="Staff View"}</a></li>
+        {if $internetLinks}
+        <li><a href="#marctab">{translate text="Links"}</a></li>
+        {/if}
       </ul>
 
       {* Display the content of individual tabs *}
       {if $notes}
-        <div id ="notestab">
+        <div id="notestab">
           <ul class='notesList'>
           {foreach from=$notes item=note}
             <li>{$note}</li>
@@ -578,15 +579,31 @@ function redrawSaveStatus() {
 
         {if $showAmazonReviews || $showStandardReviews}
         <h4>Professional Reviews</h4>
+        {* Add editorial reviews that have been entered *}
+        {if $editorialReviewResults && count($editorialReviewResults) > 0}
+	        <div id="editorialReviews">
+	        	{foreach from=$editorialReviewResults item=review}
+	        	
+				    <div id = 'review{php}$index ++;echo $index;{/php}'>
+				    	<div class='reviewTitle'>{$review->title}</div>
+				    	<div class="reviewContent">{$review->review}</div>
+				    	{if $review->source}
+					      <div class='reviewSource'>From: {$review->source}</div>
+					    {/if}
+				    </div>
+				    
+	        	{/foreach}
+	        </div>
+        {/if}
         <div id='reviewPlaceholder'></div>
         {/if}
       </div>
 
       {if $showComments == 1}
         <div id="readertab">
-          <div style ="font-size:12px;" class ="alignright" id="addReview"><span id="userreviewlink" class="add" onclick="$('#userreview{$shortId}').slideDown();">Add a Review</span></div>
+          <div class="alignright" id="addReview"><span id="userreviewlink" class="add" onclick="$('#userreview{$shortId}').slideDown();">{translate text="Add a Comment"}</span></div>
           <div id="userreview{$shortId}" class="userreview">
-            <span class ="alignright unavailable closeReview" onclick="$('#userreview{$shortId}').slideUp();" >Close</span>
+            <span class="alignright unavailable closeReview" onclick="$('#userreview{$shortId}').slideUp();" >Close</span>
             <div class='addReviewTitle'>Add your Review</div>
             {assign var=id value=$id}
             {include file="$module/submit-comments.tpl"}
@@ -599,34 +616,37 @@ function redrawSaveStatus() {
         {include file="$module/cite.tpl"}
       </div>
 
-      <div id="stafftab">
-        {include file=$staffDetails}
-      </div>
-
       <div id="holdingstab">
-        {if $internetLinks}
-        <h3>{translate text="Internet"}</h3>
-        {foreach from=$internetLinks item=internetLink}
-        {if $proxy}
-        <a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a><br/>
-        {else}
-        <a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a><br/>
-        {/if}
-        {/foreach}
-        {/if}
         <div id="holdingsPlaceholder"></div>
         {if $enablePurchaseLinks == 1 && !$purchaseLinks}
           <div class='purchaseTitle'><a href="#" onclick="return showPurchaseOptions('{$id}');">{translate text='Buy a Copy'}</a></div>
         {/if}
       </div>
+
+      <div id="stafftab">
+        {include file=$staffDetails}
+      </div>
+      {if $internetLinks}
+      <div id="marctab">
+        <ul>
+        {foreach from=$internetLinks item=internetLink}
+        {if $proxy}
+        <li><a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a><</li>
+        {else}
+        <li><a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a></li>
+        {/if}
+        {/foreach}
+        </ul>
+      </div>
+      {/if}
     </div> {* End of tabs*}
   </div>
   <script type="text/javascript">
-    {literal}
+  {literal}
     $(function() {
       $("#moredetails-tabs").tabs();
     });
-    {/literal}
+  {/literal}
   </script>
 </div>
 

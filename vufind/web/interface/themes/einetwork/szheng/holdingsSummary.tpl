@@ -1,13 +1,14 @@
 <div id = "holdingsSummary" class="holdingsSummary">
-  {if $holdingsSummary.callnumber}
+  {*{if $holdingsSummary.callnumber}
     <div class='callNumber'>
       Shelved at <a href='{$path}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
     </div>
-  {/if}
+  {/if}*}
   {* Don't show status for non-drm EPUB files*} 
   {if $holdingsSummary.status == 'Available At'}
     <div class="availability">
-      Now Available: <span class='availableAtList'>{$holdingsSummary.availableAt}</span> 
+      <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" class="holdingsImage"></span>
+      <span>Now Available: </span><span class='availableAtList'>{$holdingsSummary.availableAt}</span> 
     </div>
       
   {elseif $holdingsSummary.status != 'Available online'}
@@ -15,12 +16,12 @@
       <a href='{$path}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{translate text=$holdingsSummary.status}</a>
     </div>*}
       <div class="holdingsInformation">
-	{if $holdingsSummary.status == "Available"}
+	{if $holdingsSummary.availableCopies > 0}
 	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" class="holdingsImage"></span>
-	    <span  class="holdingsInformation_status">{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people {/if} on waitlist for {$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}</span>
+	    <span  class="holdingsInformation_status">{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}, {$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} on shelf.</span>
 	{else}
 	    <span><img alt="holdingstatus" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png" class="holdingsImage"></span>
-	    <span  class="holdingsInformation_status">{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people {/if} on waitlist for {$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}</span>
+	    <span  class="holdingsInformation_status">{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}, {$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} on shelf.</span>
 	{/if}
       </div>
       {*}

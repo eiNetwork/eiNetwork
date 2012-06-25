@@ -121,7 +121,7 @@ class Home extends Record{
 
 		//Build the actual view
 		$interface->assign('pageType','record');
-		$interface->setTemplate('ei_view.tpl');
+		$interface->setTemplate('view.tpl');
 
 		$titleField = $this->marcRecord->getField('245');
 		if ($titleField){

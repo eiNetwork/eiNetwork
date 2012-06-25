@@ -24,6 +24,8 @@
 			{css filename="record.css"}
 			{css filename="search-results.css"}
 			{css filename="suggestions.css"}
+			{css filename="brian_help.css"}
+			{css filename="wcpl.css"}
 		{/if}
 	
     {css media="print" filename="print.css"}
@@ -31,6 +33,7 @@
     <script type="text/javascript">
       path = '{$path}';
       loggedIn = {if $user}true{else}false{/if}
+
     </script>
     
     {if $consolidateJs}
@@ -55,6 +58,10 @@
     {if $includeAutoLogoutCode == true}
     <script type="text/javascript" src="{$path}/js/autoLogout.js"></script>
     {/if}
+    
+    <!-- ben: brian help script -->
+    {js filename="brian_help.js"}
+    {js filename="wcpl.js"}
     
     {if isset($theme_css)}
     <link rel="stylesheet" type="text/css" href="{$theme_css}" />

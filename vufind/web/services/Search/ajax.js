@@ -472,7 +472,6 @@ function moreFacets(name)
 	$("#narrowGroupHidden_" + name).show();
 }
 
-
 function lessFacets(name)
 {
 	$("#more" + name).show();

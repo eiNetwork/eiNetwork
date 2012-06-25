@@ -397,8 +397,9 @@ div.record {
 
 .recordcover {
 	position: relative;
-	width:136px;
-	height:115px;
+	max-width:136px;
+	height:100%;
+	width:auto;
 	border-width:0px;
 	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.20);
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);

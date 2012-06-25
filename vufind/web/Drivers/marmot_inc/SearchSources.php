@@ -103,8 +103,6 @@ class SearchSources{
 		}
 
 		//Summon Search - later
-
-
 		//Marmot Global search
 		if (isset($library) &&
 		($repeatSearchSetting == 'marmot') &&
@@ -117,6 +115,12 @@ class SearchSources{
               'description' => 'A shared catalog of public, academic, and school libraries on the Western Slope.',
 			);
 		}
+		
+		//eContent Search
+		$searchOptions['econtent'] = array(
+              'name' => 'Digital Media',
+              'description' => 'Digital Media available for use online and with portable devices',
+		);
 
 		//Genealogy Search
 		if ($searchGenealogy && !$interface->isMobile()){
@@ -125,7 +129,7 @@ class SearchSources{
               'description' => 'Genealogy Records from Colorado',
 			);
 		}
-
+		
 		//Overdrive
 		if ($repeatInOverdrive && !$interface->isMobile()){
 			$searchOptions['overdrive'] = array(
