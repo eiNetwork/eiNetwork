@@ -27,7 +27,7 @@
 	{if $user && $user->hasRole('opacAdmin')}
 	{assign var="curSection" value=$curSection+1}
 	<h4><a href="#">VuFind Configuration</a></h4>
-	<div class="sidegroupContents">
+	<div class="sidegroupContents" >
 		<div class="adminMenuLink {if $action == "IPAddresses"}{assign var="defaultSection" value=$curSection} active{/if}"><a href="{$path}/Admin/IPAddresses">IP Addresses</a></div>
 		<div class="adminMenuLink {if $action == "Libraries"}{assign var="defaultSection" value=$curSection} active{/if}"><a href="{$path}/Admin/Libraries">Library Systems</a></div>
 		<div class="adminMenuLink {if $action == "Locations"}{assign var="defaultSection" value=$curSection} active{/if}"><a href="{$path}/Admin/Locations">Locations</a></div>

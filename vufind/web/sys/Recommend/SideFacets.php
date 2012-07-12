@@ -103,12 +103,15 @@ class SideFacets implements RecommendationInterface
 		$sideFacets = $this->searchObject->getFacetList($this->mainFacets);
 		global $librarySingleton;
 		$searchLibrary = $librarySingleton->getSearchLibrary();
+		
 		$timeSinceAddedFacet = 'time_since_added';
+		
 		if ($searchLibrary != null){
 			$timeSinceAddedFacet = 'local_time_since_added_' . $searchLibrary->subdomain;
 		}
 		if (isset($sideFacets[$timeSinceAddedFacet])){
 			//See if there is a value selected
+			
 			$valueSelected = false;
 			foreach ($sideFacets[$timeSinceAddedFacet]['list'] as $facetKey => $facetValue){
 				if (isset($facetValue['isApplied']) && $facetValue['isApplied'] == true){
@@ -145,6 +148,7 @@ class SideFacets implements RecommendationInterface
 			}
 			$interface->assign('ratingLabels', $ratingLabels);
 		}
+		asort($sideFacets);
 		$interface->assign('sideFacetSet', $sideFacets);
 	}
 

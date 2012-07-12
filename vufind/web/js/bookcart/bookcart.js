@@ -516,13 +516,15 @@ function checkEmail(address){
 }
 function viewCart(){
 	var url ="";
+	var requestId = "";
 	$(bookBag).each(function (i, book) {
 		if (url.length > 0){
 			url += "+OR+";
 		}
 		url += "id%3A" + book.id;
+		requestId +="&selected["+book.id+"]=on";
 	});
 	
-	url =  path + "/Search/Results?lookfor=" + url + "&type=keyword";
+	url =  path + "/CartView/Results?lookfor=" + url + "&type=keyword&iscart=true&"+requestId;
 	window.open(url);
 }

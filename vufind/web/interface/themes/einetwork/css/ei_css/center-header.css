@@ -23,6 +23,10 @@
     
 }
 
+#disclaimer{
+	color: rgb(255,0,0);
+}
+
 #search-label{
 	font-size: 15px;
 	font-family: sans-serif;

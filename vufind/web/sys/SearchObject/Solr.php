@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+
+ //original one
+ 
+ 
 require_once 'sys/Solr.php';
 require_once 'sys/SearchObject/Base.php';
 require_once 'RecordDrivers/Factory.php';

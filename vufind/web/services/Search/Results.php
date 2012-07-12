@@ -38,7 +38,6 @@ class Results extends Action {
 		global $user;
 
 		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
-
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
@@ -94,6 +93,7 @@ class Results extends Action {
 				exit;
 			}
 		}
+		
 		
 		$rangeFilters = array('lexile_score', 'accelerated_reader_reading_level', 'accelerated_reader_point_value');
 		foreach ($rangeFilters as $filter){
@@ -159,7 +159,7 @@ class Results extends Action {
 		}
 
 		// Set Interface Variables
-		//   Those we can construct BEFORE the search is executed
+		// Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
 		$interface->assign('sortList',   $searchObject->getSortList());
 		$interface->assign('rssLink',    $searchObject->getRSSUrl());
@@ -277,7 +277,12 @@ class Results extends Action {
 			
 		} else {
 			$timer->logTime('save search');
-
+			
+			if(isset($_REQUEST["iscart"])){
+				$interface->assign('IsCart',true);
+			}else{
+				$interface->assign('IsCart',false);
+			}
 			// If the "jumpto" parameter is set, jump to the specified result index:
 			$this->processJumpto($result);
 
@@ -313,8 +318,16 @@ class Results extends Action {
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
-			$interface->assign('subpage', 'Search/list-list.tpl');
-			$interface->setTemplate('list.tpl');
+			if(isset($_REQUEST["iscart"])) //szheng: modified
+			{
+				$interface->assign('subpage', 'ei_tpl/Cart/list-list.tpl');
+				$interface->setTemplate('../ei_tpl/Cart/list.tpl');
+			}
+			else{
+				$interface->assign('subpage', 'Search/list-list.tpl');
+				$interface->setTemplate('list.tpl');
+			}
+			
 			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);

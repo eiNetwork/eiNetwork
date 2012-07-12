@@ -716,8 +716,8 @@ class IndexRecord implements RecordInterface
 		// records exist in the ILS.  Child classes can override this setting
 		// to turn on AJAX as needed:
 		$interface->assign('summAjaxStatus', false);
-		
 		return 'RecordDrivers/Index/result.tpl';
+
 	}
 	
 	function getBookcoverUrl($id, $isbn, $upc, $formatCategory, $format){

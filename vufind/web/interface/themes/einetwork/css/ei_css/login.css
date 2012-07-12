@@ -63,7 +63,7 @@
 	text-align: center;
 	padding-top: 5px;
 	cursor: pointer;
-	margin-top: 20px;
+	margin-top: 45px;
 	margin-left: 170px;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -71,16 +71,16 @@
 }
 
 #email{
-	margin-top: 10px;
+	margin-top: 15px;
 }
 
-#password{
+#pin{
 	margin-top:5px;
 	margin-bottom: 8px;
 }
 
 #description{
-	margin-top: 8px;
+	margin-top: 15px;
 	margin-bottom: 10px;
 }
 
@@ -89,6 +89,18 @@
 	height: 25px;
 	font-size: 14px;
 	color: #AAAAAA;
+}
+
+.message{
+	color: red;
+}
+
+#cardNumberMessage{
+	visibility: hidden;
+}
+
+#pinMessage{
+	visibility: hidden;
 }
 
 

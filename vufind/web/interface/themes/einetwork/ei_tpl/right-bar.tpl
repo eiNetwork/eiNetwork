@@ -14,38 +14,52 @@
     
     
     <div class="account-links">
+    {*
         <div class="notification">
             <div id="link-of-notification">
                 <a href="http://www.google.com">Notifications</a>
             </div>
-            {*
-            <div id="number-of-notification">
+                <div id="number-of-notification">
                 1
             </div>
-            *}
         </div>
+    *}
         <div id="wish-lists">
-            <a>Wish Lists</a>
+            <a href="/MyResearch/Favorites">Wish Lists</a>
         </div>
         <div id="history">
-            <a>History</a>
+            <a href="/Search/History">History</a>
         </div>
+    {*    
         <div id="recommendations">
             <div id="link-of-recommendation">
                 <a href="http://www.google.com">Recommendations</a>
             </div>
-            {*
             <div id="number-of-recommedation">
                 21
             </div>
-            *}
-            
         </div>
+    *}
         <div id="my-item">
-            <a>My Items</a>
+            <a href="/MyResearch/CheckedOut">My Items</a>
+        </div>
+        <div id="my-request">
+            <a href="/MyResearch/Holds">My Requests</a>
+        </div>
+        <div id="my-od-item">
+            <a href="/MyResearch/OverdriveCheckedOut">My Overdrive Items</a>
+        </div>
+        <div id="my-od-request">
+            <a href="/MyResearch/OverdriveHolds">My Overdrive Requests</a>
+        </div>
+        <div id="my-od-wishlist">
+            <a href="/MyResearch/OverdriveWishList">My Overdrive Wish List</a>
         </div>
         <div id="account-settings">
-            <a>Account Settings</a>
+            <a href="/MyResearch/Profile">Account Settings</a>
+        </div>
+        <div id="reading-history">
+            <a href="/MyResearch/ReadingHistory">My Reading History</a>
         </div>
     </div>
     
@@ -55,12 +69,14 @@
         <div id="description">
             Your Preferred Branches
         </div>
+        {*
         <div id="branch-name">
             Carnegie Library Main
         </div>
+        *}
         <div id="blank">&nbsp;</div>
         <div id="edit-button">
-                edit
+            <a href="/MyResearch/Profile">Edit</a>
         </div>
     </div>
     
@@ -71,7 +87,7 @@
             <a>New Books</a>
         </div>
         <div id="new-movies">
-            <a>New Moives</a>
+            <a>New Movies</a>
         </div>
         <div id="staff-picks">
             <a>Staff Picks</a>

@@ -34,7 +34,14 @@ html,body {
 	text-align: left;
 	height: auto;
 }
-
+/*add at July 12 2012*/
+#sidebar{
+	width: 232px;
+	display: inline-block;
+	vertical-align: top;
+	float: left;
+	background: url("../images/Arts/filmgrain.png");
+}
 
 
 #main-content {

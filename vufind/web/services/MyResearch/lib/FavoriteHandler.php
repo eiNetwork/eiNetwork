@@ -54,7 +54,6 @@ class FavoriteHandler
 		$this->user = $user;
 		$this->listId = $listId;
 		$this->allowEdit = $allowEdit;
-
 		// Process the IDs found in the favorites (sort by source):
 		if (is_array($favorites)) {
 			foreach($favorites as $current) {
@@ -78,7 +77,6 @@ class FavoriteHandler
 	public function assign()
 	{
 		global $interface;
-		
 		// Initialise from the current search globals
 		$searchObject = SearchObjectFactory::initSearchObject();
 		$searchObject->init();
@@ -124,7 +122,7 @@ class FavoriteHandler
 		$interface->assign('recordCount', $summary['resultTotal']);
 		$interface->assign('recordStart', $summary['startRecord']);
 		$interface->assign('recordEnd',   $summary['endRecord']);
-
+		$interface->assing('test','bye');
 		$link = $searchObject->renderLinkPageTemplate();
 		$options = array('totalItems' => count($this->favorites),
                          'perPage' => $summary['perPage'],

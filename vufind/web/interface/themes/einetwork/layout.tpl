@@ -70,13 +70,13 @@
       <script type="text/javascript" src="{$path}/js/title-scroller.js"></script>
       <script type="text/javascript" src="{$path}/services/Search/ajax.js"></script>
       <script type="text/javascript" src="{$path}/services/Record/ajax.js"></script>
-		  
+      <script type="text/javascript" src="{$path}/js/ei_js/bookcart.js"></script>  
       <script type="text/javascript" src="{$path}/js/overdrive.js"></script>
     {/if}
     
     {* Files that should not be combined *}
     {if $includeAutoLogoutCode == true}
-      <script type="text/javascript" src="{$path}/js/autoLogout.js"></script>
+      {*<script type="text/javascript" src="{$path}/js/autoLogout.js"></script>*}
     {/if}
     
     {if isset($theme_css)}

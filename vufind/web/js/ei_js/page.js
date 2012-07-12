@@ -19,3 +19,8 @@ function mouseOut(event,color){
 function goToLink(url){
     window.navigate(url);
 }
+function requestItem(){
+    $.post("http://10.69.1.61/MyResearch/HoldMultiple",{"selected[.b31308028]":"on",holdType:"hold",campus:"xa"});
+    alert("aa");
+    
+}

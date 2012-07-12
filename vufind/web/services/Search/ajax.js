@@ -478,7 +478,7 @@ function lessFacets(name)
 	$("#narrowGroupHidden_" + name).hide();
 }
 
-/*add function by Xiaolin Lin 2012-06-13 for the see-all pop up box in the search result page*/
+/*add function at 2012-06-13 for the see-all pop up box in the search result page*/
 
 function seeAll(name){
 	$("#"+name+" .popup").show();
