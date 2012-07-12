@@ -221,6 +221,14 @@ class MillenniumDriver implements DriverInterface
 
 		//Get information about holdings, order information, and issue information
 		$millenniumInfo = $this->getMillenniumRecordInfo($id);
+		
+		//Get the number of holds
+		if (preg_match('/(\d+) hold(s?) on .*? of \d+ (copies|copy)/', $millenniumInfo->framesetInfo, $matches)){
+			$holdQueueLength = $matches[1];
+		}else{
+			$holdQueueLength = 0;
+		}
+		
 
 		// Load Record Page
 		$r = substr($millenniumInfo->holdingsInfo, stripos($millenniumInfo->holdingsInfo, 'bibItems'));
@@ -370,6 +378,7 @@ class MillenniumDriver implements DriverInterface
 				$numHoldings++;
 				$curHolding['id'] = $id;
 				$curHolding['number'] = $numHoldings;
+				$curHolding['holdQueueLength'] = $holdQueueLength;
 				$ret[] = $curHolding;
 			}
 			$count++;
@@ -722,6 +731,7 @@ class MillenniumDriver implements DriverInterface
 		$availableLocations = array();
 		$additionalAvailableLocations = array();
 		$unavailableStatus = null;
+		$holdQueueLength = 0;
 		//The status of all items.  Will be set to an actual status if all are the same
 		//or null if the item statuses are inconsistent
 		$allItemStatus = '';
@@ -732,6 +742,9 @@ class MillenniumDriver implements DriverInterface
 				$allItemStatus = $holding['statusfull'];
 			}elseif($allItemStatus != $holding['statusfull']){
 				$allItemStatus = null;
+			}
+			if (isset($holding['holdQueueLength'])){
+				$holdQueueLength = $holding['holdQueueLength'];
 			}
 			if (isset($holding['availability']) && $holding['availability'] == 1){
 				$numAvailableCopies++;
@@ -832,6 +845,8 @@ class MillenniumDriver implements DriverInterface
 		}else{
 			$summaryInformation['numCopies'] = $numCopies;
 		}
+		
+		$summaryInformation['holdQueueLength'] = $holdQueueLength;
 
 		if ($unavailableStatus != 'ONLINE'){
 			$summaryInformation['unavailableStatus'] = $unavailableStatus;
@@ -1228,6 +1243,7 @@ class MillenniumDriver implements DriverInterface
 				'numHoldsRequested' => $numHoldsRequested,
 				'bypassAutoLogout' => ($user) ? $user->bypassAutoLogout : 0,
 				'ptype' => $patronDump['P_TYPE'],
+				'notices' => $patronDump['NOTICE_PREF'],
 		);
 
 		//Get eContent info as well
@@ -1258,13 +1274,13 @@ class MillenniumDriver implements DriverInterface
 	 *
 	 * @param string $barcode the patron's barcode
 	 */
-	protected function _getPatronDump($barcode)
+	protected function _getPatronDump($barcode, $forceReload = false)
 	{
 		global $configArray;
 		global $memcache;
 		global $timer;
 		$patronDump = $memcache->get("patron_dump_$barcode");
-		if (!$patronDump){
+		if (!$patronDump || $forceReload){
 			$host=$configArray['OPAC']['patron_host'];
 			//Special processing to allow MCVSD Students to login
 			//with their student id.
@@ -2573,16 +2589,17 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_POST, true);
 		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
 		$sresult = curl_exec($curl_connection);
+		$logger->log("Result of Renew All\r\n" . $sresult, PEAR_LOG_INFO);
+
+		curl_close($curl_connection);
+		unlink($cookieJar);
 		
 		//Clear the existing patron info and get new information.
-		$memcache->delete("patron_dump_{$this->_getBarcode()}");
-		usleep(250);
-		$patronDump = $this->_getPatronDump($this->_getBarcode());
-		$newTotalRenewals = $patronDump['TOT_RENWAL'];
-		
 		$hold_result = array();
 		$hold_result['Total'] = $curCheckedOut;
-		$hold_result['Renewed'] = $newTotalRenewals - $totalRenewals;
+		preg_match_all("/RENEWED successfully/si", $sresult, $matches);
+		$numRenewals = count($matches[0]);
+		$hold_result['Renewed'] = $numRenewals;
 		$hold_result['Unrenewed'] = $hold_result['Total'] - $hold_result['Renewed'];
 		if ($hold_result['Unrenewed'] > 0) {
 			$hold_result['result'] = false;
@@ -2591,8 +2608,6 @@ class MillenniumDriver implements DriverInterface
 			$hold_result['result'] = true;
 			$hold_result['message'] = "All items were renewed successfully.";
 		}
-		curl_close($curl_connection);
-		unlink($cookieJar);
 
 		return $hold_result;
 	}
@@ -2693,6 +2708,10 @@ class MillenniumDriver implements DriverInterface
 		}
 		$extraPostInfo['tele1'] = $_REQUEST['phone'];
 		$extraPostInfo['email'] = $_REQUEST['email'];
+		
+		if (isset($_REQUEST['notices'])){
+			$extraPostInfo['notices'] = $_REQUEST['notices'];
+		}
 
 		//Login to the patron's account
 		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");

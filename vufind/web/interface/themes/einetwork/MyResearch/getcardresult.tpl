@@ -2,9 +2,9 @@
 	<div id="main-content">
 		<div class="resulthead"><h3>{translate text='Registration Results'}</h3></div>
 		<div class="page">
-		{if $registrationResult.result}
+		{if $registrationResult.success}
 			<p>
-			Here is your temporary barcode to use for future authentication:&nbsp;{$registrationResult.tempBarcode}. 
+			Here is your temporary barcode to use for future authentication:&nbsp;{$registrationResult.barcode}. 
 			</p>
 			<p>
 			To receive your permanent card, you will need to bring a picture ID to the library. 
@@ -14,7 +14,7 @@
 					<div id='haveCardLabel' class='loginFormRow'>Login now</div>
 					<div id ='loginUsernameRow' class='loginFormRow'>
 						<div class='loginLabel'>{translate text='Username'}: </div>
-						<div class='loginField'><input type="text" name="username" id="username" value="{$registrationResult.tempBarcode|escape}" size="15"/></div>
+						<div class='loginField'><input type="text" name="username" id="username" value="{$registrationResult.barcode|escape}" size="15"/></div>
 					</div>
 					<div id ='loginPasswordRow' class='loginFormRow'>
 						<div class='loginLabel'>{translate text='Password'}: </div>
