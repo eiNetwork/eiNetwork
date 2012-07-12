@@ -89,14 +89,19 @@ class DataObjectUtil
 			if ($primaryKeySet){
 				
 				$result = $object->update();
-				$validationResults['saveOk'] = $result;
+				$validationResults['saveOk'] = ($result == 1);
 			}else{
 				$result = $object->insert();
 				$validationResults['saveOk'] = $result;
 			}
 			if (!$validationResults['saveOk']){
 				//TODO: Display the PEAR error (in certain circumstances only?)
-				$validationResults['errors'][] = 'Save failed';
+				$error = &PEAR::getStaticProperty('DB_DataObject','lastError');
+				if (isset($error)){
+					$validationResults['errors'][] = 'Save failed ' . $error->getMessage();
+				}else{
+					$validationResults['errors'][] = 'Save failed';
+				}
 			}
 		}
 		return $validationResults;
@@ -320,7 +325,7 @@ class DataObjectUtil
 				//Check for deleted associations
 				$deletions = isset($_REQUEST[$propertyName . 'Deleted']) ? $_REQUEST[$propertyName . 'Deleted'] : array();
 				//Check for changes to the sort order
-				if ($property['sortable'] == true){
+				if ($property['sortable'] == true && isset($_REQUEST[$propertyName . 'Weight'])){
 					$weights = $_REQUEST[$propertyName . 'Weight'];
 				}
 				if (isset($_REQUEST[$propertyName.'Id'])){

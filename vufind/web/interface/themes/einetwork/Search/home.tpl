@@ -8,54 +8,26 @@
 		}
 		$(this).focus(function() {
 		    if ($(this).val() == $(this).attr('title')) {
+			//$(this).val('').removeClass('hint');
 			$(this).val('');
 		    }
-		    if($(this).attr('id')=='password'){
-			$('#password').get(0).type = 'password';
+		    if($(this).attr('id')=='pin'){
+			$('#pin').get(0).type = 'password';
 		    }
+		
 		});
 		$(this).blur( function() {
 		    if ($(this).val() == '') {
+			//$(this).val($(this).attr('title')).addClass('hint');
 			$(this).val($(this).attr('title'));
-			$('#password').get(0).type='text';
-			//validate the card number
-			if($(this).attr('id')=='username'){
-				var cardNumber=$(this).val().trim();
-				if(cardNumber.length!=14){
-					$('cardNumberMessage').style.visibility='visible';
-				}
-				
-			}
-			//validate the PIN
-			if($(this).attr('id')=='password'){
-				var pin=$(this).val().trim();
-				if(pin.lenght!=4){
-					$('pinMessage').style.visibility='visible';
-				}
-				
-			}
+			$('#pin').get(0).type='text';
 		    }
+		    
+		    
 		});
 	    });
-	  
 	});
 	
-	function isCardNumberValid(cardNumber){
-		if(cardNumber.trim().length!=14){
-			return false;
-		}else{
-			var filter=/^[1-9]{14}$/;
-			if(!filter.test(cardNumber)){
-				return false;
-			}else{
-				return true;
-			}
-		}
-	}
-	function isPINValid(pin){
-		if(pin.trim().length!=4)
-		return false;
-	}
 </script>
 {/literal}
 	<div class="loginHome-left"></div>
@@ -64,17 +36,12 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="username" class="loginFormInput" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
-					<br/><span id="cardNumberMessage" class="message">*please enter correct number</span>
+					<input id="card" class="loginFormInput" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
 				</div>
-				<div id="pin">
-					<input id="password" class="loginFormInput" type="text" name="password" title="4 digits PIN number" size="15"/>
-					<br/><span id="pinMessage" class="message">*please enter correct PIN number</span>
+				<div id="password">
+					<input id="pin" class="loginFormInput" type="text" name="password" title="4 digits PIN number" size="15"/>
 				</div>
-				<div id="loginButton" name="submit"
-				     onmouseover="mouseOver(event,'rgb(242,242,242)')"
-				     onmouseout="mouseOut(event,'rgb(255,255,255)')"
-				     onclick="document.forms['loginForm'].submit();">
+				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">
 					Login
 				</div>
 			</form>
@@ -89,7 +56,7 @@
 			<div id="registerButton"
 			     onmouseover="mouseOver(event,'rgb(242,242,242)')"
 			     onmouseout="mouseOut(event,'rgb(255,255,255)')"
-			     onclick="location.href='http://vufindplus1.einetwork.net/MyResearch/GetCard'; style='cursor: pointer;'">
+			     onclick="location.href='http://vufindplus.einetwork.net/MyResearch/GetCard'; style='cursor: pointer;'">
 				Register
 			</div>
 		</div>

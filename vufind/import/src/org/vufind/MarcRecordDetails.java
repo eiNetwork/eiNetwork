@@ -88,7 +88,7 @@ public class MarcRecordDetails {
 	 */
 	private boolean mapRecord(String source) {
 		if (allFieldsMapped) return true;
-		logger.debug("Mapping record " + getId() + " " + source);
+		//logger.debug("Mapping record " + getId() + " " + source);
 		allFieldsMapped = true;
 
 		// Map all fields for the record
@@ -1501,30 +1501,41 @@ public class MarcRecordDetails {
 		return (value);
 	}
 
+	Pattern mpaaRatingRegex1 = null;
+	Pattern mpaaRatingRegex2 = null;
 	public String getMpaaRating() {
+		if (mpaaRatingRegex1 == null){
+			mpaaRatingRegex1 = Pattern.compile("(?:.*?)Rated\\s(G|PG-13|PG|R|NC-17|NR|X)(?:.*)", Pattern.CANON_EQ);
+		}
+		if (mpaaRatingRegex2 == null){
+			mpaaRatingRegex2 = Pattern.compile("(?:.*?)(G|PG-13|PG|R|NC-17|NR|X)\\sRated(?:.*)", Pattern.CANON_EQ);
+		}
 		String val = getFirstFieldVal("521a");
 
 		if (val != null) {
 			if (val.matches("Rated\\sNR\\.?|Not Rated\\.?|NR")) {
 				return "Not Rated";
-			} else if (val.matches("Rated\\s(G|PG-13|PG|R|NC-17|NR|X)\\.?")) {
-				try {
-					Pattern Regex = Pattern.compile("Rated\\s(G|PG-13|PG|R|NC-17|NR|X)", Pattern.CANON_EQ);
-					Matcher RegexMatcher = Regex.matcher(val);
-					if (RegexMatcher.find()) {
-						return RegexMatcher.group(1) + " Rated";
+			}
+			try {
+				Matcher mpaaMatcher1 = mpaaRatingRegex1.matcher(val);
+				if (mpaaMatcher1.find()) {
+					//System.out.println("Matched matcher 1, " + mpaaMatcher1.group(1) + " Rated " + getId());
+					return mpaaMatcher1.group(1) + " Rated";
+				} else {
+					Matcher mpaaMatcher2 = mpaaRatingRegex2.matcher(val);
+					if (mpaaMatcher2.find()) {
+						//System.out.println("Matched matcher 2, " + mpaaMatcher2.group(1) + " Rated " + getId());
+						return mpaaMatcher2.group(1) + " Rated";
 					} else {
-						return val;
+						return null;
 					}
-				} catch (PatternSyntaxException ex) {
-					// Syntax error in the regular expression
-					return null;
 				}
-			} else {
+			} catch (PatternSyntaxException ex) {
+				// Syntax error in the regular expression
 				return null;
 			}
 		} else {
-			return val;
+			return null;
 		}
 	}
 
@@ -1663,65 +1674,75 @@ public class MarcRecordDetails {
 	}
 
 	public String getAcceleratedReaderPointLevel(){
-		String result = null;
-		//Get a list of all tags that may contain the lexile score.  
-		@SuppressWarnings("unchecked")
-		List<VariableField> input = record.getVariableFields("526");
-		Iterator<VariableField> iter = input.iterator();
+		try {
+			String result = null;
+			//Get a list of all tags that may contain the lexile score.  
+			@SuppressWarnings("unchecked")
+			List<VariableField> input = record.getVariableFields("526");
+			Iterator<VariableField> iter = input.iterator();
 
-		DataField field;
-		while (iter.hasNext()) {
-			field = (DataField) iter.next();
-	    
-			if (field.getSubfield('a') == null){
-				continue;
-			}else{
-				String type = field.getSubfield('a').getData();
-				if (type.matches("(?i)accelerated reader")){
-					String rawData = field.getSubfield('d').getData();
-					try {
-						Pattern Regex = Pattern.compile("([\\d.]+)",
-							Pattern.CANON_EQ | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-						Matcher RegexMatcher = Regex.matcher(rawData);
-						if (RegexMatcher.find()) {
-							String arData = RegexMatcher.group(1);
-							result = arData;
-							//System.out.println("AR Point Level " + result);
-							return result;
-						} 
-					} catch (PatternSyntaxException ex) {
-						// Syntax error in the regular expression
+			DataField field;
+			while (iter.hasNext()) {
+				field = (DataField) iter.next();
+			  
+				if (field.getSubfield('a') == null){
+					continue;
+				}else{
+					String type = field.getSubfield('a').getData();
+					if (type.matches("(?i)accelerated reader")){
+						String rawData = field.getSubfield('d').getData();
+						try {
+							Pattern Regex = Pattern.compile("([\\d.]+)",
+								Pattern.CANON_EQ | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+							Matcher RegexMatcher = Regex.matcher(rawData);
+							if (RegexMatcher.find()) {
+								String arData = RegexMatcher.group(1);
+								result = arData;
+								//System.out.println("AR Point Level " + result);
+								return result;
+							} 
+						} catch (PatternSyntaxException ex) {
+							// Syntax error in the regular expression
+						}
 					}
 				}
 			}
-		}
 
-		return result;
+			return result;
+		} catch (Exception e) {
+			logger.error("Error mapping AR points");
+			return null;
+		}
 	}
 
 	public String getAcceleratedReaderInterestLevel(){
-		String result = null;
-		//Get a list of all tags that may contain the lexile score.  
-		@SuppressWarnings("unchecked")
-		List<VariableField> input = record.getVariableFields("526");
-		Iterator<VariableField> iter = input.iterator();
+		try {
+			String result = null;
+			//Get a list of all tags that may contain the lexile score.  
+			@SuppressWarnings("unchecked")
+			List<VariableField> input = record.getVariableFields("526");
+			Iterator<VariableField> iter = input.iterator();
 
-		DataField field;
-		while (iter.hasNext()) {
-			field = (DataField) iter.next();
-	    
-			if (field.getSubfield('a') == null){
-				continue;
-			}else{
-				String type = field.getSubfield('a').getData();
-				if (type.matches("(?i)accelerated reader")){
-					String arReadingLevel = field.getSubfield('b').getData();
-					return arReadingLevel;
+			DataField field;
+			while (iter.hasNext()) {
+				field = (DataField) iter.next();
+			  
+				if (field.getSubfield('a') == null){
+					continue;
+				}else{
+					String type = field.getSubfield('a').getData();
+					if (type.matches("(?i)accelerated reader")){
+						String arReadingLevel = field.getSubfield('b').getData();
+						return arReadingLevel;
+					}
 				}
 			}
-		}
 
-		return result;
+			return result;
+		} catch (Exception e) {
+			logger.error("Error mapping AR interest level");
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -2746,7 +2767,7 @@ public class MarcRecordDetails {
 			while (iter.hasNext()) {
 				String curLocationCode = iter.next();
 				try {
-					if (!curLocationCode.matches("locationsToSuppress")) {
+					if (!curLocationCode.matches(locationsToSuppress)) {
 						suppressRecord = false;
 						break;
 					}
@@ -2766,6 +2787,7 @@ public class MarcRecordDetails {
 				while (iter2.hasNext()) {
 					String curCode = iter2.next();
 					if (curCode.matches(manualSuppressionValue)) {
+						logger.debug("Suppressing due to manual suppression field " + curCode + " matched " + manualSuppressionValue);
 						suppressRecord = true;
 						break;
 					}
@@ -2958,9 +2980,24 @@ public class MarcRecordDetails {
 	
 	public String toString(){
 		String rawRecord = getRawRecord();
+		/*for (int i = 128; i <= 255; i++ ){
+			rawRecord = rawRecord.replaceAll("\\x" + Integer.toHexString(i), "#" + i + ";");
+		}
+		for (int i = 1; i <= 31; i++ ){
+			rawRecord = rawRecord.replaceAll("\\x" + Integer.toHexString(i), "#" + i + ";");
+		}*/
+		
+
 		rawRecord = rawRecord.replaceAll("\\x1F", "#31;");
 		rawRecord = rawRecord.replaceAll("\\x1E", "#30;");
 		rawRecord = rawRecord.replaceAll("\\x1D", "#29;");
+		rawRecord = rawRecord.replaceAll("\\xA3", "#163;");
+		rawRecord = rawRecord.replaceAll("\\xA9", "#169;");
+		rawRecord = rawRecord.replaceAll("\\xAE", "#174;");
+		rawRecord = rawRecord.replaceAll("\\xE6", "#230;");
+		rawRecord = rawRecord.replaceAll("\\xE7", "#231;");
+		rawRecord = rawRecord.replaceAll("\\xE8", "#232;");
+		rawRecord = rawRecord.replaceAll("\\xE9", "#233;");
 		return rawRecord;
 	}
 }
