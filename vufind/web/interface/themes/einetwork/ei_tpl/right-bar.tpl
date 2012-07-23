@@ -5,7 +5,7 @@
             <span id="cart-descrpiion">&nbsp;your book cart is empty &nbsp;</span>
         </div>
         <div id="blank">&nbsp;</div>
-        <div id="view-cart-button">
+        <div id="view_cart_button" onclick="getViewCart()">
             View Cart
         </div>
     </div>
@@ -25,10 +25,10 @@
         </div>
     *}
         <div id="wish-lists">
-            <a href="/MyResearch/Favorites">Wish Lists</a>
+            <a href="/List/Results">Wish Lists</a>
         </div>
         <div id="history">
-            <a href="/Search/History">History</a>
+            <a href="/Search/History">Search History</a>
         </div>
     {*    
         <div id="recommendations">

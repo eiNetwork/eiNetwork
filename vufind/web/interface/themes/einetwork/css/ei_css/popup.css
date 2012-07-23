@@ -33,6 +33,7 @@ background-repeat: no-repeat;
 background-position: center center;
 }
 
+/*
 .button{
 position: relative;	
 border-radius: 8px;
@@ -56,7 +57,7 @@ font-size: 120%;
 .button.basic:hover{
 background-color: #F2F2F2;
 }
-
+*/
 .button.dark{
 padding: 6px 18px 6px 18px;	
 background-color: #777777;

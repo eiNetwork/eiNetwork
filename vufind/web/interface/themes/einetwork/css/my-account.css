@@ -9,57 +9,7 @@
 	margin: 0px 0px 0px 10px;
 }
 
-#loginFormWrapper{
-	padding: 10px 30px;
-	display: inline-block;
-	vertical-align: top;
-	zoom: 1;
-	*display: inline;
-}
-#needACardWrapper{
-	width: 42%;
-	padding: 10px 30px;
-	display: inline-block;
-	vertical-align: top;
-	zoom: 1;
-	*display: inline;
-}
-#popupbox #needACardWrapper, #popupbox #loginFormWrapper{
-  width: 40%;
-}
-#haveCardLabel, #needCardLabel, #forgottenCardLabel, #emailPinLabel{
-	text-align: center;
-	font-weight: bold;
-	color: #256292;
-}
 
-#loginSubmitButton{
-	text-align: center;
-}
-.loginLabel{
-	width: 275px;
-	display: inline-block;
-	text-align: left;
-	zoom: 1;
-	*display: inline;
-}
-.loginField{
-	display: inline-block;
-	zoom: 1;
-	*display: inline;
-	width: 150px;
-}
-
-.loginFormRow{
-	padding-top: 5px;
-	text-align:center;
-}
-#loginSubmitButtonRow{
-	text-align: right;
-}
-#loginButton{
-	margin: 3px 30px;
-}
 .holdSection{
 	border: 1px solid #949494;
     border-radius: 12px 12px 12px 12px;
@@ -97,15 +47,7 @@
   line-height: 22px; /* Increase line height so sorting controls fit on this line */
 }
 
-.overdueLabel{
-  font-weight: bold;
-  color: red;
-}
 
-.dueSoonLabel{
-  font-weight: bold;
-  color: #E58E29;
-}
 
 #resultsTableHeaderRow{
   font-weight: bold;
@@ -211,3 +153,75 @@
 .adminMenuHeader:first{
 	padding-top: 0px;
 }
+
+
+/***** BEGIN My Account--->Profile *****/
+#info{
+	display: inline-block;
+	margin-top:10px;
+	font-weight: bolder;
+	font-size: 15px;
+}
+
+.profile{
+	margin-top: 15px;
+	margin-bottom: 25px;
+}
+
+.profile_row{
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.profile_row table td{
+	padding: 5px;
+	width:200px;
+}
+/***** END My Account--->Profile *****/
+
+
+
+/***** BEGIN My Account--->Fine*****/
+.account_ballance{
+	text-align: center;
+}
+
+.account_ballance  .button{
+	padding-left: 15px;
+	padding-right: 5px;
+	width:80px;
+
+}
+
+.account_ballance div{
+	margin: 5px 5px 5px;
+	padding: 5px 5px 5px;
+}
+
+.pay_ballance .button{
+	background-color: rgb(255,230,109);
+}
+.pay_ballance .button:hover{
+	background-color: rgb(244,213,56);
+
+}
+/***** END My Account--->Fine *****/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

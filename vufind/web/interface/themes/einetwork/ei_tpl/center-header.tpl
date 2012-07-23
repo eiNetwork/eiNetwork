@@ -1,3 +1,19 @@
+{literal}
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		$("#GoButton").hide();
+		
+		$("#lookfor").focus(function(){
+			$("#GoButton").show();
+		}).blur(function(){
+			$("#GoButton").hide();
+		});
+		*/
+	});
+</script>
+{/literal}
+
 <div class="center-header-top">&nbsp;</div>
 
 <div class="center-header-middle">
@@ -20,11 +36,13 @@
 	  </select>
     </span>
     <span id="for-label">for</span>
-    <span>
-      <input id="lookfor" type="text" name="lookfor" value="{$lookfor|escape:"html"}"  />
-    </span>
+    <div>
+      <input id="lookfor" class="text" type="text" name="lookfor" value="{$lookfor|escape:"html"}"  />
+      <input id="GoButton" class="button" type="submit" value=""/>
+    </div>
 
-      {* Do we have any checkbox filters? 
+      {*
+      Do we have any checkbox filters? 
       {assign var="hasCheckboxFilters" value="0"}
       {if isset($checkboxFilters) && count($checkboxFilters) > 0}
         {foreach from=$checkboxFilters item=current}

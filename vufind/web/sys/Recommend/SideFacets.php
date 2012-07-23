@@ -148,7 +148,7 @@ class SideFacets implements RecommendationInterface
 			}
 			$interface->assign('ratingLabels', $ratingLabels);
 		}
-		asort($sideFacets);
+		//asort($sideFacets);
 		$interface->assign('sideFacetSet', $sideFacets);
 	}
 

@@ -1,54 +1,53 @@
 <div id = "holdingsSummary" class="holdingsSummary {$holdingsSummary.class}">
-	{if $holdingsSummary.status == 'Available At'}
-		<div class="{$holdingsSummary.class}">
-			{if $holdingsSummary.numCopies == 0}
-				No copies found
-			{else}
-				{* x of y copy(ies) is/are at location(s) and z other locations *}
-				<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>
-				{if (strlen($holdingsSummary.availableAt) > 0)}
-						Available now{if $holdingsSummary.inLibraryUseOnly} for in library use{/if} at <br /><span class='availableAtList'>{$holdingsSummary.availableAt}{if ($holdingsSummary.numAvailableOther) > 0},<br />and {$holdingsSummary.numAvailableOther} other location{if ($holdingsSummary.numAvailableOther) > 1}s{/if}.{/if}</span>
-				{else}
-						Available now{if $holdingsSummary.inLibraryUseOnly} for in library use{/if}.
-				{/if}
-				</a>
-			{/if}
-			
-		</div>
-	{elseif ($holdingsSummary.status) == 'Marmot'}
-		<div class="{$holdingsSummary.class}" >
-			<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{translate text='Available now at'} {$holdingsSummary.numAvailableOther+$holdingsSummary.availableAt} Marmot {if $holdingsSummary.numAvailableOther == 1}Library{else}Libraries{/if}</a>
-		</div>
-	{else}
-		<div class="{$holdingsSummary.class}">
-			<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{translate text=$holdingsSummary.status} {if strlen($holdingsSummary.unavailableStatus) > 0 && $holdingsSummary.class == 'checkedOut'}({translate text=$holdingsSummary.unavailableStatus}){/if}</a>
-		</div>
-	{/if}
-	{if $holdingsSummary.callnumber}
+
+	{if $holdingsSummary.class == 'here'}
+		{if $holdingsSummary.callnumber}
 			<div class='callNumber'>
-					<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
+				It's here <a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
 			</div>
+		{elseif $holdingsSummary.isDownloadable}
+			<div><span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
+			<a href='{$holdingsSummary.downloadLink}'	target='_blank'>Available Online</a></div>
+		{/if}
+	{elseif $holdingsSummary.inLibraryUseOnly}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Noncirculating.png"/ alt="Noncirculating"></span>
+			Available for in library use only
+		</div>
+	{elseif $holdingsSummary.class == 'nearby'}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
+			Available at your preferred libraries
+		</div>
+	{elseif $holdingsSummary.class == 'available'}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
+			Available at other libraries
+		</div>
+	{elseif $holdingsSummary.class == 'unavailable'}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="Available"></span>
+			No copies available
+		</div>
+	{elseif $holdingsSummary.class == 'reserve' or $holdingsSummary.numCopies == 0}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="Available"></span>
+			No copies available
+		</div>
+	{else $holdingsSummary.class == 'checkedOut'}
+		<div>
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="Available"></span>
+			All copies checked out
+		</div>
 	{/if}
-	{if false && $holdingsSummary.showPlaceHold}
-			<div class='requestThisLink'>
-					<a href="{$url}/Record/{$holdingsSummary.recordId|escape:"url"}/Hold" class="holdRequest" style="display:inline-block;font-size:11pt;">{translate text="Request This Title"}</a><br />
-			</div>
-	{/if}
-	{if $holdingsSummary.isDownloadable}
-			<div><a href='{$holdingsSummary.downloadLink}'	target='_blank'>{$holdingsSummary.downloadText}</a></div>
-	{else}
-			<div class="holdableCopiesSummary">
-				{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}, 
-				{$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} on shelf and 
-				{$holdingsSummary.holdableCopies} {if $holdingsSummary.holdableCopies == 1}is{else}are{/if} available by request.
-				{if $holdingsSummary.numCopiesOnOrder > 0}
-					{$holdingsSummary.numCopiesOnOrder} copies are on order.
-				{/if}
-				{if $holdingsSummary.holdQueueLength >= 0}
-					<br/>{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people are{/if} on the wait list.
-				{/if}
-			</div>
-	{/if}
+	<div class="holdableCopiesSummary">
+		{if $holdingsSummary.holdQueueLength > 0}
+			{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for
+			{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}. 
+		{/if}
+	</div>
+			
 	{if $showOtherEditionsPopup}
 		<div class="otherEditions">
 			<a href="#" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', false)">Other Formats and Languages</a>

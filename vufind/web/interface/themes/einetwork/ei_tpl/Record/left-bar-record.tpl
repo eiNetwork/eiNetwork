@@ -1,4 +1,17 @@
 	<div id="left-bar">
+			{if $wishLists}
+			<div class="sidegroup" id="wishLists">
+				 <dl class="narrowList navmenu narrowbegin">
+					<dt>{translate text='View Wish List'}</dt>
+						<dd>
+							<select id="wishListID" name='wishListID'>
+							{foreach from=$wishLists item = list name = loop}
+								<option value=$list['id']>$list['title']</option>
+							{/foreach}
+						</dd>
+				 </dl>
+			</div>
+		{/if}
             	{if $series}
 		<div class="sidegroup" id="series">
                     <dl class="narrowList navmenu narrowbegin">

@@ -2,6 +2,27 @@
 {*original left-bar look*}
 {if $recordCount > 0 || $filterList || ($sideFacetSet && $recordCount > 0)}
 <div class="sidegroup">
+	{if $wishList}
+			<div class="filters" id="wishLists">
+				 <dl class="narrowList navmenu narrowbegin">
+					<dt>{translate text='View Wish List'}</dt>
+						<dd>
+							<form id='goToList' action='/List/Results' method='GET' name='goToList'> 
+							<select id="goToListID" name='goToListID' onchange="this.form.submit()">
+								{foreach from=$wishList item = list key=key name = loop}
+									<option value="{$list.id}" {if $currentListID && $currentListID == $list.id} selected="selected"{/if}>{$list.title}									</option>
+								{/foreach}
+							</select>
+							{foreach from=$wishList item = list key=key name = loop}
+								{if $list.title == 'Book Cart'}
+									<input type="hidden" value='{$list.id}' name='bookCartID' id='bookCartID'/>
+								{/if}
+							{/foreach}
+							</form>
+						</dd>
+				 </dl>
+			</div>
+	{/if}
 	{*<h4>{translate text='Narrow Search11'}</h4>*}
 	{if isset($checkboxFilters) && count($checkboxFilters) > 0}
 	<p>

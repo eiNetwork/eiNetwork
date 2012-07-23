@@ -32,7 +32,7 @@
       {css filename="/ei_css/center-header.css"}
       {css filename="/ei_css/right-header.css"}
       {css filename="/ei_css/right-bar.css"}
-      {css filename="/ei_css/popup.css"}
+      {*css filename="/ei_css/popup.css"*}
       {css filename="/ei_css/footer.css"}
 	  {css filename="/ei_css/login.css"}
       {css filename="my-account.css"}

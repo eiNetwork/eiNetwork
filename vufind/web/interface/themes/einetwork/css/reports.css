@@ -69,7 +69,7 @@ width: 35px;
 label
 {
 	text-align: left;
-	font-weight: bold;
+	/*font-weight: bold;*/
 	min-width: 80px;
 	display: inline-block;
 	zoom: 1;

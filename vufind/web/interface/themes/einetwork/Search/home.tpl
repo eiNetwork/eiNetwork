@@ -8,7 +8,6 @@
 		}
 		$(this).focus(function() {
 		    if ($(this).val() == $(this).attr('title')) {
-			//$(this).val('').removeClass('hint');
 			$(this).val('');
 		    }
 		    if($(this).attr('id')=='pin'){
@@ -18,7 +17,6 @@
 		});
 		$(this).blur( function() {
 		    if ($(this).val() == '') {
-			//$(this).val($(this).attr('title')).addClass('hint');
 			$(this).val($(this).attr('title'));
 			$('#pin').get(0).type='text';
 		    }
@@ -36,13 +34,13 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="loginFormInput" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
+					<input id="card" class="text" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
 				</div>
 				<div id="password">
-					<input id="pin" class="loginFormInput" type="text" name="password" title="4 digits PIN number" size="15"/>
+					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" size="15"/>
 				</div>
-				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">
-					Login
+				<div>
+					<input class="button" type="submit" name="submit" value="Login" alt='{translate text="Login"}' />
 				</div>
 			</form>
 		</div>
@@ -53,11 +51,10 @@
 				view your past searches and get personalized recommendations for items you might like.
 				
 			</div>
-			<div id="registerButton"
-			     onmouseover="mouseOver(event,'rgb(242,242,242)')"
-			     onmouseout="mouseOut(event,'rgb(255,255,255)')"
-			     onclick="location.href='http://vufindplus.einetwork.net/MyResearch/GetCard'; style='cursor: pointer;'">
-				Register
+			<div>
+				<a href="http://vufindplus.einetwork.net/MyResearch/GetCard">
+					<input class="button" type="submit" name="submit" value="Register"/>
+				</a>
 			</div>
 		</div>
 	</div>

@@ -17,6 +17,18 @@
     height: 55px;
 }
 
+.center-header-middle div{
+	width:420px;
+	display: table-cell;
+}
+
+.center-header-middle span{
+	display: table-cell;
+	padding-left:3px;
+	padding-right:3px;
+}
+
+
 .center-header-buttom{
     height: 1px;
     background-color: rgb(255,255,255);
@@ -40,6 +52,7 @@
 	color: rgb(255,255,255);
 	margin-right: 8px;
 	margin-left: 5px;
+	display: table-cell;
 }
 
 #search-type {
@@ -47,18 +60,35 @@
 }
 #search-select{
 	height: 30px;
-	width: auto;
+	width: 150px;
 	font-size: 15px;
 	padding-top: 2px;
 }
+
 #lookfor{
-	width: 365px;
-	height: 20px;
+	width: 361px;
+	height: 28px;
 	font-size: 15px;
-	padding-top: 2px;
-	background: white url(../../images/Art/ActionIcon/go.png) scroll 10px 10px;
+	padding-top: 1px;
+	/*background:url(/interface/themes/einetwork/images/Art/ActionIcons/GoButton.png) no-repeat scroll right center transparent;*/
 	background-position: right;
-	padding-right: 17px;
+	padding-right: 40px;
 	border: none;
 	
 }
+
+#GoButton{
+	background: url(/interface/themes/einetwork/images/Art/ActionIcons/GoButton.png);
+	width:36px;
+	height: 28px;
+	border: none;
+	margin-bottom: 2px;
+	margin-left: -40px;
+	padding-left: -3px;
+	margin-top:1px;
+	padding: 0px;
+	float: right;
+	box-shadow: 0px 0px 0.5px #333;
+	/*display: none;*/
+}
+
