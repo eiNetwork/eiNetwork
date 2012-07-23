@@ -1,12 +1,13 @@
 <script type="text/javascript" src="{$url}/services/MyResearch/ajax.js"></script>
 
 <div id="page-content" class="content">
-  <div id="sidebar">
+  <div id="left-bar">
+     &nbsp;
+  </div>
+  <div id="right-bar">
     {include file="MyResearch/menu.tpl"}
-    
     {include file="Admin/menu.tpl"}
   </div>
-  
   <div id="main-content">
       
     {* Internal Grid *}
@@ -33,11 +34,11 @@
       {/literal}
       </script>
 
-	    {assign var="scrollerName" value="RecentlyViewed"}
-			{assign var="wrapperId" value="recentlyViewed"}
-			{assign var="scrollerVariable" value="recentlyViewedScroller"}
-			{assign var="scrollerTitle" value="Recently Browsed"}
-			{include file=titleScroller.tpl}
+      {assign var="scrollerName" value="RecentlyViewed"}
+      {assign var="wrapperId" value="recentlyViewed"}
+      {assign var="scrollerVariable" value="recentlyViewedScroller"}
+      {assign var="scrollerTitle" value="Recently Browsed"}
+      {include file=titleScroller.tpl}
 		
       <script type="text/javascript">
       {literal}
@@ -55,7 +56,6 @@
       {if $listList}
       <div>
          {foreach from=$listList item=list}
-                
 		    <div id="list{$list->id}" class="titleScrollerWrapper">
 				<div id="list{$list->id}Header" class="titleScrollerHeader">
 					<span class="listTitle resultInformationLabel"><a href="{$url}/MyResearch/MyList/{$list->id}">{$list->title|escape:"html"}</a></span>
@@ -124,3 +124,5 @@
     {* End of first Body *}
     
   </div>
+  
+  

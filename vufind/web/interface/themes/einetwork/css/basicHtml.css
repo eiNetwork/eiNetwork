@@ -107,6 +107,7 @@ li{
 
 .text:focus{
     box-shadow: 0px 1px 2px;
+    color: rgb(0,0,0);
 }
 /*****END input text style*****/
 
@@ -121,6 +122,7 @@ select{
    height:30px;  
    border-radius: 4px;
    box-shadow: 0px 1px 3px 0px rbga(0,0,0,0.32);
+
 }
 
 select:focus{

@@ -1,5 +1,8 @@
 .text{
-	color:rgb(170,170,170);
+	color:rgb(0,0,0);
+}
+.text:focus{
+	color: rgb(0,0,0);
 }
 
 #loginHome{

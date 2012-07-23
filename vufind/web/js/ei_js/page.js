@@ -209,4 +209,33 @@ function deleteItemInList(itemId){
 		}
 	});
 }
+$("#cart-descrpiion").ready(function(){
+        getBookCartItemCount();
+    })
+function getBookCartItemCount(){
+     $.ajax({
+		type: 'post',
+                url: "/List/AJAX",
+                dataType: "json",
+                data: 'method=getBookCartItemCount',
+		success: function(data) {
+                    if(data['count'] == 0){
+                        $("#cart-descrpiion").html("&nbsp;&nbsp; your book cart is empty ");
+                    }else if(data['count'] == 1){
+                        $("#cart-descrpiion").html("&nbsp;&nbsp; 1 item in your book cart ");
+                    }
+                    else if(data['count']!=null && data['count'] !=0){
+                        $("#cart-descrpiion").html('&nbsp;&nbsp;'+data['count']+" items in your book cart");
+                    }
+                    if(data['unavailable'] == true){
+                        $("#cart-descrpiion").html("login to see your book cart");
+                    }
+                    $("#descrpiion").html("bb");
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
 

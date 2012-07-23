@@ -182,26 +182,26 @@
 
 
 /***** BEGIN My Account--->Fine*****/
-.account_ballance{
+.account_balance{
 	text-align: center;
 }
 
-.account_ballance  .button{
+.account_balance  .button{
 	padding-left: 15px;
 	padding-right: 5px;
 	width:80px;
 
 }
 
-.account_ballance div{
+.account_balance div{
 	margin: 5px 5px 5px;
 	padding: 5px 5px 5px;
 }
 
-.pay_ballance .button{
+.pay_balance .button{
 	background-color: rgb(255,230,109);
 }
-.pay_ballance .button:hover{
+.pay_balance .button:hover{
 	background-color: rgb(244,213,56);
 
 }

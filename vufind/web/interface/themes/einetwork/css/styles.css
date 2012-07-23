@@ -53,8 +53,7 @@ html,body {
 }
 /*szheng: modified*/
 #right-bar {
-	/*width:254px;*/
-	width: 230px;
+	width: 254px;
 	display: inline-block;
 	vertical-align: top;
 	*display: inline;

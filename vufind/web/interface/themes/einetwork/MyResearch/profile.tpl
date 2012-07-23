@@ -2,57 +2,49 @@
 {literal}
 <script type="text/javascript">
 	$(document).ready(function() {
-		//$("#GoButton").hide();
 		
-		$("#phone").mouseout(function{
-			var pattern=/^[2-9]\d{9}$/;
+		$('#phone').blur(function(){
+			var phone=$(this).val(),
+			    phoneReg=/^[2-9]\d{9}$/;
+			if(!phoneReg.test(phone)){
+				$('#phoneError').text('*please enter a valid phone number');
+				phoneValid=false;
+				return false;
+			}else{
+				$('#phoneError').html('&nbsp;');
+				return true;
+			}
+		});
+
+		$('#email').blur(function(){
+			var email=$('input[name="email"]').val(),
+		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+			if(!emailReg.test(email)||email==''){
+				$('#emailError').text("*please enter a vaild phone number");
+				emailValid=false;
+				return false;
+			}else{
+				$('#emailError').html('&nbsp;');
+			}
 		});
 		
-		$("#email").mouseout(function(){
-			var pattern=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/;
-		});
-		
-		/*
-		$("#lookfor").focus(function(){
-			$("#GoButton").css("display","block");
-		}).blur(function(){
-			$("#GoButton").();
-		});
-		*/
 	});
-	
-	
-	//validation for phone number
-	function isValidPhone(phone){
-		var pattern=/^[2-9]\d{9}$/;
-		if(!pattern.test(phone)){
-			return false;
-		}
-		phone.style.color="rgb(255,0,0)";
-	}
-	
-	//validation for email address
-	function isValidEmail(email){
-		var pattern=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-		return pattern.test(email);
-	}
-	
-	
+
 </script>
 {/literal}
 	
 	<div id="left-bar">
-		<div class="account_ballance">
-			<div>Account Ballance</div>
+		<div class="account_balance">
+			<div>Account Balance</div>
 			<div class="fine_details">
 				<span>You have 2 overdue items accumulating fines</span>
 				<br/>
 				<input class="button" value="View Details"/>
 			</div>
-			<div class="pay_ballance">
+			<div class="pay_balance">
 				<span>$2.25 due in library fines</span>
 				<br/>
-				<a href="http://catalog.einetwork.net/patroninfo"><input class="button" value="Pay Ballance"/></a>
+				<a href="http://catalog.einetwork.net/patroninfo"><input class="button" value="Pay Balance"/></a>
 			</div>
 		</div>
 	</div>
@@ -67,7 +59,7 @@
 		<div id="info">Information</div>
 			{if $canUpdate}
 				{if $edit == true}
-				<input type='submit' value='Update Profile' name='update' class='button'/>
+				<input  type='submit' value='Update Profile' name='update'  class='button'/>
 				{else}
 				<input type='submit' value='Edit Profile' name='edit' class='button'/>
 				{/if}
@@ -127,14 +119,14 @@
 				<tr>
 					<td>
 						{if $edit == true}
-						<input id="phone" name='phone' class="text" value='{$profile.phone|escape}' size='20' maxlength='10' onmouseout="isValidPhone(this)" />
+						<input id="phone" name='phone' class="text" value='{$profile.phone|escape}' size='20' maxlength='10' />
 						<span id="phoneError" class="error">&nbsp;</span>
 						{else}{$profile.phone|escape}
 						{/if}
 					</td>
 					<td>
 						{if $edit == true}
-						<input id="email" name='email' class="text" value='{$profile.email|escape}' size='20' maxlength='30' onmouseout="isValidEmail(this)" />
+						<input id="email" name='email' class="text" value='{$profile.email|escape}' size='20' maxlength='30' />
 						<span id="emailError" class="error">&nbsp;</span>
 						{else}{$profile.email|escape}
 						{/if}

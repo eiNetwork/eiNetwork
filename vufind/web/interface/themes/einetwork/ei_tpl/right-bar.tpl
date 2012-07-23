@@ -9,37 +9,16 @@
             View Cart
         </div>
     </div>
-    
     <div class="separator"><hr/></div>
     
     
     <div class="account-links">
-    {*
-        <div class="notification">
-            <div id="link-of-notification">
-                <a href="http://www.google.com">Notifications</a>
-            </div>
-                <div id="number-of-notification">
-                1
-            </div>
-        </div>
-    *}
         <div id="wish-lists">
             <a href="/List/Results">Wish Lists</a>
         </div>
         <div id="history">
             <a href="/Search/History">Search History</a>
         </div>
-    {*    
-        <div id="recommendations">
-            <div id="link-of-recommendation">
-                <a href="http://www.google.com">Recommendations</a>
-            </div>
-            <div id="number-of-recommedation">
-                21
-            </div>
-        </div>
-    *}
         <div id="my-item">
             <a href="/MyResearch/CheckedOut">My Items</a>
         </div>

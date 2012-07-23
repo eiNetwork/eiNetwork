@@ -7,9 +7,8 @@
 <script type="text/javascript" src="{$path}/services/MyResearch/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
-		{include file="Admin/menu.tpl"}
+	<div id="left-bar">
+		 &nbsp;
 	</div>
 	
 	<div id="main-content">
@@ -347,5 +346,9 @@
 		{else} {* Check to see if user is logged in *}
 			You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
 		{/if}
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
+		{include file="Admin/menu.tpl"}
 	</div>
 </div>

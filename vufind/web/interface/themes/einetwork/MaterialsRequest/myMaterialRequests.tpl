@@ -1,11 +1,11 @@
 <script type="text/javascript" src="{$path}/services/MaterialsRequest/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
-	<div id="sidebar-wrapper"><div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
-		
-		{include file="Admin/menu.tpl"}
-	</div></div>
+	<div id="sidebar-wrapper">
+		<div id="left-bar">
+			 &nbsp;
+		</div>
+	</div>
 	
 	<div id="main-content">
 		<h2>My Materials Requests</h2>
@@ -60,6 +60,10 @@
 			{/if}
 			<div id="createNewMaterialsRequest" class="button"><a href="{$path}/MaterialsRequest/NewRequest">Submit a New Materials Request</a></div>
 		{/if}
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
+		{include file="Admin/menu.tpl"}
 	</div>
 </div>
 <script type="text/javascript">

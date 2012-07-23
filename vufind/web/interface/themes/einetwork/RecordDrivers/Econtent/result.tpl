@@ -1,8 +1,8 @@
 <div id="record{$summId|escape}" class="resultsList">
-	<div class="selectTitle">
+<!--	<div class="selectTitle">
 		<input type="checkbox" name="selected[econtentRecord{$summId|escape:"url"}]" id="selectedEcontentRecord{$summId|escape:"url"}" {if $enableBookCart}onclick="toggleInBag('econtentRecord{$summId|escape:"url"}', '{$summTitle|regex_replace:"/(\/|:'\")$/":""|escape:"javascript"}', this);"{/if} />&nbsp;
 	</div>
-	
+-->	
 	<div class="imageColumn"> 
 		{if !isset($user->disableCoverArt) ||$user->disableCoverArt != 1}	
 		<div id='descriptionPlaceholder{$summId|escape}' style='display:none'></div>
@@ -31,6 +31,7 @@
 	</div>
 
 <div class="resultDetails">
+	<div class="result_middle">
 	<div class="resultItemLine1">
 	<a href="{$path}/EcontentRecord/{$summId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">{if !$summTitle|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$summTitle|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}{/if}</a>
 	{if $summTitleStatement}
@@ -51,15 +52,16 @@
 				<a href="{$path}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
 			{/if}
 		{/if}
- 
+<!-- 
 		{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if}
+-->
 	</div>
-	
+<!--	
 	<div class="resultItemLine3">
 		{if !empty($summSnippetCaption)}<b>{translate text=$summSnippetCaption}:</b>{/if}
 		{if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
 	</div>
-
+-->
 	{if is_array($summFormats)}
 		{strip}
 		{foreach from=$summFormats item=format name=formatLoop}
@@ -75,9 +77,29 @@
 			<span class="unknown" style="font-size: 8pt;">{translate text='Loading'}...</span>
 		</div>
 	</div>
+	</div>
+	
+	<div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
+	<div class="view_details" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+		<span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
+		<span class="resultAction_span"><a href="{$path}/EcontentRecord/{$summId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="view_details_a">view details</a></span>
+	</div>
+	<div class="add_to_cart" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="sentToBag('{$summId|escape}', '{$summTitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>
+		<span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
+		<span class="resultAction_span" >add to cart</span>
+	</div>
+	<div class="more_like_this" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+		<span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
+		<span class="resultAction_span" name="more_like_this" >more like this</span>
+	</div>
+	<div class="bad_result" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
+		<span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
+		<span class="resultAction_span" name="bad_reuslt_this" >bad result</span>
+	</div>
+</div>
 </div>
 
-<div id ="searchStars{$summId|escape}" class="resultActions">
+<!--<div id ="searchStars{$summId|escape}" class="resultActions">
 	<div class="rateEContent{$summId|escape} stat">
 		<div class="statVal">
 			<span class="ui-rater">
@@ -108,7 +130,7 @@
 	</script>
 		
 </div>
-
+-->
 
 <script type="text/javascript">
 	addRatingId('{$summId|escape:"javascript"}', 'eContent');

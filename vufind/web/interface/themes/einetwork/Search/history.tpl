@@ -1,8 +1,6 @@
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
-    {include file="Admin/menu.tpl"}
+  <div id="left-bar">
+    &nbsp;
   </div>
   
   <div id="main-content">
@@ -73,4 +71,8 @@
       {/if}
       </div>
     </div>
+  <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
+    {include file="Admin/menu.tpl"}
+  </div>
 </div>

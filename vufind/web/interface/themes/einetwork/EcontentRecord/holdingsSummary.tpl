@@ -1,5 +1,10 @@
 <div id = "holdingsSummary" class="holdingsSummary">
 	<div class="availability">
+		{if $holdingsSummary.status == 'Available from OverDrive'}
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
+		{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
+			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
+		{/if}
 		{$holdingsSummary.status}
 	</div>
 
@@ -9,7 +14,7 @@
 			<br/>{$holdingsSummary.wishListSize} {if $holdingsSummary.wishListSize == 1}person has{else}people have{/if} added the record to their wish list.
 		{else}
 			{if strcasecmp($holdingsSummary.source, 'OverDrive') == 0}
-				Available for use from OverDrive.
+				{*Available for use from OverDrive.*}
 			{elseif $holdingsSummary.source == 'Freegal'}
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
@@ -25,7 +30,7 @@
 					{$holdingsSummary.onOrderCopies} {if $holdingsSummary.onOrderCopies == 1}is{else}are{/if} on order. 
 				{/if}
 			{/if}
-			{if $holdingsSummary.numHolds >= 0}
+			{if $holdingsSummary.numHolds > 0}
 				<br/>{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people are{/if} on the wait list.
 			{/if}
 		{/if} 

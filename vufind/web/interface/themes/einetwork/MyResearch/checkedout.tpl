@@ -6,12 +6,10 @@
 </script>
 {/if}
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-      
-    {include file="Admin/menu.tpl"}
+
+  <div id="left-bar">
+     &nbsp;
   </div>
-  
   <div id="main-content">
     {if $user->cat_username}
 
@@ -263,4 +261,10 @@
     You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
   {/if}
   </div>
+    <div id="right-bar">
+	{include file="MyResearch/menu.tpl"}
+	{include file="Admin/menu.tpl"}
+    </div>
+  
+  
 </div>

@@ -30,7 +30,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_REQUEST['method'];
-		if (in_array($method, array('GetAutoSuggestList', 'GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList'))){
+		if (in_array($method, array('GetAutoSuggestList', 'GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList','getBookCartItemCount'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -922,6 +922,41 @@ class AJAX extends Action {
 			$list->removeResource($resource);
 		}
 		echo 'success';
+	}
+	function getBookCartItemCount()
+	{
+		global $user;
+		if(isset($user)){
+			$raw_wishLists= $user->getLists();
+			$bookCartId;
+			//echo count($raw_wishLists);
+			foreach ($raw_wishLists as $hello){
+				$tempId;
+				$isBookCart = false;
+				foreach($hello as $key =>$hellohello){
+					if($key == 'id'){
+						$tempId = $hellohello;
+					}
+					if($key == 'title' && $hellohello == "Book Cart"){
+						$isBookCart = true;
+					}				
+				}
+				if($isBookCart){
+					$bookCartId = $tempId;
+				}
+			}
+			$bookCart = User_list::staticGet($bookCartId);
+			$bookCartItems = $bookCart->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
+			//echo count($bookCartItems);
+			$return;
+			$return['count'] = count($bookCartItems);
+			echo json_encode($return);
+		}else{
+			$return;
+			$return['unavailable'] = true;
+			echo json_encode($return);
+		}
+		
 	}
 }
 
