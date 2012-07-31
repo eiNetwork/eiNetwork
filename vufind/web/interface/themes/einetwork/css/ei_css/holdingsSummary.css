@@ -1,0 +1,36 @@
+@CHARSET "ISO-8859-1";
+
+.copiesSummary,.copiesSummary a {
+	font-size: 8pt;
+}
+
+.holdableCopiesSummary {
+	font-size: 8pt;
+}
+
+.holdingsSummary {
+	clear: right;
+	display: block;
+	text-align: left;
+	vertical-align:bottom;
+}
+
+#holdingsSummary a:hover,#holdingsSummary a:hover .availableAtList {
+	color: #003399;
+}
+
+.availability{
+	font-weight: bold;
+	font-size: 12px;
+}
+.holdingsSummary .availableAtList a{
+	color: #011753;
+}
+
+.holdingsSummary .callNumber {
+	font-weight: bold;
+	font-size: 12px;
+}
+.holdingsSummary .callNumber a{
+	color: #C1200A;
+}

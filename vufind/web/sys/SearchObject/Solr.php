@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+
+ //original one
+ 
+ 
 require_once 'sys/Solr.php';
 require_once 'sys/SearchObject/Base.php';
 require_once 'RecordDrivers/Factory.php';
@@ -583,16 +587,14 @@ class SearchObject_Solr extends SearchObject_Base
 					// We need to replace the whole token
 					$targetTerm = $token;
 					// Go and replace this token
-					$returnArray = $this->doSpellingReplace($term,
-					$targetTerm, $inToken, $details, $returnArray);
+					$returnArray = $this->doSpellingReplace($term, $targetTerm, $inToken, $details, $returnArray);
 				}
 			}
 			// If no tokens we found, just look
 			//    for the suggestion 'as is'
 			if ($targetTerm == "") {
 				$targetTerm = $term;
-				$returnArray = $this->doSpellingReplace($term,
-				$targetTerm, $inToken, $details, $returnArray);
+				$returnArray = $this->doSpellingReplace($term, $targetTerm, $inToken, $details, $returnArray);
 			}
 		}
 		return $returnArray;

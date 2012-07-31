@@ -1,4 +1,4 @@
-<div id="search">
+<div id="search"><div id="search-inner">
 {if $searchType == 'advanced'}
   <a href="{$path}/Search/Advanced?edit={$searchId}">{translate text="Edit this Advanced Search"}</a> |
   <a href="{$path}/Search/Advanced">{translate text="Start a new Advanced Search"}</a> |
@@ -6,20 +6,28 @@
   <br />{translate text="Your search terms"} : "<b>{$lookfor|escape:"html"}</b>"
 {else}
   <form method="get" action="{$path}/Union/Search" id="searchForm" class="search" onsubmit='startSearch();'>
-    <label id="type-label" for="basicType">{translate text='Search'}</label>
-    <select name="basicType" id="basicType">
-    {foreach from=$basicSearchTypes item=searchDesc key=searchVal}
-      <option value="{$searchVal}"{if $searchIndex == $searchVal} selected="selected"{/if}>{translate text=$searchDesc}</option>
-    {/foreach}
+    <input type="hidden" name="basicType" value="Keyword"/>
+    <label id="type-label" for="searchPreFilter">{translate text='Search'}</label>
+    <select name="filter[]" id="searchPreFilter">
+      <option value="format_category:*"{if $curFormatCategory == 'Everything'} selected="selected"{/if}>Everything</option>
+      <option value="format_category:Books"{if $curFormatCategory == 'Books'} selected="selected"{/if}>Books</option>
+      <option value="format_category:DVD"{if $curFormatCategory == 'DVD'} selected="selected"{/if}>Movies</option>
+      <option value="format_category:Music"{if $curFormatCategory == 'Music'} selected="selected"{/if}>Music</option>
     </select>
     <div id="search-input-wrapper">
-      <div id="search-input" class="cf">
+      <div id="search-input" class="clearfix">
       <input id="lookfor" type="text" name="lookfor" size="30" value="{$lookfor|escape:"html"}" />
       <input id="lookfor-submit" type="submit" name="submit" value="{translate text='Go'}" />
       </div>
-      <div>
+      <div id="shards">
+        <ul class="inline right"><li><a href="{$path}/Search/Advanced" class="small">{translate text="Advanced Search"}</a></li></ul>
+        {if isset($shards)}
+          {foreach from=$shards key=shard item=isSelected}
+            <input type="checkbox" {if $isSelected}checked="checked" {/if}name="shard[]" value='{$shard|escape}' id="shard-{$shard|replace:' ':''|escape}" /> <label for="shard-{$shard|replace:' ':''|escape}">{$shard|translate}</label>
+          {/foreach}
+        {/if}
         {if $filterList || $hasCheckboxFilters}
-        <div class="keepFilters">
+        <div>
           <input id="retainFiltersCheckbox" type="checkbox" onclick="filterAll(this);" /> <label for="retainFiltersCheckbox">{translate text="basic_search_keep_filters"}</label>
           <div style="display: none;">
             <ul class="inline left">
@@ -36,14 +44,6 @@
             </ul>
           </div>
         </div>
-        {/if}
-      </div>
-      <div id="shards">
-        <ul class="inline right"><li><a href="{$path}/Search/Advanced" class="small">{translate text="Advanced Search"}</a></li></ul>
-        {if isset($shards)}
-          {foreach from=$shards key=shard item=isSelected}
-            <input type="checkbox" {if $isSelected}checked="checked" {/if}name="shard[]" value='{$shard|escape}' id="shard-{$shard|replace:' ':''|escape}" /> <label for="shard-{$shard|replace:' ':''|escape}">{$shard|translate}</label>
-          {/foreach}
         {/if}
       </div>
     </div>
@@ -71,4 +71,4 @@
   </div>
   {/if}
 {/if}
-</div>
+</div></div>

@@ -1,5 +1,5 @@
 function getLightbox(module, action, id, lookfor, message, followupModule,
-		followupAction, followupId, left, width, top, height) {
+		     followupAction, followupId, left, width, top, height){
 	// Optional parameters
 	if (followupModule === undefined) {
 		followupModule = '';
@@ -164,7 +164,7 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	$('#lightbox').show();
 	$('#lightbox').css('height', documentHeight + 'px');
 	
-	$('#popupbox').html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
+	//$('#popupbox').html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
 	$('#popupbox').show();
 	$('#popupbox').css('top', '50%');
 	$('#popupbox').css('left', '50%');
@@ -182,10 +182,10 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 				collision: "flip"
 			});
 		}else{
-			if (!left) left = '100px';
-			if (!top) top = '100px';
-			if (!width) width = 'auto';
-			if (!height) height = 'auto';
+			if (!left) left = '40%';
+			if (!top) top = '35%';
+			if (!width) width = '20%';
+			if (!height) height = '30%';
 			
 			$('#popupbox').css('top', top);
 			$('#popupbox').css('left', left);
@@ -856,6 +856,9 @@ function performSaveRecord(id, source, formElem, strings, service, successCallba
 					if (value == "Done") {
 							successCallback();
 							hideLightbox();
+							if($("#listId").val()!=null&&$("#listId").val()!=""){
+								deleteItemInList(id);
+							}
 					} else {
 							getLightbox('Record', 'Save', id, null, strings.add);
 					}
@@ -950,4 +953,6 @@ function GetTags(id, elemId, strings) {
 function loadOtherEditionSummaries(id, isEcontent){
 	var url = path + "/Search/AJAX?method=getOtherEditions&id=" + id + "&isEContent=" + isEcontent;
 	ajaxLightbox(url);
+}function testLightBox(){
+	showElementInLightbox('test','<p>hello</p>');
 }

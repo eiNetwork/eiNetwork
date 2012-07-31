@@ -1,0 +1,227 @@
+.myAccountLink{
+	margin: 0 10px 0px 20px;
+	padding: 0.1em 0 0.1em 10px;
+	text-align: left;
+	text-indent: -10px;
+}
+
+.myAccountLink .myAccountLink{
+	margin: 0px 0px 0px 10px;
+}
+
+
+.holdSection{
+	border: 1px solid #949494;
+    border-radius: 12px 12px 12px 12px;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+}
+.holdSectionBody{
+	padding: 10px;
+}
+.holdSectionTitle{
+	border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+    color: white;
+    font-weight: bold;
+    margin-top: 0;
+    padding: 0.5em 0;
+    text-align: center;
+    background-color: #011751;
+}
+
+.myAccountLink.active{
+	color: #011751;
+	font-weight: bold;
+}
+.libraryHours{
+	text-align: center;
+	font-style: italic;
+}
+.myAccountTitle{
+	color: #011751;
+	font-weight: bold;
+	font-size: 14px;
+}
+.selectAllControls{
+  line-height: 22px; /* Increase line height so sorting controls fit on this line */
+}
+
+
+
+#resultsTableHeaderRow{
+  font-weight: bold;
+}
+.resultsCell{
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  vertical-align: top;
+}
+.resultsId{
+  width: 25px;
+}
+.resultsFilename{
+  width: 400px;
+}
+.resultsRecords{
+  width:200px;
+}
+#resultsTable{
+  margin-bottom: 20px;
+}
+.myAccountTitleDetails{
+  vertical-align: top;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}
+.myAccountCell{
+  vertical-align: top;
+}
+
+.myAccountTable{
+  border: 1px solid #949494;
+  border-radius: 6px;
+  border-collapse: collapse;
+  margin-top: 4px; 
+  margin-bottom: 4px;
+  width: 100%;
+}
+.myAccountTable td, .myAccountTable th{
+  border: 1px solid #949494;
+  padding: 2px 3px;
+}
+.myAccountTable th{
+  padding-right: 20px;
+}
+.myAccountTable thead{
+  border-bottom: 2px solid #949494;
+  text-align: center;
+  vertical-align: bottom;
+}
+.unsortedHeader{
+  background-image: url(/images/unsorted_icon.gif); 
+  cursor: pointer; 
+  font-weight: bold; 
+  background-repeat: no-repeat; 
+  background-position: center right; 
+  padding-right: 20px; 
+}
+.sortDescHeader{
+  background-image: url(/images/sort_desc_icon.gif);
+  background-color: #3399F;
+}
+.sortAscHeader{
+  background-image: url(/images/sort_asc_icon.gif);
+  background-color: #3399F;
+}
+
+#notice{
+  border: 1px solid #949494;;
+  border-radius: 5px;
+  margin: 5px 15px;
+  padding: 4px;
+  font-size: 11px;
+}
+.noticeTitle{
+  font-size: 13px;
+  font-weight: bold;
+}
+#pager{
+	margin: 5px;
+	font-size: 11px;
+}
+.myAccountPagination{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+}
+#recordsPerPage, #sortOptions{
+	margin-left: 5px;
+}
+.adminMenuLink{
+	font-size: 12px;
+	color: #256292;
+}
+.adminMenuHeader{
+	padding-top: 5px;
+	font-size:13px;
+	display:block;
+}
+.adminMenuLink 
+.adminMenuHeader:first{
+	padding-top: 0px;
+}
+
+
+/***** BEGIN My Account--->Profile *****/
+#info{
+	display: inline-block;
+	margin-top:10px;
+	font-weight: bolder;
+	font-size: 15px;
+}
+
+.profile{
+	margin-top: 15px;
+	margin-bottom: 25px;
+}
+
+.profile_row{
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.profile_row table td{
+	padding: 5px;
+	width:200px;
+}
+/***** END My Account--->Profile *****/
+
+
+
+/***** BEGIN My Account--->Fine*****/
+.account_balance{
+	text-align: center;
+}
+
+.account_balance  .button{
+	padding-left: 15px;
+	padding-right: 5px;
+	width:80px;
+
+}
+
+.account_balance div{
+	margin: 5px 5px 5px;
+	padding: 5px 5px 5px;
+}
+
+.pay_balance .button{
+	background-color: rgb(255,230,109);
+}
+.pay_balance .button:hover{
+	background-color: rgb(244,213,56);
+
+}
+/***** END My Account--->Fine *****/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

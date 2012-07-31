@@ -8,16 +8,6 @@ $(document).ready(function() {
     return;
   }
 
-  anythink.settings.bag_offset = $('#book_bag').offset();
-
-  $(document).bind('scroll', function() {
-    bagResize();
-  });
-
-  $(window).bind('resize', function() {
-    bagResize();
-  });
-
   // if we are printing, ignore update bag
   var url = window.location.href;
   if(url.indexOf('?' + 'print' + '=') != -1  || url.indexOf('&' + 'print' + '=') != -1) {
@@ -80,18 +70,6 @@ $(document).ready(function() {
   }
 
 });
-
-function bagResize() {
-  var bag_container = $('#cart-wrapper');
-  var offset = anythink.settings.bag_offset;
-  bag_container.css({marginLeft: '-' + parseInt(bag_container.width()/2 + 20) + 'px'});
-  if (offset.top < $(window).scrollTop() && !bag_container.hasClass('cling')) {
-    bag_container.addClass('cling');
-  }
-  else if (offset.top >= $(window).scrollTop() && bag_container.hasClass('cling')){
-    bag_container.removeClass('cling');
-  }
-}
 
 function bagLoginUser(){
   var url = path + "/AJAX/JSON?method=loginUser"

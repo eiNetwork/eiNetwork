@@ -51,7 +51,7 @@ function deleteAllAction(){
 	return false;
 }
 function emailListAction(id) {
-	getLightbox('MyResearch', 'EmailList', id, null, 'Email list');
+	ajaxLightbox(path + '/MyResearch/EmailList/' + id);
 	return false;
 }
 
@@ -60,4 +60,18 @@ function SendMyListEmail(to, from, message, id, strings) {
 	var params = "method=SendEmail&" + "url=" + URLEncode(window.location.href) + "&" + "from=" + encodeURIComponent(from) + "&" + "to=" + encodeURIComponent(to)
 	    + "&" + "message=" + encodeURIComponent(message) + "&listId=" + id;
 	sendAJAXEmail(url, params, strings);
+}
+function batchAddToListAction(id){
+	ajaxLightbox(path + '/MyResearch/AJAX/?method=getBulkAddToListForm&listId=' + id);
+	return false;
+}
+
+function changeList(){
+	var availableLists = $("#availableLists");
+	window.location = path + "/MyResearch/MyList/" + availableLists.val();
+}
+
+function printListAction(){
+	window.print();
+	return false;
 }

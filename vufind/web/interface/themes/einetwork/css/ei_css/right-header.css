@@ -1,0 +1,66 @@
+/**this style sheet created by Xiaolin Lin 2012--06-04**/
+
+#right-header{
+	font-size: 15px;
+	width:254px;
+        height: 60px;
+	color: rgb(255,255,255);
+	text-align: left;
+	float:left
+}
+
+.right-header-left{
+	float: left;
+	text-align: left;
+	margin-top:0px;
+	height: inherit;
+	margin-left: 12px;
+	padding-top: 10px;
+	width: 50%;
+}
+
+
+.right-header-left a{
+	text-decoration: underline;
+	color: rgb(255,255,255);
+	font-size: 16px;
+}
+
+#welcome-label{
+	color: rgb(255,255,255);
+	font-size: 13px;
+}
+
+.right-header-right{
+	float: left;
+	text-align: right;
+	margin-right: 10px;
+	padding-top: 10px;
+	color: rgb(255,255,255);
+	height: inherit;
+	width:40%;
+}
+
+.right-header-right a{
+	text-decoration: underline;
+	color: rgb(255,255,255);
+}
+
+#account-label {
+	color: rgb(255,255,255);
+	padding-top: 5px;
+}
+
+#sign-label {
+	color: rgb(255,255,255);
+}
+
+#sign-out-label {
+	color: rgb(255,255,255);
+	font-size: 13px;
+}
+
+
+
+
+

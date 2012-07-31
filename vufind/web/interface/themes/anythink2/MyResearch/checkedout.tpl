@@ -24,7 +24,7 @@
         recommendedScroller.loadTitlesFrom('{$url}/Search/AJAX?method=GetListTitles&id=strands:HOME-3&scrollerName=Recommended', false);
       </script>
     {/if}
-    <div class="myAccountTitle">{translate text='Your Checked Out Items'}</div>
+    <h1>{translate text='Your Checked Out Items'}</h1>
     {if $userNoticeFile}
       {include file=$userNoticeFile}
     {/if}
@@ -59,7 +59,6 @@
           </div>
         </div>
 
-        <div class='clearer'></div>
         <table class="myAccountTable" id="checkedOutTable">
           <thead>
             <tr>
@@ -195,7 +194,7 @@
               </div>
                 <div id="saveLink{$record.shortId|escape}">
                   {if $showFavorites == 1}
-                  <a href="{$url}/Resource/Save?id={$record.id|escape:"url"}&amp;source=VuFind" style="padding-left:8px;" onclick="getSaveToListForm('{$record.id|escape}', 'VuFind'); return false;">{translate text='Add to'} <span class='myListLabel'>MyLIST</span></a>
+                  <a href="{$url}/Resource/Save?id={$record.id|escape:"url"}&amp;source=VuFind" style="padding-left:8px;" onclick="getSaveToListFormAnythink('{$record.id|escape}', 'VuFind'); return false;">{translate text='Add to'} <span class='myListLabel'>MyLIST</span></a>
                   {/if}
                   {if $user}
                     <div id="lists{$record.shortId|escape}"></div>

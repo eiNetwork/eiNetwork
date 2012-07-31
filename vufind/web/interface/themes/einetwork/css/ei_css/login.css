@@ -1,0 +1,63 @@
+.text{
+	color:rgb(0,0,0);
+}
+.text:focus{
+	color: rgb(0,0,0);
+}
+
+#loginHome{
+	height: 400px;
+}
+.loginHome-left{
+	width: 232px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-right{
+	width: 254px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-center{
+	width:704px;
+	height: auto;
+	display: table-cell;
+	padding-top: 100px;
+	
+}
+
+.login{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-left:70px;
+	font-size: 13px;
+}
+
+.register{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-right: 70px;
+	padding-left: 10px;
+	font-size: 13px;
+}
+
+.login #email{
+	margin-top: 15px;
+}
+
+#pin{
+	margin-top:5px;
+	margin-bottom: 8px;
+}
+
+#description{
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+
+

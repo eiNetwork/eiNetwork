@@ -5,7 +5,7 @@
   </div></div>
   <div id="main-content">
     {if $user->cat_username}
-      <h1>{translate text='Your Profile'}</h1>
+      <h1>{translate text='My Profile'}</h1>
       {if $userNoticeFile}
         {include file=$userNoticeFile}
       {/if}
@@ -17,7 +17,7 @@
         </div>
       {/if}
       <h3>Personal Information</h3>
-      <div class="details">Can only be changed by the library</div>
+      <div class="details">{translate text="Visit your local Anythink to make changes to any of your personal information listed below."}</div>
       <form action='' method='post'>
         <table>
           <tr><th width="100px">{translate text='Full Name'}:</th><td>{$profile.fullname|escape}</td></tr>

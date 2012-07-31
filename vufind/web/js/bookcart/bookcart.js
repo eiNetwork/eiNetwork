@@ -41,6 +41,9 @@ $(document).ready(function() {
 	// print button
 	$("#bag_print_button").click(function() { printBag(); return false; });
 	
+	//view cart button
+	//$("#view-cart-button").click(function(){viewCart();return false;});
+	
 	// login button
 	$("#login_bag").click(function() { 
 		$('#bag_actions').height('175px');
@@ -176,6 +179,15 @@ function toggleInBag(id, title, checkBox) {
 	
 	updateBag();	
 
+}
+function sentToBag(id,title,checkBox)
+{
+	book = new Object();
+	book.id = id;
+	book.title = title;
+	_addToBag(book);
+	_saveBagAsCookie();
+	updateBag();
 }
 
 /** Create a list and then save all items in the book cart to it */
@@ -501,4 +513,16 @@ function checkEmail(address){
 	}else{
 		return false;
 	}
+}
+function viewCart(){
+	var url ="";
+	$(bookBag).each(function (i, book) {
+		if (url.length > 0){
+			url += "+OR+";
+		}
+		url += "id%3A" + book.id;
+	});
+	
+	url =  path + "/Search/Results?lookfor=" + url + "&type=keyword";
+	window.open(url);
 }

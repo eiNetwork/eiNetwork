@@ -160,12 +160,18 @@
 									
 												<div class="myAccountTitleDetails">
 													<div class="resultItemLine1">
-														<a href="{$url}/Record/{$record.recordId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">{if !$record.title|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$record.title|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}{/if}</a>
+														{if $record.recordId}
+														<a href="{$url}/Record/{$record.recordId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">
+														{/if}
+														{if !$record.title|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$record.title|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}{/if}
+														{if $record.recordId}
+														</a>
+														{/if}
 														{if $record.title2}
 															<div class="searchResultSectionInfo">
 																{$record.title2|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}
 															</div>
-															{/if}
+															{/if}f
 													</div>
 										
 													<div class="resultItemLine2">
@@ -316,7 +322,7 @@
 												<input type="submit" class="button" name="thawSelected" value="Activate Selected" title="Activate the hold to allow the hold to be filled again." onclick="return thawSelectedHolds();"/>
 											{/if}
 											<input type="submit" class="button" name="cancelSelected" value="Cancel Selected" onclick="return cancelSelectedHolds();"/>
-											{if $allowChangeLocation}
+											{if $allowChangeLocation && $sectionKey=='unavailable'}
 												<div id='holdsUpdateBranchSelction'>
 													Change Pickup Location for Selected Items to: 
 													{html_options name="withSelectedLocation" options=$pickupLocations selected=$resource.currentPickupId}

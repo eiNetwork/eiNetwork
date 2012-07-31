@@ -57,13 +57,24 @@ class AJAX extends Action {
 		
 		$holdings = $driver->getHolding($id);
 		$showEContentNotes = false;
+		$showSize = false;
 		foreach ($holdings as $holding){
 			if (strlen($holding->notes) > 0){
 				$showEContentNotes = true;
-			} 
+			}
+			if ($holding instanceof OverdriveItem){
+			if (is_numeric($holding->size)){
+					$showSize = true;
+				}
+			}else{
+				if ($holding->getSize() != 'Unknown'){
+					$showSize = true;
+				}
+			}
 		}
 		$interface->assign('source', $eContentRecord->source);
 		$interface->assign('showEContentNotes', $showEContentNotes);
+		$interface->assign('showSize', $showSize);
 		if ($eContentRecord->getIsbn() == null || strlen($eContentRecord->getIsbn()) == 0){
 			$interface->assign('showOtherEditionsPopup', false);
 		}
@@ -356,6 +367,11 @@ class AJAX extends Action {
 		$overDriveDriver = new OverDriveDriver();
 		$loanPeriods = $overDriveDriver->getLoanPeriodsForFormat($formatId);
 		$interface->assign('loanPeriods', $loanPeriods);
+		
+		//Var for the IDCLREADER TEMPLATE
+		$interface->assign('ButtonHome',true);
+		$interface->assign('MobileTitle','{translate text="Loan Period"}');
+		
 		return $interface->fetch('EcontentRecord/ajax-loan-period.tpl');
 	}
 	
@@ -367,8 +383,7 @@ class AJAX extends Action {
 			$eContentRecord = new EContentRecord();
 			$eContentRecord->id = $_REQUEST['recordId'];
 			if ($eContentRecord->find(true)){
-				$sourceUrl = $eContentRecord->sourceUrl;
-				$overDriveId = substr($sourceUrl, -36);
+				$overDriveId = $eContentRecord->getOverDriveId();
 			}
 		}else{
 			$overDriveId = $_REQUEST['overDriveId'];
@@ -432,8 +447,9 @@ class AJAX extends Action {
 					$interface->assign('purchaseLinks', $purchaseLinks);
 				}else{
 					$title = $eContentRecord->title;
+					$author = $eContentRecord->author;
 					require_once 'services/Record/Purchase.php';
-					$purchaseLinks = Purchase::getStoresForTitle($title);
+					$purchaseLinks = Purchase::getStoresForTitle($title, $author);
 					
 					if (count($purchaseLinks) > 0){
 						$interface->assign('purchaseLinks', $purchaseLinks);

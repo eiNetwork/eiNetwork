@@ -1,7 +1,7 @@
 {if $recordCount > 0 || $filterList || ($sideFacetSet && $recordCount > 0)}
 <div class="sidegroup">
 	<h4>{translate text='Narrow Search'}</h4>
-	{if isset($checkboxFilters) && count($checkboxFilters) > 0}
+	{*{if isset($checkboxFilters) && count($checkboxFilters) > 0}*}
 	<p>
 		<table>
 			{foreach from=$checkboxFilters item=current}
@@ -18,7 +18,7 @@
 			{/foreach}
 		</table>
 	</p>
-	{/if}
+	{*{/if}*}
 	{if $filterList}
 		<strong>{translate text='Remove Filters'}</strong>
 		<ul class="filters">

@@ -61,39 +61,180 @@
       };
     };
 
-    // Bag buttons.
-    $('.actions-cart a').each(function() {
-      var $this = $(this);
-      var book = {
-        id: $this.attr('data-summId'),
-        title: $this.attr('data-title')
-      }
-      if (bookInBagAnythink(book)) {
-        $this.text('In cart');
-        $this.addClass('in-cart');
-      };
-      $this.bind('click', {book: book}, function(event) {
+    // Set up fixed position element.
+    anythink.settings.fixed_wrapper = $('#fixed-wrapper');
+    anythink.settings.fixed_offset = anythink.settings.fixed_wrapper.offset();
+
+    var fixed_wrapper = anythink.settings.fixed_wrapper;
+
+    if (fixed_wrapper.length > 0) {
+      // Bag buttons.
+      $('.actions-cart a').each(function() {
         var $this = $(this);
-        var book = event.data.book;
-        if (!$this.hasClass('in-cart')) {
-          _addToBag(book);
+        var book = {
+          id: $this.attr('data-summId'),
+          title: $this.attr('data-title')
+        }
+        if (bookInBagAnythink(book)) {
           $this.text('In cart');
           $this.addClass('in-cart');
+        };
+        $this.bind('click', {book: book}, function(event) {
+          var $this = $(this);
+          var book = event.data.book;
+          if (!$this.hasClass('in-cart')) {
+            _addToBag(book);
+            $this.text('In cart');
+            $this.addClass('in-cart');
+          }
+          else {
+            _removeFromBag(book);
+            $this.text('Add to cart +');
+            $this.removeClass('in-cart');
+          }
+          _saveBagAsCookie();
+          updateBag();
+          return false;
+        });
+      });
+    };
+
+    // Navigate link.
+    var navigate_link = $('#navigate-link');
+    if (navigate_link.length > 0) {
+      var iframe = $('<div id="column-outer-wrapper"><div id="column-outer"><iframe width="200" height="700" border="0" frameBorder="0" src="http://www.anythinklibraries.org/vufind/sidebar"></div></div>');
+      // Add iFrame.
+      iframe.css({width: 0});
+      $('#central').prepend(iframe);
+      var central_column = $('#column-central');
+      var orig_text = navigate_link.text();
+      navigate_link.bind('click', function() {
+        if (!navigate_link.hasClass('processed')) {
+          navigate_link.addClass('processed');
+          navigate_link.text('Hide');
+          // navigate_link.fadeOut(100, function() {
+            // Scale central column.
+            fixed_wrapper.hide();
+            central_column.animate({marginLeft: '220px'}, {
+              duration: 250,
+              complete: function() {
+                anythinkResize();
+                fixed_wrapper.fadeIn(100);
+              }
+            });
+            iframe.css({width: '200px'});
+          // });
         }
         else {
-          _removeFromBag(book);
-          $this.text('Add to cart +');
-          $this.removeClass('in-cart');
+          navigate_link.removeClass('processed');
+          navigate_link.text(orig_text);
+          // Re scale.
+          fixed_wrapper.hide();
+          central_column.animate({marginLeft: 0}, {
+            duration: 250,
+            complete: function() {
+              anythinkResize();
+              fixed_wrapper.fadeIn(100);
+            }
+          });
+          iframe.css({width: 0});
         }
-        _saveBagAsCookie();
-        updateBag();
         return false;
       });
+    };
+
+    // Implement collapsible fieldsets.
+    var collapsibles = $('fieldset.anythink-collapsible');
+    if (collapsibles.length > 0) {
+      collapsibles.each(function() {
+        var collapsible = $(this);
+        var legend = collapsible.find('legend:first');
+        legend.addClass('anythink-collapsible-label').bind('click', {collapsible: collapsible}, function(event) {
+          var collapsible = event.data.collapsible;
+          if (collapsible.hasClass('anythink-collapsed')) {
+            collapsible.removeClass('anythink-collapsed');
+          }
+          else {
+            collapsible.addClass('anythink-collapsed');
+          }
+        });
+        // Init.
+        collapsible.addClass('anythink-collapsed');
+      });
+    }
+
+    // Fixed position container.
+    $(document).bind('scroll', function() {
+      anythinkResize();
+    });
+    $(window).bind('resize', function() {
+      anythinkResize();
     });
 
-
+    // @todo Refactor this to make more sense. Unfortunately depends on
+    // JS outside of the theme directory. @see /services/Record/ajax.js
+    var go_deeper = $('#goDeeperLink');
+    // The cover image is the sister.
+    var cover = go_deeper.next();
+    // On load, size the link to be commensurate.
+    cover.bind('load', function() {
+      go_deeper.height(cover.height() + 10);
+      var position = cover.position();
+      go_deeper.css({
+        top: position.top + 'px',
+        left: position.left + 'px'
+      });
+    });
   });
 
+  // Resize the fixed-position element.
+  function anythinkResize() {
+    var offset = anythink.settings.fixed_offset;
+    var fixed_wrapper = anythink.settings.fixed_wrapper;
+    fixed_wrapper.css({width: fixed_wrapper.parent().width() + 'px'});
+    if (offset.top < $(window).scrollTop() && !fixed_wrapper.hasClass('cling')) {
+      fixed_wrapper.addClass('cling');
+      $('#search').prependTo(fixed_wrapper);
+    }
+    else if (offset.top >= $(window).scrollTop() && fixed_wrapper.hasClass('cling')){
+      fixed_wrapper.removeClass('cling');
+      $('#header-utility-top').after($('#search'));
+    }
+  }
+
+  getWorldCatIdentifiersAnythink = function() {
+    var title = $("#title").val();
+    var author = $("#author").val();
+    var format = $("#format").val();
+    if (title == '' && author == ''){
+      alert("Please enter a title and author before checking for an ISBN and OCLC Number");
+      return false;
+    }
+    else {
+      var requestUrl = path + "/MaterialsRequest/AJAX?method=GetWorldCatIdentifiers&title=" + encodeURIComponent(title) + "&author=" + encodeURIComponent(author)  + "&format=" + encodeURIComponent(format);
+      var suggested_ids = $('#suggestedIdentifiers');
+      suggested_ids.html('<div class="loading">Loading...</div>');
+      suggested_ids.slideDown();
+      $.getJSON(requestUrl, function(data){
+        if (data.success == true){
+          // Dislay the results of the suggestions
+          suggested_ids.html(data.formattedSuggestions);
+        }else{
+          alert(data.error);
+        }
+      });
+    }
+  }
+
+  setIsbnAndOclcNumberAnythink = function(title, author, isbn, oclcNumber) {
+  	$("#title").val(title);
+  	$("#author").val(author);
+    $("#isbn").val(isbn);
+    $("#oclcNumber").val(oclcNumber);
+    var item = $('[data-isbn_oclc="' + isbn + '--' + oclcNumber +'"]').clone();
+    $("#suggestedIdentifiers").empty().append(item);
+    item.find('input').remove();
+  }
 
   // Get a list of the records on the page.
   get_records_anythink = function() {
@@ -165,9 +306,9 @@
       id: id,
       description: data.find('description').text(),
       length: data.find('length').text(),
-      publisher: data.find('publisher').text(),
-    };
-  };
+      publisher: data.find('publisher').text()
+    }
+  }
 
 
   bookInBagAnythink = function(book) {
@@ -179,6 +320,117 @@
       }
     }
     return bookInBag;
+  }
+
+  // Reimplement getSaveToListForm().
+  getSaveToListFormAnythink = function(id, source) {
+    if (loggedIn) {
+      var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
+      ajaxLightboxAnythink(url);
+    }
+    else {
+      ajaxLoginAnythink(function (){
+        getSaveToListFormAnythink(id, source);
+      });
+    }
+    return false;
+  }
+
+  // Reimplement ajaxLightbox().
+  ajaxLightboxAnythink = function(urlToLoad, parentId, left, width, top, height){
+
+    var loadMsg = $('#lightboxLoading').html();
+
+    hideSelects('hidden');
+
+    // Find out how far down the screen the user has scrolled.
+    var new_top =  document.body.scrollTop;
+    var lightbox = $('#lightbox');
+
+    lightbox.css({
+      height: $(document).height() + 'px',
+    });
+    lightbox.show();
+
+    var popupbox = $('#popupbox');
+
+    popupbox.html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
+    // $('#popupbox').show();
+    // $('#popupbox').css('top', '50%');
+    // $('#popupbox').css('left', '50%');
+
+    // if (parentId) {
+    //   //Automatically position the lightbox over the cursor
+    //   popupbox.position({
+    //     my: "top right",
+    //     at: "top right",
+    //     of: parentId,
+    //     collision: "flip"
+    //   });
+    // }
+    // else {
+      // if (!width) 
+      width = '66%';
+      // if (!height) 
+      height = '66%';
+
+      popupbox.css({
+        width: width,
+        height: height
+        });
+
+      // if (!left) left = '100px';
+      // if (!top) top = '100px';
+
+      popupbox.css({
+        top: parseInt(new_top + ($(window).height() - popupbox.height())/2) + 'px',
+        left: parseInt(($(window).width() - popupbox.width())/2) + 'px'
+      });
+
+      // $(document).scrollTop(0);
+    // }
+
+    $.get(urlToLoad, function(data) {
+      popupbox.html(data);
+
+      popupbox.show();
+      if ($("#popupboxHeader").length > 0){
+        popupbox.draggable({ handle: "#popupboxHeader" });
+      }
+      else {
+        popupbox.wrapInner('<div id="popupboxContent" class="content" />').prepend('<div id="popupboxHeader" class="header"><a onclick="hideLightbox(); return false;" href="">close</a></div>');
+      }
+    });
+  }
+
+  // Reimplement ajaxLogin().
+  ajaxLoginAnythink = function(callback) {
+    ajaxCallback = callback;
+    ajaxLightboxAnythink(path + '/MyResearch/AJAX?method=LoginForm');
+  }
+
+  loadOtherEditionSummariesAnythink = function(id, isEcontent) {
+    var url = path + "/Search/AJAX?method=getOtherEditions&id=" + id + "&isEContent=" + isEcontent;
+    ajaxLightboxAnythink(url);
+  }
+
+  showMaterialsRequestDetailsAnythink = function(id) {
+    ajaxLightboxAnythink(path + "/MaterialsRequest/AJAX?method=MaterialsRequestDetails&id=" +id );
+  }
+
+  updateMaterialsRequestAnythink = function(id) {
+    ajaxLightboxAnythink(path + "/MaterialsRequest/AJAX?method=UpdateMaterialsRequest&id=" +id );
+  }
+
+  GetAddTagFormAnythink = function(id, source){
+    if (loggedIn){
+      var url = path + "/Resource/AJAX?method=GetAddTagForm&id=" + id + "&source=" + source;
+      ajaxLightboxAnythink(url);
+    }else{
+      ajaxLogin(function(){
+        GetAddTagFormAnythink(id, source);
+      });
+    }
   }
 
   // // Reimplement doGetRatings().

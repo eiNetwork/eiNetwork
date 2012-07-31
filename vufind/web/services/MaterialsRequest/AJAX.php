@@ -225,7 +225,7 @@ class AJAX extends Action{
 				}
 			}
 			$worldCatUrl .= "&wskey=" . $configArray['WorldCat']['apiKey'];
-			$worldCatUrl .= "&format=rss";
+			$worldCatUrl .= "&format=rss&cformat=mla";
 			//echo($worldCatUrl);
 			$worldCatData = simplexml_load_file($worldCatUrl);
 			//print_r($worldCatData);
@@ -233,8 +233,11 @@ class AJAX extends Action{
 			foreach($worldCatData->channel->item as $item){
 				$curTitle= array(
 					'title' => (string)$item->title,
-					'author' => (string)$item->author->name
+					'author' => (string)$item->author->name,
+					'description' => (string)$item->description,
+					'link' => (string)$item->link
 				);
+				
 				$oclcChildren = $item->children('oclcterms', TRUE);
 				foreach ($oclcChildren as $child){
 					if ($child->getName() == 'recordIdentifier'){
@@ -247,6 +250,22 @@ class AJAX extends Action{
 					if ($child->getName() == 'identifier'){
 						$identifierFields = explode(":", (string)$child);
 						$curTitle[$identifierFields[1]][] = $identifierFields[2];
+					}
+				}
+				
+				$contentChildren = $item->children('content', TRUE);
+				foreach ($contentChildren as $child){
+					if ($child->getName() == 'encoded'){
+						$curTitle['citation'] = (string)$child;
+					}
+				}
+				
+				if (strlen($curTitle['description']) == 0 && isset($curTitle["ISBN"]) && is_array($curTitle["ISBN"]) && count($curTitle["ISBN"]) > 0){
+					//Get the description from syndetics
+					require_once 'Drivers/marmot_inc/GoDeeperData.php';
+					$summaryInfo = GoDeeperData::getSummary($curTitle["ISBN"][0], null);
+					if (isset($summaryInfo['summary'])){
+						$curTitle['description'] = $summaryInfo['summary'];
 					}
 				}
 				$worldCatResults[] = $curTitle;

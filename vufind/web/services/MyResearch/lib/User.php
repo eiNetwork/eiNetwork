@@ -308,7 +308,7 @@ class User extends DB_DataObject
 		if (!isset($this->homeLocationId)) $this->homeLocationId = 0;
 		if (!isset($this->myLocation1Id)) $this->myLocation1Id = 0;
 		if (!isset($this->myLocation2Id)) $this->myLocation2Id = 0;
-		if (!isset($this->bypassAutoLogout)) $this->bypassAutoLogout = 0;
+		if (!isset($this->bypassAutoLogout)) $this->bypassAutoLogout = 1;
 			
 		parent::insert();
 		$this->saveRoles();

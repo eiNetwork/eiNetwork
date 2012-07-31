@@ -162,10 +162,16 @@ class CheckedOut extends MyResearch{
 		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Title');
 		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Author');
 		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Format');
-		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Out');
+		if ($showOut){
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Out');
+		}
 		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Due');
-		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Renewed');
-		$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Wait List');
+		if ($showRenewed){
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Renewed');
+		}
+		if ($showWaitList){
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $curRow, 'Wait List');
+		}
 
 
 		$a=4;
@@ -186,19 +192,30 @@ class CheckedOut extends MyResearch{
 			}else{
 				$authorCell = '';
 			}
-			if (is_array($row['format'])){
-				$formatString = implode(', ', $row['format']);
+			if (isset($row['format'])){
+				if (is_array($row['format'])){
+					$formatString = implode(', ', $row['format']);
+				}else{
+					$formatString = $row['format'];
+				}
 			}else{
-				$formatString = $row['format'];
+				$formatString ='';
 			}
-			$objPHPExcel->setActiveSheetIndex(0)
-			->setCellValue('A'.$a, $titleCell)
-			->setCellValue('B'.$a, $authorCell)
-			->setCellValue('C'.$a, $formatString)
-			->setCellValue('D'.$a, date('M d, Y', strtotime($row['checkoutdate'])))
-			->setCellValue('E'.$a, date('M d, Y', strtotime($row['duedate'])))
-			->setCellValue('F'.$a, $row['renewCount'])
-			->setCellValue('G'.$a, $row['holdQueueLength']);
+			$activeSheet = $objPHPExcel->setActiveSheetIndex(0);
+			$curCol = 0;
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $a, $titleCell);
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $a, $authorCell);
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $a, $formatString);
+			if ($showOut){
+				$activeSheet->setCellValueByColumnAndRow($curCol++, $a, date('M d, Y', $row['checkoutdate']));
+			}
+			$activeSheet->setCellValueByColumnAndRow($curCol++, $a, date('M d, Y', $row['duedate']));
+			if ($showRenewed){
+				$activeSheet->setCellValueByColumnAndRow($curCol++, $a, $row['renewCount']);
+			}
+			if ($showWaitList){
+				$activeSheet->setCellValueByColumnAndRow($curCol++, $a, $row['holdQueueLength']);
+			}
 
 			$a++;
 		}

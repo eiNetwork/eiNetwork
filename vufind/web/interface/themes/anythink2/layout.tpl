@@ -83,8 +83,10 @@
       })(jQuery);
       {/literal}
     </script>
+    <script src="{$path}/interface/themes/anythink2/js/anythink-survey.js" type="text/javascript"></script>
   </head>
-  <body class="{$module} {$action} {$module}--{$action}">
+  <body class="{$module} {$action} {$module}--{$action} {$module}--{$action}--{$recordCount}">
+    <div style="text-align: center; background-color: #B31E3B; color: #FFF; padding: .5em 0; font-size: 1.2em;">It's Anythink's new catalog! Tell us what you think. We're still testing and tweaking, so pardon us if you find a bug.</div>
     <div id="container"><div id="inner">
       <!-- Current Physical Location: {$physicalLocation} -->
       {* LightBox *}
@@ -97,11 +99,11 @@
         <div id="header">
           {* This needs to be heavily refactored.
           {if $user}
-            <span id="myAccountNameLink" class="menu-account-link logoutOptions top-menu-item"><a href="{$path}/MyResearch/Home">{if $user->displayName}{$user->displayName}{else}{$user->firstname|capitalize} {$user->lastname|capitalize}{/if}</a></span>
-            <span class="menu-account-link logoutOptions top-menu-item"><a href="{$path}/MyResearch/Logout">{translate text="Log Out"}</a></span>
-            <span class="menu-account-link loginOptions top-menu-item"><a href="{$path}/MyResearch/Home">{translate text="My Account"}</a></span>
+            <span id="myAccountNameLink" class="menu-account-link logoutOptions top-menu-item"><a href="{$path}/MyAccount/Home">{if $user->displayName}{$user->displayName}{else}{$user->firstname|capitalize} {$user->lastname|capitalize}{/if}</a></span>
+            <span class="menu-account-link logoutOptions top-menu-item"><a href="{$path}/MyAccount/Logout">{translate text="Log Out"}</a></span>
+            <span class="menu-account-link loginOptions top-menu-item"><a href="{$path}/MyAccount/Home">{translate text="My Account"}</a></span>
           {else}
-            <span class="menu-account-link loginOptions top-menu-item"><a href="{$path}/MyResearch/Home">{translate text="My Account"}</a></span>
+            <span class="menu-account-link loginOptions top-menu-item"><a href="{$path}/MyAccount/Home">{translate text="My Account"}</a></span>
           {/if}
           *}
           <a id="logo" href="{if $homeLink}{$homeLink}{else}{$url}{/if}">{translate text="Anythink Libraries"}</a>
@@ -130,10 +132,11 @@
           <div id="header-utility-bottom">
             <ul class="inline right">
               {if !$user}
-                <li><a href="{$path}/MyResearch/Home">{translate text="My Account"}</a></li>
+                <li><a href="{$path}/MyAccount/Home">{translate text="My Account"}</a></li>
+                <li><a href="{$path}/MyAccount/GetCard">{translate text="Get a Card"}</a></li>
               {else}
-                <li><a href="{$path}/MyResearch/Home">{translate text="My Account"}</a></li>
-                <li><a href="{$path}/MyResearch/Logout">{translate text="Log Out"}</a></li>
+                <li><a href="{$path}/MyAccount/Home">{translate text="My Account"}</a></li>
+                <li><a href="{$path}/MyAccount/Logout">{translate text="Log Out"}</a></li>
               {/if}
             </ul>
           </div>
@@ -150,22 +153,25 @@
               {/if}
             </ul>
           {/if}
+          {if !($module == 'Search' && $action == 'Home')}
+            <a id="navigate-link" href="http://www.anythinklibraries.org/">{translate text="Explore Anythink..."}</a>
+          {/if}
         </div>
         <div id="central" class="clearfix{if $module == 'Search' && $action == 'Home'} with-column-outer{/if}">
           {if $module == 'Search' && $action == 'Home'}
           <div id="column-outer-wrapper"><div id="column-outer">
-            <iframe width="200" height="600" border="0" src="http://stage.anythinklibraries.org/vufind/sidebar"></iframe>
+            <iframe width="200" height="700" border="0" frameBorder="0" src="http://www.anythinklibraries.org/vufind/sidebar"></iframe>
           </div></div>
           {/if}
           <div id="column-central">
-            <h4 id="flag">{translate text="Welcome to the Anythink catalog"}</h4>
+            <h4 id="flag">{translate text="Catalog"}</h4>
             <div id="main-wrapper"><div id="main" class="debug {$module}--{$pageTemplate} clearfix">
-                <div id="cart-wrapper">
+                <div id="fixed-wrapper">
                   {include file="bookcart.tpl"}
                 </div>
                 {if $showBreadcrumbs}
                   <div id="breadcrumb">
-                    <a href="{$url}">{translate text="Home"}</a> <span>&gt;</span>
+                    <a href="{$url}">{translate text="Catalog"}</a> <span>&gt;</span>
                     {include file="$module/breadcrumbs.tpl"}
                   </div>
                 {/if}
@@ -183,7 +189,7 @@
   <script type="text/javascript">
   {literal}
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-4759493-8']);
+    _gaq.push(['_setAccount', 'UA-8977686-8']);
     _gaq.push(['_trackPageview']);
     _gaq.push(['_trackPageLoadTime']);
 
@@ -195,29 +201,5 @@
   {/literal}
   </script>
   {/if}
-
-  {* Strands tracking *}
-  {if $user && $user->disableRecommendations == 0}
-    <script type="text/javascript">
-    {literal}
-
-    //This code can actually be used anytime to achieve an "Ajax" submission whenever called
-    if (typeof StrandsTrack=="undefined"){StrandsTrack=[];}
-
-    StrandsTrack.push({
-       event:"userlogged",
-       user: "{/literal}{$user->id}{literal}"
-    });
-
-    {/literal}
-    </script>
-  {/if}
-  <!-- Strands Library MUST be included at the end of the HTML Document, before the /body closing tag and JUST ONCE -->
-  <script type="text/javascript" src="http://bizsolutions.strands.com/sbsstatic/js/sbsLib-1.0.min.js"></script>
-  <script type="text/javascript">
-  {literal}
-    try{ SBS.Worker.go("vFR4kNOW4b"); } catch (e){};
-  {/literal}
-  </script>
   </body>
 </html>
