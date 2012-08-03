@@ -12,78 +12,81 @@
 	<div id="main-content">
 	{if $user}
 		<div class="myAccountTitle">{translate text='Your OverDrive Holds'}</div>
-		{if $userNoticeFile}
-			{include file=$userNoticeFile}
-		{/if}
-
-		{if $overDriveHolds}
-			<div class='sortOptions'>
-				Hide Covers <input type="checkbox" onclick="$('.imageColumnOverdrive').toggle();"/>
-			</div>
-		{/if}
-
+		
 		{if count($overDriveHolds.available) > 0}
-			<div class='holdSection'>
-				<div class='holdSectionTitle'>Titles available for checkout</div>
-				<div class='holdSectionBody'>
-					<table class="myAccountTable">
-						<thead>
-							<tr><th class='imageColumnOverdrive'></th><th>Title</th><th>Notification Sent</th><th>Expires</th></tr>
-						</thead>
-						<tbody>
-						{foreach from=$overDriveHolds.available item=record}
-							<tr>
-								<td rowspan="{$record.numRows}" class='imageColumnOverdrive'><img src="{$record.imageUrl}"></td>
-								<td>
-									{if $record.recordId != -1}<a href="{$path}/EcontentRecord/{$record.recordId}/Home">{/if}{$record.title}{if $record.recordId != -1}</a>{/if}
-									{if $record.subTitle}<br/>{$record.subTitle}{/if}
-									{if strlen($record.author) > 0}<br/>by: {$record.author}{/if}
-								</td>
-								<td>{$record.notificationDate|date_format}</td>
-								<td>{$record.expirationDate|date_format}</td>
-							</tr>
-							{foreach from=$record.formats item=format}
-								<tr>
-									<td colspan="2">{$format.name}</td>
-									<td>
-										<a href="#" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')" class="button">Check&nbsp;Out</a><br/>
-									</td>
-								</tr>
-							{/foreach}
-						{/foreach}
-						</tbody>
-					</table>
+			
+			<div>Titles available for checkout</div>
+			<div class="checkout">
+				{foreach from=$overDriveHolds.available item=record}
+				<div id="record">
+					<div class="item_image">
+						<img src="{$record.imageUrl}">
+					</div>
+					<div class="item_detail">
+						<div class="item_subject">
+							{if $record.recordId != -1}
+								<a href="{$path}/EcontentRecord/{$record.recordId}/Home">
+							{/if}
+							{$record.title}
+							{if $record.recordId != -1}
+								</a>
+							{/if}
+							{if $record.subTitle}<br/>{$record.subTitle}{/if}
+						</div>
+						<div class="item_author">
+							{if strlen($record.author) > 0}<br/> {$record.author}{/if}
+						</div>
+						<div class="item_type"></div>
+					</div>
+					<div class="item_status">
+						{foreach from=$record.formats item=format}
+						<div>{$format.name}</div>
+						<div>
+							<a href="#" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')" class="button">Check&nbsp;Out</a>
+						</div>
+					{/foreach}
+					</div>
 				</div>
+				{/foreach}
 			</div>
 		{/if}
 		
 		{if count($overDriveHolds.unavailable) > 0}
-			<div class='holdSection'>
-				<div class='holdSectionTitle'>Requested items not yet available</div>
-				<div class='holdSectionBody'>
-					<table class="myAccountTable">
-						<thead>
-							<tr><th class='imageColumnOverdrive'></th><th>Title</th><th>Hold Position</th><th></th></tr>
-						</thead>
-						<tbody>
-						{foreach from=$overDriveHolds.unavailable item=record}
-							<tr>
-								<td rowspan="1" class='imageColumnOverdrive'><img src="{$record.imageUrl}"></td>
-								<td>
-									{if $record.recordId != -1}<a href="{$path}/EcontentRecord/{$record.recordId}/Home">{/if}{$record.title}{if $record.recordId != -1}</a>{/if}
-									{if $record.subTitle}<br/>{$record.subTitle}{/if}
-									{if strlen($record.author) > 0}<br/>by: {$record.author}{/if}
-								</td>
-								<td>{$record.holdQueuePosition} out of {$record.holdQueueLength}</td>
-								<td>
-									<a href="#" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" class="button">Remove</a><br/>
-								</td>
-							</tr>
-						{/foreach}
-						</tbody>
-					</table>
+			<div>Requested items not yet available</div>
+			<div class="checkout">
+				{foreach from=$overDriveHolds.unavailable item=record}
+				<div id="record">
+					<div class="item_image">
+						<img src="{$record.imageUrl}">
+					</div>
+					<div class="item_detail">
+						<div class="item_subject">
+							{if $record.recordId != -1}
+							<a href="{$path}/EcontentRecord/{$record.recordId}/Home">
+							{/if}
+							{$record.title}
+							{if $record.recordId != -1}</a>
+							{/if}
+							{if $record.subTitle}<br/>{$record.subTitle}{/if}
+						</div>
+						<div class="item_author">
+							{if strlen($record.author) > 0}<br/>{$record.author}{/if}
+						</div>
+						<div class="item_type">
+							{$record.format}
+						</div>
+					</div>
+					<div class="item_status">
+						{$record.holdQueuePosition} out of {$record.holdQueueLength}
+						<a href="#" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" class="button">Remove</a><br/>
+						
+						{*<a href="{$record.downloadLink}">
+							<input class="button" value="Download"/>
+						</a>*}
+					</div>
 				</div>
-			</div>
+			    {/foreach}
+			</div>	
 		{/if}
 	{else}
 		You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.

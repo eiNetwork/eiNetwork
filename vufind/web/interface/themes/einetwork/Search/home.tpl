@@ -20,8 +20,6 @@
 			$(this).val($(this).attr('title'));
 			$('#pin').get(0).type='text';
 		    }
-		    
-		    
 		});
 	    });
 	});
@@ -34,12 +32,15 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="text" type="text" name="username" title="Libray Card Number" size="15" value="{$username|escape}"/>
+					<input id="card" class="text" type="text" name="username" title="Libray Card Number"  value="{$username|escape}"/>
 				</div>
 				<div id="password">
-					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" size="15"/>
+					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" />
 				</div>
 				<div>
+					<div>
+						<input type="checkbox" value=""/>
+					</div>
 					<input class="button" type="submit" name="submit" value="Login" alt='{translate text="Login"}' />
 				</div>
 			</form>
@@ -49,7 +50,6 @@
 			<div id="description">
 				With a free catalog acount, you can request items directly from the catalog,
 				view your past searches and get personalized recommendations for items you might like.
-				
 			</div>
 			<div>
 				<a href="http://vufindplus.einetwork.net/MyResearch/GetCard">

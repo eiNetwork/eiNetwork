@@ -148,10 +148,8 @@ class HoldMultiple extends Action
 				$interface->assign('focusElementId', 'username');
 			}
 		}
-
 		$class = $configArray['Index']['engine'];
 		$db = new $class($configArray['Index']['url']);
-
 		if ($showMessage) {
 			$_SESSION['hold_message'] = $hold_message_data;
 			if (isset($_SESSION['hold_referrer'])){

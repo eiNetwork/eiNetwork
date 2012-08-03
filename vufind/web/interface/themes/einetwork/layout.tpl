@@ -110,9 +110,9 @@
 	      <img src="{$path}{$smallLogo}" alt="VuFind"  width="160px" height="60px"/>
 	    </a>*}
 	    {if isset($lastsearch) and isset($pageType) and $pageType eq "record"}
-	    <div id="returnToSearch">
-		<a href="{$lastsearch|escape}#record{$id|escape:"url"}">{translate text="Return to Search Results"}</a>
-	    </div>
+		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;"  onclick='window.location.href="{$lastsearch|escape}#record{$id|escape:"url"}"' >
+		  <p style="margin-top:10px;margin-left:10px"><span>{translate text="Back to Search Results"}</span></p>
+		</div>
 	    {/if}
 	  </div>
 	  <div class ="center-header">

@@ -1,4 +1,4 @@
-<div id = "holdingsSummary" class="holdingsSummary">
+<div id = "holdingsSummary" {if $holdingsSummary.status == 'Available from OverDrive'}class="holdingsSummary overdriveAvailable"{elseif $holdingsSummary.status == 'Checked out in OverDrive'}class="holdingsSummary overdriveCheckedOut"{/if}>
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>

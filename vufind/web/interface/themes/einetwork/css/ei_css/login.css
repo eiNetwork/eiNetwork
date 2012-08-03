@@ -1,9 +1,3 @@
-.text{
-	color:rgb(0,0,0);
-}
-.text:focus{
-	color: rgb(0,0,0);
-}
 
 #loginHome{
 	height: 400px;
@@ -33,7 +27,7 @@
 	height: inherit;
 	display: table-cell;
 	padding-left:70px;
-	font-size: 13px;
+	font-size: 16px;
 }
 
 .register{
@@ -42,7 +36,11 @@
 	display: table-cell;
 	padding-right: 70px;
 	padding-left: 10px;
-	font-size: 13px;
+	font-size: 16px;
+}
+
+#description{
+	font-size: 14px;
 }
 
 .login #email{

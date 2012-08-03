@@ -2,11 +2,11 @@
 	<span class="popupHeader-title">{translate text='Create a new List'}</span>
 	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
 </div>
-<div id="popupboxContent" class="content">
+<div id="popupboxContent" class="popupContent">
 	{if $listError}<p class="error">{$listError|translate}</p>{/if}
-	<form method="post" action="{$url}/MyResearch/ListEdit" name="listForm"
-	      onSubmit='addList(this, &quot;{translate text='add_list_fail'}&quot;); return false;'>
-	  <table   style="margin-left:5px">
+	<form method="post" action="{$url}/MyResearch/ListEdit" name="listForm" style="margin-top:10px"
+	      onSubmit='newAddList(this, &quot;{translate text='add_list_fail'}&quot;); return false;'>
+		<table   style="margin-left:5px">
 			<tbody>
 				<tr style="height:25px;vertical-align:middle">
 					<td>

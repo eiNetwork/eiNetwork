@@ -55,7 +55,6 @@
 .resultsCell{
   display: inline-block;
   zoom: 1;
-  *display: inline;
   vertical-align: top;
 }
 .resultsId{
@@ -135,7 +134,6 @@
 .myAccountPagination{
 	display: inline-block;
 	zoom: 1;
-	*display: inline;
 }
 #recordsPerPage, #sortOptions{
 	margin-left: 5px;
@@ -207,6 +205,113 @@
 }
 /***** END My Account--->Fine *****/
 
+
+/***** BEGIN My Account--->My Items*****/
+
+.sortOptions {
+}
+
+.sortOptions select{
+	width:120px;
+}
+
+.checkout{
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 640px;
+}
+
+.checkout .button{
+	width: 60px;
+	height: 20px;
+	background: rgb(255,230,109);
+}
+
+.checkout .button:hover{
+	background: rgb(244,213,56);
+	border-color: rgb(173,156,74);
+}
+
+.item_list{
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	height: 120px;
+	
+}
+.item_image{
+	display: inline-block;
+	width: 52px;
+	height: 80px;
+	padding: 10px 15px 15px 15px;
+}
+
+.item_image img{
+	width: 52px;
+	height: 80px;
+}
+
+.item_detail{
+	width:370px;
+	height: 115px;
+	margin-left: 20px;
+	display: inline-block;
+	vertical-align:top;
+}
+
+.item_subject{
+	padding-top: 10px;
+}
+
+.item_subject a{
+	text-decoration: none;
+	color: rgb(0,0,0);
+}
+
+.item_subject a:hover{
+	color: rgb(58,79,179);
+}
+
+.item_author{
+	margin: 5px 0px 0px 0px;
+}
+
+.item_rating{
+	margin: 5px 0px 0px 0px;
+}
+
+
+.item_renew .button{
+	background: rgb(70,210,70);
+	width:60px;
+	height: 20px;
+	
+}
+
+.item_renew .button:hover{
+	background: rgb(10,250,10);
+	border-color: rgb(173,156,74);
+}
+
+
+.item_type{
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+.item_status{
+	width: 160px;
+	height: 105px;
+	vertical-align:top;
+	display: inline-block;
+}
+
+.sort{
+	padding: 10px 50px 10px 50px;
+}
+
+
+/***** END My Account--->My Items*****/
 
 
 

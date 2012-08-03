@@ -28,7 +28,6 @@ class Holdings extends Record
 	{
 		global $interface;
 		global $configArray;
-
 		// Do not cache holdings page
 		$interface->caching = 0;
 
@@ -51,7 +50,6 @@ class Holdings extends Record
 	{
 		global $interface;
 		global $configArray;
-
 		try {
 			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
 		} catch (PDOException $e) {

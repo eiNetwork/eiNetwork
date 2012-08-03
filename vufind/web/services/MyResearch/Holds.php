@@ -22,6 +22,11 @@ require_once 'services/MyResearch/MyResearch.php';
 require_once("PHPExcel.php");
 require_once 'sys/Pager.php';
 
+//BEGIN overdrive holds
+require_once 'Drivers/OverDriveDriver.php';
+require_once 'sys/eContent/EContentRecord.php';
+//END overdrive holds
+
 class Holds extends MyResearch
 {
 	function launch()
@@ -93,6 +98,35 @@ class Holds extends MyResearch
 		$interface->assign('showDateWhenSuspending', $showDateWhenSuspending);
 		$showPosition = ($ils == 'Horizon');
 		$interface->assign('showPosition', $showPosition);
+		
+		//BEGIN for OverdriveHolds
+		$overDriveDriver = new OverDriveDriver();
+		$overDriveHolds = $overDriveDriver->getOverDriveHolds($user);
+		foreach ($overDriveHolds['holds'] as $sectionKey => $sectionData){
+			foreach ($sectionData as $key => $item){
+				if ($item['recordId'] != -1){
+					$econtentRecord = new EContentRecord();
+					$econtentRecord->id = $item['recordId'];
+					$econtentRecord->find(true);
+					$item['record'] = clone($econtentRecord);
+				} else{
+					$item['record'] = null;
+				}
+				if ($sectionKey == 'available'){
+					$item['numRows'] = count($item['formats']) + 1;
+				}
+				$overDriveHolds['holds'][$sectionKey][$key] = $item;
+			}
+		}
+		$interface->assign('overDriveHolds', $overDriveHolds['holds']);
+	
+		$interface->assign('ButtonBack',true);
+		$interface->assign('ButtonHome',true);
+		$interface->assign('MobileTitle','OverDrive Holds');
+		
+		$interface->setTemplate('overDriveHolds.tpl');
+		//END for OverdriveHolds
+		
 		
 		// Get My Transactions
 		if ($this->catalog->status) {
@@ -174,6 +208,7 @@ class Holds extends MyResearch
 		
 		//print_r($patron);
 		$interface->assign('patron',$patron);
+		//$interface->setTemplate('checkedout.tpl');
 		$interface->setTemplate('holds.tpl');
 		$interface->setPageTitle('My Holds');
 		$interface->display('layout.tpl');

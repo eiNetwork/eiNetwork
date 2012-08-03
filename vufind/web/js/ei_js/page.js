@@ -73,6 +73,7 @@ function performSaveToBookCart(id, source, strings, service, successCallback)
                     if($("#listId").val()!=null&&$("#listId").val()!=''){
                         deleteItemInList(id);
                     }
+                    getBookCartItemCount();
 		    document.body.style.cursor = 'default';
 			
 	},
@@ -111,9 +112,61 @@ function getViewCart(){
 	}
 	return false;
 }
-function getRequestNowForm(id){
-        //var inHtml = 
+function getWishList(){
+    if (loggedIn){	
+                window.location.href = '/List/Results'
+	}else{
+		ajaxLogin(function (){
+			window.location.href = '/List/Results'
+		});
+	}
+	return false;
 }
+
+function getCheckedOutItem(){
+    if (loggedIn){	
+                window.location.href = 'href=/MyResearch/CheckedOut'
+	}else{
+		ajaxLogin(function (){
+			window.location.href ='href=/MyResearch/CheckedOut'
+		});
+	}
+	return false;
+}
+
+function getRequestedItem(){
+    if (loggedIn){	
+                window.location.href = 'href=/MyResearch/Holds'
+	}else{
+		ajaxLogin(function (){
+			window.location.href ='href=/MyResearch/Holds'
+		});
+	}
+	return false;
+}
+
+function getReadingHistory(){
+    if (loggedIn){	
+                window.location.href = 'href=/MyResearch/ReadingHistory'
+	}else{
+		ajaxLogin(function (){
+			window.location.href ='href=/MyResearch/ReadingHistory'
+		});
+	}
+	return false;
+}
+
+function getAccountSetting(){
+    if (loggedIn){	
+                window.location.href = '/MyResearch/Profile'
+	}else{
+		ajaxLogin(function (){
+			window.location.href ='/MyResearch/Profile'
+		});
+	}
+	return false;
+}
+
 
 function requestItem(id,listId){
         //alert($("#campus").val());
@@ -127,7 +180,7 @@ function requestItem(id,listId){
 			"holdType=" + "hold";
         newAJAXLightbox(id,listId,url,'post',params,'json');
 }
-function newAJAXLightbox(id, urlToLoad, connect_type, dataToLoad, dataTypeToLoad,parentId, left, width, top, height){
+function newAJAXLightbox(id, listId,urlToLoad, connect_type,dataToLoad,dataTypeToLoad, parentId, left, width, top, height){
 	
 	var loadMsg = $('#lightboxLoading').html();
 
@@ -138,7 +191,6 @@ function newAJAXLightbox(id, urlToLoad, connect_type, dataToLoad, dataTypeToLoad
 
 	// Get the height of the document
 	var documentHeight = $(document).height();
-
 	$('#lightbox').show();
 	$('#lightbox').css('height', documentHeight + 'px');
 	$('#popupbox').html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
@@ -202,6 +254,7 @@ function deleteItemInList(itemId){
                         var recordID = reg.exec(itemId);
                         $("#record"+recordID).parent().slideUp();
                         document.body.style.cursor = 'default';
+                        getBookCartItemCount();
 		},
 		error: function() {
 			$('#popupbox').html(failMsg);
@@ -227,15 +280,118 @@ function getBookCartItemCount(){
                     else if(data['count']!=null && data['count'] !=0){
                         $("#cart-descrpiion").html('&nbsp;&nbsp;'+data['count']+" items in your book cart");
                     }
-                    if(data['unavailable'] == true){
-                        $("#cart-descrpiion").html("login to see your book cart");
+                    if(data['unavailable'] == 'yes'){
+                        $("#cart-descrpiion").html("&nbsp;&nbsp; your book cart is empty ");
                     }
-                    $("#descrpiion").html("bb");
 		},
 		error: function() {
 			$('#popupbox').html(failMsg);
 			setTimeout("hideLightbox();", 3000);
 		}
 	});
+}
+function newAddList(form, failMsg)
+{
+	for (var i = 0; i < form.public.length; i++) {
+		if (form.public[i].checked) {
+			var isPublic = form.public[i].value;
+		}
+	}
+
+	var url = path + "/MyResearch/AJAX";
+	var recordId = form.recordId.value;
+	var source = form.source.value;
+	var params = "method=AddList&" +
+							 "title=" + encodeURIComponent(form.title.value) + "&" +
+							 "public=" + isPublic + "&" +
+							 "desc=" + encodeURIComponent(form.desc.value) + "&" +
+							 "followupModule=" + form.followupModule.value + "&" +
+							 "followupAction=" + form.followupAction.value + "&" +
+							 "followupId=" + form.followupId.value;
+
+	$.ajax({
+		url: url+'?'+params,
+		dataType: "json",
+		success: function(data) {
+			var value = data.result;
+			if (value) {
+				if (value == "Done") {
+					var newId = data.newId;
+					//Save the record to the list
+					//var url = path + "/Resource/Save?lightbox=true&selectedList=" + newId + "&id=" + recordId + "&source=" + source;
+					//ajaxLightbox(url);
+                                        window.location.href = '/List/Results?goToListID='+newId;
+				} else {
+					alert(value.length > 0 ? value : failMsg);
+				}
+			} else {
+				$('#popupbox').html(failMsg);
+				setTimeout("hideLightbox();", 3000);
+			}
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
+function getDeleteList(listId){
+        var element = "<div id='warningDelete' >"+
+                            "<p id='deleteWarning' style='margin-left:80px;margin-top:30px'>Are your sure you want to delete this wish list?</p>"+
+                            "<p id='deleteWarningOption'>"+
+                            "<span style='margin-left:140px'><input type='button' class='button' value = 'Yes' onclick='deleteList("+listId+")'/></span>"+
+                            "<span><input type='button' class='button' value = 'No' onclick='hideLightbox()'/></span>"+
+                            "</p></div>";
+	newShowElementInLightbox("Warning",element,false,false,'450px','180px');
+}
+function deleteList(listId){
+        $.ajax({
+		type: 'post',
+                url: "/List/AJAX",
+                dataType: "text",
+                data: "method=deleteList&listId="+listId,
+		success: function(data) {
+                    if(data=='success'){
+                        hideLightbox();
+                        window.location.href = '/List/Results';
+                    }
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
+
+//==================Find in library==================
+function findInLibrary(id,left,top,width,height){
+    var url = "/Record/"+id+"/AJAXGetCallNumber?method=getCallNumber";
+    ajaxLightbox(url,false,left,width,top,height);
+}
+function findAllInLibrary(left,top,width,height){
+    var allResults = "";
+    $(".resultsList").each(function(){
+            var id = '.'+this.getAttribute('id').substring(6,this.getAttribute('id').length);
+            var url = "/Record/"+id+"/AJAXGetCallNumber?method=getCallNumber";
+            $.ajax({
+                    type:'get',
+                    url:url,
+                    dataType:"html",
+                    data:"",
+                    success:function(data){
+                        alert(data);
+                    }
+                })
+        });
+    //ajaxLightbox(url,false,left,width,top,height);
+}
+function seeUnavailable()
+{
+    $(".itemUnavailable").slideToggle('slow');
+    if( $("#showAndHideUnavailable").text()=="(show unavailable items)"){
+        $("#showAndHideUnavailable").html("(hide unavailable items)");
+    }else{
+        $("#showAndHideUnavailable").html("(show unavailable items)");
+    }
 }
 

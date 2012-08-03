@@ -30,7 +30,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_REQUEST['method'];
-		if (in_array($method, array('GetAutoSuggestList', 'GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList','getBookCartItemCount'))){
+		if (in_array($method, array('GetAutoSuggestList', 'AddList','GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList','getBookCartItemCount','deleteList'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -94,6 +94,32 @@ class AJAX extends Action {
 			return translate($msg);
 		}
 	}
+	
+	// Create new list
+	function AddList()
+	{
+		require_once 'services/MyResearch/ListEdit.php';
+		$return = array();
+		if (UserAccount::isLoggedIn()) {
+			$listService = new ListEdit();
+			$result = $listService->addList();
+			if (!PEAR::isError($result)) {
+				$return['result'] = 'Done';
+				$return['newId'] = $result;
+			} else {
+				$error = $result->getMessage();
+				if (empty($error)) {
+					$error = 'Error';
+				}
+				$return['result'] = translate($error);
+			}
+		} else {
+			$return['result'] = "Unauthorized";
+		}
+
+		return json_encode($return);
+	}
+
 
 	/**
 	 * Get Item Statuses
@@ -754,7 +780,7 @@ class AJAX extends Action {
 	function processRequestItem(){
 		global $configArray;
 		global $user;
-	
+		
 		try {
 			$this->catalog = new CatalogConnection($configArray['Catalog']['driver']);
 		} catch (PDOException $e) {
@@ -780,7 +806,6 @@ class AJAX extends Action {
 		global $user;
 		$eContentDriver = null;
 		$showMessage = false;
-
 		$holdings = array();
 		//Check to see if all items are eContent
 		$ids = array();
@@ -792,10 +817,9 @@ class AJAX extends Action {
 			}
 		}
 		$interface->assign('ids', $ids);
-		
 		$hold_message_data = array(
-          'successful' => 'all',
-          'titles' => array()
+			'successful' => 'all',
+			'titles' => array()
 		);
 		if (isset($_REQUEST['autologout'])){
 			$_SESSION['autologout'] = true;
@@ -825,7 +849,6 @@ class AJAX extends Action {
 							require_once('Drivers/EContentDriver.php');
 							$eContentDriver = new EContentDriver();
 						}
-						
 						$return = $eContentDriver->placeHold($recordId, $user);
 					} else {
 						
@@ -926,7 +949,7 @@ class AJAX extends Action {
 	function getBookCartItemCount()
 	{
 		global $user;
-		if(isset($user)){
+		if($user){
 			$raw_wishLists= $user->getLists();
 			$bookCartId;
 			//echo count($raw_wishLists);
@@ -947,16 +970,27 @@ class AJAX extends Action {
 			}
 			$bookCart = User_list::staticGet($bookCartId);
 			$bookCartItems = $bookCart->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
-			//echo count($bookCartItems);
 			$return;
 			$return['count'] = count($bookCartItems);
 			echo json_encode($return);
 		}else{
 			$return;
-			$return['unavailable'] = true;
+			$return['unavailable'] = 'yes';
 			echo json_encode($return);
 		}
 		
+	}
+	function deleteList(){
+		global $user;
+		$solrConnector = new User_list_solr($configArray['Index']['url']);
+		$list = User_list::staticGet($_REQUEST['listId']);
+		$list->user_id = $user->id;
+		if($user != false){
+			$solrConnector->deleteList($list);
+			$list->delete();
+		}
+		echo 'success';
+		die();
 	}
 }
 

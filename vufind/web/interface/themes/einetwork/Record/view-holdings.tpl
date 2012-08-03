@@ -1,31 +1,24 @@
 {assign var=lastSection value=''}
 
 {if isset($holdings) && count($holdings) > 0}
- <table border="0" class="holdingsTable">
- <thead>
- <tr>
- <th>Location</th>
- <th>Collection</th>
- <th>Copy</th>
- <th>Call#</th>
- <th>Status</th>
- <th>Due</th>
- </tr>
- </thead>
+ <div id="holdingInfoPopup" style="height:auto;max-height:450px;width:auto;height:inherit;padding-left:12px;padding-right:12px">
+  <div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)">
+    <span style="font-size:18px;">Item Call Numbers</span>
+    <span onclick="seeUnavailable()"  style="margin-left:10px;color:#9999ff;text-decoration:underline;" id="showAndHideUnavailable">(show unavailable items)</span>
+    <span onclick="hideLightbox()" style="float:right"><img src="/interface/themes/einetwork/images/closeHUDButton.png"></span>
+  </div>
+  <div style="overflow-y:auto;height:auto;max-height:400px;border-bottom:1px solid rgb(238,238,238);">
+  <div style="height:40px;font-size:15px;padding-top:12px;" id="itemTitle">{$BookTitle}</div>
+ <table border="0" class="holdingsTable" style="width:510px;">
  <tbody>
  {foreach from=$holdings item=holding1}
  {foreach from=$holding1 item=holding}
   {if $lastSection != $holding.section}
-    {if strlen($holding.section) > 0}
-    <tr class='holdings-section'>
-    <td colspan='3' class='holdings-section'>{$holding.section}</td>
-    </tr>
-    {/if}
     {assign var=lastSection value=$holding.section}
   {/if}
-  <tr >
+  <tr {if $holding.availability} class='itemAvailable' {else}class='itemUnavailable'{/if}>
   	{* Location *}
-  	<td style = "padding-bottom:5px;"><span><strong>
+  	<td style = "padding-bottom:5px;padding-left:50px;width:250px;"><span><strong>
   	{$holding.location|escape}
     {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
   	</strong></span></td>
@@ -37,7 +30,7 @@
   	<td style = "padding-bottom:5px;">{$holding.copy|escape}</td>
   	
   	{* Call# *}
-  	<td style = "padding-bottom:5px;">
+  	<td style = "padding-bottom:5px;width:120px">
   	{$holding.callnumber|escape}
   	{if $holding.link}
   	  {foreach from=$holding.link item=link}
@@ -67,7 +60,15 @@
   </tr>
   {/foreach}
   {/foreach}
-  
+ </tbody>
+ </table>
+  </div>
+ </div>
+  <div id="actionButton" style="height:60px;padding-top:10px">
+    <input type="button" class="button" id="emailButton" value="Email" style="margin-left:230px;width:80px"/>
+    <input type="button" class="button" id="printButton" value="Print" style="width:80px"/>
+    <input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="Done" onclick="hideLightbox()"/>
+  </div>
  {elseif isset($issueSummaries) && count($issueSummaries) > 0}
    {* Display Issue Summaries *}
    {foreach from=$issueSummaries item=issueSummary name=summaryLoop}
@@ -153,6 +154,9 @@
 
  </tbody>
  </table>
+ </div>
+
   {else}
    No Copies Found
 {/if}
+

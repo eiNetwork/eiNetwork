@@ -8,7 +8,7 @@
 			</div>
 		{elseif $holdingsSummary.isDownloadable}
 			<div><span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-			<a href='{$holdingsSummary.downloadLink}'	target='_blank'>Available Online</a></div>
+			<a href='{$holdingsSummary.downloadLink}'	target='_blank' class="availableOnline">Available Online</a></div>
 		{/if}
 	{elseif $holdingsSummary.inLibraryUseOnly}
 		<div>

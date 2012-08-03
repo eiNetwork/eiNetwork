@@ -7,7 +7,7 @@
   margin-left:.8em
 }
 .ui-rater-starsOff, .ui-rater-starsOn {
-  display:inline-block; height:18px; background:url(/interface/themes/default/images/star/stars.png) repeat-x 0 0px;
+  display:inline-block; height:15px; background:url(/interface/themes/einetwork/images/star/stars.png) repeat-x 0 0px;
   zoom: 1;
 	*display: inline;
 }
@@ -15,7 +15,7 @@
   display:block; max-width:90px; top:0; background-position: 0 -36px;
 }
 .ui-rater-starsHover {
-  background-position: 0 -18px!important;
+  background-position: 0 -15px!important;
 }
 
 #ratingSummary {

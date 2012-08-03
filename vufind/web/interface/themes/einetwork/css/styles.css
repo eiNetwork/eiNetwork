@@ -40,7 +40,6 @@ html,body {
 
 
 #main-content {
-	height: 900px;
 	display: inline-block;
 	vertical-align: top;
 	max-width:794px;
@@ -48,18 +47,19 @@ html,body {
 	width:680px;
 	padding-left:20px;
 	padding-top:20px;
-	*display: inline;
-
 }
-/*szheng: modified*/
+#page-content{
+	min-height: 900px;
+	height: auto;
+}
 #right-bar {
 	width: 254px;
 	display: inline-block;
 	vertical-align: top;
-	*display: inline;
 	float: right;
 	background-image: url("../images/Art/filmgrain.png");
 	background-repeat: repeat;
+	font-size: 16px;
 
 }
 
@@ -373,7 +373,7 @@ ul.menu li {
 
 .result {
 	border-bottom: 1px solid #eee;
-	background-color: #FFFFFF;/*szheng: change from #EEF2F3 to #ffffff*/
+	background-color: #FFFFFF;
 	padding-top:15px;
 	padding-bottom:15px;
 }
@@ -553,18 +553,49 @@ div.warning {
 	font-family: "Helvetica Neue Light", Helvetica, sans-serif;
 }
 
+.popupBox .header{
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom:10px;
+	padding-top:3px;
+	padding-left:5px;
+	padding-right:8px;
+	color: rgb(240,240,240);
+	width:auto;
+	height: 10%;
+	font-size:16px;
+}
+.popupBox .content{
+	margin:10px;
+}
 .popupHeader{
 	margin-top: 10px;
 	margin-left: 10px;
-	padding: 5px;
+	padding-top:3px;
+	padding-left:5px;
+	padding-right:8px;
 	color: rgb(240,240,240);
 	height: 10%;
+	font-size:16px;
+}
+.popupHeader-title{
+	margin-top:20px;
+}
+.popupCancle{
+	float:right;
 }
 .popupContent{
 	margin: 0px;
 	padding: 5px;
 	color: rgb(240,240,240);
 	
+}
+.popupLable{
+	height:25px;
+	vertical-align:middle;
+}
+.popupBox table{
+	margin:5px;
 }
 
 /******END General Popup Box Style*****/
@@ -704,6 +735,7 @@ ul.browse {
 .sidegroup {
 	margin: 0 0 20px 0;
 	padding-bottom: 10px;
+	width:254px;
 }
 
 .sidebarLabel {
@@ -768,13 +800,13 @@ ul.bulleted li {
 }
 
 
-/************add by Xiaolin Lin 2012-06-11 left-bar filter***********/
+
 #left-bar {
 	width: 232px;
-	/*width: 220px;*/
+	height: auto;
+	min-height: 900px;
 	display: inline-block;
 	vertical-align: top;
-	*display: inline;
 	float: left;
 	background-image: url("../images/Art/filmgrain.png");
 	background-repeat: repeat;
@@ -1202,7 +1234,7 @@ table.datagrid tr.oddrow {
 }
 
 .add {
-	background-image: url(/images/silk/add.png);
+	/*background-image: url(/images/silk/add.png);*/
 	background-repeat: no-repeat;
 	background-position: left;
 	padding: .5em .5em .5em 18px;
@@ -1212,17 +1244,34 @@ table.datagrid tr.oddrow {
 .available {
 	color: #009900;
 }
+.overdriveCheckedOut{
+	color:#cc0000;
+}
+.availableOnline{
+	color:#009900;
+}
+.overdriveAvailable{
+	color:#009900;
+}
 
 .unavailable {
 	color: #cc0000;
 }
 
-.available span {
-	padding-left: 10px;
+.holdingsSummary span {
+	text-align:left;
 }
-
-.unavailable span {
-	padding-left: 10px;
+.here{
+	color:#009900;
+}
+.reserve{
+	color:#cc0000;
+}
+.nearby{
+	color:#009900;
+}
+.checkedOut{
+	color:#cc0000;
 }
 
 div.checkedout,span.checkedout {
@@ -1242,7 +1291,7 @@ div.checkedout,span.checkedout {
 	background-repeat: no-repeat;
 	background-position: left top;
 	padding: 0 .5em .5em 20px;
-	f margin-right: 1em;
+	margin-right: 1em;
 }
 
 .map {
@@ -1678,7 +1727,7 @@ img.centered {
 }
 
 .blockhead {
-	color: 3e63a6;
+	color: #3e63a6;
 	font-size: 20px;
 	padding-top: 3px;
 	border-bottom: 1px #c0c0c0 solid;
@@ -1693,7 +1742,8 @@ img.centered {
 	padding-left: 20px;
 }
 
-table.holdingsTable td {padding 10px;
+table.holdingsTable td {
+	padding: 10px;
 	
 }
 
@@ -2186,10 +2236,6 @@ div.issueInfo {
 	font-weight: bold;
 }
 
-/* MyAccount Sorting */
-.sortOptions {
-	float: right;
-}
 
 /* Hold Result Display */
 .hold_result_title {
@@ -2551,4 +2597,7 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 }
 .action-lable-span{
 	vertical-align:middle;
+}
+.subPageTitle{
+	font-size:18px;
 }

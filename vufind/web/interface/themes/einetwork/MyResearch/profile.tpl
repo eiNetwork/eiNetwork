@@ -42,7 +42,7 @@
 				<input class="button" value="View Details"/>
 			</div>
 			<div class="pay_balance">
-				<span>$2.25 due in library fines</span>
+				<span>{$profile.fines}  due in library fines</span>
 				<br/>
 				<a href="http://catalog.einetwork.net/patroninfo"><input class="button" value="Pay Balance"/></a>
 			</div>
@@ -162,7 +162,7 @@
 		</div>
 		</form>
 		{/if}
-		<input class="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm');return false;" value="Modify PIN Number"/>
+		<input class="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
 
 	</div>
 	

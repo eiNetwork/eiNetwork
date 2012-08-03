@@ -42,7 +42,6 @@ class AJAX extends Action {
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
-
 		}else{
 			header ('Content-type: text/xml');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1

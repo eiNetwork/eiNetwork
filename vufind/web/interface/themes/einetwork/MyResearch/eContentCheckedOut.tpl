@@ -12,28 +12,28 @@
   <div id="main-content">
     {if $user->cat_username}
 
-      {* Display recommendations for the user *}
-      {if $showStrands && $user->disableRecommendations == 0}
+	{* Display recommendations for the user *}
+	{if $showStrands && $user->disableRecommendations == 0}
 	      {assign var="scrollerName" value="Recommended"}
-				{assign var="wrapperId" value="recommended"}
-				{assign var="scrollerVariable" value="recommendedScroller"}
-				{assign var="scrollerTitle" value="Recommended for you"}
-				{include file=titleScroller.tpl}
-			
-				<script type="text/javascript">
-					var recommendedScroller;
+		{assign var="wrapperId" value="recommended"}
+		{assign var="scrollerVariable" value="recommendedScroller"}
+		{assign var="scrollerTitle" value="Recommended for you"}
+		{include file=titleScroller.tpl}
 	
-					recommendedScroller = new TitleScroller('titleScrollerRecommended', 'Recommended', 'recommended');
-					recommendedScroller.loadTitlesFrom('{$url}/Search/AJAX?method=GetListTitles&id=strands:HOME-3&scrollerName=Recommended', false);
-				</script>
-			{/if}
+		<script type="text/javascript">
+			var recommendedScroller;
+
+			recommendedScroller = new TitleScroller('titleScrollerRecommended', 'Recommended', 'recommended');
+			recommendedScroller.loadTitlesFrom('{$url}/Search/AJAX?method=GetListTitles&id=strands:HOME-3&scrollerName=Recommended', false);
+		</script>
+	{/if}
           
-      <div class="myAccountTitle">{translate text='Your Checked Out eContent'}</div>
-      {if $userNoticeFile}
-        {include file=$userNoticeFile}
-      {/if}
+	 <div class="myAccountTitle">{translate text='Your Checked Out eContent'}</div>
+	{if $userNoticeFile}
+	  {include file=$userNoticeFile}
+	{/if}
       
-      {if $transList}
+	{if $transList}
         <div class='sortOptions'>
           {*
           {translate text='Sort by'}
@@ -61,13 +61,13 @@
 	        		{$record.duedate|date_format}
 	        		{if $record.overdue}
                 <span class='overdueLabel'>OVERDUE</span>
-              {elseif $record.daysUntilDue == 0}
+		{elseif $record.daysUntilDue == 0}
                 <span class='dueSoonLabel'>(Due today)</span>
-              {elseif $record.daysUntilDue == 1}
+		{elseif $record.daysUntilDue == 1}
                 <span class='dueSoonLabel'>(Due tomorrow)</span>
-              {elseif $record.daysUntilDue <= 7}
+		{elseif $record.daysUntilDue <= 7}
                 <span class='dueSoonLabel'>(Due in {$record.daysUntilDue} days)</span>
-              {/if}
+            {/if}
 	        	</td>
 	        	<td>{$record.holdQueueLength}</td>
 	        	<td>

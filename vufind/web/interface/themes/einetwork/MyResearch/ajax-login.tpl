@@ -1,40 +1,59 @@
-<div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="header">
-	<a onclick="hideLightbox(); return false;" href="">close</a>
+<div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
 	{translate text='Login to your account'}
+	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
 </div>
-<div id="popupboxContent" class="content">
+<div id="popupboxContent" class="popupContent" style="margin-top:10px">
 	<div id='ajaxLoginForm'>
 		<form method="post" action="{$path}/MyResearch/Home" id="loginForm">
-			<div id='loginFormFields'>
-				<div id ='loginUsernameRow' class='loginFormRow'>
-					<div class='loginLabel'>{translate text='Username'}: </div>
-					<div class='loginField'><input type="text" name="username" id="username" value="{$username|escape}" size="15"/></div>
-				</div>
-				<div id ='loginPasswordRow' class='loginFormRow'>
-					<div class='loginLabel'>{translate text='Password'}: </div>
-					<div class='loginField'><input type="password" name="password" id="password" size="15"/></div>
-				</div>
-				<div id ='loginPasswordRow2' class='loginFormRow'>
-					<div class='loginLabel'>&nbsp;</div>
-					<div class='loginField'>
-						<input type="checkbox" id="showPwd" name="showPwd" onclick="return pwdToText('password')"/><label for="showPwd">{translate text="Reveal Password"}</label>
-					</div>
-				</div>
-				{if !$inLibrary}
-				<div id ='loginPasswordRow3' class='loginFormRow'>
-					<div class='loginLabel'>&nbsp;</div>
-					<div class='loginField'>
-						<input type="checkbox" id="rememberMe" name="rememberMe"/><label for="rememberMe">{translate text="Remember Me"}</label>
-					</div>
-				</div>
-				{/if}
-				<div id='loginSubmitButtonRow' class='loginFormRow'>
-					<input onclick="return processAjaxLogin()" id="loginButton" type="image" name="submit" value="Login" src='{$path}/interface/themes/default/images/login.png' alt='{translate text="Login to your account"}' />
-					{if $comment}
-						<input type="hidden" name="comment" name="comment" value="{$comment|escape:"html"}"/>
-					{/if}
-				</div>
-			</div>
+			<table>
+				<tbody>
+					<tr class="popupLable">
+						<td>
+							{translate text='Username'}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" name="username" id="username" value="{$username|escape}" size="15" class="text"/>
+						</td>
+					</tr>
+					<tr class="popupLable">
+						<td>
+							{translate text='Password'}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="password" name="password" id="password" size="15" class="text"/>
+						</td>
+					</tr>
+					<tr style="margin-top:5px;">
+						<td>
+							<input type="checkbox" id="showPwd" name="showPwd" onclick="return pwdToText('password')"/><label for="showPwd">{translate text="Reveal Password"}</label>
+						</td>
+					</tr>
+						{if !$inLibrary}
+							<tr>
+								<td>
+									<input type="checkbox" id="rememberMe" name="rememberMe"/><label for="rememberMe">{translate text="Remember Me"}</label>
+								</td>
+							</tr>
+						{/if}
+						<tr>
+							<td>
+								<input style="margin-left:250px;height:30px;background-color:rgb(244,213,56)"onclick="return processAjaxLogin()" id="loginButton" class="button" type="image" name="submit" value="Login" alt='{translate text="Login to your account"}' />
+							</td>
+						</tr>
+		
+							{if $comment}
+								<tr>
+									<td>
+										<input type="hidden" name="comment" name="comment" value="{$comment|escape:"html"}"/>
+									</td>
+								</tr>
+							{/if}
+				</tbody>
+			</table>			
 		</form>
 	</div>
 	<script type="text/javascript">$('#username').focus();</script>

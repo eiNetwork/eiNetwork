@@ -1,9 +1,8 @@
-<div id='hold_results'>
-	<div class='hold_result_title header'>
-		Item Request Results
-		<a href='#' onclick='hideLightbox();return false;'>Close</a>
+	<div onmouseup="this.style.cursor='default';" class="popupHeader">
+		<span class="popupHeader-title">{translate text='Item Request Result'}</span>
+		<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
 	</div>
-	<div class="contents">
+	<div class="popupContent" style="padding-top:25px;padding-left:25px">
 		{if $hold_message_data.showItemForm}
 		<form action='{$path}/MyResearch/HoldItems' method="POST">
 		<input type='hidden' name='campus' value='{$hold_message_data.campus}'/>
@@ -52,4 +51,3 @@
 		</form>
 		{/if}
 	</div>
-</div>

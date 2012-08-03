@@ -150,6 +150,7 @@ class AJAX extends Action {
 		return json_encode(array('result' => $return));
 	}
 	
+	
 	function AddBookCartList(){
 		global $user;
 		$raw_wishLists= $user->getLists();

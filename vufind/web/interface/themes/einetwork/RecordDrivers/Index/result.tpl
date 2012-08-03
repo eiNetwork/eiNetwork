@@ -48,6 +48,7 @@
   </div>
   *}
     {include file="/usr/local/VuFind-Plus/vufind/web/interface/themes/einetwork/ei_tpl/formatType.tpl"}
+    
   <div id = "holdingsSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="holdingsSummary">
     <div class="statusSummary" id="statusSummary{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}">
       <span class="unknown" style="font-size: 8pt;">{translate text='Loading'}...</span>
@@ -81,7 +82,7 @@
 	      <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
 	      <span class="resultAction_span" >move to wish list</span>
 	  </div>
-	  <div class="more_like_this" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)" onclick="requestItem('{$summId|escape:"url"}','{$wishListID}')">
+	  <div class="more_like_this" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)" onclick="findInLibrary('{$summId|escape:"url"}',false,'150px','550px','auto')">
 	      <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
 	      <span class="resultAction_span" name="more_like_this" >find in library</span>
 	  </div>
@@ -96,7 +97,7 @@
 	</div>
 	<div class="add_to_cart" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" >move to cart</span>
+	    <span class="resultAction_span" >add to cart</span>
 	</div>
 	<div class="more_like_this" onmousemove="mouseOver_normal(event)" onmouseout="mouseOut_normal(event)">
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
@@ -118,47 +119,3 @@
 </div>
 </div>
 </div>
-{*<div id ="searchStars{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" class="resultActions">
-  <div class="rate{if $summShortId}{$summShortId}{else}{$summId|escape}{/if} stat">
-	  <div class="statVal">
-	    <span class="ui-rater">
-	      <span class="ui-rater-starsOff" style="width:90px;"><span class="ui-rater-starsOn" style="width:0px"></span></span>
-	      (<span class="ui-rater-rateCount-{if $summShortId}{$summShortId}{else}{$summId|escape}{/if} ui-rater-rateCount">0</span>)
-	    </span>
-	  </div>
-    <div id="saveLink{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}">
-      {if $user}
-      	<div id="lists{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}"></div>
-    		<script type="text/javascript">
-    		  getSaveStatuses('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}');
-    		</script>
-      {/if}
-      {if $showFavorites == 1} 
-        <a href="{$url}/Resource/Save?id={$summId|escape:"url"}&amp;source=VuFind" style="padding-left:8px;" onclick="getSaveToListForm('{$summId}', 'VuFind'); return false;">{translate text='Add to'} <span class='myListLabel'>MyLIST</span></a>
-      {/if}
-    </div>
-    {assign var=id value=$summId scope="global"}
-    {assign var=shortId value=$summShortId scope="global"}
-    {include file="Record/title-review.tpl"}
-  </div>
-  <script type="text/javascript">
-    $(
-       function() {literal} { {/literal}
-           $('.rate{if $summShortId}{$summShortId|escape}{else}{$summId|escape}{/if}').rater({literal}{ {/literal}module: 'Record', recordId: '{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}',  rating:0.0, postHref: '{$url}/Record/{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}/AJAX?method=RateTitle'{literal} } {/literal});
-       {literal} } {/literal}
-    );
-  </script>
-    
-</div>
-
-
-<script type="text/javascript">
-  addRatingId('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}');
-  addIdToStatusList('{$summId|escape}');
-  $(document).ready(function(){literal} { {/literal}
-  	resultDescription('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}','{$summId}');
-  {literal} }); {/literal}
-  
-</script>
-
-</div>*}

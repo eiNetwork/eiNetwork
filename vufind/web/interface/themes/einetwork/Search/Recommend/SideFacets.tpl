@@ -1,9 +1,10 @@
 {*commented and modified by Xiaolin Lin 2012-06-05*}
 {*original left-bar look*}
-{if $recordCount > 0 || $filterList || ($sideFacetSet && $recordCount > 0)}
+{if $recordCount >= 0 || $filterList || ($sideFacetSet && $recordCount >= 0)}
 <div class="sidegroup">
-	{if $wishList}
-			<div class="filters" id="wishLists">
+	<div class="filters" id="wishLists">
+	{if $pageType eq 'WishList'}
+				{if !$onlyBookCart}
 				 <dl class="narrowList navmenu narrowbegin">
 					<dt>{translate text='View Wish List'}</dt>
 						<dd>
@@ -21,8 +22,27 @@
 							</form>
 						</dd>
 				 </dl>
-			</div>
+				 {/if}
+				 <dl class="narrowList navmenu narrowbegin" {if count($wishList)<=1}style="margin-top:10px"{/if}>
+					<dd>
+						<input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox',false,false,'450px',false,'320px'); return false;" class="button navmenu dd" value="create new wish list" style="width:180px"/>
+					</dd>
+				 </dl>
+
 	{/if}
+		{if $recordCount}
+		 <dl class="narrowList navmenu narrowbegin">
+			<dt>{translate text='Sort'}</dt>
+			<dd>
+				<select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
+				{foreach from=$sortList item=sortData key=sortLabel}
+				  <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc}</option>
+				{/foreach}
+				</select>
+			</dd>
+		 </dl>	
+	        {/if}
+	</div>
 	{*<h4>{translate text='Narrow Search11'}</h4>*}
 	{if isset($checkboxFilters) && count($checkboxFilters) > 0}
 	<p>

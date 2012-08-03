@@ -30,15 +30,13 @@
 	<div class="resulthead">
 		<div class="yui-u first">
 		{if $recordCount}
-		{translate text="Showing"}
-		<b>{$recordStart}</b> - <b>{$recordEnd}</b>
-		{translate text='of'} <b>{$recordCount}</b>
-		{if $searchType == 'basic'}{translate text='for search'}: <b>'{$lookfor|escape:"html"}'</b>,{/if}
+		{$recordCount}{translate text=" items found for"}
+		{if $searchType == 'basic'}'{$lookfor|escape:"html"}' {/if}
 		{/if}
-		{translate text='query time'}: {$qtime}s
-		{if $spellingSuggestions}
 		<br/><br/>
-		<div class="correction"><strong>{translate text='spell_suggest'}</strong>:<br/>
+		{*{translate text='query time'}: {$qtime}s*}
+		{if $spellingSuggestions}
+		{*<div class="correction"><strong>{translate text='spell_suggest'}</strong>:<br/>
 			{foreach from=$spellingSuggestions item=details key=term name=termLoop}
 				{$term|escape} &raquo; {foreach from=$details.suggestions item=data key=word name=suggestLoop}
 				<a href="{$data.replace_url|escape}">{$word|escape}</a>
@@ -49,21 +47,9 @@
 				{/foreach}
 				{if !$smarty.foreach.termLoop.last}<br/>{/if}
 			{/foreach}
-		</div>
+		</div>*}
 		{/if}
         </div>
-
-		<div class="yui-u toggle">
-	        {if $recordCount}
-	          {translate text='Sort'}
-	          <select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
-	          {foreach from=$sortList item=sortData key=sortLabel}
-	            <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc}</option>
-	          {/foreach}
-	          </select>
-	        {/if}
-        </div>
-
 	</div>
       {* End Listing Options *}
 

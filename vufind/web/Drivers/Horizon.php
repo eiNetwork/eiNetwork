@@ -45,7 +45,7 @@ class Horizon implements DriverInterface{
 					$this->db = @sybase_connect($configArray['Catalog']['database'] ,
 					$configArray['Catalog']['username'],
 					$configArray['Catalog']['password']);
-				}else{
+				}else{ 
 					$this->db = mssql_connect($configArray['Catalog']['host'] . ':' . $configArray['Catalog']['port'],
 					$configArray['Catalog']['username'],
 					$configArray['Catalog']['password']);

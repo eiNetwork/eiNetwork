@@ -21,6 +21,18 @@
 require_once 'services/MyResearch/MyResearch.php';
 require_once 'sys/Pager.php';
 
+
+//BEGIN for holds
+require_once 'CatalogConnection.php';
+require_once("PHPExcel.php");
+//END for holds
+
+
+//BEGIN for Overdrive Checkout Items
+require_once 'Drivers/OverDriveDriver.php';
+require_once 'sys/eContent/EContentRecord.php';
+//END for Overdrive Checkout Items
+
 class CheckedOut extends MyResearch{
 	function launch(){
 		global $configArray;
@@ -28,7 +40,7 @@ class CheckedOut extends MyResearch{
 		global $user;
 		global $timer;
 		$logger = new Logger();
-
+		
 		// Get My Transactions
 		$oneOrMoreRenewableItems = false;
 		if ($this->catalog->status) {
@@ -134,11 +146,196 @@ class CheckedOut extends MyResearch{
 			$this->exportToExcel($result['transactions'], $showOut, $showRenewed, $showWaitList);
 		}
 
+		
+		//$interface->setTemplate('checkedout.tpl');
+		//$interface->setPageTitle('Checked Out Items');
+		//$interface->display('layout.tpl');
+		
+		
+		
+		
+		//*BEGIN for holds
+		if (isset($_REQUEST['multiAction'])){
+			$multiAction = $_REQUEST['multiAction'];
+			$waitingHoldSelected = $_REQUEST['waitingHoldSelected'];
+			$availableHoldSelected = $_REQUEST['availableHoldSelected'];
+			$locationId = $_REQUEST['location'];
+			$i = 0;
+			$xnum = array();
+			$cancelId = array();
+			$requestId = array();
+			$freeze = '';
+			if ($multiAction == 'cancelSelected'){
+				$type = 'cancel';
+				$freeze = '';
+			}elseif ($multiAction == 'freezeSelected'){
+				$type = 'update';
+				$freeze = 'on';
+
+			}elseif ($multiAction == 'thawSelected'){
+				$type = 'update';
+				$freeze = 'off';
+
+			}elseif ($multiAction == 'updateSelected'){
+				$type = 'update';
+				$freeze = '';
+			}
+			$result = $this->catalog->driver->updateHoldDetailed($requestId, $user->password, $type, $title, null, $cancelId, $locationId, $freeze);
+
+			//Redirect back here without the extra parameters.
+			header("Location: " . $configArray['Site']['url'] . '/MyResearch/Holds?accountSort=' . ($selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title'));
+			die();
+		}
+
+		global $librarySingleton;
+		$interface->assign('allowFreezeHolds', true);
+
+		// Define sorting options
+		$sortOptions = array('title' => 'Title',
+                         'author' => 'Author',
+                         'format' => 'Format',
+                         'placed' => 'Date Placed',
+                         'location' => 'Pickup Location',
+                         'position' => 'Position',
+                         'status' => 'Status',
+		);
+		$interface->assign('sortOptions', $sortOptions);
+		$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title';
+		$interface->assign('defaultSortOption', $selectedSortOption);
+
+		$profile = $this->catalog->getMyProfile($user);
+
+		$libraryHoursMessage = Location::getLibraryHoursMessage($profile['homeLocationId']);
+		$interface->assign('libraryHoursMessage', $libraryHoursMessage);
+
+		$ils = $configArray['Catalog']['ils'];
+		$allowChangeLocation = ($ils == 'Millennium');
+		$interface->assign('allowChangeLocation', $allowChangeLocation);
+		$showPlacedColumn = ($ils == 'Horizon');
+		$interface->assign('showPlacedColumn', $showPlacedColumn);
+		$showDateWhenSuspending = ($ils == 'Horizon');
+		$interface->assign('showDateWhenSuspending', $showDateWhenSuspending);
+		$showPosition = ($ils == 'Horizon');
+		$interface->assign('showPosition', $showPosition);
+		
+		// Get My Transactions
+		if ($this->catalog->status) {
+			if ($user->cat_username) {
+				$patron = $this->catalog->patronLogin($user->cat_username, $user->cat_password);
+				$patronResult = $this->catalog->getMyProfile($patron);
+				if (!PEAR::isError($patronResult)) {
+					$interface->assign('profile', $patronResult);
+				}
+
+				$interface->assign('sortOptions', $sortOptions);
+				$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'dueDate';
+				$interface->assign('defaultSortOption', $selectedSortOption);
+				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
+
+				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 25;
+				$interface->assign('recordsPerPage', $recordsPerPage);
+				if (isset($_GET['exportToExcel'])) {
+					$recordsPerPage = -1;
+					$page = 1;
+				}
+				
+				$result = $this->catalog->getMyHolds($patron, $page, $recordsPerPage, $selectedSortOption);
+				if (!PEAR::isError($result)) {
+					if (count($result) > 0 ) {
+						$location = new Location();
+						$pickupBranches = $location->getPickupBranches($patronResult, null);
+						$locationList = array();
+						foreach ($pickupBranches as $curLocation) {
+							$locationList[$curLocation->locationId] = $curLocation->displayName;
+						}
+						$interface->assign('pickupLocations', $locationList);
+
+						$xnum = -01;
+						foreach ($result['holds'] as $sectionKey => $sectionData) {
+							if ($sectionKey == 'unavailable'){
+								$link = $_SERVER['REQUEST_URI'];
+								if (preg_match('/[&?]page=/', $link)){
+									$link = preg_replace("/page=\\d+/", "page=%d", $link);
+								}else if (strpos($link, "?") > 0){
+									$link .= "&page=%d";
+								}else{
+									$link .= "?page=%d";
+								}
+								if ($recordsPerPage != '-1'){
+									$options = array('totalItems' => $result['numUnavailableHolds'],
+								                 'fileName'   => $link,
+								                 'perPage'    => $recordsPerPage,
+								                 'append'    => false,
+									);
+									$pager = new VuFindPager($options);
+									$interface->assign('pageLinks', $pager->getLinks());
+								}
+							}
+							
+							//Processing of freeze messages?
+							$timer->logTime("Got recordList of holds to display");
+						}
+						//Make sure available holds come before unavailable
+						$interface->assign('recordList', $result['holds']);
+
+						//make call to export function
+						if ((isset($_GET['exportToExcelAvailable'])) || (isset($_GET['exportToExcelUnavailable']))){
+							if (isset($_GET['exportToExcelAvailable'])) {
+								$exportType = "available";
+							}
+							else {
+								$exportType = "unavailable";
+							}
+							$this->exportToExcel($result['holds'], $exportType, $showDateWhenSuspending);
+						}
+
+					} else {
+						$interface->assign('recordList', 'You do not have any holds');
+					}
+				}
+			}
+		}
+		
+		
+		/**BEGIN php section for Overdrive Checkout Items**/
+		$overDriveDriver = new OverDriveDriver();
+		$overDriveCheckedOutItems = $overDriveDriver->getOverDriveCheckedOutItems($user);
+		//Load the full record for each item in the wishlist
+		foreach ($overDriveCheckedOutItems['items'] as $key => $item){
+			if ($item['recordId'] != -1){
+				$econtentRecord = new EContentRecord();
+				$econtentRecord->id = $item['recordId'];
+				$econtentRecord->find(true);
+				$item['record'] = clone($econtentRecord);
+			} else{
+				$item['record'] = null;
+			}
+			$overDriveCheckedOutItems['items'][$key] = $item;
+		}
+		$interface->assign('overDriveCheckedOutItems', $overDriveCheckedOutItems['items']);
+		$interface->assign('ButtonBack',true);
+		$interface->assign('ButtonHome',true);
+		$interface->assign('MobileTitle','OverDrive Checked Out Items');
+		
+		//$interface->setTemplate('overDriveCheckedOut.tpl');
+		//$interface->setPageTitle('OverDrive Checked Out Items');
+		
+		/**END php section for Overdrive Checkout Items**/
+		
+		
+		
+		
+		
+		
+		
+		$interface->assign('patron',$patron);
 		$interface->setTemplate('checkedout.tpl');
-		$interface->setPageTitle('Checked Out Items');
+		$interface->setPageTitle('My Holds');
 		$interface->display('layout.tpl');
+		//END for holds
 	}
 
+	
 	public function exportToExcel($checkedOutItems, $showOut, $showRenewed, $showWaitList) {
 		//PHPEXCEL
 		// Create new PHPExcel object
@@ -240,4 +437,6 @@ class CheckedOut extends MyResearch{
 		exit;
 
 	}
+
+
 }

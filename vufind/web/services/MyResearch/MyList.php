@@ -39,7 +39,7 @@ class MyList extends Action {
 		global $configArray;
 		global $interface;
 		global $user;
-
+	
 		//Get all lists for the user
 		if ($user){
 			$tmpList = new User_list();

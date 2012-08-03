@@ -1,18 +1,41 @@
+{strip}
 <div id="right-bar">
     <div class="bookcart">
         <div id="cart-image">
-            <img src="/interface/themes/einetwork/images/Art/Materialicons/Cart.png"  alt="cart"/>
-            <span id="cart-descrpiion">&nbsp;your book cart is empty &nbsp;</span>
+            <img src="/interface/themes/einetwork/images/Art/Materialicons/ShoppingCart.png"  alt="cart" style="vertical-align:middle"/>
+            <span id="cart-descrpiion" style="vertical-align:middle"></span>
         </div>
         <div id="blank">&nbsp;</div>
-        <div id="view_cart_button" onclick="getViewCart()">
-            View Cart
-        </div>
+        <input type="button" class="button" id="view_cart_button" onclick="getViewCart()" value="View Cart">
     </div>
+    
     <div class="separator"><hr/></div>
     
-    
     <div class="account-links">
+        <div id="wish-lists">
+            <a onclick='getWishList()'>Wish Lists</a>
+        </div>
+	 <div id="my-item">
+            <a onclick='getCheckedOutItem()'>Checked Out Items {if $profile.numCheckedOut} ({$profile.numCheckedOut}){/if}</a>
+        </div>
+	<div id="my-request">
+          <a onclick='getRequestedItem()' >Requested Items{if $profile.numHoldsAvailable} ({$profile.numHoldsAvailable+$profile.numHoldsRequested}){/if}</a>
+        </div>
+	<div id="reading-history">
+            <a onclick='getReadingHistory()' >Reading History</a>
+        </div>
+        <div id="history">
+            <a href="/Search/History">Search History</a>
+        </div>
+        <div id="account-settings">
+            <a onclick='getAccountSetting()'>Account Settings</a>
+        </div>
+        
+        
+        
+        
+        
+        {*}
         <div id="wish-lists">
             <a href="/List/Results">Wish Lists</a>
         </div>
@@ -20,19 +43,10 @@
             <a href="/Search/History">Search History</a>
         </div>
         <div id="my-item">
-            <a href="/MyResearch/CheckedOut">My Items</a>
+            <a href="/MyResearch/CheckedOut">Checked Out Items</a>
         </div>
         <div id="my-request">
-            <a href="/MyResearch/Holds">My Requests</a>
-        </div>
-        <div id="my-od-item">
-            <a href="/MyResearch/OverdriveCheckedOut">My Overdrive Items</a>
-        </div>
-        <div id="my-od-request">
-            <a href="/MyResearch/OverdriveHolds">My Overdrive Requests</a>
-        </div>
-        <div id="my-od-wishlist">
-            <a href="/MyResearch/OverdriveWishList">My Overdrive Wish List</a>
+            <a href="/MyResearch/Holds">Requests Items</a>
         </div>
         <div id="account-settings">
             <a href="/MyResearch/Profile">Account Settings</a>
@@ -40,7 +54,9 @@
         <div id="reading-history">
             <a href="/MyResearch/ReadingHistory">My Reading History</a>
         </div>
+        *}
     </div>
+    
     
     <div class="separator"><hr/></div>
     
@@ -54,11 +70,12 @@
         </div>
         *}
         <div id="blank">&nbsp;</div>
-        <div id="edit-button">
-            <a href="/MyResearch/Profile">Edit</a>
-        </div>
+         <a href="/MyResearch/Profile">
+	      <input id="edit-button" class="button" value="Edit"/>
+	    </a>
     </div>
     
+   
     <div class="separator"><hr/></div>
     
     <div class="recommendations">
@@ -89,3 +106,4 @@
         
     </div>
 </div>
+{/strip}

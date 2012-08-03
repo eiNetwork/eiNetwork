@@ -142,7 +142,6 @@ class Home extends Record{
 			}
 			$interface->setPageTitle($mainTitle);
 		}
-
 		// Display Page
 		$interface->display('layout.tpl');
 

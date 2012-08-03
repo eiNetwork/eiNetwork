@@ -1,15 +1,19 @@
 .bookcart{
     margin-left: 15px;
     margin-right: 15px;
-    height: 96px;
+    height: 60px;
 
 }
 
 .bookcart div{
+    margin: 0px;
     padding-top: 4px;
-    padding-left: 4px;
-    padding-right: 4px;
 }
+
+#cart-image{
+    margin-top: 15px;
+}
+
 #blank{
     width: 100px;
     display: inline-block;
@@ -76,15 +80,8 @@
 }
 
 #edit-button{
-    border:1px solid grey;
-    height:15px;
-    width:30px;
-    border-radius: 12px;
-    display: inline-block;
-    text-align: center;
-    padding-top: 1px;
-    padding-bottom: 2px;
-    margin-top: 10px;
+  width:30px;
+  height: 15px;
 }
 
 .recommendations{

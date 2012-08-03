@@ -122,7 +122,6 @@ class FavoriteHandler
 		$interface->assign('recordCount', $summary['resultTotal']);
 		$interface->assign('recordStart', $summary['startRecord']);
 		$interface->assign('recordEnd',   $summary['endRecord']);
-		$interface->assing('test','bye');
 		$link = $searchObject->renderLinkPageTemplate();
 		$options = array('totalItems' => count($this->favorites),
                          'perPage' => $summary['perPage'],

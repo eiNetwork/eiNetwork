@@ -27,6 +27,7 @@ require_once 'lib/GetList.php';
 require_once 'sys/SolrStats.php';
 require_once 'sys/Pager.php';
 require_once 'Action.php';
+require_once 'services/Record/Record.php';
 require_once 'services/MyResearch/MyResearch.php';
 require_once 'services/MyResearch/lib/Suggestions.php';
 require_once 'services/MyResearch/lib/FavoriteHandler.php';
@@ -166,6 +167,49 @@ class Results extends Action {
 			}
 			$n++;
 		}
+		if($bookCartID==null){
+			$_REQUEST['title'] = 'Book Cart';
+			$_REQUEST['desc'] = '';
+			$_REQUEST['public'] = '';
+			require_once 'services/MyResearch/ListEdit.php';
+			$return = array();
+			if (UserAccount::isLoggedIn()) {
+				$listService = new ListEdit();
+				$resultListId = $listService->addList();
+				$goToListID = $resultListId;
+				$raw_wishLists= $user->getLists();
+				foreach ($raw_wishLists as $hello){
+					foreach($hello as $key =>$hellohello){
+						if($key == 'id'){
+							$wishLists[$n]['id'] = $hellohello;
+						}
+						if($key == 'title'){
+							$wishLists[$n]['title'] = $hellohello;
+							
+						}				
+					}
+					if($wishLists[$n]['title'] == 'Book Cart'){
+						$bookCartID = $wishLists[$n]['id'];
+						$n--;	
+					}
+					if($wishLists[$n]['title'] == 'My Favorites'){
+						$myFavoritesID = $wishLists[$n]['id'];
+					}
+					$n++;
+				}
+				if (!PEAR::isError($resultListId)) {
+				} else {
+					$error = $result->getMessage();
+					if (empty($error)) {
+						$error = 'Error';
+					}
+				}
+				} else {
+			}
+		}
+		if(count($raw_wishLists)==1){
+			$interface->assign('onlyBookCart',true);
+		}
 		if($myFavoritesID ==null && count($wishLists)>0){
 			$myFavoritesID = $wishLists[0]['id'];
 		}
@@ -182,6 +226,7 @@ class Results extends Action {
 		}
 		$interface->assign('wishListID',$goToListID);
 		$interface->assign('wishList',$wishLists);
+
 		$list = User_list::staticGet($goToListID);
 		$favorites = $list->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 		$n = 0;
@@ -260,7 +305,17 @@ class Results extends Action {
 		}else{
 			$interface->assign('pageType','WishList');
 		}
-		$interface->assign('sortList',   $searchObject->getSortList());
+		$temptemp =  $searchObject->getSortList();
+		foreach($temptemp as $key =>$value){
+			foreach($value as $keykey => $valuevalue){
+				if($_REQUEST['goToListID']=='BookCart'){
+					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$valuevalue);
+				}else{
+					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results/goToListID="+$goToListID+"&",$valuevalue);
+				}
+			}
+		}
+		$interface->assign('sortList',   $temptemp);
 		$interface->assign('rssLink',    $searchObject->getRSSUrl());
 		$interface->assign('excelLink',  $searchObject->getExcelUrl());
 		
@@ -287,7 +342,6 @@ class Results extends Action {
 		$searchObject->getRecommendationsTemplates('top'));
 		$interface->assign('sideRecommendations',
 		$searchObject->getRecommendationsTemplates('side'));
-
 		// 'Finish' the search... complete timers and log search history.
 		$searchObject->close();
 		$interface->assign('time', round($searchObject->getTotalSpeed(), 2));
@@ -329,7 +383,7 @@ class Results extends Action {
 		$interface->assign('showRatings', $showRatings);
 
 		$numProspectorTitlesToLoad = 0;
-		if ($searchObject->getResultTotal() < 1) {
+		if ($searchObject->getResultTotal() == 0) {
 			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);
@@ -340,7 +394,6 @@ class Results extends Action {
 			$interface->setTemplate('list.tpl');
 			//$interface->setTemplate('list-none.tpl');
 			$interface->assign('recordCount', 0);
-
 			// Was the empty result set due to an error?
 			$error = $searchObject->getIndexError();
 			if ($error !== false) {
@@ -359,6 +412,7 @@ class Results extends Action {
 
 			$numProspectorTitlesToLoad = 10;
 			$timer->logTime('no hits processing');
+			///$interface->assign('sideRecommendations',$facet);
 
 		} else if ($searchObject->getResultTotal() < 0){//szheng: I conceal the the situation the result number equal to 1
 			//Redirect to the home page for the record
@@ -410,14 +464,20 @@ class Results extends Action {
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
-			$interface->assign('subpage', 'Search/list-list.tpl');
-			$interface->setTemplate('list.tpl');
+			if(count($raw_wishLists)<=1&&$_REQUEST['goToListID']!="BookCart"){
+				$interface->setTemplate('noList.tpl');
+				
+			}else{
+				$interface->assign('subpage', 'Search/list-list.tpl');
+				$interface->setTemplate('list.tpl');
+			}
+
 			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);
 			$interface->assign('ButtonHome',true);
 			$interface->assign('MobileTitle','Search Results');
-			
+
 
 			// Process Paging
 			$link = $searchObject->renderLinkPageTemplate();
@@ -425,7 +485,16 @@ class Results extends Action {
                              'fileName'   => $link,
                              'perPage'    => $summary['perPage']);
 			$pager = new VuFindPager($options);
-			$interface->assign('pageLinks', $pager->getLinks());
+			$tempPageLinks = $pager->getLinks();
+			foreach($tempPageLinks as $key => $value){
+				if($_REQUEST['goToListID']=='BookCart'){
+					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
+				}else{
+					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results/goToListID="+$goToListID+"&",$value);
+				}
+				//echo $tempPageLinks[$key];
+			}
+			$interface->assign('pageLinks', $tempPageLinks);
 			if ($pager->isLastPage()){
 				$numProspectorTitlesToLoad = $summary['perPage'] - $pager->getNumRecordsOnPage();
 				if ($numProspectorTitlesToLoad < 5){
@@ -455,6 +524,9 @@ class Results extends Action {
 
 		// Save the URL of this search to the session so we can return to it easily:
 		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
+		
+		//$rec = new Record();
+		//echo $rec['isbn'];
 		
 		// Done, display the page
 		$interface->display('layout.tpl');

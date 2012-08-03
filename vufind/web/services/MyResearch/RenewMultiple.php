@@ -38,7 +38,7 @@ class RenewMultiple extends Action
 				echo '</pre>';
 			}
 		}
-
+		
 		//Renew the hold
 		if (method_exists($this->catalog->driver, 'renewItem')) {
 			$selectedItems = $_GET['selected'];

@@ -11,10 +11,7 @@
 .holdingsSummary {
 	clear: right;
 	display: block;
-	margin-left: 5px;
 	margin-bottom: 10px;
-	margin-top: 10px;
-	padding: 3px;
 	text-align: left;
 }
 
@@ -35,5 +32,5 @@
 	font-size: 12px;
 }
 .holdingsSummary .callNumber a{
-	color: #C1200A;
+	color: #00ff00;
 }

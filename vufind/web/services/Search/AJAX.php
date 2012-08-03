@@ -743,7 +743,8 @@ class AJAX extends Action {
 		}elseif (isset($error)){
 			echo $error;
 		}else{
-			echo("There are no other editions for this title currently in the catalog.");
+			//echo("There are no other editions for this title currently in the catalog.");
+			echo $interface->fetch("Search/holdResult-noResult.tpl");
 		}
 	}
 }
