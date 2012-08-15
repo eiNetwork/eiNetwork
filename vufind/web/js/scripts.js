@@ -842,7 +842,7 @@ function lessFacets(name)
 function getSaveToListForm(id, source){
 	if (loggedIn){
 		var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
-		ajaxLightbox(url,false,false,'450px',false,'350px');
+		ajaxLightbox(url,false,false,'450px',false,'auto');
 	}else{
 		ajaxLogin(function (){
 			getSaveToListForm(id, source);
@@ -886,7 +886,7 @@ function performSaveRecord(id, source, formElem, strings, service, successCallba
 							successCallback();
 							hideLightbox();
 							if($("#listId").val()!=null&&$("#listId").val()!=""){
-								deleteItemInList(id);
+								deleteItemInList(id,source);
 							}
 					} else {
 							getLightbox('Record', 'Save', id, null, strings.add);

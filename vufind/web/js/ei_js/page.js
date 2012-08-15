@@ -21,23 +21,26 @@ function goToLink(url){
 }
 
 function getSaveToBookCart(id, source){
+
 	if (loggedIn){
 		//var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
 		//ajaxLightbox(url);
-                saveToBookCart(id, source);
+                successCallback = function() {
+                };
+                saveToBookCart(id, source,successCallback);
 	}else{
+                successCallback = function() {
+                    window.location.reload();
+                };
 		ajaxLogin(function (){
-			getSaveToBookCart(id, source);
-                        window.location.reload();
+			saveToBookCart(id, source,successCallback);
 		});
 	}
 	return false;
 }
 //This is for book cart.
-function saveToBookCart(id, source) {
+function saveToBookCart(id, source,successCallback) {
         var strings = {add: 'Save To List', error: 'Error: Record not saved'};
-	successCallback = function() {
-	};
 	performSaveToBookCart(id, source, strings, 'VuFind', successCallback);
 	return false;
 }
@@ -71,11 +74,10 @@ function performSaveToBookCart(id, source, strings, service, successCallback)
 		dataType: "json",
 		success: function() {
                     if($("#listId").val()!=null&&$("#listId").val()!=''){
-                        deleteItemInList(id);
+                        deleteItemInList(id,source);
                     }
                     getBookCartItemCount();
 		    document.body.style.cursor = 'default';
-			
 	},
 	error: function() {
 			document.getElementById('popupbox').innerHTML = strings.error;
@@ -178,9 +180,9 @@ function requestItem(id,listId){
                         "campus=" + $("#campus").val() + "&" +
 			"selected["+id+"]=on"  + "&" +
 			"holdType=" + "hold";
-        newAJAXLightbox(id,listId,url,'post',params,'json');
+        newAJAXLightbox(id,'VuFind',listId,url,'post',params,'json');
 }
-function newAJAXLightbox(id, listId,urlToLoad, connect_type,dataToLoad,dataTypeToLoad, parentId, left, width, top, height){
+function newAJAXLightbox(id, source,listId,urlToLoad, connect_type,dataToLoad,dataTypeToLoad, parentId, left, width, top, height){
 	
 	var loadMsg = $('#lightboxLoading').html();
 
@@ -208,7 +210,7 @@ function newAJAXLightbox(id, listId,urlToLoad, connect_type,dataToLoad,dataTypeT
                     if(data['status']!='none')
                     {
                         //alert(listId+"     "+id);
-                         deleteItemInList(id);
+                         deleteItemInList(id,source);
                     }
                     if (parentId){
                             //Automatically position the lightbox over the cursor
@@ -238,9 +240,9 @@ function newAJAXLightbox(id, listId,urlToLoad, connect_type,dataToLoad,dataTypeT
         }   );
 }
 
-function deleteItemInList(itemId){
+function deleteItemInList(itemId,source){
     document.body.style.cursor = 'wait';
-    var data ='method=deleteItemInList&selected['+itemId+']=on';
+    var data ='method=deleteItemInList&selected['+itemId+']=on&source='+source;
     if($("#listId").val()!=null&&$("#listId").val()!=''){
         data += '&listId='+$("#listId").val();
     }
@@ -379,7 +381,7 @@ function findAllInLibrary(left,top,width,height){
                     dataType:"html",
                     data:"",
                     success:function(data){
-                        alert(data);
+                        //alert(data);
                     }
                 })
         });
@@ -395,3 +397,27 @@ function seeUnavailable()
     }
 }
 
+function printPage(inLeft,inTop,inWidth,innerHTML){
+    var printWin = window.open("","Print",top=inTop,left=inLeft,width=inWidth);
+    printWin.document.body.innerHTML = innerHTML;
+    printWin.print();
+    printWin.close();
+}
+function printFindLibrary(){
+  var left = $(document).width()/2-285;
+    var top = 300;
+    var width = 570;
+    //var innerHTML = $("#headhead").html()+"<table>";
+    var innerHTML = '<div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)"> <span style="font-size:18px;">Item Call Numbers</span></div><table>';
+    if($("#showAndHideUnavailable").text()=="show unavailable items"){
+        innerHTML += $("#callNumberBody").html();
+        printPage(left,top,width,innerHTML);
+    }else{
+        $.each($(".itemAvailable"),function(){
+            innerHTML +="<tr>" + $(this).html()+"</tr>";
+            })
+        innerHTML += "</table>";
+        printPage(left,top,width,innerHTML);
+    }
+
+}

@@ -17,6 +17,11 @@
 
 		{if count($overDriveCheckedOutItems) > 0}
 			<div class="checkout">
+				<select name="accountSort" id="sort" onchange="changeAccountSort($(this).val());">
+					{foreach from=$sortOptions item=sortDesc key=sortVal}
+					<option value="{$sortVal}"{if $defaultSortOption == $sortVal} selected="selected"{/if}>{translate text=$sortDesc}</option>
+					{/foreach}
+				</select>
 				{foreach from=$overDriveCheckedOutItems item=record}
 				<div id="record">
 					<div class="item_image">

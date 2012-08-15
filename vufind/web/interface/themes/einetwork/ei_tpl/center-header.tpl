@@ -65,8 +65,8 @@
     </div>
     {/if}
   {/if}
-    <span id="disclaimer">&nbsp;&nbsp;&nbsp; This is server integrated with the live millennium and Overdrive systems,
-    Holds, Renewals, Econtent and Checkouts are all live.</span>
+    <span id="disclaimer">&nbsp;&nbsp;&nbsp; This website is integrated with the live millennium & Overdrive systems.
+    Holds, Renewals, Econtent & Checkouts are all live.</span>
 
 </div>
 

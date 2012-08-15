@@ -1,9 +1,7 @@
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	<div id="left-bar">
 		{include file="Admin/menu.tpl"}
 	</div>
-  
 	<div id="main-content">
 		<h1>Transfer Account Information to new Barcode</h1>
 		
@@ -26,5 +24,8 @@
 				<p>All patron information recorded in VuFind will be transfered from the old account to the new account.</p>
 			</form>
 		</div>
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
 	</div>
 </div>

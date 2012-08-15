@@ -1,10 +1,8 @@
 {strip}
 <div id="page-content" class="content">
   {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-
-    {include file="Admin/menu.tpl"}
+  <div id="left-bar">
+   {include file="Admin/menu.tpl"}
   </div>
   <div id="main-content">
     <h1>Available List Widgets</h1>
@@ -25,6 +23,9 @@
     </table>
     <input type="button" class="button" name="addWidget" value="Add Widget" onclick="window.location = '{$path}/Admin/ListWidgets?objectAction=add';"/>
     </div>
+  </div>
+  <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
   </div>
 </div>
 {/strip}

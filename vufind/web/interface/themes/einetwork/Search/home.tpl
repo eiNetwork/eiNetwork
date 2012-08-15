@@ -22,6 +22,46 @@
 		    }
 		});
 	    });
+	    
+	    
+	    $('#card').focusout(function(){
+		var card=$(this).val(),
+		    cardReg=/^[1-9]\d{13}$/;
+		if(!card){
+			$('#cardError').html('&nbsp;');
+			return false;
+			
+		}else{
+			if(!cardReg.test(card)){
+				$('#cardError').text('*please enter a valid 14 digits card number');
+				cardValid=false;
+				return false;
+			}else{
+				$('#cardError').html('&nbsp;');
+				return true;
+			}
+		}
+	    });
+	    
+	    $('#pin').focusout(function(){
+		var pin=$(this).val(),
+		    pinReg=/^[0-9]\d{3}$/;
+		if(!pin){
+			$('#pinError').html('&nbsp;');
+			return false;
+			
+		}else{
+			if(!pinReg.test(pin)){
+				$('#pinError').text('*please enter a valid 4 digits PIN');
+				pinValid=false;
+				return false;
+			}else{
+				$('#pinError').html('&nbsp;');
+				return true;
+			}
+		}
+		
+	    });
 	});
 	
 </script>
@@ -33,14 +73,13 @@
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
 					<input id="card" class="text" type="text" name="username" title="Libray Card Number"  value="{$username|escape}"/>
+					<div id="cardError">&nbsp;</div>
 				</div>
 				<div id="password">
 					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" />
+					<div id="pinError">&nbsp;</div>
 				</div>
 				<div>
-					<div>
-						<input type="checkbox" value=""/>
-					</div>
 					<input class="button" type="submit" name="submit" value="Login" alt='{translate text="Login"}' />
 				</div>
 			</form>
@@ -52,7 +91,7 @@
 				view your past searches and get personalized recommendations for items you might like.
 			</div>
 			<div>
-				<a href="http://vufindplus.einetwork.net/MyResearch/GetCard">
+				<a href="http://vufindplus1.einetwork.net/MyResearch/GetCard">
 					<input class="button" type="submit" name="submit" value="Register"/>
 				</a>
 			</div>
@@ -60,4 +99,3 @@
 	</div>
 	<div class="loginHome-right"></div>
 </div>
-

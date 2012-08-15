@@ -20,7 +20,7 @@
 <div class="right-header-left">
     <div id="account-label">
         <span {if $user} style="display: none;"{/if}>
-            <a href="{$path}/" class='loginLink'>
+            <a href="{$path}/MyResearch/Home" class='loginLink'>
             {translate text="My Account"}
             </a>
         </span>

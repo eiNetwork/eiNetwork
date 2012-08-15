@@ -1,11 +1,10 @@
 {css filename="listWidget.css"}
 <div id="page-content" class="content">
-  {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-
+  {if $error}<p class="error">{$error}</p>{/if}
+    <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
+
   <div id="main-content">
     <h1>Edit List Widget</h1>
     <a class="button" href="{$path}/Admin/ListWidgets">All Widgets</a>
@@ -14,6 +13,10 @@
     <a class="button" href="{$path}/Admin/ListWidgets?objectAction=delete&id={$object->id}" onclick="return confirm('Are you sure you want to delete {$object->name}?');"/>Delete</a>
 
     {$editForm}
+  </div>
+  
+    <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
   </div>
 </div>
 {if $edit}

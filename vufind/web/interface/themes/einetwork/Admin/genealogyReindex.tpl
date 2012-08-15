@@ -1,11 +1,8 @@
 <script  type="text/javascript" src="{$path}/js/genealogy/import.js"></script>
 <div id="page-content" class="content">
-	<div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-      
-    {include file="Admin/menu.tpl"}
-  </div>
-	
+	<div id="left-bar">
+		{include file="Admin/menu.tpl"}
+	</div>
   <div id="main-content">
           <h1>Reindex Genealogy Information</h1>
           {if $importMessage}
@@ -31,4 +28,7 @@
 						{/if}
           </form>
 	</div>
+    <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
+  </div>
 </div>

@@ -9,9 +9,7 @@ $(function() {
 {/literal}
 </script>
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
+<div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   
@@ -107,5 +105,8 @@ $(function() {
 		<div class="exportButton">
 		<input type="submit" id="exportToExcel" name="exportToExcel" value="Export to Excel" onclick="window.location.href='{$fullPath}{if strpos($fullPath, '?') > 0}&{else}?{/if}exportToExcel'">
 		</div>
-	</div>
+   </div>
+  <div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
+  </div>  
 </div>

@@ -1,9 +1,7 @@
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
-		
-		{include file="Admin/menu.tpl"}
-	</div>
+  <div id="left-bar">
+   {include file="Admin/menu.tpl"}
+  </div>
 	
 	<div id="main-content">
 		<h1>{$shortPageTitle}</h1>
@@ -115,4 +113,9 @@
 			This should be a file that was exported from the VuFind Admin console. Trying to import another file could result in having a very long day of trying to put things back together.	In short, don't do it!
 		</form>
 	</div>
+	
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
+	</div>
+
 </div>

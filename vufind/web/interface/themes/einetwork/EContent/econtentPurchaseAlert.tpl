@@ -1,6 +1,6 @@
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	<div id="left-bar">
+		
 		{include file="Admin/menu.tpl"}
 	</div>
   
@@ -28,5 +28,8 @@
 				</tr>
 			{/foreach}
 		</table>
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
 	</div>
 </div>

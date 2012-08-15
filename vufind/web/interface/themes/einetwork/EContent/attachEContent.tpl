@@ -1,6 +1,6 @@
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	<div id="left-bar">
+		
 		{include file="Admin/menu.tpl"}
 	</div>
   
@@ -39,5 +39,8 @@
 				<p>eContent will be attached to records in a batch process.  You can check the status of your import by viewing the <a href="AttachEContentLog">import log</a>.</p>
 			</form>
 		</div>
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
 	</div>
 </div>

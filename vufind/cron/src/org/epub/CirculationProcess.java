@@ -166,7 +166,7 @@ public class CirculationProcess implements IProcessHandler{
 				getUserEmailStmt.setLong(1, userId);
 				ResultSet userInfo = getUserEmailStmt.executeQuery();
 				while (userInfo.next()){
-					String emailSubject = "Douglas County Libraries Notice";
+					String emailSubject = "Allegheny County Libraries Notice";
 					StringBuffer emailBody = new StringBuffer();
 					String email = userInfo.getString("email");
 					String firstname = userInfo.getString("firstname");
@@ -192,8 +192,8 @@ public class CirculationProcess implements IProcessHandler{
 						}
 						
 						emailBody.append("Thank you,\r\n\r\n");
-						emailBody.append("Douglas County Libraries\r\n");
-						emailBody.append("http://www.douglascountylibraries.org/\r\n");
+						emailBody.append("Allegheny County Libraries\r\n");
+						emailBody.append("http://www.aclalibraries.org/\r\n");
 						
 						sendNotice(email, emailSubject, emailBody.toString(), logger);
 						
@@ -237,7 +237,7 @@ public class CirculationProcess implements IProcessHandler{
 				getUserEmailStmt.setLong(1, userId);
 				ResultSet userInfo = getUserEmailStmt.executeQuery();
 				while (userInfo.next()){
-					String emailSubject = "Douglas County Libraries - Hold Abandoned Notice";
+					String emailSubject = "Allegheny County Libraries - Hold Abandoned Notice";
 					StringBuffer emailBody = new StringBuffer();
 					String email = userInfo.getString("email");
 					String firstname = userInfo.getString("firstname");
@@ -263,8 +263,8 @@ public class CirculationProcess implements IProcessHandler{
 						}
 						
 						emailBody.append("Thank you,\r\n\r\n");
-						emailBody.append("Douglas County Libraries\r\n");
-						emailBody.append("http://www.douglascountylibraries.org/\r\n");
+						emailBody.append("Allegheny County Libraries\r\n");
+						emailBody.append("http://www.aclalibraries.org/\r\n");
 						
 						sendNotice(email, emailSubject, emailBody.toString(), logger);
 						
@@ -315,7 +315,7 @@ public class CirculationProcess implements IProcessHandler{
 				getUserEmailStmt.setLong(1, userId);
 				ResultSet userInfo = getUserEmailStmt.executeQuery();
 				while (userInfo.next()){
-					String emailSubject = "Douglas County Libraries - Hold Reminder Notice";
+					String emailSubject = "Allegheny County Libraries - Hold Reminder Notice";
 					StringBuffer emailBody = new StringBuffer();
 					String email = userInfo.getString("email");
 					String firstname = userInfo.getString("firstname");
@@ -325,9 +325,9 @@ public class CirculationProcess implements IProcessHandler{
 						logger.info("Sending notification to " + firstname + " " + lastname);
 						emailBody.append(firstname + " " + lastname + "\r\n\r\n\r\n");
 						emailBody.append("This is a reminder that the following items that you requested are now available for online usage. ");
-						emailBody.append("You can checkout the items by accessing your eContent at http://catalog.douglascountylibraries.org/MyResearch/MyEContent.\r\n\r\n");
+						emailBody.append("You can checkout the items by accessing your eContent at http://democat.einetwork.net/MyResearch/MyEContent.\r\n\r\n");
 						emailBody.append("***Please Note***\r\n");
-						emailBody.append("If you no longer need these items, please cancel them online at: http://catalog.douglascountylibraries.org/MyResearch/MyEContent.  This will allow these items to be available for the next patron.\r\n\r\n");
+						emailBody.append("If you no longer need these items, please cancel them online at: http://democat.einetwork.net/MyResearch/MyEContent.  This will allow these items to be available for the next patron.\r\n\r\n");
 						
 						//Get a list of records that are available where notices have not been sent
 						getAvailableHoldsForUser.setLong(1, userId);
@@ -345,8 +345,8 @@ public class CirculationProcess implements IProcessHandler{
 						}
 						
 						emailBody.append("Thank you,\r\n\r\n");
-						emailBody.append("Douglas County Libraries\r\n");
-						emailBody.append("http://www.douglascountylibraries.org/\r\n");
+						emailBody.append("Allegheny County Libraries\r\n");
+						emailBody.append("http://www.aclalibraries.org/\r\n");
 						
 						sendNotice(email, emailSubject, emailBody.toString(), logger);
 						
@@ -394,7 +394,7 @@ public class CirculationProcess implements IProcessHandler{
 				getUserEmailStmt.setLong(1, userId);
 				ResultSet userInfo = getUserEmailStmt.executeQuery();
 				while (userInfo.next()){
-					String emailSubject = "Douglas County Libraries - Hold Notice";
+					String emailSubject = "Allegheny County Libraries - Hold Notice";
 					StringBuffer emailBody = new StringBuffer();
 					String email = userInfo.getString("email");
 					String firstname = userInfo.getString("firstname");
@@ -404,9 +404,9 @@ public class CirculationProcess implements IProcessHandler{
 						logger.info("Sending notification to " + firstname + " " + lastname);
 						emailBody.append(firstname + " " + lastname + "\r\n\r\n\r\n");
 						emailBody.append("The following items that you requested are now available for online usage. ");
-						emailBody.append("You can checkout the items by accessing your eContent at http://catalog.douglascountylibraries.org/MyResearch/MyEContent.\r\n\r\n");
+						emailBody.append("You can checkout the items by accessing your eContent at http://catalog.aclalibraries.org/MyResearch/MyEContent.\r\n\r\n");
 						emailBody.append("***Please Note***\r\n");
-						emailBody.append("If you no longer need these items, please cancel them online at: http://catalog.douglascountylibraries.org/MyResearch/MyEContent.  This will allow these items to be available for the next patron.\r\n\r\n");
+						emailBody.append("If you no longer need these items, please cancel them online at: http://catalog.aclalibraries.org/MyResearch/MyEContent.  This will allow these items to be available for the next patron.\r\n\r\n");
 						
 						//Get a list of records that are available where notices have not been sent
 						getAvailableHoldsForUser.setLong(1, userId);
@@ -424,8 +424,8 @@ public class CirculationProcess implements IProcessHandler{
 						}
 						
 						emailBody.append("Thank you,\r\n\r\n");
-						emailBody.append("Douglas County Libraries\r\n");
-						emailBody.append("http://www.douglascountylibraries.org/\r\n");
+						emailBody.append("Allegheny County Libraries\r\n");
+						emailBody.append("http://www.aclalibraries.org/\r\n");
 						
 						sendNotice(email, emailSubject, emailBody.toString(), logger);
 						

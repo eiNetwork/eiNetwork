@@ -74,7 +74,6 @@ function doGetStatusSummaries()
 {
 	var now = new Date();
 	var ts = Date.UTC(now.getFullYear(),now.getMonth(),now.getDay(),now.getHours(),now.getMinutes(),now.getSeconds(),now.getMilliseconds());
-
 	var callGetEContentStatusSummaries = false;
 	var eContentUrl = path + "/Search/AJAX?method=GetEContentStatusSummaries";
 	for (var j=0; j<GetEContentStatusList.length; j++) {
@@ -82,9 +81,7 @@ function doGetStatusSummaries()
 		callGetEContentStatusSummaries = true;
 	}
 	// url += "&id[]=" + encodeURIComponent($id);
-	
 	eContentUrl += "&time=" +ts;
-
 	//Since the ILS can be slow, make individual cals to print titles
 	// Modify this to return status summaries one at a time to improve
 	// the perceived performance
@@ -95,7 +92,6 @@ function doGetStatusSummaries()
 		url += "&time="+ts;
 		$.getJSON(url, function(data){
 			var items = data.items;
-			
 			var elemId;
 			var statusDiv;
 			var status;
@@ -103,7 +99,6 @@ function doGetStatusSummaries()
 			var showPlaceHold;
 			var placeHoldLink;
 			var numHoldable = 0;
-
 			for (var i=0; i<items.length; i++) {
 				try{
 					elemId = items[i].shortId;
@@ -215,7 +210,7 @@ function doGetStatusSummaries()
 			//alert("Unexpected error trying to get status " + textStatus);
 		});
 	}
-		
+	//alert(eContentUrl);
 	if (callGetEContentStatusSummaries)
 	{
 		$.ajax({
@@ -238,18 +233,37 @@ function doGetStatusSummaries()
 			}
 		});
 	}
-	
 	// Get OverDrive status summaries one at a time since they take several
 	// seconds to load
 	for (var j=0; j<GetOverDriveStatusList.length; j++) {
-		var overDriveUrl = path + "/Search/AJAX?method=GetEContentStatusSummaries";
+		var overDriveUrl = path + "/List/AJAX?method=GetEContentStatusSummaries";
 		overDriveUrl += "&id[]=" + encodeURIComponent(GetOverDriveStatusList[j]);
 		$.ajax({
 			url: overDriveUrl, 
 			success: function(data){
+				var sta = $(data).find('status').text();
 				var items = $(data).find('item');
+				if(sta == "Not available yet"){
+					alert("hello");
+				}
 				$(items).each(function(index, item){
-					var elemId = $(item).attr("id") ;
+					var elemId = $(item).attr("id");
+					if(sta =="Available from OverDrive"){
+						$("#RequestWord"+elemId).text("checkout now");
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						if(document.getElementById("selected"+elemId)){
+							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");	
+						}
+					}else if(sta == "Checked out in OverDrive"){
+						$("#RequestWord"+elemId).text("request now");
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						if(document.getElementById("selected"+elemId)){
+							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
+						}
+					}else{
+						$("#RequestWord"+elemId).text("access online");
+					}
+					//alert($(item).find('formattedHoldingsSummary').text());
 					$('#holdingsEContentSummary' + elemId).replaceWith($(item).find('formattedHoldingsSummary').text());
 					if ($(item).find('showplacehold').text() == 1){
 						$("#placeEcontentHold" + elemId).show();

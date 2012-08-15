@@ -37,7 +37,9 @@
       {if $showLists}
       <select name="list">
         {foreach from=$nonContainingLists item="list"}
+	{if $list.title|escape:"html" neq "Book Cart"}
         <option value="{$list.id}">{$list.title|escape:"html"}</option>
+	{/if}
         {foreachelse}
         <option value="">{translate text='My Favorites'}</option>
         {/foreach}

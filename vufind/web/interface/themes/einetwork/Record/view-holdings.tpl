@@ -2,12 +2,12 @@
 
 {if isset($holdings) && count($holdings) > 0}
  <div id="holdingInfoPopup" style="height:auto;max-height:450px;width:auto;height:inherit;padding-left:12px;padding-right:12px">
-  <div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)">
+  <div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)" id="headhead">
     <span style="font-size:18px;">Item Call Numbers</span>
-    <span onclick="seeUnavailable()"  style="margin-left:10px;color:#9999ff;text-decoration:underline;" id="showAndHideUnavailable">(show unavailable items)</span>
+    {if !$allAvailableItem}<span onclick="seeUnavailable()"  style="margin-left:10px;color:#9999ff;text-decoration:underline;" id="showAndHideUnavailable">(show unavailable items)</span>{/if}
     <span onclick="hideLightbox()" style="float:right"><img src="/interface/themes/einetwork/images/closeHUDButton.png"></span>
   </div>
-  <div style="overflow-y:auto;height:auto;max-height:400px;border-bottom:1px solid rgb(238,238,238);">
+  <div style="overflow-y:auto;height:auto;max-height:400px;border-bottom:1px solid rgb(238,238,238);" id="callNumberBody">
   <div style="height:40px;font-size:15px;padding-top:12px;" id="itemTitle">{$BookTitle}</div>
  <table border="0" class="holdingsTable" style="width:510px;">
  <tbody>
@@ -20,7 +20,6 @@
   	{* Location *}
   	<td style = "padding-bottom:5px;padding-left:50px;width:250px;"><span><strong>
   	{$holding.location|escape}
-    {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
   	</strong></span></td>
   	
   	{* Collection *}
@@ -66,7 +65,7 @@
  </div>
   <div id="actionButton" style="height:60px;padding-top:10px">
     <input type="button" class="button" id="emailButton" value="Email" style="margin-left:230px;width:80px"/>
-    <input type="button" class="button" id="printButton" value="Print" style="width:80px"/>
+    <input type="button" class="button" id="printButton" value="Print" style="width:80px" onclick="printFindLibrary()"/>
     <input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="Done" onclick="hideLightbox()"/>
   </div>
  {elseif isset($issueSummaries) && count($issueSummaries) > 0}
@@ -122,7 +121,7 @@
      <tr class='holdingsLine'>
       <td style = "padding-bottom:5px;"><span><strong>
 	    {$holding.location|escape}
-	    {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
+	    
 	    </strong></span></td>
 	    <td style = "padding-bottom:5px;">
 	    {$holding.callnumber|escape}

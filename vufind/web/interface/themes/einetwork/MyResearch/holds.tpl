@@ -38,7 +38,18 @@
 				</script>
 			{/if}
 			
-			<div>{translate text='Requested Book Items'}</div>
+			<div>
+				{translate text='Requested Book Items'}
+				
+				{*<div class="sortOptions">
+					<select name="accountSort" id="sort{$sectionKey}" onchange="changeAccountSort($(this).val());">
+						{foreach from=$sortOptions item=sortDesc key=sortVal}
+						<option value="{$sortVal}"{if $defaultSortOption == $sortVal} selected="selected"{/if}>{translate text=$sortDesc}</option>
+						{/foreach}
+					</select>
+				</div>*}
+			</div>
+			
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
 
@@ -404,10 +415,6 @@
 							<a href="#" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')">
 								<input class="button" value="Remove">
 							</a>
-							
-							{*<a href="{$record.downloadLink}">
-								<input class="button" value="Download"/>
-							</a>*}
 						</div>
 					</div>
 				    {/foreach}

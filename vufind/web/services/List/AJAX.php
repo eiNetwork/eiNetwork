@@ -24,6 +24,7 @@ require_once 'services/MyResearch/lib/User_list_solr.php';
 require_once 'services/MyResearch/lib/Resource.php';
 require_once 'services/MyResearch/lib/User_resource.php';
 require_once 'services/MyResearch/lib/Resource_tags.php';
+require_once 'sys/eContent/EContentRecord.php';
 
 class AJAX extends Action {
 
@@ -293,6 +294,7 @@ class AJAX extends Action {
 
 			echo ' <item id="' . htmlspecialchars($record['recordId']) . '">';
 			echo '  <status>' . htmlspecialchars($record['status']) . '</status>';
+			echo ' <holdingAvailability>' . $record['status'] . '</holdingAvailability>';
 			echo '  <showplacehold>' . ($record['showPlaceHold'] ? '1' : '0') . '</showplacehold>';
 			echo '  <showcheckout>' . ($record['showCheckout'] ? '1' : '0') . '</showcheckout>';
 			echo '  <showaccessonline>' . ($record['showAccessOnline'] ? '1' : '0') . '</showaccessonline>';
@@ -940,8 +942,13 @@ class AJAX extends Action {
 		$list = User_list::staticGet($_REQUEST['listId']);
 		$itemsToRemove = $_REQUEST['selected'];
 		foreach ($itemsToRemove as $id => $selected){
+			$resource = new Resource();
+			$resource->record_id = $id;
+			$resource->source = $_REQUEST['source'];
+			$resource->find(true);
 			//add back the leading . to get the full bib record
-			$resource = Resource::staticGet('record_id', "$id");
+			//$resource = Resource::staticGet('record_id', "$id");
+			//$resource->source = $_REQUEST['source'];
 			$list->removeResource($resource);
 		}
 		echo 'success';

@@ -327,7 +327,15 @@ class Results extends Action {
 				$interface->assign('subpage', 'Search/list-list.tpl');
 				$interface->setTemplate('list.tpl');
 			}
-			
+			//Test 
+			/*$tempRecordSet = $searchObject->getResultRecordSet(); 
+			foreach($tempRecordSet as $key => $value){
+				echo $key."<br/>";
+				foreach($value as $keykey =>$valuevalue){
+					echo "===   ===".$keykey." => ".$valuevalue."<br/>";
+				}
+			}*/
+
 			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);

@@ -1,10 +1,11 @@
 <script type="text/javascript" src="{$path}/services/MaterialsRequest/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
-	<div id="sidebar-wrapper"><div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	
+	<div id="left-bar">
+		
 		{include file="Admin/menu.tpl"}
-	</div></div>
+	</div>
 
 	<div id="main-content">
 		<h2>Manage Materials Requests</h2>
@@ -95,6 +96,9 @@
 				<div>There are no materials requests that meet your criteria.</div>
 			{/if}
 		{/if}
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
 	</div>
 </div>
 <script type="text/javascript">

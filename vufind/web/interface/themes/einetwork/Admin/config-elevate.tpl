@@ -1,10 +1,7 @@
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
-    {include file="Admin/menu.tpl"}
+  <div id="left-bar">
+   {include file="Admin/menu.tpl"}
   </div>
-  
   <div id="main-content">
           <h1>Elevated Terms Configuration</h1>
           {include file="Admin/savestatus.tpl"}
@@ -24,4 +21,7 @@
             <input type="submit" name="submit" value="Save">
           </form>
   </div>
+  <div id="right-bar">
+  {include file="MyResearch/menu.tpl"}
+</div>
 </div>

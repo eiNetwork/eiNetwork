@@ -80,10 +80,19 @@ class AJAXGetCallNumber extends Record{
 						$holdings[$copy['location']][] = $copy;
 					}
 				}
+				$allAvailableItem = true;
+				foreach($holdings as $value){
+					foreach($value as $valuevalue){
+						if(!$valuevalue['availability']){
+							$allAvailableItem = false;
+						}
+					}
+				}
 				if (isset($issueSummaries) && count($issueSummaries) > 0){
 					$interface->assign('issueSummaries', $issueSummaries);
 					$holdingData->issueSummaries = $issueSummaries;
 				}else{
+					$interface->assign('allAvailableItem',$allAvailableItem);
 					$interface->assign('holdings', $holdings);
 					$holdingsResult = $interface->fetch("Record/view-holdings.tpl");
 					echo $holdingsResult;

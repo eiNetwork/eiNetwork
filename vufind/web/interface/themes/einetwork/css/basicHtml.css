@@ -89,7 +89,14 @@ li{
     box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-
+.yellow:hover{
+    background-color: rgb(244,213,56);
+    
+}
+.yellow{
+    background-color: rgb(255,230,109);
+    text-align:center;
+}
 /*****END input button style*****/
 
 

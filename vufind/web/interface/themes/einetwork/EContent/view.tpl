@@ -1,7 +1,5 @@
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
+  <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   
@@ -29,5 +27,8 @@
     <div id='property'><span class='propertyLabel'>Number of copies: </span><span class='propertyValue'>{$epubFile->availableCopies}</span></div>
     <div id='property'><span class='propertyLabel'>Description: </span><br/><span class='propertyValue'>{$epubFile->description}</span></div>
     <div id='property'><span class='propertyLabel'>Notes: </span><span class='propertyValue'>{$epubFile->notes}</span></div>
+  </div>
+  <div id="right-bar">
+     {include file="MyResearch/menu.tpl"}
   </div>
 </div>

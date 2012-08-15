@@ -1,12 +1,10 @@
 <script type="text/javascript" src="{$path}/services/MaterialsRequest/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
-	<div id="sidebar-wrapper">
-		<div id="left-bar">
-			 &nbsp;
-		</div>
+	<div id="left-bar">
+		{include file="Admin/menu.tpl"}
 	</div>
-	
+
 	<div id="main-content">
 		<h2>My Materials Requests</h2>
 		{if $error}
@@ -63,7 +61,7 @@
 	</div>
 	<div id="right-bar">
 		{include file="MyResearch/menu.tpl"}
-		{include file="Admin/menu.tpl"}
+		
 	</div>
 </div>
 <script type="text/javascript">

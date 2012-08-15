@@ -38,10 +38,6 @@ function redrawSaveStatus() {literal}{{/literal}
 					<a href="{$bookCoverUrl}">							
 						<img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
 					</a>
-					<div id="goDeeperLink" class="godeeper" style="display:none">
-						<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;">
-						<img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" class="godeeper_img" /></a>
-					</div>
 				</div>
 				<div id="record_record_up_middle">
 						<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape}</div>
@@ -66,19 +62,19 @@ function redrawSaveStatus() {literal}{{/literal}
 						{/if}
 				</div>
 				<div id="record_action_button">
-					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="sentToBag('{$id|escape}', '{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape:"javascript"}', this);"{/if}>
+					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','VuFind');return false;"{/if}>
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
 						<span class="action-lable-span">add to cart</span>
 					</div>
-					<div class="round-rectangle-button" id="request-now">
-						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" /></span>
+					<div class="round-rectangle-button" id="request-now" onclick="window.location.href='{$path}/Record/{$id|escape:'url'}/Hold'">
+						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
 						<span class="action-lable-span">request now</span>
 					</div>
 					<div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'VuFind'); return false;">
 						<span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
 						<span class="action-lable-span">add to wish list</span>
 					</div>
-					<div class="round-rectangle-button" id="find-in-library">
+					<div class="round-rectangle-button" id="find-in-library" onclick="findInLibrary('{$id|escape:"url"}',false,'150px','570px','auto')">
 						<span class="action-img-span"><img id="find-in-library-img" alt="find in library" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" /></span>
 						<span class="action-lable-span">find in library</span>
 					</div>
@@ -88,126 +84,14 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div id="book_format_options_lable">
 					<b>Book Format Options</b>
 				</div>
-				<div class="Format_type">
-					{if is_array($recordFormat)}
-					{foreach from=$recordFormat item=format}
-					{if $format eq "Print Book"} 
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/Book.png"/ alt="Print Book"></span>
-					{elseif $format eq "DVD"}
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DVD.png"/ alt="DVD"></span>
-					{elseif $format eq "Music CD"}
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicCD.png"/ alt="Music CD"></span>
-					{elseif $format eq "Blu-Ray"}
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BluRay.png"/ alt="Blu Ray"></span>
-					{elseif $format eq "Video Download"}
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
-					{elseif $format eq "CD-ROM"}
-					<span class="format_img_span"><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DVD.png"/ alt="Video Download"></span>
-					{/if}
-					<span class="iconlabel" >{translate text=$format}</span>&nbsp;
-					{/foreach}
-					{else}
-					<span class="iconlabel">{translate text=$summFormats}</span>
-					{/if}
-				</div>
-				
+				{include file="Record/formatType.tpl"}	
 			</div>
 		</div>
-		
-		
-		{*<div id="record-header">
-			{if isset($previousId)}
-				<div id="previousRecordLink"><a href="{$path}/{$previousType}/{$previousId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$previousIndex}&amp;page={if isset($previousPage)}{$previousPage}{else}{$page}{/if}" title="{if !$previousTitle}{translate text='Previous'}{else}{$previousTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/prev.png" alt="Previous Record"/></a></div>
-			{/if}
-			<div id="recordTitleAuthorGroup">
-				{* Display Title
-
-			</div>
-			{*this is for the next button in the original design.
-			{*<div id ="recordTitleRight">
-				{if isset($nextId)}
-					<div id="nextRecordLink"><a href="{$path}/{$nextType}/{$nextId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$nextIndex}&amp;page={if isset($nextPage)}{$nextPage}{else}{$page}{/if}" title="{if !$nextTitle}{translate text='Next'}{else}{$nextTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/next.png" alt="Next Record"/></a></div>
-				{/if}
-				{if $lastsearch}
-				<div id="returnToSearch">
-					<a href="{$lastsearch|escape}#record{$id|escape:"url"}">{translate text="Return to Search Results"}</a>
-				</div>
-				{/if}
-	 		</div
-	 	</div>>*}
-		{*
-			<div id="image-column">
-			{* Display Book Cover 
-			{if $user->disableCoverArt != 1}		
-			
-			{/if}
-			
-			{* Place hold link 
-		<div class='requestThisLink' id="placeHold{$id|escape:"url"}" style="display:none">
-			<a href="{$path}/Record/{$id|escape:"url"}/Hold"><img src="{$path}/interface/themes/default/images/place_hold.png" alt="Place Hold"/></a>
-		</div>
-
-		
-			{if $goldRushLink}
-			<div class ="titledetails">
-				<a href='{$goldRushLink}' >Check for online articles</a>
-			</div>
-			{/if}
-					
-				
-			<div id="myrating" class="stat">
-			<div class="statVal">
-			<div class="ui-rater">
-				<span class="ui-rater-starsOff" style="width:90px;"><span class="ui-rater-starsOn" style="width:63px"></span></span>
-				</div>
-				</div>
-				<script type="text/javascript">
-				$(
-				 function() {literal} { {/literal}
-						 $('#myrating').rater({literal}{ {/literal} module:'Record', recordId: '{$shortId}', rating:'{$ratingData.average}', postHref: '{$path}/Record/{$id}/AJAX?method=RateTitle'{literal} } {/literal});
-				 {literal} } {/literal}
-			);
-				</script>
-			</div>
-		</div> {* End image column 
-		*}
 		<div id="record-details-column">
 			<div id="record-details-header">
 				<div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord"></div>
-				
-			{*<div id="recordTools">
-				<ul>
-					
-					{if !$tabbedDetails}
-						<li><a href="{$path}/Record/{$id|escape:"url"}/Cite" class="cite" id="citeLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/Cite?lightbox", "#citeLink"); return false;'>{translate text="Cite this"}</a></li>
-					{/if}
-					{if $showTextThis == 1}
-						<li><a href="{$path}/Record/{$id|escape:"url"}/SMS" class="sms" id="smsLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/SMS?lightbox", "#smsLink"); return false;'>{translate text="Text this"}</a></li>
-					{/if}
-					{if $showEmailThis == 1}
-						<li><a href="{$path}/Record/{$id|escape:"url"}/Email" class="mail" id="mailLink" onclick='ajaxLightbox("{$path}/Record/{$id|escape}/Email?lightbox", "#mailLink"); return false;'>{translate text="Email this"}</a></li>
-					{/if}
-					{if is_array($exportFormats) && count($exportFormats) > 0}
-						<li>
-							<a href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormats.0|escape:"url"}" class="export" onclick="toggleMenu('exportMenu'); return false;">{translate text="Export Record"}</a><br />
-							<ul class="menu" id="exportMenu">
-								{foreach from=$exportFormats item=exportFormat}
-									<li><a {if $exportFormat=="RefWorks"} {/if}href="{$path}/Record/{$id|escape:"url"}/Export?style={$exportFormat|escape:"url"}">{translate text="Export to"} {$exportFormat|escape}</a></li>
-								{/foreach}
-							</ul>
-						</li>
-					{/if}
-					{if $showFavorites == 1}
-						<li id="saveLink"><a href="{$path}/Record/{$id|escape:"url"}/Save" class="fav" onclick="getSaveToListForm('{$id|escape}', 'VuFind'); return false;">{translate text="Add to favorites"}</a></li>
-					{/if}
-					{if !empty($addThis)}
-						<li id="addThis"><a class="addThis addthis_button"" href="https://www.addthis.com/bookmark.php?v=250&amp;pub={$addThis|escape:"url"}">{translate text='Bookmark'}</a></li>
-					{/if}
-				</ul>
-			</div>*}
-			
-					<div class="clearer">&nbsp;</div>
-		</div>
+				<div class="clearer">&nbsp;</div>
+			</div>
 			
 			{if $summary}
 			<div class="resultInformation">
@@ -228,22 +112,6 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
-			{*
-			{if $subjects}
-			<div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Subjects'}</div>
-				<div class="recordSubjects">
-					{foreach from=$subjects item=subject name=loop}
-						{foreach from=$subject item=subjectPart name=subloop}
-							{if !$smarty.foreach.subloop.first} -- {/if}
-							<a href="{$path}/Search/Results?lookfor=%22{$subjectPart.search|escape:"url"}%22&amp;basicType=Subject">{$subjectPart.title|escape}</a>
-						{/foreach}
-						<br />
-					{/foreach}
-				</div>
-			</div>
-			{/if}
-			*}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
 				<div class="recordSubjects">
@@ -377,7 +245,6 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 		</div>
-	 
 		{* tabs for series, similar titles, and people who viewed also viewed *}
 		{if $showStrands}
 			<div id="relatedTitleInfo" class="ui-tabs">
@@ -498,7 +365,7 @@ function redrawSaveStatus() {literal}{{/literal}
 			
 		{/if}
 		
-		<div id="moredetails-tabs">
+<!--		<div id="moredetails-tabs">
 			{* Define tabs for the display *}
 			<ul>
 				<li><a href="#holdingstab">{translate text="Copies"}</a></li>
@@ -575,7 +442,7 @@ function redrawSaveStatus() {literal}{{/literal}
 				
 			</div>
 		</div> {* End of tabs*}
-		
+-->		
 		{literal}
 		<script type="text/javascript">
 			$(function() {
@@ -585,13 +452,13 @@ function redrawSaveStatus() {literal}{{/literal}
 		{/literal}
             </div>
 	</div>
-        <div id="right-bar">
+	<div id="right-bar">
             {include file="ei_tpl/right-bar.tpl"}
         </div>
 	</div>	
 
 
-{if $showStrands}
+<!--{if $showStrands}
 {* Strands Tracking *}{literal}
 <!-- Event definition to be included in the body before the Strands js library -->
 <script type="text/javascript">
@@ -602,4 +469,4 @@ StrandsTrack.push({
 });
 </script>
 {/literal}
-{/if}
+{/if}-->

@@ -60,12 +60,13 @@ class CheckedOut extends MyResearch{
 				$interface->assign('libraryHoursMessage', $libraryHoursMessage);
 
 				// Define sorting options
-				$sortOptions = array('title'   => 'Title',
-                             'author'  => 'Author',
-                             'dueDate' => 'Due Date',
-				                     'format'  => 'Format',
-				                     'renewed'  => 'Times Renewed',
-				                     'holdQueueLength'  => 'Wish List',
+				$sortOptions = array(
+						'title'   => 'Title',
+						'author'  => 'Author',
+						'dueDate' => 'Due Date',
+						'format'  => 'Format',
+				                'renewed'  => 'Times Renewed',
+				                'holdQueueLength'  => 'Wish List',
 				);
 				$interface->assign('sortOptions', $sortOptions);
 				$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'dueDate';
@@ -145,13 +146,6 @@ class CheckedOut extends MyResearch{
 		if (isset($_GET['exportToExcel'])) {
 			$this->exportToExcel($result['transactions'], $showOut, $showRenewed, $showWaitList);
 		}
-
-		
-		//$interface->setTemplate('checkedout.tpl');
-		//$interface->setPageTitle('Checked Out Items');
-		//$interface->display('layout.tpl');
-		
-		
 		
 		
 		//*BEGIN for holds
@@ -191,14 +185,11 @@ class CheckedOut extends MyResearch{
 		$interface->assign('allowFreezeHolds', true);
 
 		// Define sorting options
-		$sortOptions = array('title' => 'Title',
-                         'author' => 'Author',
-                         'format' => 'Format',
-                         'placed' => 'Date Placed',
-                         'location' => 'Pickup Location',
-                         'position' => 'Position',
-                         'status' => 'Status',
-		);
+		$sortOptions = array(
+				'title' => 'Title',
+				'author' => 'Author',
+				'format' => 'Format',
+				);
 		$interface->assign('sortOptions', $sortOptions);
 		$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title';
 		$interface->assign('defaultSortOption', $selectedSortOption);
@@ -297,7 +288,8 @@ class CheckedOut extends MyResearch{
 		}
 		
 		
-		/**BEGIN php section for Overdrive Checkout Items**/
+		
+		/**BEGIN for Overdrive Checkout Items**/
 		$overDriveDriver = new OverDriveDriver();
 		$overDriveCheckedOutItems = $overDriveDriver->getOverDriveCheckedOutItems($user);
 		//Load the full record for each item in the wishlist
@@ -312,21 +304,22 @@ class CheckedOut extends MyResearch{
 			}
 			$overDriveCheckedOutItems['items'][$key] = $item;
 		}
+		
+		$sortOptions = array(
+				'title'   => 'Title',
+				'author'  => 'Author',
+				'format'  => 'Format',
+				);
+		$interface->assign('sortOptions', $sortOptions);
+		
+		
+		
 		$interface->assign('overDriveCheckedOutItems', $overDriveCheckedOutItems['items']);
 		$interface->assign('ButtonBack',true);
 		$interface->assign('ButtonHome',true);
 		$interface->assign('MobileTitle','OverDrive Checked Out Items');
 		
-		//$interface->setTemplate('overDriveCheckedOut.tpl');
-		//$interface->setPageTitle('OverDrive Checked Out Items');
-		
-		/**END php section for Overdrive Checkout Items**/
-		
-		
-		
-		
-		
-		
+		/**END for Overdrive Checkout Items**/
 		
 		$interface->assign('patron',$patron);
 		$interface->setTemplate('checkedout.tpl');

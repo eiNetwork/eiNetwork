@@ -1,7 +1,6 @@
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
+  <div id="left-bar">
+   
     {include file="Admin/menu.tpl"}
   </div>
   
@@ -19,5 +18,8 @@
     <div id='property'><span class='propertyLabel'>Source: </span><span class='propertyValue'>{$editorialReview->source}</span></div>
     <div id='property'><span class='propertyLabel'>Record Id: </span><span class='propertyValue'>{$editorialReview->recordId}</span></div>
 <!--    <div id='property'><span class='propertyLabel'>Date: </span><span class='propertyValue'>{$editorialReview->pubDate}</span></div>-->
+  </div>
+  <div id="right-bar">
+     {include file="MyResearch/menu.tpl"}
   </div>
 </div>

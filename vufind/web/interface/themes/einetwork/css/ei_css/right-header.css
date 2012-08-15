@@ -21,9 +21,25 @@
 
 
 .right-header-left a{
-	text-decoration: underline;
 	color: rgb(255,255,255);
 	font-size: 16px;
+	cursor: pointer;
+}
+
+
+
+.right-header-left a:hover{
+	color: rgb(255,255,255);
+	text-decoration: underline;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.right-header-left a:visited{
+	color: rgb(255,255,255);
+	font-size: 16px;
+	cursor: pointer;
+	font-weight: bold;
 }
 
 #welcome-label{
@@ -42,8 +58,14 @@
 }
 
 .right-header-right a{
-	text-decoration: underline;
 	color: rgb(255,255,255);
+}
+
+.right-header-right a:hover{
+	color: rgb(255,255,255);
+	text-decoration: underline;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 #account-label {

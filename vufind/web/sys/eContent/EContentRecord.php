@@ -52,7 +52,6 @@ class EContentRecord extends SolrDataObject {
 	public $literary_form_full;
 	public $marcRecord;
 	public $status; //'active', 'archived', or 'deleted'
-
 	/* Static get */
 	function staticGet($k,$v=NULL) { return DB_DataObject::staticGet('EContentRecord',$k,$v); }
 
@@ -1115,7 +1114,6 @@ class EContentRecord extends SolrDataObject {
 				require_once 'Drivers/OverDriveDriver.php';
 				$overdriveDriver = new OverDriveDriver();
 				$currentItems = $overdriveDriver->getOverdriveHoldings($curItem->overDriveId, $curItem->link);
-					
 				//Check each of the cached items to see if it has changed
 				foreach ($currentItems as $currentKey => $currentItem){
 					$currentItem->libraryId = $currentItem->libraryId;

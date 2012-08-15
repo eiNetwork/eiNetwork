@@ -18,39 +18,20 @@
 
   <div id="main-content">
     <div id="searchInfo">
-      {* Recommendations *}
-      {*
-	{if $topRecommendations}
-		{foreach from=$topRecommendations item="recommendations"}
-		{include file=$recommendations}
-		{/foreach}
-	{/if}
-	*}
-      {* Listing Options *}
-	<div class="resulthead">
+	{*<div class="resulthead">
 		<div class="yui-u first">
 		{if $recordCount}
 		{$recordCount}{translate text=" items found for"}
 		{if $searchType == 'basic'}'{$lookfor|escape:"html"}' {/if}
 		{/if}
 		<br/><br/>
-		{*{translate text='query time'}: {$qtime}s*}
 		{if $spellingSuggestions}
-		{*<div class="correction"><strong>{translate text='spell_suggest'}</strong>:<br/>
-			{foreach from=$spellingSuggestions item=details key=term name=termLoop}
-				{$term|escape} &raquo; {foreach from=$details.suggestions item=data key=word name=suggestLoop}
-				<a href="{$data.replace_url|escape}">{$word|escape}</a>
-				{if $data.expand_url}
-				<a href="{$data.expand_url|escape}"><img src="{$path}/images/silk/expand.png" alt="{translate text='spell_expand_alt'}"/></a>
-				{/if}
-				{if !$smarty.foreach.suggestLoop.last}, {/if}
-				{/foreach}
-				{if !$smarty.foreach.termLoop.last}<br/>{/if}
-			{/foreach}
-		</div>*}
 		{/if}
-        </div>
-	</div>
+		</div>
+	</div>*}
+	
+	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
+	
       {* End Listing Options *}
 
       {if $subpage}

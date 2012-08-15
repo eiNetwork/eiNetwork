@@ -1,7 +1,7 @@
 function checkoutOverDriveItem(overdriveId, formatId){
 	if (loggedIn){
 		var url = path + "/EcontentRecord/AJAX?method=GetOverDriveLoanPeriod&overDriveId=" + overdriveId + "&formatId=" + formatId;
-		ajaxLightbox(url);
+		ajaxLightbox(url,false,false,'320px',false,'150px');
 	}else{
 		ajaxLogin(function(){
 			checkoutOverDriveItem(overdriveId, formatId);

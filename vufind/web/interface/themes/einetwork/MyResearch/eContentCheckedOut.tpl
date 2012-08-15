@@ -111,9 +111,9 @@
 	        	</td>
 	        	<td>
 	        		{* Options for the user to view online or download *}
-							{foreach from=$record.links item=link}
-								<a href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button">{$link.text}</a>
-							{/foreach}
+				{foreach from=$record.links item=link}
+					<a href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button">{$link.text}</a>
+				{/foreach}
 	        	</td>
 	        </tr>
 		    {/foreach}

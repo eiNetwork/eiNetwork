@@ -43,10 +43,10 @@ class EContentImportSummary extends Admin {
 		$selectedPublisherFilter = null;
 		if (isset($_REQUEST['publisherFilter'])){
 			$selectedPublisherFilter = $_REQUEST['publisherFilter'];
-		}else{
+			}else{
 			$selectedPublisherFilter = array();
 		}
-		$interface->assign('selectedPublisherFilter', $selectedPublisherFilter);
+			$interface->assign('selectedPublisherFilter', $selectedPublisherFilter);
 		$publishers = empty($selectedPublisherFilter) ? $allPublishers : $selectedPublisherFilter;
 		$interface->assign('publishers', $publishers);
 		
@@ -111,11 +111,11 @@ class EContentImportSummary extends Admin {
 			$publishersToShow = array();
 			foreach ($_REQUEST['publisherFilter'] as $item){
 				$publishersToShow[] = "'" . mysql_escape_string(strip_tags($item)) . "'";
-			}
-			if (!empty($publishersToShow)) {
-				$publisherRestriction = "publisher IN (" . implode(",", $publishersToShow) . ") ";
-			}
-		}
+				}
+				if (!empty($publishersToShow)) {
+					$publisherRestriction = "publisher IN (" . implode(",", $publishersToShow) . ") ";
+					}
+				}
 	
 		//Load data for each period
 		$periodDataByPublisher = array();
@@ -156,7 +156,7 @@ class EContentImportSummary extends Admin {
 			$importDetails->find();
 			while ($importDetails->fetch()){
 				$periodDataByStatus[$periodStart->getTimestamp()][$importDetails->status] = $importDetails->numberOfFiles;
-			}
+				}
 		}
 		$interface->assign('periodDataByPublisher', $periodDataByPublisher);
 		$interface->assign('periodDataByStatus', $periodDataByStatus);
@@ -206,22 +206,21 @@ class EContentImportSummary extends Admin {
 		$column = 1;
 		foreach ($publishers as $publisher){
 			$activeSheet->setCellValueByColumnAndRow($column++, 3, $publisher);
-		}
-		
-		$row = 4;
-		$column = 0;
-		//Loop Through The Report Data
-		foreach ($periodDataByPublisher as $date => $periodInfo) {
-			$activeSheet->setCellValueByColumnAndRow($column++, $row, date('M j, Y', $date));
-			foreach ($publishers as $publisher){
-				$activeSheet->setCellValueByColumnAndRow($column++, $row, isset($periodInfo[$publisher]) ? $periodInfo[$publisher] : 0);
 			}
-			$row++;
+			$row = 4;
 			$column = 0;
-		}
-		for ($i = 0; $i < count($publishers) + 1; $i++){
-			$activeSheet->getColumnDimensionByColumn($i)->setAutoSize(true);
-		}
+			//Loop Through The Report Data
+			foreach ($periodDataByPublisher as $date => $periodInfo) {
+				$activeSheet->setCellValueByColumnAndRow($column++, $row, date('M j, Y', $date));
+				foreach ($publishers as $publisher){
+					$activeSheet->setCellValueByColumnAndRow($column++, $row, isset($periodInfo[$publisher]) ? $periodInfo[$publisher] : 0);
+					}
+					$row++;
+					$column = 0;
+					}
+					for ($i = 0; $i < count($publishers) + 1; $i++){
+						$activeSheet->getColumnDimensionByColumn($i)->setAutoSize(true);
+						}
 				
 		// skip 5 rows to create some spaces 
 		$row += 5;

@@ -194,7 +194,7 @@ class Home extends Action{
 				}
 			}
 			$interface->assign('editorialReviewResults', $editorialReviewResults);
-
+			$interface->assign('pageType','record');
 			//Build the actual view
 			$interface->setTemplate('view.tpl');
 

@@ -18,14 +18,25 @@
 
   <div id="main-content">
 	<input type="hidden" value="{$wishListID}" id="listId"/>
+	<script type="text/javascript" src="/services/List/ajax.js"></script>
     <div id="searchInfo">
 	{if $pageType eq 'WishList'}
-		<span><input type="button" value="move all to book cart" onclick="saveAllToBookCart()" class="button"></span>
+		<span><input type="button" value="move all physical items to book cart" onclick="saveAllToBookCart()" class="button"></span>
 		<span  style="margin-left:10px;"><input type="button" value="delete this wish list" onclick="getDeleteList('{$wishListID}')" class="button"></span>
 	{/if}
-	<div class="resulthead">
-	
+	{if $pageType eq 'BookCart'}
+	<div class="resulthead" style="font-size:16px;height:30px">
+		
+			{if count($recordSet)>1}
+				Items in Your Book Cart
+			{elseif count($recordSet) == 1}
+				Item in Your Book Cart
+			{else}
+				No Item in Your Book Cart
+			{/if}
+		
 	</div>
+	{/if}
       {* End Listing Options *}
 
       {if $subpage}
@@ -87,13 +98,15 @@
 			 {/if}
 			</div>
 	        </div>
-		<div style="padding-left:35px;">
-			After hitting the Request All button below, your items will be transfered to your pickup location. If any items are unavailable, you will be added to waitlist and notified when your items are ready.  
-		</div>
-	        <div class='loginFormRow'>
-	        <input type="hidden" name="holdType" value="hold"/>
-	        <input type="submit"  class="button" style="float:right;width:130px;background-color:rgb(244,213,56)" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
-	        </div>
+		{if count($recordSet)>0}
+			<div style="padding-left:35px;">
+				After hitting the Request All button below, your items will be transfered to your pickup location. If any items are unavailable, you will be added to waitlist and notified when your items are ready.  
+			</div>
+			<div class='loginFormRow'>
+			<input type="hidden" name="holdType" value="hold"/>
+			<input type="submit"  class="button" style="float:right;width:130px;background-color:rgb(244,213,56)" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
+			</div>
+		{/if}
 	      </div>
 	      </div>
 			</div>

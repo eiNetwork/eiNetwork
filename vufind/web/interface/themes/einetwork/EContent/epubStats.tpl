@@ -28,9 +28,8 @@ $(function() {
 {/literal}
 </script> 
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
+  <div id="left-bar">
+   
     {include file="Admin/menu.tpl"}
   </div>
   
@@ -96,12 +95,15 @@ $(function() {
         <div id="generateStats">
 				<input type="submit" value="Generate Statistics"/>
 				</div>
-      
-    </div>
+      </div>
     </form>
-			<div id="statisticsDisplay">
-				{include file="$stats_template"}
-			</div>
+		<div id="statisticsDisplay">
+		{include file="$stats_template"}
+		</div>
   </div>
 </div>
+  <div id="right-bar">
+	{include file="MyResearch/menu.tpl"}	
+  </div>
+   
 </div>

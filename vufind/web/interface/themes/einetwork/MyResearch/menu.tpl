@@ -29,7 +29,6 @@
         <div id="account-settings">
             <a href="/MyResearch/Profile">Account Settings</a>
         </div>
-        
     </div>
     
    

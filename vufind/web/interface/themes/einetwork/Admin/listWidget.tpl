@@ -1,8 +1,6 @@
 <div id="page-content" class="content">
   {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-
+  <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   <div id="main-content">
@@ -44,10 +42,12 @@
     	<p>
     	&lt;iframe src=&quot;{$url}/API/SearchAPI?method=getListWidget&amp;id={$object->id}&quot; width=&quot;100%&quot; height=&quot;250&quot;&gt;&lt;/iframe&gt;
     	</p>
-			<p>
-			Width and height can be adjusted as needed to fit within your site. 
-			</p>
+	<p>
+	Width and height can be adjusted as needed to fit within your site. 
+	</p>
     </div>
-    
+  </div>
+  <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
   </div>
 </div>

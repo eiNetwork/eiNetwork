@@ -8,7 +8,7 @@
 		<div>
 			<div id="loginFormWrapper">
 				{if (!isset($profile)) }
-					<div id='haveCardLabel' class='loginFormRow'>I have a Douglas County Library Card</div>
+					<div id='haveCardLabel' class='loginFormRow'>I have an Allegheny County Library Card</div>
 					<div id ='loginUsernameRow' class='loginFormRow'>
 						<div class='loginLabel'>{translate text='Username'}: </div>
 						<div class='loginField'><input type="text" name="username" id="username" value="{$username|escape}" size="15"/></div>

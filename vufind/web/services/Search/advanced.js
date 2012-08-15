@@ -20,7 +20,7 @@ function addSearch(group, term, field)
         newSearch += "<div class='label'>&nbsp;</div>";
     }
     // Terms
-    newSearch += "<div class='terms'><input type='text' name='lookfor" + group + "[]' size='50' value='" + jsEntityEncode(term) + "'/></div>";
+    newSearch += "<div class='terms'><input type='text' class='text' name='lookfor" + group + "[]' size='50' value='" + jsEntityEncode(term) + "'/></div>";
 
     // Field
     newSearch += "<div class='field'>" + searchFieldLabel + " ";

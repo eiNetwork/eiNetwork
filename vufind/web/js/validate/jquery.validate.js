@@ -27,7 +27,7 @@ $.extend($.fn, {
 		var validator = $.data(this[0], 'validator');
 		if ( validator ) {
 			return validator;
-		}
+			}
 
 		validator = new $.validator( options, this[0] );
 		$.data(this[0], 'validator', validator);
@@ -85,10 +85,9 @@ $.extend($.fn, {
 				}
 			});
 		}
-
 		return validator;
-	},
-	// http://docs.jquery.com/Plugins/Validation/valid
+		},
+		// http://docs.jquery.com/Plugins/Validation/valid
 	valid: function() {
         if ( $(this[0]).is('form')) {
             return this.validate().form();
@@ -1155,7 +1154,7 @@ $.format = $.validator.format;
 	};
 	$.extend($.fn, {
 		validateDelegate: function(delegate, type, handler) {
-			return this.bind(type, function(event) {
+			return this.bind(type, function(event){
 				var target = $(event.target);
 				if (target.is(delegate)) {
 					return handler.apply(target, arguments);

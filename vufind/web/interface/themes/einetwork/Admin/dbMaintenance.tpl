@@ -1,8 +1,6 @@
 <div id="page-content" class="content">
-  {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-
+  {if $error}<p class="error">{$error}</p>{/if}
+    <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   <div id="main-content">
@@ -41,5 +39,9 @@
     </div>
     </form>
     
+  </div>
+
+  <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
   </div>
 </div>

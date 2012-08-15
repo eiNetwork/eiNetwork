@@ -5,30 +5,26 @@
 </script>
 {/if}
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-      
+  <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   
   <div id="main-content">
     {if $user->cat_username}
-
-      {* Display recommendations for the user *}
-      {if $showStrands && $user->disableRecommendations == 0}
-	      {assign var="scrollerName" value="Recommended"}
-				{assign var="wrapperId" value="recommended"}
-				{assign var="scrollerVariable" value="recommendedScroller"}
-				{assign var="scrollerTitle" value="Recommended for you"}
-				{include file=titleScroller.tpl}
+    {* Display recommendations for the user *}
+    {if $showStrands && $user->disableRecommendations == 0}
+	{assign var="scrollerName" value="Recommended"}
+	{assign var="wrapperId" value="recommended"}
+	{assign var="scrollerVariable" value="recommendedScroller"}
+	{assign var="scrollerTitle" value="Recommended for you"}
+	{include file=titleScroller.tpl}
 			
-				<script type="text/javascript">
-					var recommendedScroller;
-	
-					recommendedScroller = new TitleScroller('titleScrollerRecommended', 'Recommended', 'recommended');
-					recommendedScroller.loadTitlesFrom('{$url}/Search/AJAX?method=GetListTitles&id=strands:HOME-3&scrollerName=Recommended', false);
-				</script>
-			{/if}
+	<script type="text/javascript">
+		var recommendedScroller;
+		recommendedScroller = new TitleScroller('titleScrollerRecommended', 'Recommended', 'recommended');
+		recommendedScroller.loadTitlesFrom('{$url}/Search/AJAX?method=GetListTitles&id=strands:HOME-3&scrollerName=Recommended', false);
+	</script>
+    {/if}
           
       <div class="myAccountTitle">{translate text='Your Checked Out eContent'}</div>
       {if $userNoticeFile}
@@ -126,6 +122,10 @@
   {else}
     You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
   {/if}
+  </div>
+  
+  <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
   </div>
 </div>
 <script type="text/javascript">

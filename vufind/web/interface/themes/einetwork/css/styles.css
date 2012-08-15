@@ -29,7 +29,6 @@ html,body {
 	background-color: #000;
 }
 
-/*add at July 12 2012*/
 #sidebar{
 	width: 232px;
 	display: inline-block;
@@ -62,6 +61,13 @@ html,body {
 	font-size: 16px;
 
 }
+
+#right-bar a:hover{
+	text-decoration: underline;
+	font-weight: bold;
+	cursor: pointer;
+}
+
 
 /*****************Homepage*******************/
 .searchHome {
@@ -616,33 +622,11 @@ div.popupBox {
 	-webkit-transition-delay: 0.25s;
 }
 
-/*
-div.popupBox .header {
-	cursor: move;
-	padding: 3px 6px 3px 10px;
-	color: white;
-	font-size: 13px;
-	font-weight: bold;
-	height: 30%;
-}
-
-div.popupBox .content {
-	padding: 5px 20px 20px 20px;
-	overflow: auto;
-	border-bottom: none;
-	height: 70%;
-	-webkit-transition-property: height;
-	-webkit-transition-duration: 0.25s;
-	-webkit-transition-delay: 0.25s;
-}
-*/
-
 div.popupBox .header a {
 	float: right;
 	text-decoration: none;
 	color: white;
 }
-
 
 
 div.popupBox a.close {
@@ -757,25 +741,11 @@ ul.browse {
 	margin: 0 0 20px 0;
 	padding-bottom: 10px;
 }
-.sidegroup h4 {
-	padding: .5em 0 .5em 0;
-	color: black;
-	font-weight: bold;
-	background-color: #EDEDED;
-	-moz-border-radius-topleft: 2px;
-	border-top-left-radius: 2px;
-	-moz-border-radius-topright: 2px;
-	border-top-right-radius: 2px;
-	text-align: center;
-	margin-top: 0px;
-}
+
 .navmenu dd {
 	border-bottom: 0px solid black;
 }
 
-.narrowList {
-
-}
 
 .narrowGroupHidden {
 	display: none;
@@ -995,6 +965,9 @@ ul.bulleted li {
 }
 
 /***** Citation Table *****/
+.citation select{
+	height: 100px;
+}
 .citation {
 	font-size: 90%;
 }
@@ -1018,7 +991,6 @@ ul.bulleted li {
 
 .citation td {
 	padding: .3em 0 .3em 1em;
-	border-bottom: 1px solid #f3f3f3;
 }
 
 .citation tr,.citation td {
@@ -1479,7 +1451,7 @@ img.centered {
 
 .groupSearchDetails .join {
 	padding-right: 5px;
-	float: left;
+	display: none;
 }
 
 .groupSearchHolder .label,.groupSearchHolder .join {
@@ -1500,7 +1472,7 @@ img.centered {
 }
 
 .groupSearchHolder .field {
-	
+	margin-left: 30px;
 }
 
 .group .groupSearchDetails {
@@ -1510,8 +1482,8 @@ img.centered {
 }
 
 .group0 .groupSearchDetails {
-	border: 1px solid #D8D7D8;
-	border-top: 0px;
+	/*border: 1px solid #D8D7D8;
+	border-top: 0px;*/
 }
 
 .group1 .groupSearchDetails {
@@ -1520,8 +1492,8 @@ img.centered {
 }
 
 #searchHolder .group0 {
-	border-top: 1px solid #D8D7D8;
-	background: url(/images/gradient_grey.gif) repeat-y;
+	/*border-top: 1px solid #D8D7D8;
+	background: url(/images/gradient_grey.gif) repeat-y;*/
 }
 
 #searchHolder .group1 {
@@ -1718,14 +1690,6 @@ img.centered {
 	padding-left: 20px;
 }
 
-#mainblock {
-	
-}
-
-#titleblock {
-	
-}
-
 .blockhead {
 	color: #3e63a6;
 	font-size: 20px;
@@ -1896,7 +1860,6 @@ a.holdUpdatelink {
 	-moz-border-radius-bottomright: 5px;
 	-webkit-border-bottom-right-radius: 5px;
 	zoom: 1;
-	*display: inline;
 }
 
 div.autoLogoutButton:hover {
@@ -2127,7 +2090,6 @@ div.listEntryRight {
 	-webkit-border-bottom-right-radius: 3px;
 	cursor: pointer;
 	zoom: 1;
-	*display: inline;
 }
 
 /* Check-in Grid */
@@ -2530,7 +2492,6 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .request_detail_field_value {
 	display: inline-block;
 	zoom: 1;
-	*display: inline;
 }
 
 .request_detail_field_value_long {
@@ -2581,6 +2542,7 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 }
 /*=========== round rectangle button ===========*/
 .round-rectangle-button{
+	background-color:rgb(252,252,252);
 	padding-left:10px;
 	padding-top:4px;
 	border-style: solid;
@@ -2588,6 +2550,17 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 	border-width:1px 1px 1px 1px;
 	height:25px;
 	border-radius:8px 8px 8px 8px;
+	cursor: pointer;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+.round-rectangle-button:hover{
+    background-color: rgb(242,242,242);
+}
+
+.round-rectangle-button:avtive{
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 .action-img{
 	vertical-align:middle;

@@ -1,10 +1,7 @@
 <div id="page-content" class="content">
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-    
+  <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
-  
   <div id="main-content">
           <h1>User Suggestions</h1>
           {if $showHidden == false}
@@ -46,5 +43,9 @@
           </div>
           <input type="submit" name="submit" value="Save Changes"/>
           </form>
+  </div>
+
+  <div id="right-bar">
+          {include file="MyResearch/menu.tpl"}
   </div>
 </div>

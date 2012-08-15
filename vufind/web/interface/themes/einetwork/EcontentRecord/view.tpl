@@ -28,8 +28,9 @@ function redrawSaveStatus() {literal}{{/literal}
 </script>
 
 <div id="page-content" class="content">
-  {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
+  {if $error}<p class="error">{$error}</p>{/if}
+  {include file = "EcontentRecord/left-bar-record.tpl"}
+  {*<div id="sidebar">
     <div class="sidegroup" id="titleDetailsSidegroup">
       <h4>{translate text="Title Details"}</h4>
     	{if $eContentRecord->author}
@@ -157,7 +158,6 @@ function redrawSaveStatus() {literal}{{/literal}
     {/if}
     
   	<div class="sidegroup" id="similarTitlesSidegroup">
-     {* Display either similar tiles from novelist or from the catalog*}
      <div id="similarTitlePlaceholder"></div>
      {if is_array($similarRecords)}
      <div id="relatedTitles">
@@ -214,7 +214,6 @@ function redrawSaveStatus() {literal}{{/literal}
     
     {if $enablePospectorIntegration == 1}
     <div class="sidegroup">
-    {* Display in Prospector Sidebar *}
     <div id="inProspectorPlaceholder"></div>
     </div>
     {/if}
@@ -224,15 +223,52 @@ function redrawSaveStatus() {literal}{{/literal}
       <a href="http://amazon.com/dp/{$isbn|@formatISBN}" class='amazonLink'> {translate text = "View on Amazon"}</a>
     </div>
     {/if}
-  </div> {* End sidebar *}
+  </div>*}
   
   <div id="main-content" class="full-result-content">
-    <div id="record-header">
-      {if isset($previousId)}
-        <div id="previousRecordLink"><a href="{$path}/{$previousType}/{$previousId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$previousIndex}&amp;page={if isset($previousPage)}{$previousPage}{else}{$page}{/if}" title="{if !$previousTitle}{translate text='Previous'}{else}{$previousTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/prev.png" alt="Previous Record"/></a></div>
-      {/if}
+      <div id="main-content" class="full-result-content">
+	    <div id="inner-main-content">
+		  	<div id="record_record">
+			<div id="record_record_up">
+			      <div class="recordcoverWrapper">
+				    <a href="{$bookCoverUrl}">              
+				      <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
+				    </a>
+			      </div>
+			      <div id="record_record_up_middle">
+						<div id='recordTitle'>{$eContentRecord->title|regex_replace:"/(\/|:)$/":""|escape}
+						{if $user && $user->hasRole('epubAdmin')}
+						{if $eContentRecord->status != 'active'}<span id="eContentStatus">({$eContentRecord->status})</span>{/if}
+						<span id="editEContentLink"><a href='{$path}/EcontentRecord/{$id}/Edit'>(edit)</a></span>
+						{if $eContentRecord->status != 'archived' && $eContentRecord->status != 'deleted'}
+							<span id="archiveEContentLink"><a href='{$path}/EcontentRecord/{$id}/Archive' onclick="return confirm('Are you sure you want to archive this record?  The record should not have any holds or checkouts when it is archived.')">(archive)</a></span>
+						{/if}
+						{if $eContentRecord->status != 'deleted'}
+							<span id="deleteEContentLink"><a href='{$path}/EcontentRecord/{$id}/Delete' onclick="return confirm('Are you sure you want to delete this record?  The record should not have any holds or checkouts when it is deleted.')">(delete)</a></span>
+						{/if}
+						{/if}
+						</div>
+						{* Display more information about the title*}
+						{if $eContentRecord->author}
+						      <div class="recordAuthor">
+							    <span class="resultLabel">by</span>
+							    <span class="resultValue"><a href="{$path}/Author/Home?author={$eContentRecord->author|escape:"url"}">{$eContentRecord->author|escape}</a></span>
+						      </div>
+						{/if}
+						{if $corporateAuthor}
+							<div class="recordAuthor">
+								<span class="resultLabel">{translate text='Corporate Author'}:</span>
+								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
+							</div>
+						{/if}
+						{if $showOtherEditionsPopup}
+						<div id="otherEditionCopies">
+							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
+						</div>
+						{/if}
+				</div>
+    {*<div id="record-header">
       <div id="recordTitleAuthorGroup">
-        {* Display Title *}
         <div id='recordTitle'>{$eContentRecord->title|regex_replace:"/(\/|:)$/":""|escape} 
         {if $user && $user->hasRole('epubAdmin')}
         {if $eContentRecord->status != 'active'}<span id="eContentStatus">({$eContentRecord->status})</span>{/if}
@@ -245,28 +281,15 @@ function redrawSaveStatus() {literal}{{/literal}
         {/if}
         {/if}
         </div>
-        {* Display more information about the title*}
         {if $eContentRecord->author}
           <div class="recordAuthor">
             <span class="resultLabel">by</span>
             <span class="resultValue"><a href="{$path}/Author/Home?author={$eContentRecord->author|escape:"url"}">{$eContentRecord->author|escape}</a></span>
           </div>
         {/if}
-        
       </div>
-      <div id ="recordTitleRight">
-		    {if isset($nextId)}
-		      <div id="nextRecordLink"><a href="{$path}/{$nextType}/{$nextId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$nextIndex}&amp;page={if isset($nextPage)}{$nextPage}{else}{$page}{/if}" title="{if !$nextTitle}{translate text='Next'}{else}{$nextTitle|truncate:180:"..."}{/if}"><img src="{$path}/interface/themes/default/images/next.png" alt="Next Record"/></a></div>
-		    {/if}
-      	{if $lastsearch}
-	      <div id="returnToSearch">
-	      	<a href="{$lastsearch|escape}#record{$id|escape:"url"}">{translate text="Return to Search Results"}</a>
-	      </div>
-		    {/if}
-   	  </div>
-   	</div>
+      </div>
       <div id="image-column">
-      {* Display Book Cover *}
 			{if $user->disableCoverArt != 1} 
 			 
         <div id = "recordcover">  
@@ -275,48 +298,80 @@ function redrawSaveStatus() {literal}{{/literal}
           <a href="{$bookCoverUrl}">              
             <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
           </a>
-          <div id="goDeeperLink" class="godeeper" style="display:none">
+<!--        <div id="goDeeperLink" class="godeeper" style="display:none">
             <a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', null,'5%', '90%', 50, '85%'); return false;">
             <img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
-          </div>
+          </div>-->
         </div>
-        </div>  
-      {/if}
-      
+        </div>
+      </div>*}
+
+            <div id="record_action_button">
+<!--	    <div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','eContent');return false;"{/if}>
+		  <span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
+		  <span class="action-lable-span">add to cart</span>
+	    </div>
+-->	    {if $eContentRecord->source == 'OverDrive'}
+		  {if $holdingsSummary.status == 'Checked out in OverDrive'}
+			<div class="round-rectangle-button" id="request-now" onclick="placeOverDriveHold('{$record.overDriveId}', '{$format.formatId}')">
+			<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="request now"/></span>
+			<span class="action-lable-span">request now</span>
+			</div>
+		  {elseif $holdingsSummary.status == 'Available from OverDrive'}
+			<div class="round-rectangle-button" id="checkout-now" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')">
+			<span class="action-img-span"><img id="request-now-img" alt="checkout now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="checkout now"/></span>
+			<span class="action-lable-span">checkout now</span>
+			</div>
+		  {else}
+		  	{if $eContentRecord->sourceUrl}
+			      <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'">
+			      <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
+			      <span class="action-lable-span">access online</span>
+			</div>
+			{/if}	  
+		  {/if}	
+	    {else}
+		  {if $eContentRecord->sourceUrl}
+		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'">
+			<span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
+			<span class="action-lable-span">access online</span>
+		  </div>
+		  {/if}	    
+	    {/if}
+
+	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;">
+		  <span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
+		  <span class="action-lable-span">add to wish list</span>
+	    </div>
+     
       {* Place hold link *}
-	  <div class='requestThisLink' id="placeHold{$id|escape:"url"}" style="display:none">
+<!--	  <div class='requestThisLink' id="placeHold{$id|escape:"url"}" style="display:none">
 	    <a href="{$path}/EcontentRecord/{$id|escape:"url"}/Hold"><img src="{$path}/interface/themes/default/images/place_hold.png" alt="Place Hold"/></a>
 	  </div>
-	  
+-->	  
 	  {* Checkout link *}
 	  <div class='checkoutLink' id="checkout{$id|escape:"url"}" style="display:none">
 	    <a href="{$path}/EcontentRecord/{$id|escape:"url"}/Checkout"><img src="{$path}/interface/themes/default/images/checkout.png" alt="Checkout"/></a>
 	  </div>
-	  
+<!--	  
 	  {* Access online link *}
 	  <div class='accessOnlineLink' id="accessOnline{$id|escape:"url"}" style="display:none">
 	    <a href="{$path}/EcontentRecord/{$id|escape:"url"}/Home?detail=holdingstab#detailsTab"><img src="{$path}/interface/themes/default/images/access_online.png" alt="Access Online"/></a>
 	  </div>
-	  
+-->	  
 	  {* Add to Wish List *}
 	  <div class='addToWishListLink' id="addToWishList{$id|escape:"url"}" style="display:none">
 	    <a href="{$path}/EcontentRecord/{$id|escape:"url"}/AddToWishList"><img src="{$path}/interface/themes/default/images/add_to_wishlist.png" alt="Add To Wish List"/></a>
 	  </div>
 	  
-	  {if $showOtherEditionsPopup}
-		<div id="otherEditionCopies">
-			<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', true)">{translate text="Other Formats and Languages"}</a></div>
-		</div>
-		{/if}
-
-      {if $goldRushLink}
+<!--      {if $goldRushLink}
       <div class ="titledetails">
         <a href='{$goldRushLink}' >Check for online articles</a>
       </div>
       {/if}
-          
+          -->
         
-      <div id="myrating" class="stat">
+<!--      <div id="myrating" class="stat">
 	    <div class="statVal">
 		  <div class="ui-rater">
 		  	<span class="ui-rater-starsOff" style="width:90px;"><span class="ui-rater-starsOn" style="width:63px"></span></span>
@@ -329,16 +384,19 @@ function redrawSaveStatus() {literal}{{/literal}
          {literal} } {/literal}
 	    );
         </script>
-      </div>
-    </div> {* End image column *}
-    
+      </div>-->
+       {* End image column *}
+			</div>
+	    </div>
+
     <div id="record-details-column">
-      <div id="record-details-header">
-	      <div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord">Loading...</div>
+	    <div id="record-details-header">
+	    <div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord">Loading...</div>
 	      {if $enableProspectorIntegration == 1}
 	      <div id="prospectorHoldingsPlaceholder"></div>
 	      {/if}
-	      <div id="recordTools">
+
+<!--	      <div id="recordTools">
 		    <ul>
 		      
 		      {if !$tabbedDetails}
@@ -371,8 +429,284 @@ function redrawSaveStatus() {literal}{{/literal}
 		  
       	  <div class="clearer">&nbsp;</div>
 	  </div>
-      
+-->
+      <div id="record_record_down">	   
+	    {if is_array($eContentRecord->format())}
+		  {foreach from=$eContentRecord->format() item=displayFormat name=loop}
+		  <div>
+		  {if $displayFormat eq "Video Download"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
+		  {elseif $displayFormat eq "Adobe EPUB eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Adobe PDF"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Adobe PDF eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "EPUB eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Kindle Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Kindle USB Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Kindle"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "External Link"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Interactive Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Internet Link"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Open EPUB eBook "}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Open PDF eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "Plucker"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "MP3"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "MP3 AudioBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "MP3 AudioBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "MP3 Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "WMA Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "WMA Music"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "WMA Video"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "OverDrive MP3 Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "OverDrive Music"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "OverDrive WMA Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $displayFormat eq "OverDrive Video"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+		  {/if}		  
+			<span class="iconlabel {$displayFormat|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$displayFormat}</span></div>
+		  {/foreach}
+	    {else}
+		  <div>
+		  {if $eContentRecord->format eq "Video Download"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
+		  {elseif $eContentRecord->format eq "Adobe EPUB eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Adobe PDF"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Adobe PDF eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "EPUB eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Kindle Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Kindle USB Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Kindle"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "External Link"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Interactive Book"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Internet Link"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Open EPUB eBook "}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Open PDF eBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "Plucker"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "MP3"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "MP3 AudioBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "MP3 AudioBook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "MP3 Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "WMA Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "WMA Music"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "WMA Video"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "OverDrive MP3 Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "OverDrive Music"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "OverDrive WMA Audiobook"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $eContentRecord->format eq "OverDrive Video"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+		  {/if}	
+			<span class="iconlabel {$eContentRecord->format()|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$eContentRecord->format}</span></div>
+	    {/if}
+      </div>
+    </div>
+	      
       {if $eContentRecord->description}
+	    <div class="resultInformation">
+		  <div class="resultInformationLabel">{translate text='Description'}</div>
+		  <div class="recordDescription">
+			{$eContentRecord->description|escape}
+		  </div>
+	    </div>
+      {/if}
+
+		  {if $summary}
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Summary'}</div>
+				<div class="recordDescription">
+					{if strlen($summary) > 300}
+						<span id="shortSummary">
+						{$summary|stripTags:'<b><p><i><em><strong><ul><li><ol>'|truncate:300}{*Leave unescaped because some syndetics reviews have html in them *}
+						<a href='#' onclick='$("#shortSummary").slideUp();$("#fullSummary").slideDown()'>More</a>
+						</span>
+						<span id="fullSummary" style="display:none">
+						{$summary|stripTags:'<b><p><i><em><strong><ul><li><ol>'}{*Leave unescaped because some syndetics reviews have html in them *}
+						<a href='#' onclick='$("#shortSummary").slideDown();$("#fullSummary").slideUp()'>Less</a>
+						</span>
+					{else}
+						{$summary|stripTags:'<b><p><i><em><strong><ul><li><ol>'}{*Leave unescaped because some syndetics reviews have html in them *}
+					{/if}
+				</div>
+			</div>
+			{/if}
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
+				<div class="recordSubjects">
+					{if $showAmazonReviews || $showStandardReviews}
+						<div id='reviewPlaceholder'></div>
+					{/if}
+				</div>
+			</div>
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
+				<div class="recordSubjects">
+					<div id = "staffReviewtab" >
+						{include file="$module/view-staff-reviews.tpl"}
+					</div>
+				</div>
+			</div>
+			<div class="resultInformation">
+				<div class="resultInformationLabel">Details</div>
+				<div class="recordSubjects">
+					<table>
+					{if $published}
+					<tr>
+						<td class="details_lable">Publish</td>
+						<td>
+							<table>
+								{foreach from=$published item=publish name=loop}
+									<tr><td>{$publish|escape}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $edition}
+					<tr>
+						<td class="details_lable">Edition</td>
+						<td>
+							<table>
+							{foreach from=$editionsThis item=edition name=loop}
+								<tr><td>{$edition|escape}</td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $lang}
+						<tr>
+							<td class="details_lable">{translate text='Language'}</td>
+							<td>
+								<table>
+								{foreach from=$recordLanguage item=lang}
+									<tr><td>{$lang|escape}</td></tr>
+								{/foreach}
+								</table>
+							</td>
+						</tr>
+					{/if}
+					{if $physicalDescription}
+					<tr>
+						<td class="details_lable">Description</td>
+						<td>
+							<table>
+								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
+									<tr><td>{$physicalDescription|escape}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $note}
+					<tr>
+					<td class="details_lable">Note</td>
+					<td>
+						<table>
+							{foreach from=$notes item=note}
+								<tr><td>{$note}</td></tr>
+							{/foreach}
+						</table>
+					</td>
+					</tr>
+					{/if}
+					{if $corporateAuthor}
+					<tr>
+					<td class="details_lable">Addit Author</td>
+					<td>
+						<table>
+							<tr>
+								<a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape}</a>
+							</tr>
+						</table>
+					</td>
+					</tr>
+					{/if}
+					{if $contributors}
+					<tr>
+						<td>{translate text='Contributors'}</td>
+						<td>
+							<table>
+							{foreach from=$contributors item=contributor name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape}</a></td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $tmpIsbn}
+					<tr>
+						<td class="details_lable">ISBN</td>
+						<td>
+							<table>
+							{foreach from=$isbns item=tmpIsbn name=loop}
+								<tr><td>{$tmpIsbn|escape}</td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $issn}
+						<tr>
+						<td class="details_lable">{translate text='ISSN'}</td>
+						
+						<td>{$issn}</td>
+						</tr>
+						{if $goldRushLink}
+						<tr>
+							<td></td>
+							<td><a href='{$goldRushLink}' target='_blank'>Check for online articles</a></td>
+						</tr>
+						{/if}
+					{/if}
+					</table>
+				</div>
+			</div>
+		</div>
+      <!--{if $eContentRecord->description}
       <div class="resultInformation">
         <div class="resultInformationLabel">{translate text='Description'}</div>
         <div class="recordDescription">
@@ -394,6 +728,7 @@ function redrawSaveStatus() {literal}{{/literal}
       {/if}
       
     </div>
+			-->
    
     {* tabs for series, similar titles, and people who viewed also viewed *}
     {if $showStrands}
@@ -515,7 +850,7 @@ function redrawSaveStatus() {literal}{{/literal}
 			
 		{/if}
 		
-		<a id="detailsTabAnchor" name="detailsTab" href="#detailsTab"></a>
+<!--		<a id="detailsTabAnchor" name="detailsTab" href="#detailsTab"></a>
     <div id="moredetails-tabs">
       {* Define tabs for the display *}
       <ul>
@@ -555,44 +890,50 @@ function redrawSaveStatus() {literal}{{/literal}
 			</div>
       
       {if $showComments == 1}
-        <div id = "readertab" >
-          <div style ="font-size:12px;" class ="alignright" id="addReview"><span id="userreviewlink" class="add" onclick="$('#userreview{$id}').slideDown();">Add a Review</span></div>
-          <div id="userreview{$id}" class="userreview">
-            <span class ="alignright unavailable closeReview" onclick="$('#userreview{$id}').slideUp();" >Close</span>
-            <div class='addReviewTitle'>Add your Review</div>
-            {assign var=id value=$id}
-            {include file="EcontentRecord/submit-comments.tpl"}
-          </div>
-          {include file="EcontentRecord/view-comments.tpl"}
-          
+      <div id = "readertab" >
+	    <div style ="font-size:12px;" class ="alignright" id="addReview"><span id="userreviewlink" class="add" onclick="$('#userreview{$id}').slideDown();">Add a Review</span></div>
+	    <div id="userreview{$id}" class="userreview">
+		  <span class ="alignright unavailable closeReview" onclick="$('#userreview{$id}').slideUp();" >Close</span>
+		  <div class='addReviewTitle'>Add your Review</div>
+		  {assign var=id value=$id}
+		  {include file="EcontentRecord/submit-comments.tpl"}
+	    </div>
+	    {include file="EcontentRecord/view-comments.tpl"}
+	    
 					{* Chili Fresh Reviews *}
-					{if $chiliFreshAccount && ($isbn || $upc || $issn)}
-						<h4>Chili Fresh Reviews</h4>
-						{if $isbn}
-						<div class="chili_review" id="isbn_{$isbn10}"></div>
-						<div id="chili_review_{$isbn10}" style="display:none" align="center" width="100%"></div>
-						{elseif $upc}
-						<div class="chili_review_{$upc}" id="isbn"></div>
-						<div id="chili_review_{$upc}" style="display:none" align="center" width="100%"></div>
-						{elseif $issn}
-						<div class="chili_review_{$issn}" id="isbn"></div>
-						<div id="chili_review_{$issn}" style="display:none" align="center" width="100%"></div>
-						{/if}
-					{/if}
-        </div>
+	    {if $chiliFreshAccount && ($isbn || $upc || $issn)}
+		    <h4>Chili Fresh Reviews</h4>
+		    {if $isbn}
+		    <div class="chili_review" id="isbn_{$isbn10}"></div>
+		    <div id="chili_review_{$isbn10}" style="display:none" align="center" width="100%"></div>
+		    {elseif $upc}
+		    <div class="chili_review_{$upc}" id="isbn"></div>
+		    <div id="chili_review_{$upc}" style="display:none" align="center" width="100%"></div>
+		    {elseif $issn}
+		    <div class="chili_review_{$issn}" id="isbn"></div>
+		    <div id="chili_review_{$issn}" style="display:none" align="center" width="100%"></div>
+		    {/if}
+	    {/if}
+      </div>
       {/if}
       
       <div id = "citetab" >
         {include file="Record/cite.tpl"}
       </div>
+-->
+      {if $eContentRecord->sourceUrl}
+      	<div id="econtentSource">
+      		<a href="{$eContentRecord->sourceUrl}">Access original files</a>
+      	</div>
+      	{/if}
       
-      <div id = "holdingstab">
-      	<div id="holdingsPlaceholder">Loading...</div>
+<!--      <div id = "holdingstab">
+      	<div id="holdingsPlaceholder">oading...</div>
       	{if $showOtherEditionsPopup}
-				<div id="otherEditionCopies">
+			      <div id="otherEditionCopies">
 					<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', true)">{translate text="Other Formats and Languages"}</a></div>
-				</div>
-				{/if}
+			      </div>
+	{/if}
         {if $enablePurchaseLinks == 1}
 					<div class='purchaseTitle button'><a href="#" onclick="return showEcontentPurchaseOptions('{$id}');">{translate text='Buy a Copy'}</a></div>
 				{/if}
@@ -611,17 +952,15 @@ function redrawSaveStatus() {literal}{{/literal}
 	      </div>
       {/if}
     </div> {* End of tabs*}
-    
+-->    
     {literal}
 		<script type="text/javascript">
 			$(function() {
 				$("#moredetails-tabs").tabs();
 			});
 		</script>
-		{/literal}
-            
+		{/literal}     
   </div>
-    
 </div>
 
 {if $showStrands}   

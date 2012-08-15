@@ -34,12 +34,11 @@
 				<div id='loginSubmitButtonRow' class='loginFormRow'>
 					<input type="submit" name="submit" value="Login" />
 					{if $followup}<input type="hidden" name="followup" value="{$followup}"/>{/if}
-        	{if $followupModule}<input type="hidden" name="followupModule" value="{$followupModule}"/>{/if}
-        	{if $followupAction}<input type="hidden" name="followupAction" value="{$followupAction}"/>{/if}
-        	{if $recordId}<input type="hidden" name="recordId" value="{$recordId|escape:"html"}"/>{/if}
-        	{if $comment}<input type="hidden" name="comment" name="comment" value="{$comment|escape:"html"}"/>{/if}
+					{if $followupModule}<input type="hidden" name="followupModule" value="{$followupModule}"/>{/if}
+					{if $followupAction}<input type="hidden" name="followupAction" value="{$followupAction}"/>{/if}
+					{if $recordId}<input type="hidden" name="recordId" value="{$recordId|escape:"html"}"/>{/if}
+					{if $comment}<input type="hidden" name="comment" name="comment" value="{$comment|escape:"html"}"/>{/if}
 					{if $returnUrl}<input type="hidden" name="returnUrl" value="{$returnUrl}"/>{/if}
-	  
 					{if $comment}
 						<input type="hidden" name="comment" name="comment" value="{$comment|escape:"html"}"/>
 					{/if}

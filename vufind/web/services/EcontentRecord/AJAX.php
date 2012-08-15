@@ -17,7 +17,7 @@ class AJAX extends Action {
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
-		}else if (in_array($method, array('GetGoDeeperData', 'AddItem', 'EditItem', 'GetOverDriveLoanPeriod', 'getPurchaseOptions'))){
+		}else if (in_array($method, array('GetGoDeeperData', 'AddItem', 'EditItem', 'GetOverDriveLoanPeriod', 'getPurchaseOptions','GetHoldingsInfoPopup'))){
 			header('Content-type: text/html');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -38,9 +38,57 @@ class AJAX extends Action {
 			$xmlResponse .= '</AJAXResponse>';
 
 			echo $xmlResponse;
+			
 		}
 	}
 	function GetHoldingsInfo(){
+		global $interface;
+		global $configArray;
+		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
+		$id = strip_tags($_REQUEST['id']);
+		$interface->assign('id', $id);
+		//Load holdings information from the driver
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $id;
+		$eContentRecord->find(true);
+		$holdings = $driver->getHolding($id);
+		$showEContentNotes = false;
+		$showSize = false;
+		foreach ($holdings as $holding){
+			if (strlen($holding->notes) > 0){
+				$showEContentNotes = true;
+			}
+			if ($holding instanceof OverdriveItem){
+			if (is_numeric($holding->size)){
+					$showSize = true;
+				}
+			}else{
+				if ($holding->getSize() != 'Unknown'){
+					$showSize = true;
+				}
+			}
+		}
+		$interface->assign('source', $eContentRecord->source);
+		$interface->assign('showEContentNotes', $showEContentNotes);
+		$interface->assign('showSize', $showSize);
+		if ($eContentRecord->getIsbn() == null || strlen($eContentRecord->getIsbn()) == 0){
+			$interface->assign('showOtherEditionsPopup', false);
+		}
+		$interface->assign('holdings', $holdings);
+		//Load status summary
+		$result = $driver->getStatusSummary($id, $holdings);
+		if (PEAR::isError($result)) {
+			PEAR::raiseError($result);
+		}
+		$holdingData->holdingsSummary = $result;
+		$interface->assign('holdingsSummary', $result);
+		return $interface->fetch('Record/ajax-holdings.tpl');
+	}
+	function GetHoldingsInfoPopup(){
 		global $interface;
 		global $configArray;
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
@@ -86,7 +134,14 @@ class AJAX extends Action {
 		}
 		$holdingData->holdingsSummary = $result;
 		$interface->assign('holdingsSummary', $result);
-		return $interface->fetch('Record/ajax-holdings.tpl');
+		/*foreach($eContentRecord as $key=>$value){
+			echo $key."<br/>";
+
+			foreach($value as $keykey => $valuevalue){
+				echo "========".$keykey." => ".$valuevalue."<br/>";
+			}
+		}*/
+		return $interface->fetch('EcontentRecord/viewHoldingPopup.tpl');
 	}
 
 	// Email Record

@@ -14,8 +14,7 @@ $(function() {
 {/literal}
 </script>
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	<div id="left-bar">
 		{include file="Admin/menu.tpl"}
 	</div>
 	
@@ -26,7 +25,6 @@ $(function() {
 			</div>
 			<div class="myAccountTitle">				
 				<form method="get" action="" id="reportForm" class="search">
-				
 					<div id="filterContainer">
 						<div id="filterLeftColumn">
 							<div id="startDate">
@@ -36,9 +34,9 @@ $(function() {
 							<div id="roles">
 								Stores: <br/>
 								<select id="storesFilter[]" name="storesFilter[]" multiple="multiple" size="5" class="multiSelectFilter">
-										{section name=resultsStoresFilterRow loop=$resultsStoresFilter} 
-												<option value="{$resultsStoresFilter[resultsStoresFilterRow]}" {if $resultsStoresFilter[resultsStoresFilterRow]|in_array:$selectedStoresFilter}selected='selected'{/if}>{$resultsStoresFilter[resultsStoresFilterRow]}</option> 
-										{/section} 
+									{section name=resultsStoresFilterRow loop=$resultsStoresFilter} 
+									<option value="{$resultsStoresFilter[resultsStoresFilterRow]}" {if $resultsStoresFilter[resultsStoresFilterRow]|in_array:$selectedStoresFilter}selected='selected'{/if}>{$resultsStoresFilter[resultsStoresFilterRow]}</option> 
+									{/section} 
 								</select>
 							</div>
 						</div>
@@ -48,7 +46,6 @@ $(function() {
 								<input id="dateFilterEnd" name="dateFilterEnd" value="{$selectedDateEnd}" />
 							</div>
 							<div class="filterPlaceholder">
-							
 							</div>
 						</div>
 						<div class="divClear"></div>
@@ -88,30 +85,28 @@ $(function() {
 					<th align="center">Purchases</th>
 				 </tr>
 				{section name=resultsPurchasesRow loop=$resultsPurchases} 
-						<tr {if $smarty.section.nr.iteration is odd} bgcolor="#efefef"{/if}> 
-								<td> 
-										{$resultsPurchases[resultsPurchasesRow].Store}</td> 
-								<td>{$resultsPurchases[resultsPurchasesRow].Purchases}
-								</td> 
-						</tr> 
+					<tr {if $smarty.section.nr.iteration is odd} bgcolor="#efefef"{/if}> 
+						<td>{$resultsPurchases[resultsPurchasesRow].Store}</td> 
+						<td>{$resultsPurchases[resultsPurchasesRow].Purchases}</td> 
+					</tr> 
 				{sectionelse} 
-				<tr><td align="center" colspan="4"><br /><b>No Purchases </b> <br /> </td></tr> 
+					<tr><td align="center" colspan="4"><br /><b>No Purchases </b> <br /> </td></tr> 
 				{/section}
 				</table>
-				
-							{if $pageLinks.all}<div class="pagination" id="pagination-bottom">Page: {$pageLinks.all}</div>{/if}
-							
-				
-				
+				{if $pageLinks.all}
+				<div class="pagination" id="pagination-bottom">Page: {$pageLinks.all}</div>
+				{/if}
 				<div class="exportButton">
-				<input type="submit" id="exportToExcel" name="exportToExcel" value="Export to Excel">
+					<input type="submit" id="exportToExcel" name="exportToExcel" value="Export to Excel">
 				</div>
-				</form>
-			</div>
-				
-				
-			{else}
-				You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
-			{/if}
+			</form>
+		</div>
+			
+		{else}
+			You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
+		{/if}
+	</div>
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
 	</div>
 </div>

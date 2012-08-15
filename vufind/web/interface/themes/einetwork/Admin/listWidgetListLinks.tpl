@@ -55,16 +55,14 @@
 {css filename="listWidget.css"}
 <div id="page-content" class="content">
   {if $error}<p class="error">{$error}</p>{/if} 
-  <div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-
+  <div id="left-bar">
     {include file="Admin/menu.tpl"}
   </div>
   	  
 	  <div id="main-content">
 	   <h1>Edit Links</h1>
 	  <div id="header">
-  	  		<h2> <a href='/Admin/ListWidgets?objectAction=edit&id={$widgetId}'>{$widgetName}</a> | {$widgetListName}</h2>
+  	    <h2> <a href='/Admin/ListWidgets?objectAction=edit&id={$widgetId}'>{$widgetName}</a> | {$widgetListName}</h2>
   	  </div>
 	  	
 	  	 <form id='objectEditor' method="post" enctype="multipart/form-data">  
@@ -79,35 +77,39 @@
 	  	   </thead>
 	  	   <tbody>
 	  	   {foreach from=$availableLinks item=link}
-	  	   		<tr id='linkId_{$link->id}'>
-	  	   			<td>
-						<span class="ui-icon ui-icon-arrowthick-2-n-s" style='pointer:cursor;'></span>
-						<input class='weightValue' type="hidden" id="Weight[{$link->id}]" name="weight[{$link->id}]" value="{$link->weight}"/>
-					</td>
-	  	   			<td>
-	  	   				<input type='hidden' id='toDelete_{$link->id}' name='toDelete_{$link->id}' value='0'/>
-	  	   				<input type='hidden' name='id[{$link->id}]' value='{$link->id}'/>
-	  	   				<input type='hidden' name='listWidgetListsId[{$link->id}]' value='{$link->listWidgetListsId}'/>
-	  	   				<input class='required' type='text' size='40' name='name[{$link->id}]' value='{$link->name}'/>
-	  	   			</td>
-	  	   			<td>
-	  	   				<input class='required'  type='text' size='40' name='link[{$link->id}]' value='{$link->link}'/>
-	  	   			</td>
-	  	   			<td>
-						<a href="#" onclick='deleteLink({$link->id});'>
-							<img src="{$path}/images/silk/delete.png" alt="Delete Link" title="Delete Link"/>
-						</a>
-	  	   			</td>
-	  	   		</tr>
+		  <tr id='linkId_{$link->id}'>
+		    <td>
+			    <span class="ui-icon ui-icon-arrowthick-2-n-s" style='pointer:cursor;'></span>
+			    <input class='weightValue' type="hidden" id="Weight[{$link->id}]" name="weight[{$link->id}]" value="{$link->weight}"/>
+		    </td>
+		    <td>
+			    <input type='hidden' id='toDelete_{$link->id}' name='toDelete_{$link->id}' value='0'/>
+			    <input type='hidden' name='id[{$link->id}]' value='{$link->id}'/>
+			    <input type='hidden' name='listWidgetListsId[{$link->id}]' value='{$link->listWidgetListsId}'/>
+			    <input class='required' type='text' size='40' name='name[{$link->id}]' value='{$link->name}'/>
+		    </td>
+		    <td>
+			    <input class='required'  type='text' size='40' name='link[{$link->id}]' value='{$link->link}'/>
+		    </td>
+		    <td>
+			    <a href="#" onclick='deleteLink({$link->id});'>
+				    <img src="{$path}/images/silk/delete.png" alt="Delete Link" title="Delete Link"/>
+			    </a>
+		    </td>
+		  </tr>
 	  	   {/foreach}
 	  	   </tbody>
 	  	   </table>
 	  	   <div class="Actions">
-				<a href="#" onclick="addNewLink();return false;"  class="button">Add New</a>
-			</div>
-			<br/>
+		      <a href="#" onclick="addNewLink();return false;"  class="button">Add New</a>
+		    </div>
+		    <br/>
 	  	   <input type='hidden' name='objectAction' value='save' />
 	  	   <input type="submit" name="submit" value="Save Changes"/>
 	  	   </form>
 	  	   
 </div>
+	  
+    <div id="right-bar">
+    {include file="MyResearch/menu.tpl"}
+  </div>

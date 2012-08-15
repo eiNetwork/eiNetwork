@@ -35,6 +35,7 @@ require_once 'services/MyResearch/lib/User_list_solr.php';
 require_once 'services/MyResearch/lib/Resource.php';
 require_once 'services/MyResearch/lib/User_resource.php';
 require_once 'services/MyResearch/lib/Resource_tags.php';
+require_once 'sys/Mailer.php';
 
 class Results extends Action {
 
@@ -50,7 +51,6 @@ class Results extends Action {
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
-
 		//Check to see if the year has been set and if so, convert to a filter and resend.
 		$dateFilters = array('publishDate');
 		foreach ($dateFilters as $dateFilter){
@@ -230,26 +230,49 @@ class Results extends Action {
 		$list = User_list::staticGet($goToListID);
 		$favorites = $list->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 		$n = 0;
+		$m = 0;
 		$favId;
-		foreach($favorites as $aa){
-			foreach($aa as $key => $bb){
-				if($key =='record_id'){
+		/*foreach($favorites as $key => $value){
+			echo $key."<br/>";
+			foreach($value as $keykey => $valuevalue){
+				echo "******".$keykey."=>".$valuevalue."<br/>";
+			}
+		}*/
+		$recordTypes;
+		foreach($favorites as $key => $aa){
+			foreach($aa as $keykey => $bb){
+				if($keykey =='record_id'){
 					$favId[$n] = $bb;
 					$n++;
 				}
+				if($keykey == 'source'){
+					$recordTypes[$m] =$bb;
+					$m++;
+				}
 			}
 		}
+		//$mail->send("zhengsiping@gmail.com", $configArray['Site']['email'], "hello", "nohello", "zhengsiping@gmail.com");
 		$requestIds;
 		$n = 0;
 		if(count($favId)>0){
-			$_REQUEST['lookfor'] = 'id:'.$favId[0];
+			if($recordTypes[0] == "eContent"){
+				$_REQUEST['lookfor'] = 'id:econtentRecord'.$favId[0];
+			}else{
+				$_REQUEST['lookfor'] = 'id:'.$favId[0];
+			}
+			
 			$requestIds[$n] = $favId[0];
 			$n++;
 		}
+		$nn = 0;
 		foreach($favId as $a){
-			$_REQUEST['lookfor'] = $_REQUEST['lookfor'].' OR id:'.$a;
-			$requestIds[$n] = $a;
-			$n++;
+			if($recordTypes[$nn] == "eContent"){
+				$_REQUEST['lookfor'] = $_REQUEST['lookfor'].' OR id:econtentRecord'.$a;
+			}else{
+				$_REQUEST['lookfor'] = $_REQUEST['lookfor'].' OR id:'.$a;
+			}
+			$requestIds[$nn] = $a;
+			$nn++;
 		}
 		if($favId==null){
 			$_REQUEST['lookfor'] = '#$%^&*';
@@ -277,6 +300,7 @@ class Results extends Action {
 		
 		$searchObject = SearchObjectFactory::initSearchObject();
 		$searchObject->init($searchSource);
+		$searchObject->disableLogging();
 		$timer->logTime("Init Search Object");
 		// Build RSS Feed for Results (if requested)
 		if ($searchObject->getView() == 'rss') {
@@ -311,7 +335,7 @@ class Results extends Action {
 				if($_REQUEST['goToListID']=='BookCart'){
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$valuevalue);
 				}else{
-					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results/goToListID="+$goToListID+"&",$valuevalue);
+					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$valuevalue);
 				}
 			}
 		}
@@ -332,7 +356,7 @@ class Results extends Action {
 		//   no matter whether there were any results
 		$interface->assign('qtime',               round($searchObject->getQuerySpeed(), 2));
 		$interface->assign('spellingSuggestions', $searchObject->getSpellingSuggestions());
-		$interface->assign('lookfor',             $searchObject->displayQuery());
+		//$interface->assign('lookfor',             $searchObject->displayQuery());
 		$interface->assign('searchType',          $searchObject->getSearchType());
 		// Will assign null for an advanced search
 		$interface->assign('searchIndex',         $searchObject->getSearchIndex());
@@ -518,7 +542,6 @@ class Results extends Action {
 			$searchStat = new SearchStat();
 			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : $_GET['basicType']), $searchObject->getResultTotal());
 		}
-	
 		// Save the ID of this search to the session so we can return to it easily:
 		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
 

@@ -30,31 +30,6 @@
         <div id="account-settings">
             <a onclick='getAccountSetting()'>Account Settings</a>
         </div>
-        
-        
-        
-        
-        
-        {*}
-        <div id="wish-lists">
-            <a href="/List/Results">Wish Lists</a>
-        </div>
-        <div id="history">
-            <a href="/Search/History">Search History</a>
-        </div>
-        <div id="my-item">
-            <a href="/MyResearch/CheckedOut">Checked Out Items</a>
-        </div>
-        <div id="my-request">
-            <a href="/MyResearch/Holds">Requests Items</a>
-        </div>
-        <div id="account-settings">
-            <a href="/MyResearch/Profile">Account Settings</a>
-        </div>
-        <div id="reading-history">
-            <a href="/MyResearch/ReadingHistory">My Reading History</a>
-        </div>
-        *}
     </div>
     
     
@@ -64,15 +39,9 @@
         <div id="description">
             Your Preferred Branches
         </div>
-        {*
-        <div id="branch-name">
-            Carnegie Library Main
-        </div>
-        *}
-        <div id="blank">&nbsp;</div>
          <a href="/MyResearch/Profile">
 	      <input id="edit-button" class="button" value="Edit"/>
-	    </a>
+	</a>
     </div>
     
    
