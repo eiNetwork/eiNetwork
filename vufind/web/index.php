@@ -197,10 +197,17 @@ $timer->logTime('Create interface');
 if (isset($configArray['Site']['theme_css'])){
 	$interface->assign('theme_css', $configArray['Site']['theme_css']);
 }
-$interface->assign('smallLogo', $configArray['Site']['smallLogo']);
-$interface->assign('largeLogo', $configArray['Site']['largeLogo']);
+if (isset($configArray['Site']['smallLogo'])){
+	$interface->assign('smallLogo', $configArray['Site']['smallLogo']);
+}
+if (isset($configArray['Site']['largeLogo'])){
+	$interface->assign('largeLogo', $configArray['Site']['largeLogo']);
+}
 //Set focus to the search box by default.
 $interface->assign('focusElementId', 'lookfor');
+
+//Set System Message
+//$interface->assign('systemMessage', "The catalog will be undergoing maintenance on Sunday July 29th from 8am - noon.  The system may be unavailable during this period.");
 
 //Get the name of the active instance
 if ($locationSingleton->getActiveLocation() != null){
@@ -621,7 +628,7 @@ if (is_readable("services/$module/$action.php")) {
 		PEAR::raiseError(new PEAR_Error('Unknown Action'));
 	}
 } else {
-	PEAR::RaiseError(new PEAR_Error("Cannot Load Action '$action' for Module '$module'"));
+	PEAR::RaiseError(new PEAR_Error("Cannot Load Action '$action' for Module '$module' request '$requestURI'"));
 }
 $timer->logTime('Finished Index');
 $timer->writeTimings();
@@ -841,10 +848,6 @@ function updateConfigForScoping($configArray) {
 	//Get the subdomain for the request
 	global $servername;
 
-	//Default dynamic logos
-	$configArray['Site']['smallLogo'] = "/interface/themes/{$configArray['Site']['theme']}/images/logo_small.png";
-	$configArray['Site']['largeLogo'] = "/interface/themes/{$configArray['Site']['theme']}/images/logo_large.png";
-
 	//split the servername based on
 	$subdomain = null;
 	if(strpos($_SERVER['SERVER_NAME'], '.')){
@@ -916,28 +919,19 @@ function updateConfigForScoping($configArray) {
 
 		$location = $locationSingleton->getActiveLocation();
 		
-		//Add an extra css file for the scope if it exists.
-		if (file_exists('./interface/themes/' . $library->themeName . '/css/extra_styles.css')) {
-			$configArray['Site']['theme_css'] = $configArray['Site']['url'] . '/interface/themes/' . $library->themeName . '/css/extra_styles.css';
+		//Add an extra css file for the location if it exists.
+		$themes = explode(',', $library->themeName);
+		foreach ($themes as $themeName){
+			if ($location != null && file_exists('./interface/themes/' . $themeName . '/css/'. $location->code .'_extra_styles.css')) {
+				$configArray['Site']['theme_css'] = $configArray['Site']['url'] . '/interface/themes/' . $themeName . '/css/'. $location->code .'_extra_styles.css';
+			}
+			if ($location != null && file_exists('./interface/themes/' . $themeName . '/images/'. $location->code .'_logo_small.png')) {
+				$configArray['Site']['smallLogo'] = '/interface/themes/' . $themeName . '/images/'. $location->code .'_logo_small.png';
+			}
+			if ($location != null && file_exists('./interface/themes/' . $themeName . '/images/'. $location->code .'_logo_large.png')) {
+				$configArray['Site']['largeLogo'] = '/interface/themes/' . $themeName . '/images/'. $location->code .'_logo_large.png';
+			}
 		}
-		if ($location != null && file_exists('./interface/themes/' . $library->themeName . '/css/'. $location->code .'_extra_styles.css')) {
-			$configArray['Site']['theme_css'] = $configArray['Site']['url'] . '/interface/themes/' . $library->themeName . '/css/'. $location->code .'_extra_styles.css';
-		}
-		if ($location != null && file_exists('./interface/themes/' . $library->themeName . '/images/'. $location->code .'_logo_small.png')) {
-			$configArray['Site']['smallLogo'] = '/interface/themes/' . $library->themeName . '/images/'. $location->code .'_logo_small.png';
-		}elseif (file_exists('./interface/themes/' . $library->themeName . '/images/logo_small.png')) {
-			$configArray['Site']['smallLogo'] = '/interface/themes/' . $library->themeName . '/images/logo_small.png';
-		}else{
-			$configArray['Site']['smallLogo'] = "/interface/themes/{$configArray['Site']['theme']}/images/logo_small.png";
-		}
-		if ($location != null && file_exists('./interface/themes/' . $library->themeName . '/images/'. $location->code .'_logo_large.png')) {
-			$configArray['Site']['largeLogo'] = '/interface/themes/' . $library->themeName . '/images/'. $location->code .'_logo_large.png';
-		}elseif (file_exists('./interface/themes/' . $library->themeName . '/images/logo_large.png')) {
-			$configArray['Site']['largeLogo'] = '/interface/themes/' . $library->themeName . '/images/logo_large.png';
-		}else{
-			$configArray['Site']['largeLogo'] = "/interface/themes/{$configArray['Site']['theme']}/images/logo_large.png";
-		}
-
 	}
 	$timer->logTime('finished update config for scoping');
 

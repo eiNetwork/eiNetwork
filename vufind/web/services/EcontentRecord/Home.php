@@ -68,6 +68,8 @@ class Home extends Action{
 			$interface->assign('showRatings', $library->showRatings);
 			$interface->assign('showComments', $library->showComments);
 			$interface->assign('tabbedDetails', $library->tabbedDetails);
+			$interface->assign('showOtherEditionsPopup', $library->showOtherEditionsPopup == 1 ? true : false);
+			$interface->assign('showProspectorTitlesAsTab', $library->showProspectorTitlesAsTab);
 		}else{
 			$interface->assign('showTextThis', 1);
 			$interface->assign('showEmailThis', 1);
@@ -88,6 +90,7 @@ class Home extends Action{
 			$interface->assign('showRatings', 1);
 			$interface->assign('showComments', 1);
 			$interface->assign('tabbedDetails', 1);
+			$interface->assign('showProspectorTitlesAsTab', 0);
 		}
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
 		$interface->assign('chiliFreshAccount', $configArray['Content']['chiliFreshAccount']);
@@ -224,16 +227,20 @@ class Home extends Action{
 	public function getStaffView($eContentRecord){
 		global $interface;
 		$marcRecord = $eContentRecord->marcRecord;
-		$marc = trim($marcRecord);
-		$marc = preg_replace('/#31;/', "\x1F", $marc);
-		$marc = preg_replace('/#30;/', "\x1E", $marc);
-		$marc = new File_MARC($marc, File_MARC::SOURCE_STRING);
-
-		if (!($marcRecord = $marc->next())) {
-			PEAR::raiseError(new PEAR_Error('Could not load marc record for record ' . $record['id']));
+		if (strlen($marcRecord) > 0){
+			$marc = trim($marcRecord);
+			$marc = preg_replace('/#31;/', "\x1F", $marc);
+			$marc = preg_replace('/#30;/', "\x1E", $marc);
+			$marc = new File_MARC($marc, File_MARC::SOURCE_STRING);
+	
+			if (!($marcRecord = $marc->next())) {
+				PEAR::raiseError(new PEAR_Error('Could not load marc record for record ' . $record['id']));
+			}
+			$interface->assign('marcRecord', $marcRecord);
+			return 'RecordDrivers/Marc/staff.tpl';
+		}else{
+			return null;
 		}
-		$interface->assign('marcRecord', $marcRecord);
-		return 'RecordDrivers/Marc/staff.tpl';
 	}
 
 	/**

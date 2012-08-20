@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -193,6 +192,7 @@ public class Packaging implements IProcessHandler{
 		//Get a list of files that we need to get packaging information for
 		try {
 			ResultSet filesToGetAcsPackagingInfoForRs = filesToGetAcsPackagingInfoFor.executeQuery();
+			logger.debug("Getting results from packaging service");
 			while (filesToGetAcsPackagingInfoForRs.next()){
 				Long id = filesToGetAcsPackagingInfoForRs.getLong("id");
 				String distributorId = filesToGetAcsPackagingInfoForRs.getString("distributorId");
@@ -209,6 +209,7 @@ public class Packaging implements IProcessHandler{
 
 	private void getPackagingResults(Long id, String distributorId, Long packagingId, long eContentItemId) {
 		try {
+			logger.debug("Getting results from packaging service for pacakgingId " + packagingId + " distributorId " + distributorId );
 			URL getProtectionStatusRequest = new URL(packagingUrl + 
 					"?method=GetFileProtectionStatus" +
 					"&distributorId=" + distributorId +

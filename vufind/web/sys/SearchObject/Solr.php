@@ -80,6 +80,7 @@ class SearchObject_Solr extends SearchObject_Base
 
 		global $configArray;
 		global $timer;
+		global $library;
 		// Include our solr index
 		$class = $configArray['Index']['engine'];
 		require_once "sys/$class.php";
@@ -101,6 +102,11 @@ class SearchObject_Solr extends SearchObject_Base
 
 		// Load search preferences:
 		$searchSettings = getExtraConfigArray('searches');
+		if (isset($library)){
+			if ($library->showTagging == 0){
+				unset($searchSettings['Basic_Searches']['tag']);
+			}
+		}
 		if (isset($searchSettings['General']['default_handler'])) {
 			$this->defaultIndex = $searchSettings['General']['default_handler'];
 		}
@@ -499,6 +505,7 @@ class SearchObject_Solr extends SearchObject_Base
 		for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
 			$current = & $this->indexResult['response']['docs'][$x];
 			$interface->assign('recordIndex', $x + 1);
+			$interface->assign('resultIndex', $x + 1 + (($this->page - 1) * $this->limit));
 			$record = RecordDriverFactory::initRecordDriver($current);
 			$html[] = $interface->fetch($record->getSearchResult());
 		}
@@ -1414,6 +1421,9 @@ class SearchObject_Solr extends SearchObject_Base
 						$valueKey = '2' . $valueKey;
 						$numValidRelatedLocations++;
 					}elseif ($facet[0] == 'Digital Collection'){
+						$valueKey = '4' . $valueKey;
+						$numValidRelatedLocations++;
+					}elseif ($facet[0] == $currentLibrary->facetLabel . ' Online'){
 						$valueKey = '3' . $valueKey;
 						$numValidRelatedLocations++;
 					}

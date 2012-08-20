@@ -49,7 +49,7 @@ class DBMaintenance extends Admin {
 					$updateOk = true;
 					foreach ($sqlStatements as $sql){
 						//Give enough time for long queries to run
-						$this->setTimeLimit(120);
+						set_time_limit(120);
 						if (method_exists($this, $sql)){
 							$this->$sql();
 						}else{
@@ -170,6 +170,65 @@ class DBMaintenance extends Admin {
 				'dependencies' => array(),
 				'sql' => array(
 					"ALTER TABLE `library` ADD `eContentLinkRules` VARCHAR(512) DEFAULT '';",
+				),
+			),
+			'library_9' => array(
+				'title' => 'Library 9',
+				'description' => 'Add showOtherEditionsPopup to determine whether or not the Other Editions and Languages Popup is shown',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `showOtherEditionsPopup` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `showTableOfContentsTab` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `notesTabName` VARCHAR(50) DEFAULT 'Notes';",
+				),
+			),
+			'library_10' => array(
+				'title' => 'Library 10',
+				'description' => 'Add fields for showing copies in holdings summary, and hold button in results list',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `showHoldButtonInSearchResults` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `showCopiesLineInHoldingsSummary` TINYINT DEFAULT '1';",
+				),
+			),
+			'library_11' => array(
+				'title' => 'Library 11',
+				'description' => 'Add fields for disabling some Novelist functionality and disabling boosting by number of holdings',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `showSimilarAuthors` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `showSimilarTitles` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `showProspectorTitlesAsTab` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `show856LinksAsTab` TINYINT DEFAULT '0';",
+					"ALTER TABLE `library` ADD `applyNumberOfHoldingsBoost` TINYINT DEFAULT '1';",
+					"ALTER TABLE `library` ADD `worldCatUrl` VARCHAR(100) DEFAULT '';",
+					"ALTER TABLE `library` ADD `worldCatQt` VARCHAR(20) DEFAULT '';",
+					"ALTER TABLE `library` ADD `preferSyndeticsSummary` TINYINT DEFAULT '1';",
+				),
+			),
+			'library_12' => array(
+				'title' => 'Library 12',
+				'description' => 'Add abbreviation for library name for use in some cases where the full name is not desired.',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `abbreviatedDisplayName` VARCHAR(20) DEFAULT '';",
+					"UPDATE `library` SET `abbreviatedDisplayName` = LEFT(`displayName`, 20);",
+				),
+			),
+			'library_13' => array(
+				'title' => 'Library 13',
+				'description' => 'Updates to World Cat integration for local libraries',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` CHANGE `worldCatQt` `worldCatQt` VARCHAR(40) DEFAULT '';",
+				),
+			),
+			'library_14' => array(
+				'title' => 'Library 14',
+				'description' => 'Allow Go Deeper to be disabled by Library',
+				'dependencies' => array(),
+				'sql' => array(
+					"ALTER TABLE `library` ADD `showGoDeeper` TINYINT DEFAULT '1';",
 				),
 			),
 			
@@ -532,6 +591,17 @@ class DBMaintenance extends Admin {
 				),
 			),
 			
+			'resource_update9' => array(
+				'title' => 'Update resource 9',
+				'description' => 'Updates resources to use MyISAM rather than INNODB for . ',
+				'sql' => array(
+					//"UPDATE resource set marc = null, marc_checksum = -1;",
+					"ALTER TABLE resource_callnumber ENGINE = MYISAM",
+					"ALTER TABLE resource_subject ENGINE = MYISAM",
+					"ALTER TABLE `resource_callnumber` CHANGE `callnumber` `callnumber` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
+				),
+			),
+			
 			'resource_callnumber' => array(
 				'title' => 'Resource call numbers',
 				'description' => 'Create table to store call numbers for resources',
@@ -836,41 +906,177 @@ class DBMaintenance extends Admin {
 			),
 		),
 		
-		'alpha_browse_setup' => array(
+		/* This routine completely changed, removing alpha_browse_setup since alpha_browse_setup_1 complete redoes the tables */
+		'alpha_browse_setup_2' => array(
 			'title' => 'Setup Alphabetic Browse',
 			'description' => 'Create tables to handle alphabetic browse functionality.',
 			'dependencies' => array(),
 			'sql' => array(
+				"DROP TABLE IF EXISTS `title_browse`",
 				"CREATE TABLE `title_browse` ( 
-					`id` INT NOT NULL COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
+					`id` INT NOT NULL AUTO_INCREMENT COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
 					`value` VARCHAR( 255 ) NOT NULL COMMENT 'The original value',
-					`numResults` INT NOT NULL COMMENT 'The number of results found in the table',
+					`sortValue` VARCHAR( 255 ) NOT NULL COMMENT 'The value to sort by',
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `value` )
-				) ENGINE = InnoDB;",
+				INDEX ( `sortValue` ),
+				UNIQUE (`value`)
+				) ENGINE = MYISAM;",
+				"DROP TABLE IF EXISTS `title_browse_scoped_results`",
+				"CREATE TABLE `title_browse_scoped_results`( 
+					`browseValueId` INT(11) NOT NULL,
+					`scope` TINYINT NOT NULL,
+					`scopeId` INT(11) NOT NULL,
+					`record` VARCHAR( 50 ) NOT NULL,
+				PRIMARY KEY ( `browseValueId`, `scope`, `scopeId`, `record` ), 
+				INDEX (`scopeId`)
+				) ENGINE = MYISAM",
+		
+				"DROP TABLE IF EXISTS `author_browse`",
 				"CREATE TABLE `author_browse` ( 
-					`id` INT NOT NULL COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
+					`id` INT NOT NULL AUTO_INCREMENT COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
 					`value` VARCHAR( 255 ) NOT NULL COMMENT 'The original value',
-					`numResults` INT NOT NULL COMMENT 'The number of results found in the table',
+					`sortValue` VARCHAR( 255 ) NOT NULL COMMENT 'The value to sort by',
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `value` )
-				) ENGINE = InnoDB;",
+				INDEX ( `sortValue` ),
+				UNIQUE (`value`)
+				) ENGINE = MYISAM;",
+				"DROP TABLE IF EXISTS `author_browse_scoped_results`",
+				"CREATE TABLE `author_browse_scoped_results`( 
+					`browseValueId` INT(11) NOT NULL,
+					`scope` TINYINT NOT NULL,
+					`scopeId` INT(11) NOT NULL,
+					`record` VARCHAR( 50 ) NOT NULL,
+				PRIMARY KEY ( `browseValueId`, `scope`, `scopeId`, `record` ), 
+				INDEX (`scopeId`)
+				) ENGINE = MYISAM",
+		
+				"DROP TABLE IF EXISTS `callnumber_browse`",
 				"CREATE TABLE `callnumber_browse` ( 
-					`id` INT NOT NULL COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
+					`id` INT NOT NULL AUTO_INCREMENT COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
 					`value` VARCHAR( 255 ) NOT NULL COMMENT 'The original value',
-					`numResults` INT NOT NULL COMMENT 'The number of results found in the table',
+					`sortValue` VARCHAR( 255 ) NOT NULL COMMENT 'The value to sort by',
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `value` )
-				) ENGINE = InnoDB;",
+				INDEX ( `sortValue` ),
+				UNIQUE (`value`)
+				) ENGINE = MYISAM;",
+				"DROP TABLE IF EXISTS `callnumber_browse_scoped_results`",
+				"CREATE TABLE `callnumber_browse_scoped_results`( 
+					`browseValueId` INT(11) NOT NULL,
+					`scope` TINYINT NOT NULL,
+					`scopeId` INT(11) NOT NULL,
+					`record` VARCHAR( 50 ) NOT NULL,
+				PRIMARY KEY ( `browseValueId`, `scope`, `scopeId`, `record` ), 
+				INDEX (`scopeId`)
+				) ENGINE = MYISAM",
+		
+				"DROP TABLE IF EXISTS `subject_browse`",
 				"CREATE TABLE `subject_browse` ( 
-					`id` INT NOT NULL COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
+					`id` INT NOT NULL AUTO_INCREMENT COMMENT 'The id of the browse record in numerical order based on the sort order of the rows',
 					`value` VARCHAR( 255 ) NOT NULL COMMENT 'The original value',
-					`numResults` INT NOT NULL COMMENT 'The number of results found in the table',
+					`sortValue` VARCHAR( 255 ) NOT NULL COMMENT 'The value to sort by',
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `value` )
-				) ENGINE = InnoDB;",
+				INDEX ( `sortValue` ),
+				UNIQUE (`value`)
+				) ENGINE = MYISAM;",
+				"DROP TABLE IF EXISTS `subject_browse_scoped_results`",
+				"CREATE TABLE `subject_browse_scoped_results`( 
+					`browseValueId` INT(11) NOT NULL,
+					`scope` TINYINT NOT NULL,
+					`scopeId` INT(11) NOT NULL,
+					`record` VARCHAR( 50 ) NOT NULL,
+				PRIMARY KEY ( `browseValueId`, `scope`, `scopeId`, `record` ), 
+				INDEX (`scopeId`) 
+				) ENGINE = MYISAM",
 			),
 		),
+		
+		'alpha_browse_setup_3' => array(
+			'title' => 'Alphabetic Browse Performance',
+			'description' => 'Create additional indexes and columns to improve performance of Alphabetic Browse.',
+			'dependencies' => array(),
+			'sql' => array(
+				//Author browse 
+				"ALTER TABLE `author_browse_scoped_results` ADD INDEX ( `browseValueId` )", 
+				"ALTER TABLE `author_browse_scoped_results` ADD INDEX ( `scope` )",
+				"ALTER TABLE `author_browse_scoped_results` ADD INDEX ( `record` )", 
+				"ALTER TABLE `author_browse` ADD COLUMN `alphaRank` INT( 11 ) NOT NULL COMMENT 'A numerical ranking of the sort values from a-z'",
+				"ALTER TABLE `author_browse` ADD INDEX ( `alphaRank` )", 
+				"set @r=0;",
+				"UPDATE author_browse SET alphaRank = @r:=(@r + 1) ORDER BY `sortValue`;",
+		
+				//Call number browse
+				"ALTER TABLE `callnumber_browse_scoped_results` ADD INDEX ( `browseValueId` )",
+				"ALTER TABLE `callnumber_browse_scoped_results` ADD INDEX ( `scope` )", 
+				"ALTER TABLE `callnumber_browse_scoped_results` ADD INDEX ( `record` )", 
+				"ALTER TABLE `callnumber_browse` ADD COLUMN `alphaRank` INT( 11 ) NOT NULL COMMENT 'A numerical ranking of the sort values from a-z'",
+				"ALTER TABLE `callnumber_browse` ADD INDEX ( `alphaRank` )", 
+				"set @r=0;",
+				"UPDATE callnumber_browse SET alphaRank = @r:=(@r + 1) ORDER BY `sortValue`;",
+		
+				//Subject Browse
+				"ALTER TABLE `subject_browse_scoped_results` ADD INDEX ( `browseValueId` )", 
+				"ALTER TABLE `subject_browse_scoped_results` ADD INDEX ( `scope` )", 
+				"ALTER TABLE `subject_browse_scoped_results` ADD INDEX ( `record` )", 
+				"ALTER TABLE `subject_browse` ADD COLUMN `alphaRank` INT( 11 ) NOT NULL COMMENT 'A numerical ranking of the sort values from a-z'",
+				"ALTER TABLE `subject_browse` ADD INDEX ( `alphaRank` )", 
+				"set @r=0;",
+				"UPDATE subject_browse SET alphaRank = @r:=(@r + 1) ORDER BY `sortValue`;",
+		
+				//Tile Browse
+				"ALTER TABLE `title_browse_scoped_results` ADD INDEX ( `browseValueId` )", 
+				"ALTER TABLE `title_browse_scoped_results` ADD INDEX ( `scope` )", 
+				"ALTER TABLE `title_browse_scoped_results` ADD INDEX ( `record` )", 
+				"ALTER TABLE `title_browse` ADD COLUMN `alphaRank` INT( 11 ) NOT NULL COMMENT 'A numerical ranking of the sort values from a-z'",
+				"ALTER TABLE `title_browse` ADD INDEX ( `alphaRank` )", 
+				"set @r=0;",
+				"UPDATE title_browse SET alphaRank = @r:=(@r + 1) ORDER BY `sortValue`;",
+			),
+		),
+		
+		'alpha_browse_setup_4' => array(
+			'title' => 'Alphabetic Browse Metadata',
+			'description' => 'Create metadata about alphabetic browsing improve performance of Alphabetic Browse.',
+			'dependencies' => array(),
+			'sql' => array(
+				"CREATE TABLE author_browse_metadata (
+					`scope` TINYINT( 4 ) NOT NULL ,
+					`scopeId` INT( 11 ) NOT NULL ,
+					`minAlphaRank` INT NOT NULL ,
+					`maxAlphaRank` INT NOT NULL ,
+					`numResults` INT NOT NULL
+				) ENGINE = InnoDB;",
+				"INSERT INTO author_browse_metadata (SELECT scope, scopeId, MIN(alphaRank) as minAlphaRank, MAX(alphaRank) as maxAlphaRank, count(id) as numResults FROM author_browse inner join author_browse_scoped_results ON id = browseValueId GROUP BY scope, scopeId)",
+				
+				"CREATE TABLE callnumber_browse_metadata (
+					`scope` TINYINT( 4 ) NOT NULL ,
+					`scopeId` INT( 11 ) NOT NULL ,
+					`minAlphaRank` INT NOT NULL ,
+					`maxAlphaRank` INT NOT NULL ,
+					`numResults` INT NOT NULL
+				) ENGINE = InnoDB;",
+				"INSERT INTO callnumber_browse_metadata (SELECT scope, scopeId, MIN(alphaRank) as minAlphaRank, MAX(alphaRank) as maxAlphaRank, count(id) as numResults FROM callnumber_browse inner join callnumber_browse_scoped_results ON id = browseValueId GROUP BY scope, scopeId)",
+		
+				"CREATE TABLE title_browse_metadata (
+					`scope` TINYINT( 4 ) NOT NULL ,
+					`scopeId` INT( 11 ) NOT NULL ,
+					`minAlphaRank` INT NOT NULL ,
+					`maxAlphaRank` INT NOT NULL ,
+					`numResults` INT NOT NULL
+				) ENGINE = InnoDB;",
+				"INSERT INTO title_browse_metadata (SELECT scope, scopeId, MIN(alphaRank) as minAlphaRank, MAX(alphaRank) as maxAlphaRank, count(id) as numResults FROM title_browse inner join title_browse_scoped_results ON id = browseValueId GROUP BY scope, scopeId)",
+		
+				"CREATE TABLE subject_browse_metadata (
+					`scope` TINYINT( 4 ) NOT NULL ,
+					`scopeId` INT( 11 ) NOT NULL ,
+					`minAlphaRank` INT NOT NULL ,
+					`maxAlphaRank` INT NOT NULL ,
+					`numResults` INT NOT NULL
+				) ENGINE = InnoDB;",
+				"INSERT INTO subject_browse_metadata (SELECT scope, scopeId, MIN(alphaRank) as minAlphaRank, MAX(alphaRank) as maxAlphaRank, count(id) as numResults FROM subject_browse inner join subject_browse_scoped_results ON id = browseValueId GROUP BY scope, scopeId)",
+			),
+		),
+		
+		
 		
 		'reindexLog' => array(
 			'title' => 'Reindex Log table',
@@ -901,6 +1107,17 @@ class DBMaintenance extends Admin {
 				
 			),
 		),
+		
+		'reindexLog_1' => array(
+			'title' => 'Reindex Log table update 1',
+			'description' => 'Update Reindex Log table to include notes and last update.',
+			'dependencies' => array(),
+			'sql' => array(
+				"ALTER TABLE reindex_log ADD COLUMN `notes` TEXT COMMENT 'Notes related to the overall process'",
+				"ALTER TABLE reindex_log ADD `lastUpdate` INT(11) COMMENT 'The last time the log was updated'",
+			),
+		),
+		
 		
 		'cronLog' => array(
 			'title' => 'Cron Log table',
@@ -1166,19 +1383,9 @@ class DBMaintenance extends Admin {
 		);
 	}
 	
-	private function setTimeLimit($time = 120)
-	{
-		set_time_limit(120);
-	}
-	private function freeMysqlResult($result)
-	{
-		mysql_free_result($result);
-	}
-	
-	
 	public function addTableListWidgetListsLinks()
 	{
-		$this->setTimeLimit(120);
+		set_time_limit(120);
 		$sql =	'CREATE TABLE IF NOT EXISTS `list_widget_lists_links`( '.
 				'`id` int(11) NOT NULL AUTO_INCREMENT, '.
 				'`listWidgetListsId` int(11) NOT NULL, '.
@@ -1194,7 +1401,7 @@ class DBMaintenance extends Admin {
 			$sqlInsert = 'INSERT INTO `list_widget_lists_links` (`id`,`listWidgetListsId`,`name`,`link`) VALUES (NULL,\''.$row['id'].'\',\'Full List Link\',\''.$row['fullListLink'].'\') ';
 			mysql_query($sqlInsert);
 		}
-		$this->freeMysqlResult($result);
+		mysql_free_result($result);
 		mysql_query('ALTER TABLE `list_widget_lists` DROP `fullListLink`');
 	}
 	

@@ -257,7 +257,7 @@ class Solr implements IndexEngine {
 		// Generate data if not found in cache:
 		if (!($results = $cache->load($key))) {
 			$results = Horde_Yaml::load(
-			file_get_contents($this->searchSpecsFile)
+				file_get_contents($this->searchSpecsFile)
 			);
 			$cache->save($results, $key);
 		}
@@ -995,14 +995,23 @@ class Solr implements IndexEngine {
 			}else{
 				$boostFactors[] = 'language_boost';
 			}
-			$boostFactors[] = 'product(num_holdings,15,div(format_boost,50))';
+			global $librarySingleton;
+			global $locationSingleton;
+			$searchLibrary = Library::getSearchLibrary();
+			
+			$applyHoldingsBoost = true;
+			if (isset($searchLibrary) && !is_null($searchLibrary)){
+				$applyHoldingsBoost = $searchLibrary->applyNumberOfHoldingsBoost;
+			}
+			if ($applyHoldingsBoost){
+				$boostFactors[] = 'product(num_holdings,15,div(format_boost,50))';
+			}else{
+				$boostFactors[] = 'product(15,div(format_boost,50))';
+			}
 			//$boostFactors[] = 'product(num_holdings,7)';
 			//Add rating as part of the ranking, normalize so ratings of less that 2.5 are below unrated entries.
 			$boostFactors[] = 'product(sum(abs(rating),-2.5),10)';
 				
-			global $librarySingleton;
-			global $locationSingleton;
-			$searchLibrary = Library::getSearchLibrary();
 			if (isset($searchLibrary) && !is_null($searchLibrary)){
 				$boostFactors[] = "lib_boost_{$searchLibrary->subdomain}";
 			}

@@ -216,8 +216,10 @@ class EContentDriver implements DriverInterface{
 		
 			if ($available){
 				$statusSummary['status'] = 'Available from OverDrive';
+				$statusSummary['class'] = 'available';
 			}else{
 				$statusSummary['status'] = 'Checked out in OverDrive';
+				$statusSummary['class'] = 'checkedOut';
 			}
 			$wishListSize = 0;
 		}else{
@@ -263,21 +265,31 @@ class EContentDriver implements DriverInterface{
 			if ($checkedOut == true){
 				$statusSummary['status'] = 'Checked Out to you';
 				$statusSummary['available'] = false;
+				$statusSummary['class'] = 'available';
 			}elseif ($onHold == true){
 				$statusSummary['status'] = 'On Hold for you';
 				$statusSummary['available'] = false;
+				$statusSummary['class'] = 'available';
 			}elseif ($addedToWishList == true){
 				$statusSummary['status'] = 'On your wishlist';
 				$statusSummary['available'] = false;
+				if ($statusSummary['numCheckedOut'] < $statusSummary['totalCopies']){
+					$statusSummary['class'] = 'available';
+				}else{
+					$statusSummary['class'] = 'checkedOut';
+				}
 			}elseif (count($holdings) == 0){
 				$statusSummary['status'] = 'Not available yet';
 				$statusSummary['available'] = false;
+				$statusSummary['class'] = 'unavailable';
 			}elseif ($statusSummary['numCheckedOut'] < $statusSummary['totalCopies']){
 				$statusSummary['status'] = 'Available Online';
 				$statusSummary['available'] = true;
+				$statusSummary['class'] = 'available';
 			}else{
 				$statusSummary['status'] = 'Checked Out';
 				$statusSummary['available'] = false;
+				$statusSummary['class'] = 'checkedOut';
 			}
 	
 			$wishList = new EContentWishList();
@@ -1007,10 +1019,15 @@ class EContentDriver implements DriverInterface{
 							'text' => 'Access&nbsp;MP3',
 				);
 			}
-		}elseif (in_array($eContentItem->item_type, array('externalLink', 'interactiveBook'))){
+		}elseif (strcasecmp($eContentItem->item_type, 'interactiveBook') == 0){
 			$links[] = array(
 							'url' =>  $configArray['Site']['path'] . "/EcontentRecord/{$eContentItem->recordId}/Link?itemId={$eContentItem->id}",
 							'text' => 'Access&nbsp;eBook',
+			);
+		}else{
+			$links[] = array(
+							'url' =>  $configArray['Site']['path'] . "/EcontentRecord/{$eContentItem->recordId}/Link?itemId={$eContentItem->id}",
+							'text' => 'Click&nbsp;for&nbsp;Access',
 			);
 		}
 		return $links;
@@ -1125,10 +1142,12 @@ class EContentDriver implements DriverInterface{
 
 		//Download link
 		$downloadLink = AdobeContentServer::mintDownloadLink($eContentItem, $eContentCheckout);
-		$links[] = array(
-			'url' => $downloadLink,
-			'text' => 'Download',
-		);
+		if ($downloadLink != null){
+			$links[] = array(
+				'url' => $downloadLink,
+				'text' => 'Download',
+			);
+		}
 		return $links;
 	}
 	
