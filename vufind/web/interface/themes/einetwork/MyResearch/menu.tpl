@@ -34,18 +34,34 @@
    
     <div class="separator"><hr/></div>
     
-    <div class="prefer-branch">
+    <div class="prefer-branch" id="prefer-branch">
         <div id="description">
             Your Preferred Branches
         </div>
-        
-        <div id="blank">&nbsp;</div>
-        <div>
-            <a href="/MyResearch/Profile">
+         <a href="/MyResearch/Profile">
 	      <input id="edit-button" class="button" value="Edit"/>
-	    </a>
-        </div>
+	</a>
     </div>
+   {literal}
+   <script type="text/javascript">
+	$("#prefer-branch").ready(function(){
+	    $.ajax({
+		type: 'get',
+                url: "/MyResearch/AJAX?method=getLocations",
+		dataType:"html",
+		success: function(data) {
+		    $("#prefer-branch").html(data);
+		},
+		error: function() {
+		    alert("ddd");
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	    });
+	    
+	    })
+    </script>
+    {/literal}
     
     <div class="separator"><hr/></div>
     

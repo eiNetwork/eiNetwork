@@ -169,24 +169,25 @@ class Location extends DB_DataObject
 				$selected = '';
 			}
 			$this->selected = $selected;
-			if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
+			/*if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
 				//If the user is in a branch, those holdings come first.
-				$locationList['1' . $this->displayName] = clone $this;
+				//$locationList['1' . $this->displayName] = clone $this;
 			} else if ($this->locationId == $patronProfile['homeLocationId']){
 				//Next come the user's home branch if the user is logged in or has the home_branch cookie set.
-				$locationList['2' . $this->displayName] = clone $this;
-			} else if (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
+				//$locationList['2' . $this->displayName] = clone $this;
+			} else*/
+			if (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
 				//Next come nearby locations for the user
-				$locationList['3' . $this->displayName] = clone $this;
+				$locationList['1' . $this->displayName] = clone $this;
 			} else if (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
 				//Next come nearby locations for the user
-				$locationList['4' . $this->displayName] = clone $this;
+				$locationList['2' . $this->displayName] = clone $this;
 			} else if (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
 				//Other locations that are within the same library system
-				$locationList['5' . $this->displayName] = clone $this;
+				$locationList['3' . $this->displayName] = clone $this;
 			} else {
 				//Finally, all other locations are shown sorted alphabetically.
-				$locationList['6' . $this->displayName] = clone $this;
+				$locationList['4' . $this->displayName] = clone $this;
 			}
 		}
 		ksort($locationList);

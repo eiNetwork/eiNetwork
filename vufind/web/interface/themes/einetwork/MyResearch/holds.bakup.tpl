@@ -221,7 +221,8 @@
 												<td class="myAccountCell">
 														{if $record.frozen}
 															<span class='frozenHold'>
-														{/if}{$record.status} 
+														{/if}
+														{$record.status} 
 														{if $record.frozen && $showDateWhenSuspending}until {$record.reactivate|date_format}</span>{/if}
 														{if strlen($record.freezeMessage) > 0}
 															<div class='{if $record.freezeResult == true}freezePassed{else}freezeFailed{/if}'>

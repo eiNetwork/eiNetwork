@@ -73,7 +73,6 @@
   vertical-align: top;
   display: inline-block;
   zoom: 1;
-  *display: inline;
 }
 .myAccountCell{
   vertical-align: top;
@@ -87,13 +86,23 @@
   margin-bottom: 4px;
   width: 100%;
 }
-.myAccountTable td, .myAccountTable th{
-  border: 1px solid #949494;
-  padding: 2px 3px;
+.myAccountTable td{
+	border-left: 1px solid rgb(255,255,255);
+	border-right: 1px solid rgb(255,255,255);
+	padding: 5px 10px;
 }
+.myAccountTable tbody tr{
+	background-color: rgb(221,221,221);
+}
+
 .myAccountTable th{
-  padding-right: 20px;
+	color: rgb(240,240,240);
+	background-color: rgb(32,32,32);
+	border: 1px solid rgb(244,213,56);
+	text-align: left;
+	padding: 5px 15px;
 }
+
 .myAccountTable thead{
   border-bottom: 2px solid #949494;
   text-align: center;
@@ -222,9 +231,13 @@
 }
 
 .checkout .button{
-	width: 60px;
+	width: 100px;
 	height: 20px;
 	background: rgb(255,230,109);
+}
+
+.checkout .button:disabled{
+	background: rgb(192,192,192);
 }
 
 .checkout .button:hover{
@@ -282,14 +295,13 @@
 
 
 .item_renew .button{
-	background: rgb(70,210,70);
-	width:60px;
-	height: 20px;
-	
+	background: rgb(255,230,109);
+	width:90px;
+	height: 20px;	
 }
 
 .item_renew .button:hover{
-	background: rgb(10,250,10);
+	background: rgb(242,242,242);
 	border-color: rgb(173,156,74);
 }
 
@@ -300,7 +312,7 @@
 }
 
 .item_status{
-	width: 160px;
+	width: 120px;
 	height: 105px;
 	vertical-align:top;
 	display: inline-block;

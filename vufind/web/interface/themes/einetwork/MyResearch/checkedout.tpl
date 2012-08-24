@@ -340,7 +340,12 @@
 			<div class="item_renew">
 			    {assign var=id value=$record.id scope="global"}
 			    {assign var=shortId value=$record.shortId scope="global"}
-			    <input id="userreviewlink{$shortId}" class="userreviewlink button" onclick="$('.userreview').slideUp();$('#userreview{$shortId}').slideDown();return renewSelectedTitles();" value="renew" />
+			    <input id="userreviewlink{$shortId}" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+			    {if $record.renewMessage}
+				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">
+				{$record.renewMessage|escape}
+			      </div>
+			    {/if}
 			</div>
 			{*******END renew******}
 		    </div>
@@ -412,7 +417,7 @@
 	
 
 	{else}
-	    {translate text='You do not have any items checked out'}.
+	    {translate text='You do not have any physical item checked out'}.
 	     {*******BEGIN Overdrive items*********}
 	    <div>
 		{translate text='eContent Checked Out Items'}

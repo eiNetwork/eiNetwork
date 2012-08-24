@@ -652,7 +652,6 @@ class Results extends Action {
 				$atLeast1Successful = false;
 				
 				foreach ($selectedIds as $recordId => $onOff){
-					
 					if (strpos($recordId, 'econtentRecord', 0) === 0){
 						if ($eContentDriver == null){
 							require_once('Drivers/EContentDriver.php');

@@ -27,7 +27,7 @@
 					</tr>
 				{/if}
 				<tr>
-					<td><input style="margin-left:320px;height:30px;width:40px;padding-top:0px;padding-bottom:0px;onclick="return processAjaxLogin()" id="loginButton" class="button yellow" name="submit" value="Login" /></td>
+					<td><input style="margin-left:320px;height:30px;width:40px;padding-top:0px;padding-bottom:0px;"onclick="return processAjaxLogin()" id="loginButton" class="button yellow" name="submit" value="Login" /></td>
 				</tr>
 
 				{if $comment}

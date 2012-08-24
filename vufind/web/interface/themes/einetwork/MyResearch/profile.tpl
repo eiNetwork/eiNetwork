@@ -36,11 +36,11 @@
 	<div id="left-bar">
 		<div class="account_balance">
 			<div>Account Balance</div>
-			<div class="fine_details">
+			{*<div class="fine_details">
 				<span>You have 2 overdue items accumulating fines</span>
 				<br/>
 				<input class="button" value="View Details"/>
-			</div>
+			</div>*}
 			<div class="pay_balance">
 				<span>{$profile.fines}  due in library fines</span>
 				<br/>

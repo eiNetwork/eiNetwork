@@ -18,7 +18,8 @@ function checkoutOverDriveItemStep2(overdriveId, formatId){
 		success: function(data){
 			alert(data.message);
 			if (data.result){
-				window.location.href = path + "/MyResearch/OverdriveCheckedOut";
+				//window.location.href = path + "/MyResearch/OverdriveCheckedOut";
+				window.location.href = path + "/MyResearch/CheckedOut";
 			}else{
 				hideLightbox();
 			}
@@ -40,7 +41,7 @@ function placeOverDriveHold(overDriveId, formatId){
 			success: function(data){
 				alert(data.message);
 				if (data.result){
-					window.location.href = path + "/MyResearch/OverdriveHolds";
+					window.location.href = path + "/MyResearch/Holds";
 				}else{
 					hideLightbox();
 				}
@@ -121,7 +122,7 @@ function cancelOverDriveHold(overDriveId, formatId){
 			success: function(data){
 				alert(data.message);
 				if (data.result){
-					window.location.href = path + "/MyResearch/OverdriveHolds";
+					window.location.href = path + "/MyResearch/Holds";
 				}else{
 					hideLightbox();
 				}

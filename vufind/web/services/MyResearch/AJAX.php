@@ -23,6 +23,10 @@ require_once 'services/MyResearch/lib/Suggestions.php';
 
 require_once 'services/MyResearch/lib/User_resource.php';
 require_once 'services/MyResearch/lib/User_list.php';
+require_once 'CatalogConnection.php';
+
+require_once 'services/MyResearch/lib/User.php';
+require_once 'services/MyResearch/lib/Resource.php';
 
 class AJAX extends Action {
 
@@ -38,7 +42,7 @@ class AJAX extends Action {
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
-		}else if (in_array($method, array('LoginForm', 'getBulkAddToListForm', 'getPinUpdateForm'))){
+		}else if (in_array($method, array('LoginForm', 'getBulkAddToListForm', 'getPinUpdateForm','getLocations'))){
 			header('Content-type: text/html');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -293,5 +297,67 @@ class AJAX extends Action {
 		$pageContent = $interface->fetch('MyResearch/modifyPinPopup.tpl');
 		$interface->assign('popupContent', $pageContent);
 		return $interface->fetch('popup-wrapper.tpl');
+	}
+	function getLocations(){
+		global $interface;
+		global $configArray;
+		global $user;
+		$catalog = new CatalogConnection($configArray['Catalog']['driver']);
+		if ($user !== false){
+			$interface->assign('user', $user);
+			// Get My Profile
+			if ($catalog->status) {
+				if ($user->cat_username) {
+					$patron = $catalog->patronLogin($user->cat_username, $user->cat_password);
+					if (PEAR::isError($patron)){
+						PEAR::raiseError($patron);
+					}
+					$profile = $catalog->getMyProfile($patron);
+					//$logger = new Logger();
+					//$logger->log("Patron profile phone number in MyResearch = " . $profile['phone'], PEAR_LOG_INFO);
+					if (!PEAR::isError($profile)) {
+						$interface->assign('profile', $profile);
+					}
+				}
+			}
+			
+			global $librarySingleton;
+			$activeLibrary = $librarySingleton->getActiveLibrary();
+			if ($activeLibrary == null || $activeLibrary->allowProfileUpdates){
+				$interface->assign('canUpdate', true);
+			}else{
+				$interface->assign('canUpdate', false);
+			}
+	
+			//Get the list of locations for display in the user interface.
+			
+			global $locationSingleton;
+			$locationSingleton->whereAdd("validHoldPickupBranch = 1");
+			$locationSingleton->find();
+	
+			$locationList = array();
+			while ($locationSingleton->fetch()) {
+				$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
+			}
+			$interface->assign('locationList', $locationList);
+			$returnwords  ="";
+			/*foreach($profile as $key=>$value){
+				echo "aaa";
+				if(is_array($value)){
+					echo $key."<br/>";
+					foreach($value as $keykey => $valuevalue){
+						echo $keykey."  =>  ".$valuevalue."<br/>";
+					}
+				}else{
+					echo $key."  =>  ".$value."<br/>";
+				}
+			}*/
+			return $interface->fetch('MyResearch/ajax-location.tpl');
+			
+		}
+		else{
+			return "";
+		}
+
 	}
 }

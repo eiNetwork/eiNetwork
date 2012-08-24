@@ -27,10 +27,10 @@
 	color: #011753;
 }
 
-.holdingsSummary .callNumber {
+.holdingsSummary .callNumber { 
 	font-weight: bold;
 	font-size: 12px;
 }
 .holdingsSummary .callNumber a{
-	color: #009900;
+	color: #00B253;
 }

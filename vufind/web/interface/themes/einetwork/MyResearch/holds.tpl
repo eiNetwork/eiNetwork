@@ -41,15 +41,12 @@
 			<div>
 				{translate text='Requested Book Items'}
 				
-				{*<div class="sortOptions">
-					<select name="accountSort" id="sort{$sectionKey}" onchange="changeAccountSort($(this).val());">
-						{foreach from=$sortOptions item=sortDesc key=sortVal}
-						<option value="{$sortVal}"{if $defaultSortOption == $sortVal} selected="selected"{/if}>{translate text=$sortDesc}</option>
-						{/foreach}
-					</select>
-				</div>*}
 			</div>
-			
+			<div id='holdsUpdateBranchSelction'>
+				Change Pickup Location to: 
+				{html_options name="withSelectedLocation" options=$pickupLocations selected=$resource.currentPickupId}
+				{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
+			</div>
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
 
@@ -92,6 +89,14 @@
 										{/if}
 									{/if}	 
 									{if $record.publicationDate}{translate text='Published'} {$record.publicationDate|escape}{/if}
+								</div>
+								
+								<div>Pickup Location: {$record.location}</div>
+								<div>
+									Status: {$record.status}
+									{if $record.expire}
+									for pick up by {$record.expire|date_format:"%b %d, %Y"}
+									{/if}
 								</div>
 								
 								<div class="item_type">
@@ -212,15 +217,67 @@
 								    </div>
 							</div>
 							
+							
 							<div class="item_status">
-								<div>{$record.status}</div>
-								<div>{$record.location}</div>
+								{*****Freeze********************}
+								{*****Unfreeze******************}
+								{*****Cancel********************}
+								{****Change Pick Up Location****}
+								
+								{if $record.status eq "Available"}
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								
+								{elseif $record.status eq "Frozen"}
+									{if $record.frozen}
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Unfreeze" onclick="thawSelectedHolds(this)"/>
+									
+									{else}
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									{/if}
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								{elseif $record.status eq "In Transit"}
+									{*You can't do anything because item is in transit*}
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								
+								{elseif $record.status eq "Ready"}
+									{*You can't do anything because item is ready to pick up*}
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								
+								{elseif $record.status eq "Frozen"}
+									{*You can't do anything because item is ready to pick up*}
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								
+								{else}
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								{/if}
+								
+								
+							
+								{*if $record.frozen}
+								<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Unfreeze" onclick="thawSelectedHolds(this)"/>
+								{else}
+								<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Freeze" onclick="freezeSelectedHolds(this)"/>
+								{/if}
+								<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Cancel" onclick="cancelSelectedHolds(this)"/>
+								<input id="{$record.cancelId}" name="waitingholdselected[]" class="button" value="Change Pick Up" onclick="updateSeledHold(this)"/>
+								*}
 							</div>
 						</div>
-								
 					{/foreach}
+					
 				</div>
-				
+
 				{else}
 					{if $sectionKey=='unavailable'}
 						{translate text='You do not have any holds that are not available yet'}.
@@ -256,22 +313,28 @@
 							</div>
 							<div class="item_type"></div>
 						</div>
+						
 						<div class="item_status">
+							
 							{foreach from=$record.formats item=format}
 							<div>{$format.name}</div>
+							
 							<div>
 								<a href="#" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')">
 									<input class="button" value="Check Out">	
 								</a>
 							</div>
-						{/foreach}
+							{/foreach}
 						</div>
+						
+
+						
 					</div>
 					{/foreach}
 				</div>
-			{/if}
 			
-			{if count($overDriveHolds.unavailable) > 0}
+			
+			{elseif count($overDriveHolds.unavailable) > 0}
 				<div>Requested items not yet available</div>
 				<div class="checkout">
 					{foreach from=$overDriveHolds.unavailable item=record}
@@ -410,15 +473,21 @@
 									{/if}
 							</div>
 						</div>
+						
 						<div class="item_status">
 							{$record.holdQueuePosition} out of {$record.holdQueueLength}
 							<a href="#" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')">
 								<input class="button" value="Remove">
 							</a>
 						</div>
+						
+						
+						
 					</div>
 				    {/foreach}
 				</div>	
+			{else}
+			<div>{translate text="Empty"}</div>
 			{/if}
 			{*****END Overdrive Holds*****}
 			

@@ -7,7 +7,7 @@
 		<p>Please enter the following information to set up your account.</p>
 		<p>Fields marks in yellow are required.</p>
 		<div class="page">
-			<form id="getacard" method="POST" action="{$path}/MyResearch/GetCard">
+			<form id="getacard" class="getacard" method="POST" action="{$path}/MyResearch/GetCard" onsubmit="return checkNewCard();">
 				<div class="title">Personal Information</div>
 				<div class="name">
 					<div id="first_name" class="require">
@@ -18,6 +18,7 @@
 						<div>
 							<input name="firstName" type="text" class="required text"/>
 						</div>
+						<div class="errorMessage" id="firstNameError" style="display:table-cell"></div>
 					</div>
 					<div id="middle_name" class="short">
 						<div>MI</div>
@@ -31,8 +32,9 @@
 							<span class="error">*required</span>
 						</div>
 						<div>
-							<input name="lastName" type="text"  class="required text" />
+							<input name="lastName" type="text"  class="required text"/>
 						</div>
+						<div class="errorMessage" id="lastNameError" style="display:table-cell"></div>
 					</div>
 				</div>
 				
@@ -193,16 +195,18 @@
 					<div>
 						Email Address
 					</div>
-					<input name="email" type="text" class="text">
+					<input name="email" type="text" class="text" id="email_input"/>
+					<div id="emailError" class="errorMessage" style='display:table-cell'></div>
 				</div>
 				
-				<div class="phone require">
+				<div class="phone require" style="vertical-align:top">
 					<div>
 						Phone Number
 					</div>
 					<div>
 						<input name="phone" type="text" class="text"/>
 					</div>
+					<div id="phoneError" class="errorMessage"></div>
 				</div>
 				
 				<div class="title">Primary Address</div>
@@ -216,6 +220,7 @@
 						<div>
 							<input name="street" type="text" class="text"/>
 						</div>
+						<div class="errorMessage" id="addressError" style="display:table-cell"></div>
 					</div>
 					<div id="apartment">
 						<div>Apartment Number, Suite</div>
@@ -232,8 +237,9 @@
 						<div>
 							<input name="city" type="text" class="text"/>
 						</div>
+						<div class="errorMessage" id="cityError" style="display:table-cell"></div>
 					</div>
-					<div id="state">
+					<div id="state"  class="require">
 						<div>State</div>
 						<div>
 							<select name="state">
@@ -297,6 +303,7 @@
 						<div>
 							<input name="zip" type="text" class="text"/>
 						</div>
+						<div id="zipError" class="errorMessage" style="display:table-cell"></div>
 						
 					</div>
 					
@@ -383,9 +390,9 @@
 					<div id="zip_code">
 						<div>Zip Code</div>
 						<div>
-							<input name="zip" type="text" class="text"/>
+							<input name="secondZip" type="text" class="text"/>
 						</div>
-						
+						<div id="secondZipError" class="errorMessage" style="display:table-cell"></div>
 					</div>
 					
 				</div>
@@ -401,7 +408,7 @@
 					We will not release email addresses or any other information in your library record to
 					third parties without an appropriate legal court document.
 					</p>
-					<input id="getcardSubmit" name="submit" class="button" type="submit" onclick="return checkNewCard()" value="Submit" />
+					<input id="getcardSubmit" name="submit" class="button" type="submit" onclick="" value="Submit" />
 				</div>
 			
 			</form>
@@ -413,36 +420,199 @@
 </div>
 <script type="text/javascript">
 {literal}
+var firstNameValid = false;
+var lastNameValid = false;
+var addressValid = false;
+var cityValid = false;
+var emailValid = false;
+var phoneValid = false;
+var zipValid = false;
+var secondZipValid = true;
 	$(document).ready(function(){
-		$("#getacard").validate();
+		//$("#getacard").validate();
 		
-		$('input[name=phone]').blur(function(){
-			var phone=$(this).val(),
-			    phoneReg=/^[2-9]\d{9}$/;
-			if(!phone){
-				$('.phone').children('div').append('<span class="error">*required</span>');
-				return false;
-			}else if(!phoneReg.test(phone)){
-				$('.phone').children('div').append('<span class="error">please a valid phone number</span>');
-				phoneValid=false;
-				return false;
-			}else{
-				$('.phone').children('div').append('<span classs="error">&nbsp;</span>');
-				return true;
-			}
-		});
-
 		$('#email_input').blur(function(){
-			var email=$('input[name="email"]').val(),
-		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-			if(!emailReg.test(email)||email==''){
-				$('#emailError').text("*please enter a vaild phone number");
+			//alert("adf");
+			var email=$('[name=email]').val(),
+		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;    
+			if(!email){
+				$('#emailError').text("*required");
 				emailValid=false;
 				return false;
+			}else if(!emailReg.test(email)){
+				$('#emailError').text("*please enter a vaild email address");
 			}else{
+				emailValid = true;
 				$('#emailError').html('&nbsp;');
 			}
 		});
+		$('[name=firstName]').blur(function(){
+			var firstName = $(this).val();
+			if(!firstName){
+				$('#firstNameError').text("*required");
+				firstNameValid = false;
+			}else{
+				$('#firstNameError').text("");
+				firstNameValid = true;
+			}
+			})
+		$('[name=lastName]').blur(function(){
+			var lastName = $(this).val();
+			if(!lastName){
+				$('#lastNameError').text("*required");
+				lastNameValid = false;
+			}else{
+				$('#lastNameError').text("");
+				lastNameValid = true;
+			}
+			})
+		$('[name=street]').blur(function(){
+			var address = $(this).val();
+			if(!address){
+				$('#addressError').text("*required");
+				addressValid = false;
+			}else{
+				$('#addressError').text("");
+				addressValid = true;
+			}
+			})
+		$('[name=city]').blur(function(){
+			var city = $(this).val();
+			if(!city){
+				$('#cityError').text("*required");
+				cityValid = false;
+			}else{
+				$('#cityError').text("");
+				cityValid = true;
+			}
+			})
+		$('input[name=phone]').blur(function(){
+			var phone=$(this).val(),
+			    phoneReg=/^[2-9]\d{9}$/;
+			    phone = phone.replace(/[-()+]/g,"");
+			if(!phone){
+				//$('.phone').children('div').append('<span class="error">*required</span>');
+				$('#phoneError').text("*required");
+				phoneValid = false;
+				return false;
+			}else if(!phoneReg.test(phone)){
+				//$('.phone').children('div').append('<span class="error">please a valid phone number</span>');
+				$('#phoneError').text("*please enter a vaild phone number");
+				phoneValid = false;
+				return false;
+			}else{
+				//$('.phone').children('div').append('<span classs="error">&nbsp;</span>');
+				$('#phoneError').text("");
+				phoneValid = true;
+				return true;
+			}
+		});
+		
+		
+		
+		
+		$('[name=zip]').blur(function(){
+			var zip=$(this).val(),
+			    zipReg=/^[1-9]\d{4}$/;
+			if(!zip){
+				//$('.phone').children('div').append('<span class="error">*required</span>');
+				$('#zipError').text("*required");
+				zipValid = false;
+				return false;
+			}else if(!zipReg.test(zip)){
+				$('#zipError').text("*please enter a vaild zip code");
+				zipValid = false;
+				return false;
+			}else{
+				$('#zipError').text("");
+				zipValid = true;
+				return true;
+			}
+		});
+		
+		
+		$('[name=secondZip]').blur(function(){
+			var zip=$(this).val(),
+			    zipReg=/^[1-9]\d{4}$/;
+			if(!zip){
+				//$('.phone').children('div').append('<span class="error">*required</span>');
+				$('#secondZipError').text("");
+				secondZipValid = true;
+				return false;
+			}else if(!zipReg.test(zip)){
+				$('#secondZipError').text("*please enter a vaild zip code");
+				secondZipValid = false;
+				return false;
+			}else{
+				$('#secondZipError').text("");
+				secondZipValid = true;
+				return true;
+			}
+		});
+		
+	
+		
 	});
+	function checkNewCard(){
+		if(firstNameValid&&lastNameValid&&addressValid&&cityValid&&emailValid&&phoneValid&&zipValid&&secondZipValid){
+			return true;
+		}else{
+			/*alert("first"+firstNameValid);
+			alert("last"+lastNameValid);
+			alert("addre"+addressValid);
+			alert("city"+cityValid);
+			alert("email"+emailValid);
+			alert("phone"+phoneValid);
+			alert("zip"+zipValid);
+			alert("second"+secondZipValid);*/
+			window.scrollTo(0,0);
+			var firstName = $('[name=firstName]').val();
+			if(!firstName){
+				$('#firstNameError').text("*required");
+				firstNameValid = false;
+			}else{
+				firstNameValid = true;
+			}
+			var lastName = $('[name=lastName]').val();
+			if(!lastName){
+				$('#lastNameError').text("*required");
+				lastNameValid = false;
+			}else{
+				lastNameValid = true;
+			}
+			var address = $('[name=street]').val();
+			if(!address){
+				$('#addressError').text("*required");
+				addressValid = false;
+			}else{
+				addressValid = true;
+			}
+			var city = $('[name=city]').val();
+			if(!city){
+				$('#cityError').text("*required");
+				addressValid = false;
+			}else{
+				addressValid = true;
+			}
+			
+			var phone=$('[name=phone]').val();
+			if(!phone){
+				$('#phoneError').text("*required");
+				phoneValid = false;
+			}
+			var zip=$('[name=zip]').val();
+			if(!zip){
+				//$('.phone').children('div').append('<span class="error">*required</span>');
+				$('#zipError').text("*required");
+				zipValid = false;
+			}
+			var email=$('[name=email]').val();
+			if(!email){
+				$('#emailError').text("*required");
+				emailValid=false;
+			}
+			return false;
+		}
+	}
 {/literal}
 </script>

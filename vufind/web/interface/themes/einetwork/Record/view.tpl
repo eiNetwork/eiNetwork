@@ -26,7 +26,6 @@ function redrawSaveStatus() {literal}{{/literal}
 		getSaveStatus('{$id|escape:"javascript"}', 'saveLink');
 {literal}}{/literal}
 </script>
-
 <div id="page-content" class="content">
 	{if $error}<p class="error">{$error}</p>{/if} 
 	{include file="ei_tpl/Record/left-bar-record.tpl"}

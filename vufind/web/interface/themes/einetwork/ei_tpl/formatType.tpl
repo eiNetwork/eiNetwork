@@ -6,4 +6,4 @@
         {else}
 		<span class="iconlabel">{translate text=$summFormats}</span>
         {/if}
-    </div>
+</div>

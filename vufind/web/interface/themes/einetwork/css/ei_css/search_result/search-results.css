@@ -13,7 +13,6 @@
 	vertical-align: top;
 	width: 17px;
 	zoom: 1;
-	*display: inline;
 }
 .format_img{
 	vertical-align:middle;
@@ -28,10 +27,9 @@
 	display: inline-block;
 	vertical-align: top;
 	width: 112px;
-	height:94px;
+	height:100px;
 	text-align: center;
 	zoom: 1;
-	*display: inline;
 	margin-left:4px;
 	margin-right:4px;
 }
@@ -102,13 +100,13 @@
 .result_middle{
 	width:300px;
 	display:inline-block;
-	height:115px;
+	height:100px;
 }
 .holdingsImage{
 	vertical-align:middle;
 }
 .Format_type{
-	margin-top:10px;
+	margin-top:1px;
 }
 .resultItemLine2{
 	margin-bottom:38px;

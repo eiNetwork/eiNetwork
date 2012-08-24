@@ -19,7 +19,6 @@
     <div id='property'><span class='propertyLabel'>Title: </span><span class='propertyValue'>{$eContentRecord->title}</span></div>
     <div id='property'><span class='propertyLabel'>Author: </span><span class='propertyValue'>{$eContentRecord->author}</span></div>
     <div id='property'><span class='propertyLabel'>Description: </span><span class='propertyValue'>{$eContentRecord->description}</span></div>
-    
     <div id='property'><span class='propertyLabel'>Subject: </span><span class='propertyValue'>{$eContentRecord->subject}</span></div>
     <div id='property'><span class='propertyLabel'>Notes: </span><span class='propertyValue'>{$eContentRecord->notes}</span></div>
   </div>

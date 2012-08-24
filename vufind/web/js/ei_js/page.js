@@ -20,8 +20,8 @@ function goToLink(url){
     window.navigate(url);
 }
 
-function getSaveToBookCart(id, source){
-
+function getSaveToBookCart(id, source,obj){
+	//alert($(obj).find(".resultAction_span").attr('class'));
 	if (loggedIn){
 		//var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
 		//ajaxLightbox(url);
@@ -33,7 +33,9 @@ function getSaveToBookCart(id, source){
                     window.location.reload();
                 };
 		ajaxLogin(function (){
+			
 			saveToBookCart(id, source,successCallback);
+			
 		});
 	}
 	return false;
@@ -42,6 +44,7 @@ function getSaveToBookCart(id, source){
 function saveToBookCart(id, source,successCallback) {
         var strings = {add: 'Save To List', error: 'Error: Record not saved'};
 	performSaveToBookCart(id, source, strings, 'VuFind', successCallback);
+	//alert("You have successfully added this item to bookcart");
 	return false;
 }
 
@@ -254,7 +257,9 @@ function deleteItemInList(itemId,source){
 		success: function(data) {
 			var reg = /\w+/;
                         var recordID = reg.exec(itemId);
-                        $("#record"+recordID).parent().slideUp();
+                        $("#record"+recordID).parent().slideUp("normal",function(){
+				this.parentNode.removeChild(this);
+			    });
                         document.body.style.cursor = 'default';
                         getBookCartItemCount();
 		},
@@ -285,6 +290,7 @@ function getBookCartItemCount(){
                     if(data['unavailable'] == 'yes'){
                         $("#cart-descrpiion").html("&nbsp;&nbsp; your book cart is empty ");
                     }
+		    
 		},
 		error: function() {
 			$('#popupbox').html(failMsg);
@@ -419,5 +425,19 @@ function printFindLibrary(){
         innerHTML += "</table>";
         printPage(left,top,width,innerHTML);
     }
-
+}
+function renewItem(url){
+    document.body.style.cursor = 'wait';
+     $.ajax({
+		type: 'get',
+                url: url,
+		success: function(data) {
+		    window.location.href=url;
+		    document.body.style.cursor = 'default';
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
 }

@@ -382,12 +382,11 @@ ul.menu li {
 	background-color: #FFFFFF;
 	padding-top:15px;
 	padding-bottom:15px;
+	height: 130px;
 }
 
 div.record {
 	padding: 0 1.5em;
-	/* border-right: 1px dashed #cccccc; */
-	/*    padding:10px 15px 10px 10px; */
 }
 
 .page {
@@ -1003,6 +1002,7 @@ ul.bulleted li {
 /***** Pagination *****/
 .pagination {
 	font-size: 11px;
+	text-align: center;
 }
 
 .pagination a {
@@ -1032,9 +1032,9 @@ table.datagrid {
 }
 
 table.datagrid th {
-	color: #003366;
-	background-color: #DDEEFF;
-	border: solid 1px #99CCFF;
+	color: rgb(240,240,240);
+	background-color: rgb(32,32,32);
+	border: solid 1px rgb(244,213,56);
 	text-align: left;
 	border-left: 1px solid #FFFFFF;
 	border-right: 1px solid #FFFFFF;
@@ -1214,16 +1214,16 @@ table.datagrid tr.oddrow {
 }
 
 .available {
-	color: #009900;
+	color: #00B253;
 }
 .overdriveCheckedOut{
-	color:#cc0000;
+	color:#EE3224;
 }
 .availableOnline{
-	color:#009900;
+	color:#00B253;
 }
 .overdriveAvailable{
-	color:#009900;
+	color:#00B253;
 }
 
 .unavailable {
@@ -1234,20 +1234,20 @@ table.datagrid tr.oddrow {
 	text-align:left;
 }
 .here{
-	color:#009900;
+	color:#00B253;
 }
 .reserve{
-	color:#cc0000;
+	color:#EE3224;
 }
 .nearby{
-	color:#009900;
+	color:#00B253;
 }
 .checkedOut{
-	color:#cc0000;
+	color:#EE3224;
 }
 
 div.checkedout,span.checkedout {
-	color: #cc0000;
+	color: #EE3224;
 }
 
 .checkedout>span {
@@ -2279,8 +2279,19 @@ ul.hold_items li {
 	cursor: pointer;
 	font-size: 12px;
 	zoom: 1;
-	*display: inline;
 }
+
+#readingListForm input.button{
+	background: rgb(255,230,109);
+	width:90px;
+	height: 20px;
+}
+
+#readingListForm input.button:hover{
+	background: rgb(244,213,56);
+
+}
+
 
 /* Favorites Lists */
 .listButton {
@@ -2298,7 +2309,6 @@ ul.hold_items li {
 	margin-top: 4px;
 	padding: 0 7px;
 	zoom: 1;
-	*display: inline;
 }
 
 .listButton:hover {
@@ -2549,6 +2559,7 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 	border-color:grey;
 	border-width:1px 1px 1px 1px;
 	height:25px;
+	width:120px;
 	border-radius:8px 8px 8px 8px;
 	cursor: pointer;
 	-moz-user-select: none;
@@ -2573,4 +2584,8 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 }
 .subPageTitle{
 	font-size:18px;
+}
+.errorMessage{
+	/*height:12px;*/
+	color: red;
 }

@@ -226,7 +226,6 @@ function redrawSaveStatus() {literal}{{/literal}
   </div>*}
   
   <div id="main-content" class="full-result-content">
-      <div id="main-content" class="full-result-content">
 	    <div id="inner-main-content">
 		  	<div id="record_record">
 			<div id="record_record_up">
@@ -313,18 +312,18 @@ function redrawSaveStatus() {literal}{{/literal}
 	    </div>
 -->	    {if $eContentRecord->source == 'OverDrive'}
 		  {if $holdingsSummary.status == 'Checked out in OverDrive'}
-			<div class="round-rectangle-button" id="request-now" onclick="placeOverDriveHold('{$record.overDriveId}', '{$format.formatId}')">
+			<div class="round-rectangle-button" id="request-now" onclick="placeOverDriveHold('{$record.overDriveId}', '{$format.formatId}')" >
 			<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="request now"/></span>
 			<span class="action-lable-span">request now</span>
 			</div>
 		  {elseif $holdingsSummary.status == 'Available from OverDrive'}
-			<div class="round-rectangle-button" id="checkout-now" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')">
+			<div class="round-rectangle-button" id="checkout-now" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')" style="border-radius:8px,8px,0px,0px">
 			<span class="action-img-span"><img id="request-now-img" alt="checkout now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="checkout now"/></span>
 			<span class="action-lable-span">checkout now</span>
 			</div>
 		  {else}
 		  	{if $eContentRecord->sourceUrl}
-			      <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'">
+			      <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			      <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
 			      <span class="action-lable-span">access online</span>
 			</div>
@@ -339,7 +338,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		  {/if}	    
 	    {/if}
 
-	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;">
+	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="border-top-right-radius:0px;border-top-left-radius:0px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;border-top-width:1px">
 		  <span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
 		  <span class="action-lable-span">add to wish list</span>
 	    </div>
@@ -961,6 +960,11 @@ function redrawSaveStatus() {literal}{{/literal}
 		</script>
 		{/literal}     
   </div>
+</div>
+</div>
+	<div id="right-bar">
+            {include file="ei_tpl/right-bar.tpl"}
+        </div>
 </div>
 
 {if $showStrands}   

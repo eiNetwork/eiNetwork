@@ -33,10 +33,10 @@
 <div class="resultDetails">
 	<div class="result_middle">
 	<div class="resultItemLine1">
-	<a href="{$path}/EcontentRecord/{$summId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">{if !$summTitle|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$summTitle|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}{/if}</a>
+	<a href="{$path}/EcontentRecord/{$summId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" class="title">{if !$summTitle|regex_replace:"/(\/|:)$/":""}{translate text='Title not available'}{else}{$summTitle|regex_replace:"/(\/|:)$/":""|truncate:100:"..."|highlight:$lookfor}{/if}</a>
 	{if $summTitleStatement}
 		<div class="searchResultSectionInfo">
-			{$summTitleStatement|regex_replace:"/(\/|:)$/":""|truncate:180:"..."|highlight:$lookfor}
+			{$summTitleStatement|regex_replace:"/(\/|:)$/":""|truncate:100:"..."|highlight:$lookfor}
 		</div>
 		{/if}
 	</div>
@@ -62,7 +62,7 @@
 		{if !empty($summSnippet)}<span class="quotestart">&#8220;</span>...{$summSnippet|highlight}...<span class="quoteend">&#8221;</span><br />{/if}
 	</div>
 -->
-	<div>
+	
 	{include file="/usr/local/VuFind-Plus/vufind/web/interface/themes/einetwork/ei_tpl/formatType.tpl"}
 <!--	{if is_array($summFormats)}
 		{strip}
@@ -74,7 +74,7 @@
 	{else}
 		<span class="iconlabel {$summFormats|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$summFormats}</span>
 	{/if}
--->	</div>
+-->	
 	
 	<div id = "holdingsEContentSummary{$summId|escape:"url"}" class="holdingsSummary">
 		<div class="statusSummary" id="statusSummary{$summId|escape:"url"}">
@@ -87,7 +87,7 @@
     {if $pageType eq 'WishList'}
 	<div class="round-rectangle-button" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}'">
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-	    <span class="resultAction_span">view details</span>
+	    <span class="resultAction_span">View details</span>
 	</div>
 	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
@@ -99,29 +99,29 @@
 	</div>
 	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" onclick="deleteItemInList('{$summId|escape:"url"}','eContent')">
 	    <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="bad_reuslt_this" >remove</span>
+	    <span class="resultAction_span" name="bad_reuslt_this" >Remove</span>
 	</div>
     {elseif $pageType eq 'BookCart'}
 	  <div class="round-rectangle-button" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="requestItem('{$summId|escape:"url"}','{$wishListID}')">
 	      <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-	      <span class="resultAction_span">request Now</span>
+	      <span class="resultAction_span">Request Now</span>
 	  </div>
 	  <div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="getSaveToListForm('{$summId|escape:"url"}', 'VuFind'); return false;">
 	      <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
-	      <span class="resultAction_span" >move to wish list</span>
+	      <span class="resultAction_span" >Move to wish list</span>
 	  </div>
 	  <div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;" onclick="requestItem('{$summId|escape:"url"}','{$wishListID}')">
 	      <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-	      <span class="resultAction_span" name="more_like_this" >find in library</span>
+	      <span class="resultAction_span" name="more_like_this" >Find in library</span>
 	  </div>
 	  <div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" onclick="deleteItemInList('{$summId|escape:"url"}','eContent')">
 	      <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
-	      <span class="resultAction_span" name="bad_reuslt_this" >remove</span>
+	      <span class="resultAction_span" name="bad_reuslt_this" >Remove</span>
 	  </div>
     {else}
 	<div class="round-rectangle-button" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}'">
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-	    <span class="resultAction_span">view details</span>
+	    <span class="resultAction_span">View details</span>
 	</div>
 	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
@@ -129,11 +129,11 @@
 	</div>
 	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;">
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="more_like_this" >more like this</span>
+	    <span class="resultAction_span" name="more_like_this" >More like this</span>
 	</div>
 	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px">
 	    <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="bad_reuslt_this" >bad result</span>
+	    <span class="resultAction_span" name="bad_reuslt_this" >Bad result</span>
 	</div>
 
     {/if}

@@ -1,9 +1,9 @@
 <div id='renew_results'>
-	<div class='hold_result_title header'>
-		Renewal Results
-		<a href="#" onclick='hideLightbox();return false;' class="closeIcon">Close <img src="{$path}/images/silk/cancel.png" alt="close" /></a>
+	<div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
+		{translate text='Renewal Results'}
+		<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"/></span>
 	</div>
-	<div class = "content">
+	<div id="popupboxContent" class="popupContent" style="margin-top:10px;height:150px;width:300px;">
 		{if $renew_message_data.Unrenewed == 0}
 			<div>All items were renewed successfully.</div>
 		{else}

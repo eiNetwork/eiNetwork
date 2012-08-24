@@ -123,7 +123,6 @@ class Holds extends MyResearch
 		$interface->assign('ButtonBack',true);
 		$interface->assign('ButtonHome',true);
 		$interface->assign('MobileTitle','OverDrive Holds');
-		
 		$interface->setTemplate('overDriveHolds.tpl');
 		//END for OverdriveHolds
 		

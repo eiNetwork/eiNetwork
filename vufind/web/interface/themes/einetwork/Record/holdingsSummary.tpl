@@ -33,7 +33,7 @@
 	{elseif $holdingsSummary.class == 'reserve' or $holdingsSummary.numCopies == 0}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
-			No copies available
+			All copies checked out
 		</div>
 	{else $holdingsSummary.class == 'checkedOut'}
 		<div>
