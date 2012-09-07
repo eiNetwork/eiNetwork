@@ -105,8 +105,6 @@
 			    {if $record.publicationDate}{translate text='Published'} {$record.publicationDate|escape}{/if}
 			</div>
 			
-
-			
 			<div class="item_type">
 			    {if is_array($record.format)}
 				{foreach from=$record.format item=format}
@@ -322,16 +320,15 @@
 		    </div>
 		    
 		    <div class="item_status">
-			{$record.duedate|date_format}
+			Due On&nbsp;{$record.duedate|date_format}
 			{if $record.overdue}
 			    <span class='overdueLabel'>OVERDUE</span>
-			{*elseif $record.daysUntilDue == 0}
+			{elseif $record.daysUntilDue == 0}
 			    <span class='dueSoonLabel'>(Due today)</span>
 			{elseif $record.daysUntilDue == 1}
 			    <span class='dueSoonLabel'>(Due tomorrow)</span>
 			{elseif $record.daysUntilDue <= 7}
-			    <span class='dueSoonLabel'>(Due on {$record.daysUntilDue} days )</span>
-			    *}
+			    <span class='dueSoonLabel'>(Due in {$record.daysUntilDue} days )</span>
 			{/if}
 			{*if $record.fine}
 			    <span class='overdueLabel'>FINE {$record.fine}</div>
@@ -340,7 +337,12 @@
 			<div class="item_renew">
 			    {assign var=id value=$record.id scope="global"}
 			    {assign var=shortId value=$record.shortId scope="global"}
-			    <input id="userreviewlink{$shortId}" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+<!--			    disable renewals if the item is overdue   
+-->			    {if $record.overdue}
+				<input id="userreviewlink{$shortId}" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+			    {else}
+				<input id="userreviewlink{$shortId}" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+			    {/if}
 			    {if $record.renewMessage}
 				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">
 				{$record.renewMessage|escape}
@@ -417,7 +419,7 @@
 	
 
 	{else}
-	    {translate text='You do not have any physical item checked out'}.
+	    {translate text='You do not have any physical items checked out'}.
 	     {*******BEGIN Overdrive items*********}
 	    <div>
 		{translate text='eContent Checked Out Items'}

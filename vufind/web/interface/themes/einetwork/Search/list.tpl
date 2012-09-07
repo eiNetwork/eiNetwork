@@ -30,8 +30,8 @@
 		</div>
 	</div>*}
 	
-	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
-	
+<!--	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
+-->	<input class="button" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
       {* End Listing Options *}
 
       {if $subpage}

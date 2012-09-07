@@ -53,7 +53,7 @@
 		    $("#prefer-branch").html(data);
 		},
 		error: function() {
-		    alert("ddd");
+		    //alert("ddd");
 			$('#popupbox').html(failMsg);
 			setTimeout("hideLightbox();", 3000);
 		}

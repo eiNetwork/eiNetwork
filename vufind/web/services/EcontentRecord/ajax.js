@@ -66,13 +66,13 @@ function GetEContentHoldingsInfo(id, type, callback) {
 			//ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;
 			//document.getElementById("access-online")
 			if(SummaryDetails =="Checked out in OverDrive"){
-				$("#access-online .action-lable-span").text("request now");
+				$("#access-online .action-lable-span").text("Request Now");
 				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else if(SummaryDetails =="Available from OverDrive"){
-				$("#access-online .action-lable-span").text("checkout now");
+				$("#access-online .action-lable-span").text("Checkout Now");
 				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else{
-				$("#access-online .action-lable-span").text("access online");
+				$("#access-online .action-lable-span").text("Access Online");
 				
 			}
 			

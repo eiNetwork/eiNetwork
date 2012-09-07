@@ -63,19 +63,19 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div id="record_action_button">
 					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','VuFind');return false;"{/if}>
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
-						<span class="action-lable-span">add to cart</span>
+						<span class="action-lable-span">Add to Cart</span>
 					</div>
 					<div class="round-rectangle-button" id="request-now" onclick="window.location.href='{$path}/Record/{$id|escape:'url'}/Hold'">
 						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
-						<span class="action-lable-span">request now</span>
+						<span class="action-lable-span">Request Now</span>
 					</div>
 					<div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'VuFind'); return false;">
 						<span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
-						<span class="action-lable-span">add to wish list</span>
+						<span class="action-lable-span">Add To Wish List</span>
 					</div>
 					<div class="round-rectangle-button" id="find-in-library" onclick="findInLibrary('{$id|escape:"url"}',false,'150px','570px','auto')">
 						<span class="action-img-span"><img id="find-in-library-img" alt="find in library" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" /></span>
-						<span class="action-lable-span">find in library</span>
+						<span class="action-lable-span">Find in Library</span>
 					</div>
 				</div>
 			</div>	

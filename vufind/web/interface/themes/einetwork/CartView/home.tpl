@@ -30,7 +30,7 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="loginFormInput" type="text" title="Libray Card Number" size="15" value="{$username|escape}"/>
+					<input id="card" class="loginFormInput" type="text" title="Library Card Number" size="15" value="{$username|escape}"/>
 				</div>
 				<div id="password">
 					<input id="pin" class="loginFormInput" type="text" title="4 digits PIN number" size="15"/>
@@ -43,9 +43,7 @@
 		<div class="register">
 			<div><b>Don't have an account?</b></div>
 			<div id="description">
-				With a free catalog acount, you can request items directly from the catalog,
-				view your past searches and get personalized recommendations for items you might like.
-				
+				With a free catalog account, you can request items directly from the catalog, view your past searches and get personalized recommendations for items you might like.
 			</div>
 			<div id="registerButton" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')">
 				Register

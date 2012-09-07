@@ -87,17 +87,17 @@
     {if $pageType eq 'WishList'}
 	<div class="round-rectangle-button" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}'">
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-	    <span class="resultAction_span">View details</span>
+	    <span class="resultAction_span">View Details</span>
 	</div>
 	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}" >Loading..</span>
 	</div>
-	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;" >
+<!--	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;" >
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="more_like_this" >More like this</span>
+	    <span class="resultAction_span" name="more_like_this" >More Like This</span>
 	</div>
-	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" onclick="deleteItemInList('{$summId|escape:"url"}','eContent')">
+-->	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" onclick="deleteItemInList('{$summId|escape:"url"}','eContent')">
 	    <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" name="bad_reuslt_this" >Remove</span>
 	</div>
@@ -108,11 +108,11 @@
 	  </div>
 	  <div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="getSaveToListForm('{$summId|escape:"url"}', 'VuFind'); return false;">
 	      <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
-	      <span class="resultAction_span" >Move to wish list</span>
+	      <span class="resultAction_span" >Move to Wish List</span>
 	  </div>
 	  <div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;" onclick="requestItem('{$summId|escape:"url"}','{$wishListID}')">
 	      <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-	      <span class="resultAction_span" name="more_like_this" >Find in library</span>
+	      <span class="resultAction_span" name="more_like_this" >Find in Library</span>
 	  </div>
 	  <div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" onclick="deleteItemInList('{$summId|escape:"url"}','eContent')">
 	      <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
@@ -121,21 +121,22 @@
     {else}
 	<div class="round-rectangle-button" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}'">
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
-	    <span class="resultAction_span">View details</span>
+	    <span class="resultAction_span">View Details</span>
 	</div>
-	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
+<!--	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
+-->	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" {if $enableBookCart}onclick="getSaveToBookCart('{$summId|escape:"url"}','VuFind');return false;"{/if}>
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}">Loading..</span>
 	</div>
-	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;">
+<!--	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;">
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="more_like_this" >More like this</span>
+	    <span class="resultAction_span" name="more_like_this" >More Like This</span>
 	</div>
 	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px">
 	    <span class="resultAction_img_span"><img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"></span>
-	    <span class="resultAction_span" name="bad_reuslt_this" >Bad result</span>
+	    <span class="resultAction_span" name="bad_reuslt_this" >Bad Result</span>
 	</div>
-
+-->
     {/if}
 </div>
 </div>

@@ -314,18 +314,18 @@ function redrawSaveStatus() {literal}{{/literal}
 		  {if $holdingsSummary.status == 'Checked out in OverDrive'}
 			<div class="round-rectangle-button" id="request-now" onclick="placeOverDriveHold('{$record.overDriveId}', '{$format.formatId}')" >
 			<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="request now"/></span>
-			<span class="action-lable-span">request now</span>
+			<span class="action-lable-span">Request Now</span>
 			</div>
 		  {elseif $holdingsSummary.status == 'Available from OverDrive'}
 			<div class="round-rectangle-button" id="checkout-now" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')" style="border-radius:8px,8px,0px,0px">
 			<span class="action-img-span"><img id="request-now-img" alt="checkout now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="checkout now"/></span>
-			<span class="action-lable-span">checkout now</span>
+			<span class="action-lable-span">Checkout Now</span>
 			</div>
 		  {else}
 		  	{if $eContentRecord->sourceUrl}
 			      <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			      <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
-			      <span class="action-lable-span">access online</span>
+			      <span class="action-lable-span">Access Online</span>
 			</div>
 			{/if}	  
 		  {/if}	
@@ -333,14 +333,14 @@ function redrawSaveStatus() {literal}{{/literal}
 		  {if $eContentRecord->sourceUrl}
 		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'">
 			<span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
-			<span class="action-lable-span">access online</span>
+			<span class="action-lable-span">Access Online</span>
 		  </div>
 		  {/if}	    
 	    {/if}
 
 	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="border-top-right-radius:0px;border-top-left-radius:0px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;border-top-width:1px">
 		  <span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
-		  <span class="action-lable-span">add to wish list</span>
+		  <span class="action-lable-span">Add To Wish List</span>
 	    </div>
      
       {* Place hold link *}

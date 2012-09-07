@@ -251,19 +251,19 @@ function doGetStatusSummaries()
 				$(items).each(function(index, item){
 					var elemId = $(item).attr("id") ;
 					if(sta =="Available from OverDrive"){
-						$("#RequestWord"+elemId).text("checkout now");
+						$("#RequestWord"+elemId).text("Checkout Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
 						if(document.getElementById("selected"+elemId)){
 							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");	
 						}
 					}else if(sta == "Checked out in OverDrive"){
-						$("#RequestWord"+elemId).text("request now");
+						$("#RequestWord"+elemId).text("Request Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
 						if(document.getElementById("selected"+elemId)){
 							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
 						}
 					}else{
-						$("#RequestWord"+elemId).text("access online");
+						$("#RequestWord"+elemId).text("Access Online");
 					}
 					$('#holdingsEContentSummary' + elemId).replaceWith($(item).find('formattedHoldingsSummary').text());
 					if ($(item).find('showplacehold').text() == 1){

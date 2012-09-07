@@ -1117,7 +1117,6 @@ class EContentRecord extends SolrDataObject {
 				//Check each of the cached items to see if it has changed
 				foreach ($currentItems as $currentKey => $currentItem){
 					$currentItem->libraryId = $currentItem->libraryId;
-					
 					$cachedItemFound = false;
 					foreach ($cachedItems as $cacheKey => $cachedItem){
 						if ($cachedItem->formatId = $currentItem->formatId){
@@ -1126,6 +1125,8 @@ class EContentRecord extends SolrDataObject {
 								$cachedItem->available = $currentItem->available;
 								$currentItem->update();
 							}
+							//***** changed as a test
+							//$cachedItem->format = $currentItem->format;
 							$cachedItem->availableCopies = $currentItem->availableCopies;
 							$cachedItem->totalCopies = $currentItem->totalCopies;
 							$cachedItem->numHolds = $currentItem->numHolds;
@@ -1147,9 +1148,12 @@ class EContentRecord extends SolrDataObject {
 					$dataChanged = true;
 				}
 				//Mark that the record should be reindexed.
-				if ($dataChanged){
-					$this->updateDetailed(true);
-				}
+				//if ($dataChanged){
+				//	$logger = new Logger();
+				//	$logger->log("reindexing wheeee $this->title", PEAR_LOG_DEBUG );
+				//	//$logger->log("reindexing id $this->overDriveId format $this->format", PEAR_LOG_DEBUG );
+				//	$this->updateDetailed(true);
+				//}
 			}else{
 				$overDriveItems = $cachedItems;
 			}

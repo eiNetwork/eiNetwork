@@ -72,7 +72,7 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="text" type="text" name="username" title="Libray Card Number"  value="{$username|escape}"/>
+					<input id="card" class="text" type="text" name="username" title="Library Card Number"  value="{$username|escape}"/>
 					<div id="cardError">&nbsp;</div>
 				</div>
 				<div id="password">
@@ -87,8 +87,7 @@
 		<div class="register">
 			<div><b>Don't have an account?</b></div>
 			<div id="description">
-				With a free catalog acount, you can request items directly from the catalog,
-				view your past searches and get personalized recommendations for items you might like.
+				With a free catalog account, you can request items directly from the catalog, view your past searches and get personalized recommendations for items you might like.
 			</div>
 			<div>
 				<a href="http://vufindplus1.einetwork.net/MyResearch/GetCard">

@@ -21,8 +21,8 @@
 	<script type="text/javascript" src="/services/List/ajax.js"></script>
     <div id="searchInfo">
 	{if $pageType eq 'WishList'}
-		<span><input type="button" value="move all physical items to book cart" onclick="saveAllToBookCart()" class="button"></span>
-		<span  style="margin-left:10px;"><input type="button" value="delete this wish list" onclick="getDeleteList('{$wishListID}')" class="button"></span>
+		<span><input type="button" value="Move All Physical Items to Book Cart" onclick="saveAllToBookCart()" class="button"></span>
+		<span  style="margin-left:10px;"><input type="button" value="Delete This Wish List" onclick="getDeleteList('{$wishListID}')" class="button"></span>
 	{/if}
 	{if $pageType eq 'BookCart'}
 	<div class="resulthead" style="font-size:16px;height:30px">

@@ -280,7 +280,7 @@ function getBookCartItemCount(){
                 data: 'method=getBookCartItemCount',
 		success: function(data) {
                     if(data['count'] == 0){
-                        $("#cart-descrpiion").html("&nbsp;&nbsp; your book cart is empty ");
+                        $("#cart-descrpiion").html("&nbsp;&nbsp; Your book cart is empty ");
                     }else if(data['count'] == 1){
                         $("#cart-descrpiion").html("&nbsp;&nbsp; 1 item in your book cart ");
                     }
@@ -288,12 +288,13 @@ function getBookCartItemCount(){
                         $("#cart-descrpiion").html('&nbsp;&nbsp;'+data['count']+" items in your book cart");
                     }
                     if(data['unavailable'] == 'yes'){
-                        $("#cart-descrpiion").html("&nbsp;&nbsp; your book cart is empty ");
+                        $("#cart-descrpiion").html("&nbsp;&nbsp; Your book cart is empty ");
                     }
 		    
 		},
 		error: function() {
 			$('#popupbox').html(failMsg);
+			
 			setTimeout("hideLightbox();", 3000);
 		}
 	});

@@ -295,6 +295,13 @@ function GetHoldingsInfo(id) {
 					$("#eBookLink" + id).show();
 				}
 			}
+			var SummaryDetails = $(data).find("class").text();
+			//alert(SummaryDetails);
+			if(SummaryDetails =="here"){
+				$("#request-now .action-lable-span").text("It's Here");
+				document.getElementById("request-now").disabled='true';
+				document.getElementById("request-now").setAttribute("onclick","");
+			}
 		}
 	});
 }

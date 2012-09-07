@@ -996,7 +996,7 @@ class OverDriveDriver {
 							$overdriveItem->overDriveId = $overDriveId;
 							$overdriveItem->format = $itemInfoAll[1][$matchi];
 							$overdriveItem->formatId = $itemInfoAll[2][$matchi];
-							//echo $overdriveItem->formatId;
+							//echo $overdriveItem->format;
 							//$overdriveItem->usageLink = $itemInfoAll[2][$matchi];
 							if (preg_match('/unknown/i', $itemInfoAll[4][$matchi])){
 								$overdriveItem->size = 'unknown';

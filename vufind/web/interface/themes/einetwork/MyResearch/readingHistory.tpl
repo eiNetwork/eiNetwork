@@ -22,7 +22,7 @@
 					<div id='readingListDisclaimer' {if $historyActive == true}style='display: none'{/if}>
 					The library takes seriously the privacy of your library records. Therefore, we do not keep track of what you borrow after you return it. 
 					However, our automated system has a feature called "My Reading History" that allows you to track items you check out. 
-					Participation in the feature is entirely voluntary. You may start or stop using it, as well as delete any or all entries in "My Reading History" at any time. 
+					Participation in the feature is entirely voluntary. You may start or stop using it, as well as delete all entries in "My Reading History" at any time. 
 					If you choose to start recording "My Reading History", you agree to allow our automated system to store this data. 
 					The library staff does not have access to your "My Reading History", however, it is subject to all applicable local, state, and federal laws, and under those laws, could be examined by law enforcement authorities without your permission. 
 					If this is of concern to you, you should not use the "My Reading History" feature.
@@ -36,12 +36,12 @@
 							<div id="readingListActionsTop">
 								{if $historyActive == true}
 									{if $transList}
-										<input class="button" onclick='return deletedMarkedAction()' value="Delete Marked">
-										<input class="button" onclick='return deleteAllAction()' value="Delete All">
+<!--										<input class="button" onclick='return deletedMarkedAction()' value="Delete Marked">
+-->										<input class="button" onclick='return deleteAllAction()' value="Delete All">
 									{/if}
-									<input class="button" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
+									<input class="button" style="width: 95px" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
 									{else}
-									<input class="button" onclick='return optInAction()' value="Start Recording My Reading History">
+									<input class="button" style="width: 212px" onclick='return optInAction()' value="Start Recording My Reading History">
 								{/if}
 							</div>
 							
@@ -170,12 +170,12 @@
 					<div id="readingListActionsBottom">
 					{if $historyActive == true}
 						{if $transList}
-						<input class="button" onclick="return deletedMarkedAction()" value="Delete Marked">
-						<input class="button" onclick="return deletedAllAction()" value="Delete All">
+<!--						<input class="button" onclick="return deletedMarkedAction()" value="Delete Marked">
+-->						<input class="button" onclick="return deletedAllAction()" value="Delete All">
 						{/if}
-						<input class="button" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
+						<input class="button" style="width: 95px" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
 						{else}
-						<input class="button" onclick="return optInAction()" value="Start Recording My Reading History">
+						<input class="button" style="width: 212px" onclick="return optInAction()" value="Start Recording My Reading History">
 						{/if}
 					</div>
 				{/if}
