@@ -32,7 +32,7 @@ class IPAddresses extends ObjectEditor
 		return 'IPAddresses';
 	}
 	function getPageTitle(){
-		return 'Location IP Addresses';
+		return 'Location IP Addresses check';
 	}
 	function getAllObjects(){
 		$object = new subnet();

@@ -88,7 +88,7 @@
   {/if}
 
   {if $user && $user->hasRole('cataloging')}
-  <h4>Materials Requests</h4>
+  <h4>Materials Requests test test</h4>
   <ul>
     <li><a {if $action == "ManageRequests"}class="active"{/if} href="{$path}/MaterialsRequest/ManageRequests">Manage Requests</a></li>
     <li><a {if $action == "SummaryReport"}class="active"{/if} href="{$path}/MaterialsRequest/SummaryReport">Summary Report</a></li>

@@ -461,6 +461,7 @@ class SearchObject_Solr extends SearchObject_Base
 	public function getResultListHTML($user, $listId = null, $allowEdit = true)
 	{
 		global $interface;
+		echo"getResultListHTML";
 
 		$html = array();
 		for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
