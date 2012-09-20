@@ -149,8 +149,8 @@ class MillenniumDriver implements DriverInterface
 	public function getMillenniumRecordInfo($id){
 		require_once 'Drivers/marmot_inc/MillenniumCache.php';
 		$scope = $this->getMillenniumScope();
-		$logger = new Logger();
-		$logger->log('Loaded millennium info for id ' . $id . ' scope ' . $scope, PEAR_LOG_INFO);
+		//$logger = new Logger();
+		//$logger->log('Loaded millennium info for id ' . $id . ' scope ' . $scope, PEAR_LOG_INFO);
 		$millenniumCache = new MillenniumCache();
 		//First clean out any records that are more than 5 minutes old
 		$cacheExpirationTime = time() - 5 * 60;
@@ -245,9 +245,9 @@ class MillenniumDriver implements DriverInterface
 		$reserves_col_name = $configArray['OPAC']['location_column'];
 		$reserves_key_name = $configArray['OPAC']['reserves_key_name'];
 		$transit_key_name  = $configArray['OPAC']['transit_key_name'];
-		$stat_avail 	   = $configArray['OPAC']['status_avail'];
-		$stat_due	   	   = $configArray['OPAC']['status_due'];
-		$stat_libuse	   = $configArray['OPAC']['status_libuse'];
+		$stat_avail        = $configArray['OPAC']['status_avail'];
+		$stat_due          = $configArray['OPAC']['status_due'];
+		$stat_libuse       = $configArray['OPAC']['status_libuse'];
 
 		$ret = array();
 		//Process each row in the callnumber table.
@@ -375,6 +375,7 @@ class MillenniumDriver implements DriverInterface
 
 				}
 			} //End looping through columns
+
 			if ($addHolding){
 				$numHoldings++;
 				$curHolding['id'] = $id;
@@ -524,11 +525,11 @@ class MillenniumDriver implements DriverInterface
 			}
 			//Get the library display name for the holding location
 			/*foreach ($locationLabels as $holdingLabel => $displayName){
-			if (strpos($holding['location'], $holdingLabel) !== false){
-			$holding['libraryDisplayName'] = $displayName;
-			break;
-			}
-			}*/
+			 if (strpos($holding['location'], $holdingLabel) !== false){
+			 $holding['libraryDisplayName'] = $displayName;
+			 break;
+			 }
+			 }*/
 			if (!isset($holding['libraryDisplayName'])){
 				$holding['libraryDisplayName'] = $holding['location'];
 			}
@@ -620,14 +621,20 @@ class MillenniumDriver implements DriverInterface
 				}
 
 				if ($haveIssueSummary){
-					$issueSummaries[$issueSummaryKey]['holdings'][$key] = $holding;
+					$issueSummaries[$issueSummaryKey]['holdings'][strtolower($key)] = $holding;
 				}else{
 					//Need to automatically add a summary so we don't lose data
 					$issueSummaries[$holding['location']] = array(
                         'location' => $holding['location'],
                         'type' => 'issue',
-                        'holdings' => array($key => $holding),
+                        'holdings' => array(strtolower($key) => $holding),
 					);
+				}
+			}
+			foreach ($issueSummaries as $key => $issueSummary){
+				if (isset($issueSummary['holdings']) && is_array($issueSummary['holdings'])){
+					krsort($issueSummary['holdings']);
+					$issueSummaries[$key] = $issueSummary;
 				}
 			}
 			ksort($issueSummaries);
@@ -690,9 +697,10 @@ class MillenniumDriver implements DriverInterface
                             'location' => $issueSummary['location'],
                             'libraryDisplayName' => $issueSummary['location'],
                             'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',
-                            'status' => 'Lib Use Only',
-                            'statusfull' => 'In Library Use Only',
 						);
+						$summaryInformation['status'] = 'Available';
+						$summaryInformation['statusfull'] = 'Available';
+						$summaryInformation['class'] = 'available';
 					}
 				}
 			}
@@ -809,6 +817,8 @@ class MillenniumDriver implements DriverInterface
 				}else if (is_null($firstCallNumber)){
 					//echo("Skipping call number " . $holding['callnumber'] . " because it is holdable");
 					$firstCallNumber = $holding['callnumber'];
+				}else if (is_null($firstLocation)){
+					//echo("Skipping call number " . $holding['callnumber'] . " because it is holdable");
 					$firstLocation = $holding['location'];
 				}
 			}
@@ -817,20 +827,26 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['status'] = "It's here";
 				$summaryInformation['showPlaceHold'] = $canShowHoldButton;
 				$summaryInformation['class'] = 'here';
+				$summaryInformation['location'] = $holding['location'];
 			}elseif ($showItsHere && !isset($summaryInformation['status']) &&
 			substr($holdingKey, 0, 1) >= 2 && (substr($holdingKey, 0, 1) <= 4) &&
-			$holding['availability'] == 1){
-				//The item is at one of the patron's preferred branches.
-				$summaryInformation['status'] = "It's at " . $holding['location'];
-				$summaryInformation['showPlaceHold'] = $canShowHoldButton;
-				$summaryInformation['class'] = 'nearby';
+			$holding['availability'] == 1 ){
+				if (!isset($summaryInformation['class']) || $summaryInformation['class'] != 'here'){
+					//The item is at one of the patron's preferred branches.
+					$summaryInformation['status'] = "It's at " . $holding['location'];
+					$summaryInformation['showPlaceHold'] = $canShowHoldButton;
+					$summaryInformation['class'] = 'nearby';
+					$summaryInformation['location'] = $holding['location'];
+				}
 			}elseif (!isset($summaryInformation['status']) &&
 			((!$showItsHere && substr($holdingKey, 0, 1) <= 5) || substr($holdingKey, 0, 1) == 5 || !isset($library) ) &&
 			(isset($holding['availability']) && $holding['availability'] == 1)){
-				//The item is at a location either in the same system or another system.
-				$summaryInformation['status'] = "Available At";
-				$summaryInformation['showPlaceHold'] = $canShowHoldButton;
-				$summaryInformation['class'] = 'available';
+				if (!isset($summaryInformation['class']) || ($summaryInformation['class'] != 'here' && $summaryInformation['class'] = 'nearby')){
+					//The item is at a location either in the same system or another system.
+					$summaryInformation['status'] = "Available At";
+					$summaryInformation['showPlaceHold'] = $canShowHoldButton;
+					$summaryInformation['class'] = 'available';
+				}
 			}elseif (!isset($summaryInformation['status']) &&
 			(substr($holdingKey, 0, 1) == 6 ) &&
 			(isset($holding['availability']) && $holding['availability'] == 1)){
@@ -867,7 +883,8 @@ class MillenniumDriver implements DriverInterface
 		}
 
 		//Status is not set, check to see if the item is downloadable
-		if (!isset($summaryInformation['status'])){
+		/*
+		 if (!isset($summaryInformation['status'])){
 			//Check to see if there is a download link in the 856 field
 			//Make sure that the search engine has been setup.  It may not be if the
 			//this is an AJAX request where the search engine is not needed otherwise.
@@ -877,71 +894,71 @@ class MillenniumDriver implements DriverInterface
 			$url = $configArray['Index']['url'];
 			$this->db = new $class($url);
 			if ($configArray['System']['debugSolr']) {
-				$this->db->debug = true;
+			$this->db->debug = true;
 			}
 
 			// Retrieve Full Marc Record
 			$recordURL = null;
 			if (!($record = $this->db->getRecord($id))) {
-				//Must not be a MARC record. Ignore it for now.
+			//Must not be a MARC record. Ignore it for now.
 			}else{
-				// Process MARC Data
-				require_once 'sys/MarcLoader.php';
-				$marcRecord = MarcLoader::loadMarcRecordFromRecord($record);
-				if ($marcRecord) {
-					//Check the 856 tag to see if there is a URL
-					if ($linkField = $marcRecord->getField('856')) {
-						if ($linkURLField = $linkField->getSubfield('u')) {
-							$linkURL = $linkURLField->getData();
-						}
-						if ($linkTextField = $linkField->getSubfield('y')) {
-							$linkText = $linkTextField->getData();
-						}else if ($linkTextField = $linkField->getSubfield('z')) {
-							$linkText = $linkTextField->getData();
-						}else if ($linkTextField = $linkField->getSubfield('3')) {
-							$linkText = $linkTextField->getData();
-						}
-					}
-				} else {
-					//Can't process the marc record, ignore it.
-				}
+			// Process MARC Data
+			require_once 'sys/MarcLoader.php';
+			$marcRecord = MarcLoader::loadMarcRecordFromRecord($record);
+			if ($marcRecord) {
+			//Check the 856 tag to see if there is a URL
+			if ($linkField = $marcRecord->getField('856')) {
+			if ($linkURLField = $linkField->getSubfield('u')) {
+			$linkURL = $linkURLField->getData();
+			}
+			if ($linkTextField = $linkField->getSubfield('y')) {
+			$linkText = $linkTextField->getData();
+			}else if ($linkTextField = $linkField->getSubfield('z')) {
+			$linkText = $linkTextField->getData();
+			}else if ($linkTextField = $linkField->getSubfield('3')) {
+			$linkText = $linkTextField->getData();
+			}
+			}
+			} else {
+			//Can't process the marc record, ignore it.
+			}
 			}
 
 			//If there is a link, add that status information.
 			if (isset($linkURL) && !preg_match('/.*\.(?:gif|jpg|jpeg|tif|tiff)/', $linkURL)){
-				$linkTestText = $linkURL;
-				if (isset($linkText)){
-					$linkTestText .= ' ' . $linkText;
-				}
-				$isDownload = preg_match('/SpringerLink|NetLibrary|digital media|Online version\.|ebrary|gutenberg/i', $linkTestText);
-				if ($linkTestText == 'digital media') $linkText = 'OverDrive';
-				if (preg_match('/netlibrary/i', $linkURL)){
-					$isDownload = true;
-					$linkText = 'NetLibrary';
-				}elseif(preg_match('/ebscohost/i', $linkURL)){
-					$isDownload = true;
-					$linkText = 'Ebsco';
-				}elseif(preg_match('/overdrive/i', $linkURL)){
-					$isDownload = true;
-					$linkText = 'OverDrive';
-				}elseif(preg_match('/ebrary/i', $linkURL)){
-					$isDownload = true;
-					$linkText = 'ebrary';
-				}elseif(preg_match('/gutenberg/i', $linkURL)){
-					$isDownload = true;
-					$linkText = 'Gutenberg Project';
-				}elseif(preg_match('/.*\.[pdf]/', $linkURL)){
-					$isDownload = true;
-				}
-				if ($isDownload){
-					$summaryInformation['status'] = "Available for Download";
-					$summaryInformation['class'] = 'here';
-					$summaryInformation['isDownloadable'] = true;
-					$summaryInformation['downloadLink'] = $linkURL;
-					$summaryInformation['downloadText'] = isset($linkText)? $linkText : 'Download';
-				}
+			$linkTestText = $linkURL;
+			if (isset($linkText)){
+			$linkTestText .= ' ' . $linkText;
 			}
-		}
+			$isDownload = preg_match('/SpringerLink|NetLibrary|digital media|Online version\.|ebrary|gutenberg/i', $linkTestText);
+			if ($linkTestText == 'digital media') $linkText = 'OverDrive';
+			if (preg_match('/netlibrary/i', $linkURL)){
+			$isDownload = true;
+			$linkText = 'NetLibrary';
+			}elseif(preg_match('/ebscohost/i', $linkURL)){
+			$isDownload = true;
+			$linkText = 'Ebsco';
+			}elseif(preg_match('/overdrive/i', $linkURL)){
+			$isDownload = true;
+			$linkText = 'OverDrive';
+			}elseif(preg_match('/ebrary/i', $linkURL)){
+			$isDownload = true;
+			$linkText = 'ebrary';
+			}elseif(preg_match('/gutenberg/i', $linkURL)){
+			$isDownload = true;
+			$linkText = 'Gutenberg Project';
+			}elseif(preg_match('/.*\.[pdf]/', $linkURL)){
+			$isDownload = true;
+			}
+			if ($isDownload){
+			$summaryInformation['status'] = "Available for Download";
+			$summaryInformation['class'] = 'here';
+			$summaryInformation['isDownloadable'] = true;
+			$summaryInformation['downloadLink'] = $linkURL;
+			$summaryInformation['downloadText'] = isset($linkText)? $linkText : 'Download';
+			}
+			}
+			}*/
 
 		if (isset($summaryInformation['status']) && $summaryInformation['status'] != "It's here"){
 			//Replace all spaces in the name of a location with no break spaces
@@ -988,7 +1005,7 @@ class MillenniumDriver implements DriverInterface
 		//That way it will jive with the actual full record display.
 		if ($allItemStatus != null && $allItemStatus != ''){
 			//Only override this for statuses that don't have special meaning
-			if ($summaryInformation['status'] != 'Marmot' && $summaryInformation['status'] != 'Available At'){
+			if ($summaryInformation['status'] != 'Marmot' && $summaryInformation['status'] != 'Available At' && $summaryInformation['class'] != 'here' && $summaryInformation['class'] != 'nearby'){
 				$summaryInformation['status'] = $allItemStatus;
 			}
 		}
@@ -1010,7 +1027,7 @@ class MillenniumDriver implements DriverInterface
 			$summaryInformation['unavailableStatus'] = '';
 		}
 
-		//Reset call nmber as needed
+		//Reset call number as needed
 		if (!is_null($firstCallNumber) && !isset($summaryInformation['callnumber'])){
 			$summaryInformation['callnumber'] = $firstCallNumber;
 		}
@@ -1319,6 +1336,8 @@ class MillenniumDriver implements DriverInterface
 			//with their student id.
 			if (strlen($barcode)== 5){
 				$barcode = "41000000" . $barcode;
+			}elseif (strlen($barcode)== 6){
+				$barcode = "4100000" . $barcode;
 			}
 
 			// Load Record Page.  This page has a dump of all patron information
@@ -1701,6 +1720,7 @@ class MillenniumDriver implements DriverInterface
 					if ($resource->find(true)){
 						$historyEntry = array_merge($historyEntry, get_object_vars($resource));
 						$historyEntry['recordId'] = $resource->record_id;
+						$historyEntry['shortId'] = str_replace('.b', 'b', $resource->record_id);
 					}else{
 						//echo("Warning did not find resource for {$historyEntry['shortId']}");
 					}
@@ -2140,7 +2160,8 @@ class MillenniumDriver implements DriverInterface
 	 * @access  public
 	 */
 	public function placeHold($recordId, $patronId, $comment, $type){
-		return $this->placeItemHold($recordId, null, $patronId, $comment, $type);
+		$result = $this->placeItemHold($recordId, null, $patronId, $comment, $type);
+		return $result;
 	}
 
 	/**
@@ -2316,6 +2337,9 @@ class MillenniumDriver implements DriverInterface
 			$hold_result = $this->_getHoldResult($sresult);
 			$hold_result['title']  = $title;
 			$hold_result['bid'] = $bib1;
+			if ($hold_result['result'] == true){
+				UsageTracking::logTrackingData('numHolds');
+			}
 			return $hold_result;
 		}
 	}
@@ -2340,7 +2364,8 @@ class MillenniumDriver implements DriverInterface
 				$book = $cleanResponse;
 				$reason = '';
 			}
-			if (preg_match('/success/', $cleanResponse)){
+
+			if (preg_match('/success/', $cleanResponse) && preg_match('/request denied/', $cleanResponse) == 0){
 				//Hold was successful
 				$hold_result['result'] = true;
 				if (!isset($reason) || strlen($reason) == 0){
@@ -2649,6 +2674,7 @@ class MillenniumDriver implements DriverInterface
 			$hold_result['result'] = true;
 			$hold_result['message'] = "All items were renewed successfully.";
 		}
+		UsageTracking::logTrackingData($hold_result['Renewed']);
 
 		return $hold_result;
 	}
@@ -2717,12 +2743,19 @@ class MillenniumDriver implements DriverInterface
 		}else if (preg_match('/<h2>\\s*You cannot renew items because:\\s*<\/h2><ul><li>(.*?)<\/ul>/si', $sresult, $matches)) {
 			$success = false;
 			$message = 'Unable to renew this item, ' . strtolower($matches[1]) . '.';
+		}else if (preg_match('/Your record is in use/si', $sresult, $matches)) {
+			$success = false;
+			$message = 'Unable to renew this item, your record is in use by the system.';
 		}else{
 			$success = true;
 			$message = 'Your item was successfully renewed';
 		}
 		curl_close($curl_connection);
 		unlink($cookieJar);
+
+		if ($success){
+			UsageTracking::logTrackingData('numRenewals');
+		}
 
 		return array(
                     'itemId' => $itemId,
@@ -2886,6 +2919,8 @@ class MillenniumDriver implements DriverInterface
 		global $user;
 		if (strlen($user->cat_password) == 5){
 			$user->cat_password = '41000000' . $user->cat_password;
+		}elseif (strlen($user->cat_password) == 6){
+			$user->cat_password = '4100000' . $user->cat_password;
 		}
 		return $user->cat_password;
 	}

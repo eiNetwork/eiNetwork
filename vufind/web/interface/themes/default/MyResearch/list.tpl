@@ -7,7 +7,7 @@
 	
 	<div id="main-content">
 		{if $allowEdit}
-			<form action="{$url}/MyResearch/MyList/{$favList->id}" id="myListFormHead">
+			<form action="{$path}/MyResearch/MyList/{$favList->id}" id="myListFormHead">
 			<div>
 			<input type="hidden" name="myListActionHead" id="myListActionHead"/>
 		{/if}
@@ -45,7 +45,7 @@
 			{/if}
 
 		</div>
-		<form action="{$url}/MyResearch/MyList/{$favList->id}" id="myListFormItem">
+		<form action="{$path}/MyResearch/MyList/{$favList->id}" id="myListFormItem">
 		<div>
 		<input type="hidden" name="myListActionItem" id="myListActionItem"/>
 		<ul>
@@ -61,8 +61,8 @@
 		{*
 		<button value="moveMarked" id="FavMoveMarked" class="listButton" onclick='return moveMarkedAction()'>Move Marked</button>
 		*}
-		<button value="deleteMarked" id="FavDeleteMarked" class="listButton" onclick='return deletedMarkedAction()'>Delete Marked</button>
-		<button value="deleteAll" id="FavDeleteAll" class="listButton" onclick='return deleteAllAction()'>Delete All</button>
+		<button value="deleteMarked" id="FavDeleteMarked" class="listButton" onclick='return deletedListItemsMarkedAction()'>Delete Marked</button>
+		<button value="deleteAll" id="FavDeleteAll" class="listButton" onclick='return deleteListItemsAllAction()'>Delete All</button>
 		{*
 		<div id='listToMoveToPanel' style='display:none'>
 		<button value="moveMarked" id="FavMoveMarked" class="listButton" onclick='return moveMarkedGo()'>Move Marked</button>
@@ -85,7 +85,7 @@
 		<ul>
 		{foreach from=$tags item=tag}
 			<li>{translate text='Tag'}: {$tag|escape:"html"}
-			<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;{foreach from=$tags item=mytag}{if $tag != $mytag}tag[]={$mytag|escape:"url"}&amp;{/if}{/foreach}">X</a>
+			<a href="{$path}/MyResearch/MyList/{$favList->id}&amp;{foreach from=$tags item=mytag}{if $tag != $mytag}tag[]={$mytag|escape:"url"}&amp;{/if}{/foreach}">X</a>
 			</li>
 		{/foreach}
 		</ul>
@@ -93,7 +93,7 @@
 		<ul>
 		{foreach from=$tagList item=tag}
 			<li>
-				<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;tag[]={$tag->tag|escape:"url"}{foreach from=$tags item=mytag}&amp;tag[]={$mytag|escape:"url"}{/foreach}">{$tag->tag|escape:"html"}</a> ({$tag->cnt})
+				<a href="{$path}/MyResearch/MyList/{$favList->id}&amp;tag[]={$tag->tag|escape:"url"}{foreach from=$tags item=mytag}&amp;tag[]={$mytag|escape:"url"}{/foreach}">{$tag->tag|escape:"html"}</a> ({$tag->cnt})
 			</li>
 		{/foreach}
 		</ul>

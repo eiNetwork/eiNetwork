@@ -16,7 +16,7 @@ class SearchSources{
 
 		global $locationSingleton;
 		$location = $locationSingleton->getActiveLocation();
-		if ($location != null){
+		if ($location != null && $location->useScope && strlen($location->defaultLocationFacet) > 0){
 			$repeatSearchSetting = $location->repeatSearchOption;
 			$repeatInWorldCat = $location->repeatInWorldCat == 1;
 			$repeatInProspector = $location->repeatInProspector == 1;
@@ -42,7 +42,7 @@ class SearchSources{
 		$marmotAdded = false;
 
 		//Local search
-		if (isset($location) && $location != null){
+		if (isset($location) && $location != null && $location->useScope && strlen($location->defaultLocationFacet) > 0){
 			$searchOptions['local'] = array(
               'name' => $location->displayName,
               'description' => "The {$location->displayName} catalog.",
@@ -104,6 +104,11 @@ class SearchSources{
 
 		//Summon Search - later
 
+		//eContent Search
+		$searchOptions['econtent'] = array(
+              'name' => 'Digital Collection',
+              'description' => 'Digital Media available for use online and with portable devices',
+		);
 
 		//Marmot Global search
 		if (isset($library) &&
@@ -117,12 +122,6 @@ class SearchSources{
               'description' => 'A shared catalog of public, academic, and school libraries on the Western Slope.',
 			);
 		}
-		
-		//eContent Search
-		$searchOptions['econtent'] = array(
-              'name' => 'Digital Media',
-              'description' => 'Digital Media available for use online and with portable devices',
-		);
 
 		//Genealogy Search
 		if ($searchGenealogy && !$interface->isMobile()){
@@ -131,7 +130,7 @@ class SearchSources{
               'description' => 'Genealogy Records from Colorado',
 			);
 		}
-		
+
 		//Overdrive
 		if ($repeatInOverdrive && !$interface->isMobile()){
 			$searchOptions['overdrive'] = array(

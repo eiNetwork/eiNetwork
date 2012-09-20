@@ -56,6 +56,7 @@ public class ReindexProcess {
 	private static boolean exportStrandsCatalog = false;
 	private static boolean exportOPDSCatalog = true;
 	private static boolean updateAlphaBrowse = true;
+	private static String idsToProcess = null;
 	
 	//Database connections and prepared statements
 	private static Connection vufindConn = null;
@@ -130,13 +131,37 @@ public class ReindexProcess {
 	
 	private static void reloadDefaultSchemas() {
 		logger.info("Reloading schemas from default");
+		try {
+			//Copy default schemas from biblio to biblio2 and econtent
+			logger.debug("Copying " + "../../sites/default/solr/biblio/conf/schema.xml" + " to " + "../../sites/default/solr/biblio2/conf/schema.xml");
+			if (!Util.copyFile(new File("../../sites/default/solr/biblio/conf/schema.xml"), new File("../../sites/default/solr/biblio2/conf/schema.xml"))){
+				logger.info("Unable to copy schema to biblio2");
+				addNoteToCronLog("Unable to copy schema to biblio2");
+			}
+			logger.debug("Copying " + "../../sites/default/solr/biblio/conf/schema.xml" + " to " + "../../sites/default/solr/econtent/conf/schema.xml");
+			if (!Util.copyFile(new File("../../sites/default/solr/biblio/conf/schema.xml"), new File("../../sites/default/solr/econtent/conf/schema.xml"))){
+				logger.info("Unable to copy schema to econtent");
+				addNoteToCronLog("Unable to copy schema to econtent");
+			}
+			logger.debug("Copying " + "../../sites/default/solr/biblio/conf/schema.xml" + " to " + "../../sites/default/solr/econtent2/conf/schema.xml");
+			if (!Util.copyFile(new File("../../sites/default/solr/biblio/conf/schema.xml"), new File("../../sites/default/solr/econtent2/conf/schema.xml"))){
+				logger.info("Unable to copy schema to econtent");
+				addNoteToCronLog("Unable to copy schema to econtent");
+			}
+		} catch (IOException e) {
+			logger.error("error reloading copying default scehmas", e);
+			addNoteToCronLog("error reloading copying default scehmas " + e.toString());
+		}
 		//biblio
 		reloadSchema("biblio");
 		//biblio2
 		reloadSchema("biblio2");
 		//econtent
 		reloadSchema("econtent");
-		
+		//econtent2
+		reloadSchema("econtent2");
+		//genealogy
+		reloadSchema("genealogy");
 	}
 
 	private static void reloadSchema(String schemaName) {
@@ -148,6 +173,16 @@ public class ReindexProcess {
 				logger.info("Unable to copy schema for " + schemaName);
 				addNoteToCronLog("Unable to copy schema for " + schemaName);
 				reloadIndex = false;
+			}
+			logger.debug("Copying " + "../../sites/default/solr/" + schemaName + "/conf/mapping-FoldToASCII.txt" + " to " + "../../sites/" + serverName + "/solr/" + schemaName + "/conf/mapping-FoldToASCII.txt");
+			if (!Util.copyFile(new File("../../sites/default/solr/" + schemaName + "/conf/mapping-FoldToASCII.txt"), new File("../../sites/" + serverName + "/solr/" + schemaName + "/conf/mapping-FoldToASCII.txt"))){
+				logger.info("Unable to copy mapping-FoldToASCII.txt for " + schemaName);
+				addNoteToCronLog("Unable to copy mapping-FoldToASCII.txt for " + schemaName);
+			}
+			logger.debug("Copying " + "../../sites/default/solr/" + schemaName + "/conf/mapping-ISOLatin1Accent.txt" + " to " + "../../sites/" + serverName + "/solr/" + schemaName + "/conf/mapping-ISOLatin1Accent.txt");
+			if (!Util.copyFile(new File("../../sites/default/solr/" + schemaName + "/conf/mapping-ISOLatin1Accent.txt"), new File("../../sites/" + serverName + "/solr/" + schemaName + "/conf/mapping-ISOLatin1Accent.txt"))){
+				logger.info("Unable to copy mapping-ISOLatin1Accent.txt for " + schemaName);
+				addNoteToCronLog("Unable to copy mapping-ISOLatin1Accent.txt for " + schemaName);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -291,7 +326,11 @@ public class ReindexProcess {
 		//Check to see if the record already exists
 		try {
 			int econtentRecordsProcessed = 0;
-			PreparedStatement econtentRecordStatement = econtentConn.prepareStatement("SELECT * FROM econtent_record WHERE status = 'active'");
+			String idFilter = "";
+			if (idsToProcess != null && idsToProcess.length() > 0){
+				idFilter = " AND id REGEXP '" + idsToProcess + "'";
+			}
+			PreparedStatement econtentRecordStatement = econtentConn.prepareStatement("SELECT * FROM econtent_record WHERE status = 'active'" + idFilter);
 			ResultSet allEContent = econtentRecordStatement.executeQuery();
 			long indexTime = new Date().getTime() / 1000;
 			while (allEContent.next()){
@@ -371,12 +410,12 @@ public class ReindexProcess {
 		try {
 			Date date = new Date();
 			cronNotes.append("<br>").append(dateFormat.format(date)).append(note);
-			addNoteToCronLogStmt.setString(1, cronNotes.toString());
+			addNoteToCronLogStmt.setString(1, Util.trimTo(65535, cronNotes.toString()));
 			addNoteToCronLogStmt.setLong(2, new Date().getTime() / 1000);
 			addNoteToCronLogStmt.setLong(3, reindexLogId);
 			addNoteToCronLogStmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Error adding note to Cron Log", e);
+			logger.error("Error adding note to Reindex Log", e);
 		}
 	}
 	
@@ -540,6 +579,14 @@ public class ReindexProcess {
 		} catch (SQLException e) {
 			logger.error("Unable to create log entry for reindex process", e);
 			System.exit(0);
+		}
+		
+		idsToProcess = Util.cleanIniValue(configIni.get("Reindex", "idsToProcess"));
+		if (idsToProcess == null || idsToProcess.length() == 0){
+			idsToProcess = null;
+			logger.debug("Did not load a set of idsToProcess");
+		}else{
+			logger.debug("idsToProcess = " + idsToProcess);
 		}
 		
 	}

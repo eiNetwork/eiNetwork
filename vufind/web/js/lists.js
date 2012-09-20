@@ -36,7 +36,7 @@ function requestMarkedAction(){
 	$('#myListFormItem').submit();
 	return false;
 }
-function deletedMarkedAction(){
+function deletedMarkedListItemsAction(){
 	$('#myListActionItem').val('deleteMarked');
 	$('#myListFormItem').submit();
 	return false;
@@ -45,13 +45,17 @@ function moveMarkedAction(){
 	alert("Not implemented yet.");
 	return false;
 }
-function deleteAllAction(){
+function deleteAllListItemsAction(){
 	$('#myListActionItem').val('deleteAll');
 	$('#myListFormItem').submit();
 	return false;
 }
 function emailListAction(id) {
 	ajaxLightbox(path + '/MyResearch/EmailList/' + id);
+	return false;
+}
+function citeListAction(id) {
+	ajaxLightbox(path + '/MyResearch/AJAX?method=getCitationFormatsForm&listId=' + id);
 	return false;
 }
 

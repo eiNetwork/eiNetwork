@@ -126,14 +126,20 @@ class Hold extends Action {
 				//set focus to the username field by default.
 				$interface->assign('focusElementId', 'username');
 			}
-			
+
 			global $librarySingleton;
 			$patronHomeBranch = $librarySingleton->getPatronHomeLibrary();
 			if ($patronHomeBranch != null){
+				if ($patronHomeBranch->defaultNotNeededAfterDays > 0){
+					$interface->assign('defaultNotNeededAfterDays', date('m/d/Y', time() + $patronHomeBranch->defaultNotNeededAfterDays * 60 * 60 * 24));
+				}else{
+					$interface->assign('defaultNotNeededAfterDays', '');
+				}
 				$interface->assign('showHoldCancelDate', $patronHomeBranch->showHoldCancelDate);
 			}else{
 				//Show the hold cancellation date for now.  It may be hidden later when the user logs in.
 				$interface->assign('showHoldCancelDate', 1);
+				$interface->assign('defaultNotNeededAfterDays', '');
 			}
 			$activeLibrary = $librarySingleton->getActiveLibrary();
 			if ($activeLibrary != null){
@@ -156,7 +162,7 @@ class Hold extends Action {
 		$interface->assign('id', $_GET['id']);
 		if ($showMessage && isset($return)) {
 			$hold_message_data = array(
-				'successful' => $return['result'] ? 'all' : 'none',
+				'successful' => $return['result'] == true ? 'all' : 'none',
 				'error' => isset($return['error']) ? $return['error'] : '',
 				'titles' => array(
 					$return,

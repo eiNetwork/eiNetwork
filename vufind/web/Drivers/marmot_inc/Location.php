@@ -33,6 +33,8 @@ class Location extends DB_DataObject
 	public $homeLink;
 	public $defaultPType;
 	public $ptypesToAllowRenewals;
+	public $footerTemplate;
+	public $homePageWidgetId;
 
 	/* Static get */
 	function staticGet($k,$v=NULL) { return DB_DataObject::staticGet('Location',$k,$v); }
@@ -65,11 +67,11 @@ class Location extends DB_DataObject
 
 		// get the structure for the location's hours
 		$hoursStructure = LocationHours::getObjectStructure();
-		
+
 		// we don't want to make the locationId property editable
 		// because it is associated with this location only
 		unset($hoursStructure['locationId']);
-		
+
 		$structure = array(
 		array('property'=>'code', 'type'=>'text', 'label'=>'Code', 'description'=>'The code for use when communicating with Millennium'),
 		array('property'=>'displayName', 'type'=>'text', 'label'=>'Display Name', 'description'=>'The full name of the location for display to the user'),
@@ -84,6 +86,8 @@ class Location extends DB_DataObject
 		array('property'=>'facetLabel', 'type'=>'text', 'label'=>'Facet Label', 'description'=>'The label of the facet that identifies this location.', 'hideInLists' => true),
 		array('property'=>'defaultLocationFacet', 'type'=>'text', 'label'=>'Default Location Facet', 'description'=>'A facet to apply during initial searches.  If left blank, no additional refinement will be done.', 'hideInLists' => true),
 		array('property'=>'facetFile', 'type'=>'text', 'label'=>'Facet File', 'description'=>'The name of the facet file which should be used while searching', 'hideInLists' => true),
+		array('property'=>'homePageWidgetId', 'type'=>'integer', 'label'=>'Home Page Widget Id', 'description'=>'An id for the list widget to display on the home page', 'hideInLists' => true,),
+		array('property'=>'footerTemplate', 'type'=>'text', 'label'=>'Footer Template', 'description'=>'The name of the footer file to display in the regular interface when scoped to a single school.  Use default to display the default footer', 'hideInLists' => true, 'default' => 'default'),
 		array('property'=>'showHoldButton', 'type'=>'checkbox', 'label'=>'Show Hold Button', 'description'=>'Whether or not the hold button is displayed so patrons can place holds on items', 'hideInLists' => true),
 		array('property'=>'showAmazonReviews', 'type'=>'checkbox', 'label'=>'Show Amazon Reviews', 'description'=>'Whether or not reviews from Amazon are displayed on the full record page.', 'hideInLists' => true),
 		array('property'=>'showStandardReviews', 'type'=>'checkbox', 'label'=>'Show Standard Reviews', 'description'=>'Whether or not reviews from Content Cafe/Syndetics are displayed on the full record page.', 'hideInLists' => true),
@@ -124,7 +128,7 @@ class Location extends DB_DataObject
 			}
 		}
 		$homeLibrary = $librarySingleton->getLibraryForLocation($patronProfile['homeLocationId']);
-		
+
 
 		if (isset($homeLibrary) && $homeLibrary->inSystemPickupsOnly == 1){
 			if (strlen($homeLibrary->validPickupSystems) > 0){
@@ -201,7 +205,9 @@ class Location extends DB_DataObject
 	 */
 	private $activeLocation = 'unset';
 	function getActiveLocation(){
-		if (isset($this->activeLocation) && $this->activeLocation != 'unset') return $this->activeLocation;
+		if ($this->activeLocation != 'unset') {
+			return $this->activeLocation;
+		}
 
 		//default value
 		$this->activeLocation = null;
@@ -210,8 +216,9 @@ class Location extends DB_DataObject
 		global $library;
 		if (is_null($library)){
 			//If we are not in a library, then do not allow branch scoping, etc.
-			$this->activeLocation == null;
+			$this->activeLocation = null;
 		}else{
+
 			//Check to see if a branch location has been specified.
 			$locationCode = $this->getBranchLocationCode();
 
@@ -224,9 +231,14 @@ class Location extends DB_DataObject
 						$this->activeLocation = clone($activeLocation);
 					}
 				}
+			}else{
+				$physicalLocation = $this->getPhysicalLocation();
+				if ($physicalLocation != null){
+					$this->activeLocation = $physicalLocation;
+				}
 			}
 			global $timer;
-			$timer->logTime('Finished getActiveLocation'); 
+			$timer->logTime('Finished getActiveLocation');
 		}
 
 		return $this->activeLocation;
@@ -243,7 +255,6 @@ class Location extends DB_DataObject
 		$this->userHomeLocation = null;
 
 		global $user;
-		global $library;
 		if (isset($user) && $user != false){
 			$homeLocation = new Location();
 			$homeLocation->locationId = $user->homeLocationId;
@@ -279,7 +290,7 @@ class Location extends DB_DataObject
 	 */
 	private $physicalLocation = 'unset';
 	function getPhysicalLocation(){
-		if (isset($this->physicalLocation) && $this->physicalLocation != 'unset'){
+		if ($this->physicalLocation != 'unset'){
 			if ($this->physicalLocation == 'null'){
 				return null;
 			}else{
@@ -322,6 +333,9 @@ class Location extends DB_DataObject
 	private $ipLocation = 'unset';
 	private $ipId = 'unset';
 	function getIPLocation(){
+		if ($this->ipLocation != 'unset'){
+			return $this->ipLocation;
+		}
 		global $timer;
 		global $memcache;
 		global $configArray;
@@ -330,12 +344,15 @@ class Location extends DB_DataObject
 		$activeIp = $this->getActiveIp();
 		$this->ipLocation = $memcache->get('location_for_ip_' . $activeIp);
 		$this->ipId = $memcache->get('ipId_for_ip_' . $activeIp);
-		
-		if (!isset($this->ipLocation) || $this->ipLocation === false || $this->ipId === false){
+		if ($this->ipId == -1){
+			$this->ipLocation = null;
+		}
+
+		if ($this->ipLocation == false || $this->ipId == false){
 			//echo("Active IP is $activeIp");
 			require_once './Drivers/marmot_inc/ipcalc.php';
 			require_once './Drivers/marmot_inc/subnet.php';
-			
+
 			$subnets = $memcache->get('ip_addresses');
 			if ($subnets == false){
 				$subnetSql = new subnet();
@@ -350,12 +367,14 @@ class Location extends DB_DataObject
 			//Get the locationId for the subnet.
 			if (isset($bestmatch) && $bestmatch != null){
 				//echo("Best match Location is {$bestmatch->locationid}");
-				 
+
 				$matchedLocation = $this->staticGet('locationId', $bestmatch->locationid);
 				//Only use the physical location regardless of where we are
+				//echo("Active location is {$matchedLocation->displayName}");
 				$this->ipLocation = clone($matchedLocation);
 				$this->ipId = $bestmatch->id;
 			} else {
+				//echo("Did not get a location for $activeIp");
 				//Clear the cookie if we don't get a match.
 				$this->activeIp = '';
 				$this->ipLocation = null;
@@ -378,7 +397,8 @@ class Location extends DB_DataObject
 
 	private $activeIp = null;
 	function getActiveIp(){
-		if (!empty($this->activeIp)) return $this->activeIp;
+		if (!is_null($this->activeIp)) return $this->activeIp;
+		global $timer;
 		//Make sure gets and cookies are processed in the correct order.
 		if (isset($_GET['test_ip'])){
 			$ip = $_GET['test_ip'];
@@ -389,8 +409,8 @@ class Location extends DB_DataObject
 		}else{
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
-
 		$this->activeIp = $ip;
+		$timer->logTime("getActiveIp");
 		return $this->activeIp;
 	}
 
@@ -406,7 +426,7 @@ class Location extends DB_DataObject
 		}
 		return $facets;
 	}
-	
+
 	public function __get($name){
 		if ($name == "hours") {
 			if (!isset($this->hours)){
@@ -422,7 +442,7 @@ class Location extends DB_DataObject
 			return $this->hours;
 		}
 	}
-	
+
 	public function __set($name, $value){
 		if ($name == "hours") {
 			$this->hours = $value;
@@ -442,7 +462,7 @@ class Location extends DB_DataObject
 			$this->saveHours();
 		}
 	}
-	
+
 	/**
 	 * Override the update functionality to save the hours
 	 *
@@ -456,7 +476,7 @@ class Location extends DB_DataObject
 			$this->saveHours();
 		}
 	}
-	
+
 	public function saveHours(){
 		if (isset ($this->hours) && is_array($this->hours)){
 			foreach ($this->hours as $hours){
@@ -474,14 +494,14 @@ class Location extends DB_DataObject
 			unset($this->hours);
 		}
 	}
-	
+
 	public static function getLibraryHours($locationId, $timeToCheck){
 		$location = new Location();
 		$location->locationId = $locationId;
 		if ($location->find(true)){
 			// format $timeToCheck according to MySQL default date format
 			$todayFormatted = date('Y-m-d', $timeToCheck);
-			
+
 			// check to see if today is a holiday
 			require_once 'Drivers/marmot_inc/Holiday.php';
 			$holidays = array();
@@ -494,10 +514,10 @@ class Location extends DB_DataObject
 					'closureReason' => $holiday->name
 				);
 			}
-			
+
 			// get the day of the week (0=Sunday to 6=Saturday)
 			$dayOfWeekToday = strftime ('%w', $timeToCheck);
-	
+
 			// find library hours for the above day of the week
 			require_once 'Drivers/marmot_inc/LocationHours.php';
 			$hours = new LocationHours();
@@ -514,12 +534,12 @@ class Location extends DB_DataObject
 				);
 			}
 		}
-		
+
 
 		// no hours found
 		return null;
 	}
-	
+
 	public static function getLibraryHoursMessage($locationId){
 		$today = time();
 		$todaysLibraryHours = Location::getLibraryHours($locationId, $today);
@@ -531,16 +551,26 @@ class Location extends DB_DataObject
 				//Library is closed now
 				$nextDay = time() + (24 * 60 * 60);
 				$nextDayHours = Location::getLibraryHours($locationId,  $nextDay);
-				while (isset($nextDayHours['closed']) && $nextDayHours['closed'] == true){
+				$daysChecked = 0;
+				while (isset($nextDayHours['closed']) && $nextDayHours['closed'] == true && $daysChecked < 7){
 					$nextDay += (24 * 60 * 60);
 					$nextDayHours = Location::getLibraryHours($locationId,  $nextDay);
+					$daysChecked++;
 				}
-	
+
 				$nextDayOfWeek = strftime ('%a', $nextDay);
-				if (isset($closureReason)){
-					$libraryHoursMessage = "The library is closed today for $closureReason. It will reopen on $nextDayOfWeek from {$nextDayHours['openFormatted']} to {$nextDayHours['closeFormatted']}";
+				if (isset($nextDayHours['closed']) && $nextDayHours['closed'] == true){
+					if (isset($closureReason)){
+						$libraryHoursMessage = "The library is closed today for $closureReason.";
+					}else{
+						$libraryHoursMessage = "The library is closed today.";
+					}
 				}else{
-					$libraryHoursMessage = "The library is closed today. It will reopen on $nextDayOfWeek from {$nextDayHours['openFormatted']} to {$nextDayHours['closeFormatted']}";
+					if (isset($closureReason)){
+						$libraryHoursMessage = "The library is closed today for $closureReason. It will reopen on $nextDayOfWeek from {$nextDayHours['openFormatted']} to {$nextDayHours['closeFormatted']}";
+					}else{
+						$libraryHoursMessage = "The library is closed today. It will reopen on $nextDayOfWeek from {$nextDayHours['openFormatted']} to {$nextDayHours['closeFormatted']}";
+					}
 				}
 			}else{
 				//Library is open

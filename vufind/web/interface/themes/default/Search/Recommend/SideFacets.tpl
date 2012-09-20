@@ -22,7 +22,7 @@
 	{if $filterList}
 		<strong>{translate text='Remove Filters'}</strong>
 		<ul class="filters">
-		{foreach from=$filterList item=filters key=field}
+		{foreach from=$filterList item=filters key=field }
 			{foreach from=$filters item=filter}
 				<li>{translate text=$field}: {$filter.display|escape} <a href="{$filter.removalUrl|escape}"><img src="{$path}/images/silk/delete.png" alt="Delete"/></a></li>
 			{/foreach}
@@ -30,7 +30,7 @@
 		</ul>
 	{/if}
 	{if $sideFacetSet && $recordCount > 0}
-		{foreach from=$sideFacetSet item=cluster key=title}
+		{foreach from=$sideFacetSet item=cluster key=title name=facetSet}
 			{if $title == 'publishDate' || $title == 'birthYear' || $title == 'deathYear'}
 				<dl class="narrowList navmenu narrow_begin">
 					<dt>{translate text=$cluster.label}</dt>
@@ -93,6 +93,9 @@
 					<dd>
 						<form id='{$title}Filter' action='{$fullPath}'>
 							<div>
+								{if $title == 'lexile_score'}
+									<div id="lexile-range"></div>
+								{/if}
 								<label for="{$title}from" class='yearboxlabel'>From:</label>
 								<input type="text" size="4" maxlength="4" class="yearbox" name="{$title}from" id="{$title}from" value="" />
 								<label for="{$title}to" class='yearboxlabel'>To:</label>
@@ -111,6 +114,29 @@
 									{/if}
 								{/foreach}
 								<input type="submit" value="Go" id="goButton" />
+								{if $title == 'lexile_score'}
+								<script>{literal}
+									$(function() {
+										$( "#lexile-range" ).slider({
+											range: true,
+											min: 0,
+											max: 2500,
+											step: 10,
+											values: [ 0, 2500 ],
+											slide: function( event, ui ) {
+												$( "#lexile_scorefrom" ).val( ui.values[ 0 ] );
+												$( "#lexile_scoreto" ).val( ui.values[ 1 ] );
+											}
+										});
+										$( "#lexile_scorefrom" ).change(function (){
+											$( "#lexile-range" ).slider( "values", 0, $( "#lexile_scorefrom" ).val());
+										});
+										$( "#lexile_scoreto" ).change(function (){
+											$( "#lexile-range" ).slider( "values", 1, $( "#lexile_scoreto" ).val());
+										});
+									});{/literal}
+									</script>
+									{/if}
 							</div>
 						</form>
 					</dd>
@@ -127,11 +153,14 @@
 						{if $thisFacet.isApplied}
 							<dd>{$thisFacet.display|escape} <img src="{$path}/images/silk/tick.png" alt="Selected" /> <a href="{$thisFacet.removalUrl|escape}" class="removeFacetLink">(remove)</a></dd>
 						{else}
-							<dd>{if $thisFacet.url !=null}<a href="{$thisFacet.url|escape}">{/if}{$thisFacet.display|escape}{if $thisFacet.url !=null}</a>{/if} {if $thisFacet.count != ''}({$thisFacet.count}){/if}</dd>
+							<dd>{if $thisFacet.url !=null}<a href="{$thisFacet.url|escape}">{/if}{$thisFacet.display|escape}{if $thisFacet.url !=null}</a>{/if}{if $thisFacet.count != ''}&nbsp;({$thisFacet.count}){/if}</dd>
 						{/if}
 					{/foreach}
 					{if $smarty.foreach.narrowLoop.total > $cluster.valuesToShow}<dd><a href="#" onclick="lessFacets('{$title}'); return false;">{translate text='less'} ...</a></dd>{/if}
 				</dl>
+			{/if}
+			{if !$smarty.foreach.facetSet.last}
+			<hr class="facetSeparator"/>
 			{/if}
 		{/foreach}
 	{/if}

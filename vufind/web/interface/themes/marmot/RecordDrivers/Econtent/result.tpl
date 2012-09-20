@@ -1,7 +1,7 @@
 {strip}
 <div id="record{$summId|escape}" class="resultsList">
 	<div class="selectTitle">
-		<input type="checkbox" name="selected[econtentRecord{$summId|escape:"url"}]" id="selectedEcontentRecord{$summId|escape:"url"}" {if $enableBookCart}onclick="toggleInBag('econtentRecord{$summId|escape:"url"}', '{$summTitle|regex_replace:"/(\/|:'\")$/":""|escape:"javascript"}', this);"{/if} />&nbsp;
+		<input type="checkbox" name="selected[econtentRecord{$summId|escape:"url"}]" id="selectedEcontentRecord{$summId|escape:"url"}" {if $enableBookCart}onclick="toggleInBag('econtentRecord{$summId|escape:"url"}', '{$summTitle|replace:'"':''|escape:'javascript'}', this);"{/if} />&nbsp;
 	</div>
 	
 	<div class="imageColumn"> 
@@ -45,7 +45,7 @@
 
 	<div class="resultItemLine2">
 		{if $summAuthor}
-			{translate text='by'}
+			{translate text='by'}&nbsp;
 			{if is_array($summAuthor)}
 				{foreach from=$summAuthor item=author}
 					<a href="{$path}/Author/Home?author={$author|escape:"url"}">{$author|highlight:$lookfor}</a>
@@ -53,6 +53,7 @@
 			{else}
 				<a href="{$path}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
 			{/if}
+			&nbsp;
 		{/if}
  
 		{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if}

@@ -1,9 +1,9 @@
 <?php
-/** 
- * This file consolidates CSS and JS for all themes based on the consolidation.ini file within 
- * each theme (if any). 
- * 
- * Must have write access to the theme folder from Apache so it may be better to run from 
+/**
+ * This file consolidates CSS and JS for all themes based on the consolidation.ini file within
+ * each theme (if any).
+ *
+ * Must have write access to the theme folder from Apache so it may be better to run from
  * development machine and then check the combined files in to git
  */
 ini_set('display_errors', true);
@@ -23,6 +23,10 @@ function vufind_autoloader($class) {
 spl_autoload_register('vufind_autoloader');
 
 $themeDir = "./interface/themes";
+$minify = true;
+if (isset($_REQUEST['minify']) && $_REQUEST['minify'] == "false"){
+	$minify = false;
+}
 
 if (is_dir($themeDir)){
 	echo("Found themes directory<br/>");
@@ -42,7 +46,7 @@ if (is_dir($themeDir)){
 				}
 			}
 		}
-		
+
 		//Determine which themes to update
 		if (isset($_REQUEST['themes'])){
 			if (is_array($_REQUEST['themes'])){
@@ -57,18 +61,23 @@ if (is_dir($themeDir)){
 				$themesToUpdate[] = $themeName;
 			}
 		}
-		
+
+		flush();
+		ob_start();
 		foreach ($themes as $themeName => $info){
 			if ($info['hasConsolidationFile'] && in_array($themeName, $themesToUpdate)){
 				$now = time();
 				echo("Consolidating $themeName<br/>");
-				set_time_limit(120);
+				flush();
 				ob_flush();
-				consolidateFiles($info, $themes);
+				set_time_limit(120);
+
+				consolidateFiles($info, $themes, $minify);
 				$end = time();
 				echo (".." . ($end - $now) . " secs<br/>");
 			}
 		}
+		ob_end_flush();
 		closedir($dirHnd);
 	}else{
 		echo("Could not open themes directory<br/>");
@@ -79,27 +88,31 @@ if (is_dir($themeDir)){
 
 echo("Finished<br/>");
 
-function consolidateFiles($info, $themes){
+function consolidateFiles($info, $themes, $minify){
 	$info = doInheritance($info, $themes);
 	//print_r($info);
-	
+
 	//merge css files
 	$fileGeneratedFile = $info['path'] . 'css/consolidated.min.css';
 	$fileGeneratedFileHnd = fopen($fileGeneratedFile, 'w');
 	foreach ($info['settings']['css'] as $filename => $scope){
-		//Load contents from the search file 
+		//Load contents from the search file
 		$fileContents = loadCss($filename, $info['searchPaths']);
 		if ($fileContents != null){
 			fwrite($fileGeneratedFileHnd, "/* $filename */\r\n");
 			//minify the css
-			$minifiedCss = Minify_CSS::minify($fileContents, array());
+			if ($minify){
+				$minifiedCss = Minify_CSS::minify($fileContents, array());
+			}else{
+				$minifiedCss = $fileContents;
+			}
 			fwrite($fileGeneratedFileHnd, "$minifiedCss\r\n");
+		}else{
+			echo("Could not find file $filename");
 		}
 	}
 	fclose($fileGeneratedFileHnd);
-	
-	
-	
+
 	//merge javascript files
 	$fileGeneratedFile = $info['path'] . 'js/consolidated.min.js';
 	if (!file_exists($info['path'] . 'js')){
@@ -108,13 +121,19 @@ function consolidateFiles($info, $themes){
 	$fileGeneratedFileHnd = fopen($fileGeneratedFile, 'w');
 	foreach ($info['settings']['javascript'] as $filename => $scope){
 		//echo("Consolidating  $filename<br/>");
-		//Load contents from the search file 
+		//Load contents from the search file
 		$fileContents = loadJavascript($filename, $info['searchPaths']);
 		if ($fileContents != null){
 			fwrite($fileGeneratedFileHnd, "/* $filename */\r\n");
 			//minify the javascript
-			$minifiedJs = JSMin::minify($fileContents);
+			if ($minify){
+				$minifiedJs = JSMin::minify($fileContents);
+			}else{
+				$minifiedJs = $fileContents;
+			}
 			fwrite($fileGeneratedFileHnd, "$minifiedJs\r\n");
+		}else{
+			echo("Could not find file $filename");
 		}
 	}
 	fclose($fileGeneratedFileHnd);
