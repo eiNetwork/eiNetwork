@@ -298,9 +298,15 @@ function GetHoldingsInfo(id) {
 			var SummaryDetails = $(data).find("class").text();
 			//alert(SummaryDetails);
 			if(SummaryDetails =="here"){
-				$("#request-now .action-lable-span").text("It's Here");
-				document.getElementById("request-now").disabled='true';
-				document.getElementById("request-now").setAttribute("onclick","");
+				var shortId=id.replace(".","");
+				$("#request-now"+shortId).css('background-color','rgb(192,192,192)');
+				$("#request-now"+shortId).css('background-color','rgb(192,192,192)');
+				$("#request-now"+shortId).css("color","rgb(248,248,248)");
+				$("#request-now"+shortId+" .action-lable-span").text("It's Here");
+				$("#request-now"+shortId).css("cursor","default");
+				//$("#request-now .action-lable-span").css('background-color','rgb(192,192,192)').text("It's Here")
+				//document.getElementById("request-now").disabled='true';
+				document.getElementById("request-now"+shortId).setAttribute("onclick","");
 			}
 		}
 	});

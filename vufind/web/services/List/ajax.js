@@ -199,14 +199,31 @@ function doGetStatusSummaries()
 						}
 					}
 					// Disable Request Now if local copy is available
+					var SummaryDetails = items[i].status;
 					//var SummaryDetails = $(data).find("status").text();
 					//var SummaryDetails = "Hi There";
 					//alert(SummaryDetails);
-					//if(SummaryDetails =="here"){
-					//	$("#request-now .action-lable-span").text("It's Here");
-					//	document.getElementById("request-now").disabled='true';
-					//	document.getElementById("request-now").setAttribute("onclick","");
-					//}
+					//alert(elemId +"    " + SummaryDetails);
+					if(SummaryDetails =="It's here"){
+						$("#request-now"+elemId).css('background-color','rgb(192,192,192)');
+						$("#request-now"+elemId).css("color","rgb(248,248,248)");
+						$("#request-now"+elemId+" .resultAction_span").text("It's Here");
+						$("#request-now"+elemId).css("cursor","default");
+						$("#request-now"+elemId).addClass("it-is-here");
+						if($("#selected."+elemId)!=null){
+							
+							$("#selected."+elemId).addClass("here");
+							//alert("#selected."+elemId);
+						}
+				//$("#request-now .action-lable-span").css('background-color','rgb(192,192,192)').text("It's Here")
+				//document.getElementById("request-now").disabled='true';
+				document.getElementById("request-now"+elemId).setAttribute("onclick","");
+				
+					//	alert("Here")
+					//$("#request-now .resultAction_span" + elemId).text("It's Here");
+					//document.getElementById("request-now").disabled='true';
+					//document.getElementById("request-now").setAttribute("onclick","");
+					}
 
 				}catch (err){
 					//alert("Unexpected error " + err);

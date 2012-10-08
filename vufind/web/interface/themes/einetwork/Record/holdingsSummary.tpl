@@ -4,7 +4,7 @@
 		{if $holdingsSummary.callnumber}
 			<div class='callNumber'>
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-				It's here <a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
+				It's here<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
 			</div>
 		{elseif $holdingsSummary.isDownloadable}
 			<div><span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>

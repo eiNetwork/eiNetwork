@@ -37,31 +37,16 @@
 		
 	</div>
 	{/if}
-      {* End Listing Options *}
-
-      {if $subpage}
-        {include file=$subpage}
-      {else}
-        {$pageContent}
-      {/if}
-
-      {if $prospectorNumTitlesToLoad > 0}
-        <script type="text/javascript">getProspectorResults({$prospectorNumTitlesToLoad}, {$prospectorSavedSearchId});</script>
-      {/if}
-      {* Prospector Results *}
-      <div id='prospectorSearchResultsPlaceholder'></div>
-        
-      {if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
-      {if $pageType eq 'BookCart'}
+	{if $pageType eq 'BookCart'}
 	<form name='placeHoldForm' id='placeHoldForm' action="{$url}/MyResearch/HoldMultiple" method="post">
-		<div>
+	<div>
 			{if $holdDisclaimer}
 				<div id="holdDisclaimer">{$holdDisclaimer}</div>
 			{/if}
 			
-	    <div id="loginFormWrapper">
+	    <div id="loginFormWrapper" style="border-bottom-color: rgb(238,238,238);border-bottom-style: solid;border-bottom-width: 1px;padding-bottom: 10px;">
 		  {foreach from=$ids item=id}
-		     <input type="hidden" name="selected[{$id|escape:url}]" value="on" />
+		     <input type="hidden" name="selected[{$id|escape:url}]" value="on" id="selected{$id|escape:url}" class="selected"/>
 		  {/foreach}
 		{if (!isset($profile)) }
 			<div id ='loginUsernameRow' class='loginFormRow'>
@@ -80,7 +65,7 @@
 	        <div class='loginFormRow'>
 			<div style="margin-top:15px;padding-left:35px;margin-bottom:15px"> <span style="margin-right:15px;font-size:15px"class='loginLabel'>{translate text="Pickup Location"}: </span>
 			 <span class='loginField'>
-			 <select name="campus" id="campus" style="width:340px">
+			 <select name="campus" id="campus" style="width:260px">
 			   {if count($pickupLocations) > 0}
 			     {foreach from=$pickupLocations item=location}
 			       <option value="{$location->code}" {if $location->selected == "selected"}selected="selected"{/if}>{$location->displayName}</option>
@@ -89,6 +74,9 @@
 			     <option>placeholder</option>
 			   {/if}
 			 </select>
+			 </span>
+			 <span>
+				<input type="button" onclick="requestAllItems('{$wishListID}')" class="button" style="margin-top: 0px;float:right;width:130px;background-color:rgb(244,213,56)" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
 			 </span>
 			 {if $showHoldCancelDate == 1}
 			       <div id='cancelHoldDate'><b>{translate text="Automatically cancel this hold if not filled by"}:</b>
@@ -104,14 +92,28 @@
 			</div>
 			<div class='loginFormRow'>
 			<input type="hidden" name="holdType" value="hold"/>
-			<input type="submit"  class="button" style="float:right;width:130px;background-color:rgb(244,213,56)" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
 			</div>
 		{/if}
 	      </div>
 	      </div>
-			</div>
+	</div>
 	</form>
 	{/if}
+      {* End Listing Options *}
+
+      {if $subpage}
+        {include file=$subpage}
+      {else}
+        {$pageContent}
+      {/if}
+
+      {if $prospectorNumTitlesToLoad > 0}
+        <script type="text/javascript">getProspectorResults({$prospectorNumTitlesToLoad}, {$prospectorSavedSearchId});</script>
+      {/if}
+      {* Prospector Results *}
+      <div id='prospectorSearchResultsPlaceholder'></div>
+        
+      {if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
       <b class="bbot"><b></b></b>
     </div>
     {* End Main Listing *}

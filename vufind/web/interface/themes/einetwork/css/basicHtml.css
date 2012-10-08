@@ -111,10 +111,19 @@ li{
     width: 180px;
     height: 30px;
 }
-
 .text:focus{
     box-shadow: 0px 1px 2px;
     color: rgb(0,0,0);
+}
+.password2{
+    position: relative;	
+    border-radius: 5px;
+    padding: 1px 10px 1px 10px;
+    margin: 0px 0px 5px;
+    border-style: solid;
+    border-width: 1px;
+    width: 180px;
+    height: 30px;
 }
 /*****END input text style*****/
 

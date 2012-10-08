@@ -71,8 +71,8 @@ class HoldMultiple extends Action
 		$interface->assign('ids', $ids);
 		
 		$hold_message_data = array(
-          'successful' => 'all',
-          'titles' => array()
+			'successful' => 'all',
+			'titles' => array()
 		);
 
 		if (isset($_REQUEST['autologout'])){
@@ -104,7 +104,6 @@ class HoldMultiple extends Action
 							require_once('Drivers/EContentDriver.php');
 							$eContentDriver = new EContentDriver();
 						}
-						
 						$return = $eContentDriver->placeHold($recordId, $user);
 					} else {
 						$return = $this->catalog->placeHold($recordId, $user->password, '', $_REQUEST['holdType']);
@@ -112,8 +111,10 @@ class HoldMultiple extends Action
 					$hold_message_data['titles'][] = $return;
 					if (!$return['result']){
 						$hold_message_data['successful'] = 'partial';
+						
 					}else{
 						$atLeast1Successful = true;
+						$successItems[i] = $recordId;
 					}
 					//Check to see if there are item level holds that need follow-up by the user
 					if (isset($return['items'])){
@@ -150,6 +151,23 @@ class HoldMultiple extends Action
 		}
 		$class = $configArray['Index']['engine'];
 		$db = new $class($configArray['Index']['url']);
+		header('Content-type: text/plain');
+		header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		$interface->assign("hold_message_data",$hold_message_data);
+		$re = array();
+		$re['page'] = $interface->fetch("MyResearch/ajax-multiholdsReturn.tpl");
+		$ava = array();
+		$i= 0;
+		foreach ($hold_message_data['titles'] as $title){
+			if($title['result']){
+				$ava[$i] =$title['bid'];
+				$i++;
+			}
+		}
+		$re['avaiblity'] = $ava;
+		echo json_encode($re);
+		return null;
 		if ($showMessage) {
 			$_SESSION['hold_message'] = $hold_message_data;
 			if (isset($_SESSION['hold_referrer'])){

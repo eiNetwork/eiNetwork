@@ -23,7 +23,7 @@
 					</div>
 				</div>
 				<div id ='loginPasswordConfirmRow' class='loginFormRow' style="display:none">
-					<div class='loginLabel'>{translate text='Confirm pin #'}: </div>
+					<div class='loginLabel'>{translate text='Confirm pin #'} </div>
 					<div class='loginField'>
 						<input type="password" name="password2" id="password2" size="28"/>
 					</div>

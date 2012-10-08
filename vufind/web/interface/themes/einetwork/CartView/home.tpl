@@ -34,6 +34,7 @@
 				</div>
 				<div id="password">
 					<input id="pin" class="loginFormInput" type="text" title="4 digits PIN number" size="15"/>
+					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
 				</div>
 				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">
 					Login

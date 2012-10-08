@@ -182,6 +182,72 @@ class EINetwork extends MillenniumDriver{
 		}
 
 	}
+/**
+	 * Reset pin
+	 * 
+	 * @see Drivers/Millennium::patronPinreset()
+	 */
+	public function patronPinreset()
+	{
+		global $configArray;
+		global $memcache;
+		global $timer;
+		
+		if (isset($_REQUEST['barcode']) && strlen($_REQUEST['barcode']) > 0){
+			//User has entered a barcode and requested a pin reset
+			$header=array();
+			$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+			$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+			$header[] = "Cache-Control: max-age=0";
+			$header[] = "Connection: keep-alive";
+			$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+			$header[] = "Accept-Language: en-us,en;q=0.5";
+			$cookie = tempnam ("/tmp", "CURLCOOKIE");
+			
+			$curl_connection = curl_init();
+			curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl_connection, CURLOPT_HTTPHEADER, $header);
+			curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+			curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+			curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookie);
+			curl_setopt($curl_connection, CURLOPT_COOKIESESSION, true);
+			curl_setopt($curl_connection, CURLOPT_FORBID_REUSE, false);
+			curl_setopt($curl_connection, CURLOPT_HEADER, false);
+			
+			//Go to the pin reset page
+			$curl_url = $configArray['Catalog']['url'] . "/pinreset";
+			curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+			curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
+			$sresult = curl_exec($curl_connection);
+			
+			$curl_url = $configArray['Catalog']['url'] . "/pinreset";
+			curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+			
+			//Post the barcode to request a PIN reset email
+			$barcode = $_REQUEST['barcode'];
+			$post_data = array();
+			$post_data['submit.x']="35";
+			$post_data['submit.y']="21";
+			$post_data['code']= $barcode;
+			curl_setopt($curl_connection, CURLOPT_POST, true);
+			curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+			foreach ($post_data as $key => $value) {
+				$post_items[] = $key . '=' . $value;
+			}
+			$post_string = implode ('&', $post_items);
+			curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+			$sresult = curl_exec($curl_connection);
+			if (!preg_match('/A message has been sent./i', $sresult)){
+				//PEAR::raiseError('Unable to request PIN reset for this barcode');
+				return false;
+			}
+			else {return true;}
+			unlink($cookie);
+		}
+	}
 	
 	protected function _getLoginFormValues($patronInfo, $admin = false){
 		global $user;

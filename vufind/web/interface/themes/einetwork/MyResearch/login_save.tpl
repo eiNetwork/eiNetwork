@@ -132,6 +132,8 @@
 {/literal}
 	<div class="loginHome-left"></div>
 	<div class="loginHome-center">
+		
+		
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
@@ -146,8 +148,16 @@
 				<div id="password">
 					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" />
 					<div id="pinError">&nbsp;</div>
-					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
+					<div class="login"><a href="#" id="noPin" onclick="$('#loginPasswordConfirmRow').toggle();return false;">({translate text="I don't have a pin yet"})</a> </div>
 				</div>
+				<div id ='loginPasswordConfirmRow' style="display:none">
+					<div class='loginLabel'>{translate text='Enter new PIN above and confirm here'} </div>
+					<div class='loginField'><input type="password" name="password2" id="password2" size="28"/></div>
+				</div>
+				<!--<div id ='loginPasswordConfirmRow' style="display:none">-->
+				<!--	<input id="password2" class="text" type = "text" name="password2" title="Set PIN above, confirm here"/>-->
+				<!--</div>-->
+
 				<div>
 					<input class="button" type="submit" name="submit" value="Login" alt='{translate text="Login"}' />
 				</div>

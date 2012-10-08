@@ -453,43 +453,31 @@ public class BasicMarcInfo {
 			if (eightFiftySixDataField.getSubfield('u') != null){
 				url = eightFiftySixDataField.getSubfield('u').getData();
 			}
-			// get the link text information from subfield y, z, or 3
 			String text = null;
-			String textsubfield = " ";
 			if (eightFiftySixDataField.getSubfield('y') != null){
 				text = eightFiftySixDataField.getSubfield('y').getData();
-				textsubfield = "y";
 			}else if (eightFiftySixDataField.getSubfield('z') != null){
 				text = eightFiftySixDataField.getSubfield('z').getData();
-				textsubfield = "z";
 			}else if (eightFiftySixDataField.getSubfield('3') != null){
 				text = eightFiftySixDataField.getSubfield('3').getData();
-				textsubfield = "3";
 			}
-			// get the second indicator information
-			String ind2 = " "
-			if (eightFiftySixDataField.getIndicator2() != null) {
-				ind2 = eightFiftySixDataField.getIndicator2();
-			}
-			// The second indicator is used to designate whether the accompanying 856 link is
-			// blank = no information provided
-			// 0 - primary link for resource
-			// 1 - version of resource
-			// 2 - related resource
-			}
-			if (text != null && url != null) {
-				boolean isSourceUrl = false;
-				// If the indicator indicates a primrary resource, use this link for the 856
-				if (ind2 == "0" || ind2 == "1"){
-					logger.info("Found source url based on indicator");
-					isSourceUrl = true;
-				} else (if ind2 == " " && subfieldtext == "z")
-					logger.info("Found source url based on subfield");
-					isSourceUrl = true;
-				} else if (url.matches("(?i).*?(idm.oclc.org/login|ezproxy).*?")) {
-					isSourceUrl = true;
-				} else {
+			
+			if (text != null && url != null){
+				if (text.matches("(?i).*?(?:download|access online|electronic book|access digital media|access title).*?")  ){
+					if (!url.matches("(?i).*?vufind.*?")){
+						//System.out.println("Found source url");
+						sourceUrl = url;
+					}
+				}else if (text.matches("(?i).*?(?:cover|review).*?")){
+					//File is an enrichment url
+				}else if (text.matches("(?i).*?purchase.*?")){
+					//System.out.println("Found purchase URL");
+					purchaseUrl = url;
+				}else if (url.matches("(?i).*?(idm.oclc.org/login|ezproxy).*?")){
+					sourceUrl = url;
+				}else{
 					logger.info("Unknown URL " + url + " " + text);
+					
 				}
 			}
 		}

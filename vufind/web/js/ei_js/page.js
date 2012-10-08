@@ -21,7 +21,6 @@ function goToLink(url){
 }
 
 function getSaveToBookCart(id, source,obj){
-	//alert($(obj).find(".resultAction_span").attr('class'));
 	if (loggedIn){
 		//var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
 		//ajaxLightbox(url);
@@ -130,10 +129,10 @@ function getWishList(){
 
 function getCheckedOutItem(){
     if (loggedIn){	
-                window.location.href = 'href=/MyResearch/CheckedOut'
+                window.location.href = '/MyResearch/CheckedOut'
 	}else{
 		ajaxLogin(function (){
-			window.location.href ='href=/MyResearch/CheckedOut'
+			window.location.href ='/MyResearch/CheckedOut'
 		});
 	}
 	return false;
@@ -141,10 +140,10 @@ function getCheckedOutItem(){
 
 function getRequestedItem(){
     if (loggedIn){	
-                window.location.href = 'href=/MyResearch/Holds'
+                window.location.href = '/MyResearch/Holds'
 	}else{
 		ajaxLogin(function (){
-			window.location.href ='href=/MyResearch/Holds'
+			window.location.href ='/MyResearch/Holds'
 		});
 	}
 	return false;
@@ -152,10 +151,10 @@ function getRequestedItem(){
 
 function getReadingHistory(){
     if (loggedIn){	
-                window.location.href = 'href=/MyResearch/ReadingHistory'
+                window.location.href = '/MyResearch/ReadingHistory'
 	}else{
 		ajaxLogin(function (){
-			window.location.href ='href=/MyResearch/ReadingHistory'
+			window.location.href ='/MyResearch/ReadingHistory'
 		});
 	}
 	return false;
@@ -290,6 +289,9 @@ function getBookCartItemCount(){
                     if(data['unavailable'] == 'yes'){
                         $("#cart-descrpiion").html("&nbsp;&nbsp; Your book cart is empty ");
                     }
+		    if(data["count"]==null){
+			
+		    }
 		    
 		},
 		error: function() {
@@ -441,4 +443,32 @@ function renewItem(url){
 			setTimeout("hideLightbox();", 3000);
 		}
 	});
+}
+
+function requestAllItems(listId){
+    var send = "";
+    send = "holdType=hold&campus="+$("#campus").val();
+    $.each($(".resultsList"),function (){
+    	var pid = this.getAttribute("id");
+	id = pid.replace("record",".");
+	var temp = pid.replace("record","");	
+	if(!$("#request-now"+temp).hasClass("it-is-here")){
+	    send = send+"&selected["+id+"]=on";
+	    //requestItem(id,listId);
+	}
+    })
+    var url = "/MyResearch/HoldMultiple";
+    $.ajax({
+            type:'post',
+            url:url,
+            dataType:"json",
+            data:send,
+            success:function(data){
+	        newShowElementInLightbox("Request result",data['page'],false,false,'450px','500px');
+		for(var i = 0;i<data['avaiblity'].length;i++){
+		    deleteItemInList(data['avaiblity'][i],'VuFind');
+		}
+	    }
+	    
+        })
 }

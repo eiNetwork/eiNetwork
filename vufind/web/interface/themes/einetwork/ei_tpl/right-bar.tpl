@@ -16,11 +16,11 @@
             <a onclick='getWishList()'>Wish Lists</a>
         </div>
 	 <div id="my-item">
-            <a onclick='getCheckedOutItem()'>Checked Out Items {if $profile.numCheckedOut} ({$profile.numCheckedOut}){/if}</a>
+            <a onclick='getCheckedOutItem()'>Checked Out Items <span id="my-item-PlaceHolder"></span></a>
         </div>
 	<div id="my-request">
-          <a onclick='getRequestedItem()' >Requested Items{if $profile.numHoldsAvailable} ({$profile.numHoldsAvailable+$profile.numHoldsRequested}){/if}</a>
-        </div>
+          <a onclick='getRequestedItem()' >Requested Items<span id="my-ruest-item-placeHolder"></span></a>
+	</div>
 	<div id="reading-history">
             <a onclick='getReadingHistory()' >Reading History</a>
         </div>
@@ -31,7 +31,25 @@
             <a onclick='getAccountSetting()'>Account Settings</a>
         </div>
     </div>
-    
+    {literal}
+	<script type="text/javascript">
+	    $("#my-item-PlaceHolder").ready(function(){
+		$.getJSON(path + '/MyResearch/AJAX?method=getAllItems', function (data){
+		    if (data.error){
+		    }else{
+			if(data.SumOfCheckoutItems != 0){
+			    $("#my-item-PlaceHolder").text("("+data.SumOfCheckoutItems+")");
+			}
+			if(data.SumOfRequestItems != 0){
+			    $("#my-ruest-item-placeHolder").text(" ("+data.SumOfRequestItems+")");
+			}
+		    }
+		}
+		)
+	    }
+	);
+	</script>
+    {/literal}
     
     <div class="separator"><hr/></div>
     
@@ -39,9 +57,10 @@
         <div id="description">
             Your Preferred Branches
         </div>
-         <a href="/MyResearch/Profile">
+         {*}<a href="/MyResearch/Profile">
 	      <input id="edit-button" class="button" value="Edit"/>
-	</a>
+	</a>{*}
+	<input id="edit-button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
     </div>
     {literal}
     <script type="text/javascript">
@@ -54,7 +73,6 @@
 		    $("#prefer-branch").html(data);
 		},
 		error: function() {
-		    alert("ddd");
 			$('#popupbox').html(failMsg);
 			setTimeout("hideLightbox();", 3000);
 		}

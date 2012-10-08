@@ -1,8 +1,7 @@
 <div id="page-content" class="content">
 {literal}
 <script type="text/javascript">
-	$(document).ready(function() {
-		
+	$(document).ready(function(){
 		$('#phone').blur(function(){
 			var phone=$(this).val(),
 			    phoneReg=/^[2-9]\d{9}$/;
@@ -20,7 +19,7 @@
 			var email=$('input[name="email"]').val(),
 		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 			if(!emailReg.test(email)||email==''){
-				$('#emailError').text("*please enter a vaild phone number");
+				$('#emailError').text("*please enter a vaild email address");
 				emailValid=false;
 				return false;
 			}else{
@@ -29,10 +28,21 @@
 		});
 		
 	});
+	function checkWhenSubmit(){
+		var phone=$('input[name="phone"]').val(),
+		phoneReg=/^[2-9]\d{9}$/;
+		var email=$('input[name="email"]').val(),
+		emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		if(!phoneReg.test(phone)||!emailReg.test(email)||email==''){
+			return false;
+		}else{
+			return true;
+		}
+	}
 
 </script>
 {/literal}
-	
+	 
 	<div id="left-bar">
 		<div class="account_balance">
 			<div>Account Balance</div>
@@ -55,7 +65,7 @@
 		<div class="error">{$profileUpdateErrors}</div>
 		{/if}
 		{if $user->cat_username}
-		<form id="profileForm" action="" method="post">
+		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
 		<div id="info">Information</div>
 			{if $canUpdate}
 				{if $edit == true}

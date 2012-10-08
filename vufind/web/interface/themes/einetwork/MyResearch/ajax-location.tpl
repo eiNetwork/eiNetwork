@@ -13,8 +13,26 @@
         {/if}
     </div>
     <div>
-        <a href="/MyResearch/Profile">
-          <input id="edit-button" class="button" value="Edit" style="margin-left:0px;margin-top:5px"/>
-        </a>
+        <input id="edit-button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
     </div>
-</div>	
+</div>
+{literal}
+    <script type="text/javascript">
+        function getToUpdatePreferredBranches(){
+             $.ajax({
+                type: 'post',
+                url: "/MyResearch/AJAX?method=getToUpdatePreferredBranches",
+                dataType: "html",
+                data: '',
+                success: function(data) {
+                    //alert(data);
+                    $("#prefer-branch").html(data);
+                },
+                error: function() {
+                        $('#popupbox').html(failMsg);
+                        setTimeout("hideLightbox();", 3000);
+                }
+            });
+        }
+    </script>
+{/literal}

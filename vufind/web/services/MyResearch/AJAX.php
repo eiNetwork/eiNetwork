@@ -37,12 +37,12 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_GET['method'];
-		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary', 'AddList'))){
+		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
-		}else if (in_array($method, array('LoginForm', 'getBulkAddToListForm', 'getPinUpdateForm','getLocations'))){
+		}else if (in_array($method, array('LoginForm', 'getBulkAddToListForm', 'getPinUpdateForm','getLocations','getToUpdatePreferredBranches'))){
 			header('Content-type: text/html');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -94,6 +94,139 @@ class AJAX extends Action {
 	 *
 	 * @return string XML representing the pickup branches.
 	 */
+	function updatePreferredBranches(){
+		require_once 'Drivers/marmot_inc/Location.php';
+		global $configArray;
+		global $interface;
+		global $user;
+		if (!UserAccount::isLoggedIn()) {
+			require_once 'Login.php';
+			Login::launch();
+			exit();
+		}
+		try {
+			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
+		} catch (PDOException $e) {
+			// What should we do with this error?
+			if ($configArray['System']['debug']) {
+				echo '<pre>';
+				echo 'DEBUG: ' . $e->getMessage();
+				echo '</pre>';
+			}
+		}
+		$result = $catalog->updatePatronInfo($user->cat_password);
+		return "OK";
+	}
+	function getToUpdatePreferredBranches(){
+		require_once 'Drivers/marmot_inc/Location.php';
+		global $configArray;
+		global $interface;
+		global $user;
+		
+		if (!UserAccount::isLoggedIn()) {
+			require_once 'Login.php';
+			Login::launch();
+			exit();
+		}
+		$interface->assign('page_body_style', 'sidebar_left');
+		$interface->assign('ils', $configArray['Catalog']['ils']);
+		//$interface->assign('userNoticeFile', 'MyResearch/listNotice.tpl');
+
+		// Setup Search Engine Connection
+		$class = $configArray['Index']['engine'];
+		$this->db = new $class($configArray['Index']['url']);
+		if ($configArray['System']['debugSolr']) {
+			$this->db->debug = true;
+		}
+
+		// Connect to Database
+		$this->catalog = new CatalogConnection($configArray['Catalog']['driver']);
+
+		// Register Library Catalog Account
+		if (isset($_POST['submit']) && !empty($_POST['submit'])) {
+			if ($this->catalog && isset($_POST['cat_username']) && isset($_POST['cat_password'])) {
+				$result = $this->catalog->patronLogin($_POST['cat_username'], $_POST['cat_password']);
+				if ($result && !PEAR::isError($result)) {
+					$user->cat_username = $_POST['cat_username'];
+					$user->cat_password = $_POST['cat_password'];
+					$user->update();
+					UserAccount::updateSession($user);
+					$interface->assign('user', $user);
+				} else {
+					$interface->assign('loginError', 'Invalid Patron Login');
+				}
+			}
+		}
+		if ($user !== false){
+			$interface->assign('user', $user);
+			// Get My Profile
+			if ($this->catalog->status) {
+				if ($user->cat_username) {
+					$patron = $this->catalog->patronLogin($user->cat_username, $user->cat_password);
+					if (PEAR::isError($patron)){
+						PEAR::raiseError($patron);
+					}
+					$profile = $this->catalog->getMyProfile($patron);
+					//$logger = new Logger();
+					//$logger->log("Patron profile phone number in MyResearch = " . $profile['phone'], PEAR_LOG_INFO);
+					if (!PEAR::isError($profile)) {
+						$interface->assign('profile', $profile);
+					}
+				}
+			}
+			//Figure out if we should show a link to classic opac to pay holds.
+			$ecommerceLink = $configArray['Site']['ecommerceLink'];
+			$homeLibrary = Library::getLibraryForLocation($user->homeLocationId);
+			if (strlen($ecommerceLink) > 0 && isset($homeLibrary) && $homeLibrary->showEcommerceLink == 1){
+				$interface->assign('showEcommerceLink', true);
+				$interface->assign('minimumFineAmount', $homeLibrary->minimumFineAmount);
+				$interface->assign('ecommerceLink', $ecommerceLink);
+			}else{
+				$interface->assign('showEcommerceLink', false);
+				$interface->assign('minimumFineAmount', 0);
+			}
+		}
+		//echo isset($catalog);
+		$interface->assign('edit', true);
+		if (isset($_SESSION['profileUpdateErrors'])){
+			$interface->assign('profileUpdateErrors', $_SESSION['profileUpdateErrors']);
+			unset($_SESSION['profileUpdateErrors']);
+		}
+		global $librarySingleton;
+		$activeLibrary = $librarySingleton->getActiveLibrary();
+		if ($activeLibrary == null || $activeLibrary->allowProfileUpdates){
+			$interface->assign('canUpdate', true);
+		}else{
+			$interface->assign('canUpdate', false);
+		}
+		
+		//Get the list of locations for display in the user interface.
+		global $locationSingleton;
+		$locationSingleton->whereAdd("validHoldPickupBranch = 1");
+		$locationSingleton->find();
+
+		$locationList = array();
+		while ($locationSingleton->fetch()) {
+			$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
+		}
+		$interface->assign('locationList', $locationList);
+		/*if ($this->catalog->checkFunction('isUserStaff')){
+			$userIsStaff = $this->catalog->isUserStaff();
+			$interface->assign('userIsStaff', $userIsStaff);
+		}else{
+			$interface->assign('userIsStaff', false);
+		}*/
+		
+		foreach($user as $key=>$value){
+			//echo $key.'=>'.$value.'</br>';
+			if($key == 'cat_username')
+			{
+				$interface->assign('card_number',$value);
+			}
+		}
+		$return = $interface->fetch("MyResearch/updatePreferredBranches.tpl");
+		echo $return;
+	}
 	function GetPreferredBranches()
 	{
 		require_once 'Drivers/marmot_inc/Location.php';
@@ -273,6 +406,45 @@ class AJAX extends Action {
 		}else{
 			return array('error' => 'There is no user currently logged in.');
 		}
+	}
+	function getAllItems(){
+		global $interface;
+		global $configArray;
+		global $user;
+		$catalog = new CatalogConnection($configArray['Catalog']['driver']);
+		if ($user !== false){
+			$interface->assign('user', $user);
+			// Get My Profile
+			if ($catalog->status) {
+				if ($user->cat_username) {
+					$patron = $catalog->patronLogin($user->cat_username, $user->cat_password);
+					if (PEAR::isError($patron)){
+						PEAR::raiseError($patron);
+					}
+					$profile = $catalog->getMyProfile($patron);
+					//$logger = new Logger();
+					//$logger->log("Patron profile phone number in MyResearch = " . $profile['phone'], PEAR_LOG_INFO);
+					if (!PEAR::isError($profile)) {
+						$interface->assign('profile', $profile);
+					}
+				}
+			}
+			$sum;
+			$sumOfCheckoutItems = $profile["numEContentCheckedOut"] + $profile["numCheckedOut"];
+			$sumOfRequestItems = $profile["numHoldsAvailable"]+$profile["numHoldsRequested"]+$profile["numEContentUnavailableHolds"]+$profile["numEContentWishList"];
+			require_once 'Drivers/OverDriveDriver.php';
+			$overDriveDriver = new OverDriveDriver();
+			$summary = $overDriveDriver->getOverDriveSummary($user);
+			$sumOfCheckoutItems += $summary["numCheckedOut"];
+			$sumOfRequestItems = $sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"];
+			$sum["SumOfCheckoutItems"] = $sumOfCheckoutItems;
+			$sum["SumOfRequestItems"] = $sumOfRequestItems;
+			return json_encode($sum);
+		}else{
+			return array('error' => 'There is no user currently logged in.');
+		}
+
+		
 	}
 	
 	function LoginForm(){

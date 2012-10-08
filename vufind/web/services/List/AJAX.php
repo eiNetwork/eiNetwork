@@ -975,6 +975,12 @@ class AJAX extends Action {
 					$bookCartId = $tempId;
 				}
 			}
+			if($bookCartId==null){
+				$return;
+				$return['unavailable'] = 'yes';
+				echo json_encode($return);
+				return;
+			}
 			$bookCart = User_list::staticGet($bookCartId);
 			$bookCartItems = $bookCart->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 			$return;

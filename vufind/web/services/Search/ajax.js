@@ -254,7 +254,7 @@ function doGetStatusSummaries()
 						$("#RequestWord"+elemId).text("Checkout Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
 						if(document.getElementById("selected"+elemId)){
-							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");	
+							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
 						}
 					}else if(sta == "Checked out in OverDrive"){
 						$("#RequestWord"+elemId).text("Request Now");

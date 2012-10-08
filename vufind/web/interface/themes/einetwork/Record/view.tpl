@@ -65,7 +65,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
 						<span class="action-lable-span">Add to Cart</span>
 					</div>
-					<div class="round-rectangle-button" id="request-now" onclick="window.location.href='{$path}/Record/{$id|escape:'url'}/Hold'">
+					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$path}/Record/{$id|escape:'url'}/Hold'">
 						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
 						<span class="action-lable-span">Request Now</span>
 					</div>
