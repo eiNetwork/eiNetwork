@@ -43,14 +43,22 @@ class OverdriveCheckedOut extends MyResearch {
 			}
 			$overDriveCheckedOutItems['items'][$key] = $item;
 		}
+		$sortOptions = array(
+				'title' => 'Title',
+				'author' => 'Author',
+				'format' => 'Format',
+				);
+		$interface->assign('sortOptions', $sortOptions);
+		$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title';
+		$interface->assign('defaultSortOption', $selectedSortOption);
+		
 		$interface->assign('overDriveCheckedOutItems', $overDriveCheckedOutItems['items']);
-	
 		$interface->assign('ButtonBack',true);
 		$interface->assign('ButtonHome',true);
 		$interface->assign('MobileTitle','OverDrive Checked Out Items');
 		
-		
-		$interface->setTemplate('overDriveCheckedOut.tpl');
+		$interface->setTemplate('holds.tpl');
+		//$interface->setTemplate('overDriveCheckedOut.tpl');
 		$interface->setPageTitle('OverDrive Checked Out Items');
 		$interface->display('layout.tpl');
 	}

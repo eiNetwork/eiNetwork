@@ -38,7 +38,6 @@ class Results extends Action {
 		global $user;
 
 		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
-
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
@@ -94,14 +93,15 @@ class Results extends Action {
 				exit;
 			}
 		}
-
+		
+		
 		$rangeFilters = array('lexile_score', 'accelerated_reader_reading_level', 'accelerated_reader_point_value');
 		foreach ($rangeFilters as $filter){
-			if ((isset($_REQUEST[$filter . 'from']) && strlen($_REQUEST[$filter . 'from']) > 0) || (isset($_REQUEST[$filter . 'to']) && strlen($_REQUEST[$filter . 'to']) > 0)){
+			if (isset($_REQUEST[$filter . 'from']) || isset($_REQUEST[$filter . 'to'])){
 				$queryParams = $_GET;
 				$from = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'from']) ? $_REQUEST[$filter . 'from'] : '*';
 				$to = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'to']) ? $_REQUEST[$filter . 'to'] : '*';
-
+				
 				if ($to != '*' && $from != '*' && $to < $from){
 					$tmpFilter = $to;
 					$to = $from;
@@ -159,14 +159,14 @@ class Results extends Action {
 		}
 
 		// Set Interface Variables
-		//   Those we can construct BEFORE the search is executed
+		// Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
 		$interface->assign('sortList',   $searchObject->getSortList());
 		$interface->assign('rssLink',    $searchObject->getRSSUrl());
 		$interface->assign('excelLink',  $searchObject->getExcelUrl());
 
 		$timer->logTime('Setup Search');
-
+		
 		// Process Search
 		$result = $searchObject->processSearch(true, true);
 		if (PEAR::isError($result)) {
@@ -207,68 +207,37 @@ class Results extends Action {
 		global $library;
 		global $locationSingleton;
 		$location = $locationSingleton->getActiveLocation();
-		$showHoldButton = 1;
-		$showHoldButtonInSearchResults = 1;
 		if (isset($library) && $location != null){
 			$interface->assign('showFavorites', $library->showFavorites);
-			$interface->assign('showComments', $library->showComments);
-			$showHoldButton = (($location->showHoldButton == 1) && ($library->showHoldButton == 1)) ? 1 : 0;
-			$showHoldButtonInSearchResults = (($location->showHoldButton == 1) && ($library->showHoldButtonInSearchResults == 1)) ? 1 : 0;
+			$interface->assign('showHoldButton', (($location->showHoldButton == 1) && ($library->showHoldButton == 1)) ? 1 : 0);
 		}else if ($location != null){
 			$interface->assign('showFavorites', 1);
-			$showHoldButton = $location->showHoldButton;
+			$interface->assign('showHoldButton', $location->showHoldButton);
 		}else if (isset($library)){
 			$interface->assign('showFavorites', $library->showFavorites);
-			$showHoldButton = $library->showHoldButton;
-			$showHoldButtonInSearchResults = $library->showHoldButtonInSearchResults;
-			$interface->assign('showComments', $library->showComments);
+			$interface->assign('showHoldButton', $library->showHoldButton);
 		}else{
 			$interface->assign('showFavorites', 1);
-			$interface->assign('showComments', 1);
+			$interface->assign('showHoldButton', 1);
 		}
-		if ($showHoldButton == 0){
-			$showHoldButtonInSearchResults = 0;
-		}
-		$interface->assign('showHoldButton', $showHoldButtonInSearchResults);
 		$interface->assign('page_body_style', 'sidebar_left');
-
-		//Check to see if we should show unscoped results
-		$enableUnscopedSearch = false;
-		$searchLibrary = Library::getSearchLibrary();
-		if ($searchLibrary != null){
-			$searchSources = new SearchSources();
-			$searchOptions = $searchSources->getSearchSources();
-			if (isset($searchOptions['marmot']) && $searchLibrary->showMarmotResultsAtEndOfSearch){
-				$unscopedSearch = clone($searchObject);
-				$enableUnscopedSearch = true;
-			}
-		}
 
 		$enableProspectorIntegration = isset($configArray['Content']['Prospector']) ? $configArray['Content']['Prospector'] : false;
 		$showRatings = 1;
-		$showProspectorResultsAtEndOfSearch = true;
 		if (isset($library)){
 			$enableProspectorIntegration = ($library->enablePospectorIntegration == 1);
 			$showRatings = $library->showRatings;
-			$showProspectorResultsAtEndOfSearch = ($library->showProspectorResultsAtEndOfSearch == 1);
 		}
 		$interface->assign('showRatings', $showRatings);
 
 		$numProspectorTitlesToLoad = 0;
-		$numUnscopedTitlesToLoad = 0;
-
-		// Save the ID of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
-
-		// Save the URL of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
-
 		if ($searchObject->getResultTotal() < 1) {
+			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);
 			$interface->assign('ButtonHome',true);
 			$interface->assign('MobileTitle','No Results Found');
-
+			
 			// No record found
 			$interface->setTemplate('list-none.tpl');
 			$interface->assign('recordCount', 0);
@@ -290,7 +259,6 @@ class Results extends Action {
 			}
 
 			$numProspectorTitlesToLoad = 10;
-			$numUnscopedTitlesToLoad = 10;
 			$timer->logTime('no hits processing');
 
 		} else if ($searchObject->getResultTotal() == 1){
@@ -300,19 +268,21 @@ class Results extends Action {
 			if ($record['recordtype'] == 'list'){
 				$listId = substr($record['id'], 4);
 				header("Location: " . $interface->getUrl() . "/MyResearch/MyList/{$listId}");
-				exit();
 			}elseif ($record['recordtype'] == 'econtentRecord'){
 				$shortId = str_replace('econtentRecord', '', $record['id']);
 				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
-				exit();
 			}else{
 				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
-				exit();
 			}
-
+			
 		} else {
 			$timer->logTime('save search');
-
+			
+			if(isset($_REQUEST["iscart"])){
+				$interface->assign('IsCart',true);
+			}else{
+				$interface->assign('IsCart',false);
+			}
 			// If the "jumpto" parameter is set, jump to the specified result index:
 			$this->processJumpto($result);
 
@@ -348,14 +318,22 @@ class Results extends Action {
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
-			$interface->assign('subpage', 'Search/list-list.tpl');
-			$interface->setTemplate('list.tpl');
-
+			if(isset($_REQUEST["iscart"])) //szheng: modified
+			{
+				$interface->assign('subpage', 'ei_tpl/Cart/list-list.tpl');
+				$interface->setTemplate('../ei_tpl/Cart/list.tpl');
+			}
+			else{
+				$interface->assign('subpage', 'Search/list-list.tpl');
+				$interface->setTemplate('list.tpl');
+			}
+			
+			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);
 			$interface->assign('ButtonHome',true);
 			$interface->assign('MobileTitle','Search Results');
-
+			
 
 			// Process Paging
 			$link = $searchObject->renderLinkPageTemplate();
@@ -365,48 +343,36 @@ class Results extends Action {
 			$pager = new VuFindPager($options);
 			$interface->assign('pageLinks', $pager->getLinks());
 			if ($pager->isLastPage()){
-				$numProspectorTitlesToLoad = 5;
-				$numUnscopedTitlesToLoad = 5;
+				$numProspectorTitlesToLoad = $summary['perPage'] - $pager->getNumRecordsOnPage();
+				if ($numProspectorTitlesToLoad < 5){
+					$numProspectorTitlesToLoad = 5;
+				}
 			}
 			$timer->logTime('finish hits processing');
 		}
 
-		if ($numProspectorTitlesToLoad > 0 && $enableProspectorIntegration && $showProspectorResultsAtEndOfSearch){
+		if ($numProspectorTitlesToLoad > 0 && $enableProspectorIntegration){
 			$interface->assign('prospectorNumTitlesToLoad', $numProspectorTitlesToLoad);
 			$interface->assign('prospectorSavedSearchId', $searchObject->getSearchId());
 		}else{
 			$interface->assign('prospectorNumTitlesToLoad', 0);
 		}
-
-		if ($enableUnscopedSearch){
-			$unscopedSearch->setLimit($numUnscopedTitlesToLoad);
-			$unscopedSearch->disableScoping();
-			$unscopedSearch->processSearch(false, false);
-			$numUnscopedResults = $unscopedSearch->getResultTotal();
-			$interface->assign('numUnscopedResults', $numUnscopedResults);
-			$unscopedSearchUrl = $unscopedSearch->renderSearchUrl();
-			if (preg_match('/searchSource=(.*?)(?:&|$)/', $unscopedSearchUrl)){
-				$unscopedSearchUrl = preg_replace('/(.*searchSource=)(.*?)(&|$)(.*)/', '$1marmot$3$4', $unscopedSearchUrl);
-			}else{
-				$unscopedSearchUrl .= "&searchSource=marmot";
-			}
-			$unscopedSearchUrl .= "&shard=";
-			$interface->assign('unscopedSearchUrl', $unscopedSearchUrl);
-			if ($numUnscopedTitlesToLoad > 0){
-				$unscopedResults = $unscopedSearch->getSupplementalResultRecordHTML();
-				$interface->assign('unscopedResults', $unscopedResults);
-			}
-		}
-
+		
 		//Determine whether or not materials request functionality should be enabled
 		$interface->assign('enableMaterialsRequest', MaterialsRequest::enableMaterialsRequest());
 
 		if ($configArray['Statistics']['enabled'] && isset( $_GET['lookfor'])) {
 			require_once('Drivers/marmot_inc/SearchStat.php');
 			$searchStat = new SearchStat();
-			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : (isset($_GET['basicType']) ? $_GET['basicType'] : 'Keyword')), $searchObject->getResultTotal());
+			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : $_GET['basicType']), $searchObject->getResultTotal());
 		}
 
+		// Save the ID of this search to the session so we can return to it easily:
+		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
+
+		// Save the URL of this search to the session so we can return to it easily:
+		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
+		
 		// Done, display the page
 		$interface->display('layout.tpl');
 	} // End launch()

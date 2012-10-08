@@ -174,12 +174,7 @@ function doGetStatusSummaries()
 						if (availableAt){
 							locationSpan.html(availableAt);
 						}else{
-							var location = items[i].location;
-							if (location){
-								locationSpan.html(location);
-							}else{
-								locationSpan.html("N/A");
-							}
+							locationSpan.html("N/A");
 						}
 					}
 					
@@ -239,16 +234,10 @@ function doGetStatusSummaries()
 					}else if ($(item).find('showaddtowishlist').text() == 1){
 						$("#addToWishList" + elemId).show();
 					}
-					
-					if ($("#statusValue" + elemId).length > 0){
-						var status = $(item).find('status').text();
-						$("#statusValue" + elemId).text(status);
-					}
 				});
 			}
 		});
 	}
-	
 	// Get OverDrive status summaries one at a time since they take several
 	// seconds to load
 	for (var j=0; j<GetOverDriveStatusList.length; j++) {
@@ -257,9 +246,25 @@ function doGetStatusSummaries()
 		$.ajax({
 			url: overDriveUrl, 
 			success: function(data){
+				var sta = $(data).find('status').text();
 				var items = $(data).find('item');
 				$(items).each(function(index, item){
 					var elemId = $(item).attr("id") ;
+					if(sta =="Available from OverDrive"){
+						$("#RequestWord"+elemId).text("Checkout Now");
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						if(document.getElementById("selected"+elemId)){
+							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
+						}
+					}else if(sta == "Checked out in OverDrive"){
+						$("#RequestWord"+elemId).text("Request Now");
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						if(document.getElementById("selected"+elemId)){
+							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
+						}
+					}else{
+						$("#RequestWord"+elemId).text("Access Online");
+					}
 					$('#holdingsEContentSummary' + elemId).replaceWith($(item).find('formattedHoldingsSummary').text());
 					if ($(item).find('showplacehold').text() == 1){
 						$("#placeEcontentHold" + elemId).show();
@@ -487,6 +492,20 @@ function lessFacets(name)
 	$("#more" + name).show();
 	$("#narrowGroupHidden_" + name).hide();
 }
+
+/*add function at 2012-06-13 for the see-all pop up box in the search result page*/
+
+function seeAll(name){
+	$("#"+name+" .popup").show();
+	$(".filter-list"+"#"+name).hide();
+}
+
+function closePopup(name){
+	$(".popup").hide();
+	$(".filter-list"+"#"+name).show();
+}
+
+/*end add*/
 
 function getProspectorResults(prospectorNumTitlesToLoad, prospectorSavedSearchId){
 	var url = path + "/Search/AJAX";

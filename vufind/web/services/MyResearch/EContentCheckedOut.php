@@ -42,11 +42,12 @@ class EContentCheckedOut extends MyResearch {
 				$timer->logTime("Got patron profile to get checked out items.");
 
 				// Define sorting options
-				$sortOptions = array('title'   => 'Title',
-                             'author'  => 'Author',
-                             'dueDate' => 'Due Date',
-				                     'format'  => 'Format',
-				                    );
+				$sortOptions = array(
+						'title'   => 'Title',
+						'author'  => 'Author',
+						//'dueDate' => 'Due Date',
+				                'format'  => 'Format',
+				                );
 				$interface->assign('sortOptions', $sortOptions);
 				$selectedSortOption = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'dueDate';
 				$interface->assign('defaultSortOption', $selectedSortOption);

@@ -168,13 +168,8 @@ function GetPreferredBranches() {
 	return false;
 }
 
-function getGoDeeperData(dataType, recordType, id, isbn, upc) {
-	if (recordType == 'eContentRecord'){
-		var url = path + "/EContentRecord/" + encodeURIComponent(id) + "/AJAX";
-	}else{
-		var url = path + "/Record/" + encodeURIComponent(id) + "/AJAX";
-	}
-
+function getGoDeeperData(dataType, id, isbn, upc) {
+	var url = path + "/Record/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=GetGoDeeperData&dataType=" + encodeURIComponent(dataType) + "&isbn=" + encodeURIComponent(isbn) + "&upc=" + encodeURIComponent(upc);
 	var fullUrl = url + "?" + params;
 	$.ajax( {
@@ -187,49 +182,46 @@ function getGoDeeperData(dataType, recordType, id, isbn, upc) {
 
 var seriesScroller;
 
-function GetEnrichmentInfo(id, isbn, upc, econtent) {
+function GetEnrichmentInfo(id, isbn, upc) {
 	var url = path + "/Record/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=GetEnrichmentInfo&isbn=" + encodeURIComponent(isbn) + "&upc=" + encodeURIComponent(upc);
 	var fullUrl = url + "?" + params;
 	$.ajax( {
 		url : fullUrl,
 		success : function(data) {
-			try{
-				var similarAuthorData = $(data).find("SimilarAuthors").text();
-				if (similarAuthorData) {
-					if (similarAuthorData.length > 0) {
-						$("#similarAuthorPlaceholder").html(similarAuthorData);
-						$("#similarAuthorsSidegroup").show();
-					}
+			var similarAuthorData = $(data).find("SimilarAuthors").text();
+			if (similarAuthorData) {
+				if (similarAuthorData.length > 0) {
+					$("#similarAuthorPlaceholder").html(similarAuthorData);
+					$("#similarAuthorsSidegroup").show();
+
 				}
-				var similarTitleData = $(data).find("SimilarTitles").text();
-				if (similarTitleData) {
-					if (similarTitleData.length > 0) {
-						$("#similarTitlePlaceholder").html(similarTitleData);
-						$("#relatedTitles").hide();
-						$("#similarTitles").show();
-						$("#similarTitlePlaceholder").show();
-						$("#similarTitlesSidegroup").show();
-					}
+			}
+			var similarTitleData = $(data).find("SimilarTitles").text();
+			if (similarTitleData) {
+				if (similarTitleData.length > 0) {
+					$("#similarTitlePlaceholder").html(similarTitleData);
+					$("#relatedTitles").hide();
+					$("#similarTitles").show();
+					$("#similarTitlePlaceholder").show();
+					$("#similarTitlesSidegroup").show();
 				}
-				var seriesData = $(data).find("SeriesInfo").text();
-				if (seriesData && seriesData.length > 0) {
-					
-					seriesScroller = new TitleScroller('titleScrollerSeries', 'Series', 'seriesList');
-	
-					seriesData = $.parseJSON(seriesData);
-					if (seriesData.titles.length > 0){
-						$('#list-series-tab').show();
-						$('#relatedTitleInfo').show();
-						seriesScroller.loadTitlesFromJsonData(seriesData);
-					}
+			}
+			var seriesData = $(data).find("SeriesInfo").text();
+			if (seriesData && seriesData.length > 0) {
+				
+				seriesScroller = new TitleScroller('titleScrollerSeries', 'Series', 'seriesList');
+
+				seriesData = $.parseJSON(seriesData);
+				if (seriesData.titles.length > 0){
+					$('#list-series-tab').show();
+					$('#relatedTitleInfo').show();
+					seriesScroller.loadTitlesFromJsonData(seriesData);
 				}
-				var showGoDeeperData = $(data).find("ShowGoDeeperData").text();
-				if (showGoDeeperData) {
-					$('#goDeeperLink').show();
-				}
-			} catch (e) {
-				alert("error during autocomplete setup" + e);
+			}
+			var showGoDeeperData = $(data).find("ShowGoDeeperData").text();
+			if (showGoDeeperData) {
+				$('#goDeeperLink').show();
 			}
 		},
 		failure : function(jqXHR, textStatus, errorThrown) {
@@ -255,7 +247,6 @@ function GetProspectorInfo(id) {
 			if (prospectorCopies && prospectorCopies.length > 0) {
 				$("#prospectorHoldingsPlaceholder").html(prospectorCopies);
 			}
-			$("#inProspectorSidegroup").show();
 		}
 	});
 }
@@ -304,6 +295,19 @@ function GetHoldingsInfo(id) {
 					$("#eBookLink" + id).show();
 				}
 			}
+			var SummaryDetails = $(data).find("class").text();
+			//alert(SummaryDetails);
+			if(SummaryDetails =="here"){
+				var shortId=id.replace(".","");
+				$("#request-now"+shortId).css('background-color','rgb(192,192,192)');
+				$("#request-now"+shortId).css('background-color','rgb(192,192,192)');
+				$("#request-now"+shortId).css("color","rgb(248,248,248)");
+				$("#request-now"+shortId+" .action-lable-span").text("It's Here");
+				$("#request-now"+shortId).css("cursor","default");
+				//$("#request-now .action-lable-span").css('background-color','rgb(192,192,192)').text("It's Here")
+				//document.getElementById("request-now").disabled='true';
+				document.getElementById("request-now"+shortId).setAttribute("onclick","");
+			}
 		}
 	});
 }
@@ -329,12 +333,7 @@ function GetHoldingsInfoMSC(id) {
 			var callNumber = summaryDetails.find("callnumber").text();
 			$("#callNumberValue").html(callNumber);
 			var location = summaryDetails.find("availableAt").text();
-			if (location.length > 0){
-				$("#locationValue").html(location);
-			}else{
-				var location = summaryDetails.find("location").text();
-				$("#locationValue").html(location);
-			}
+			$("#locationValue").html(location);
 			var status = summaryDetails.find("status").text();
 			if (status == "Available At"){
 				status = "Available";

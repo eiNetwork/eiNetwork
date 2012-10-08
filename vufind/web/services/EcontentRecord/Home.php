@@ -68,8 +68,6 @@ class Home extends Action{
 			$interface->assign('showRatings', $library->showRatings);
 			$interface->assign('showComments', $library->showComments);
 			$interface->assign('tabbedDetails', $library->tabbedDetails);
-			$interface->assign('showOtherEditionsPopup', $library->showOtherEditionsPopup == 1 ? true : false);
-			$interface->assign('showProspectorTitlesAsTab', $library->showProspectorTitlesAsTab);
 		}else{
 			$interface->assign('showTextThis', 1);
 			$interface->assign('showEmailThis', 1);
@@ -90,15 +88,9 @@ class Home extends Action{
 			$interface->assign('showRatings', 1);
 			$interface->assign('showComments', 1);
 			$interface->assign('tabbedDetails', 1);
-			$interface->assign('showProspectorTitlesAsTab', 0);
 		}
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
 		$interface->assign('chiliFreshAccount', $configArray['Content']['chiliFreshAccount']);
-		$showCopiesLineInHoldingsSummary = true;
-		if ($library && $library->showCopiesLineInHoldingsSummary == 0){
-			$showCopiesLineInHoldingsSummary = false;
-		}
-		$interface->assign('showCopiesLineInHoldingsSummary', $showCopiesLineInHoldingsSummary);
 		$timer->logTime('Configure UI for library and location');
 
 		UserComments::loadEContentComments();
@@ -110,13 +102,6 @@ class Home extends Action{
 		if (!$eContentRecord->find(true)){
 			//TODO: display record not found error
 		}else{
-			if ($configArray['Catalog']['ils'] == 'Millennium'){
-				if (isset($eContentRecord->ilsId) && strlen($eContentRecord->ilsId) > 0){
-					$interface->assign('classicId', substr($eContentRecord->ilsId, 1, strlen($eContentRecord->ilsId) -2));
-					$interface->assign('classicUrl', $configArray['Catalog']['linking_url']);
-				}
-			}
-
 			$this->isbn = $eContentRecord->getIsbn();
 			if (is_array($this->isbn)){
 				if (count($this->isbn) > 0){
@@ -209,7 +194,7 @@ class Home extends Action{
 				}
 			}
 			$interface->assign('editorialReviewResults', $editorialReviewResults);
-
+			$interface->assign('pageType','record');
 			//Build the actual view
 			$interface->setTemplate('view.tpl');
 
@@ -232,20 +217,16 @@ class Home extends Action{
 	public function getStaffView($eContentRecord){
 		global $interface;
 		$marcRecord = $eContentRecord->marcRecord;
-		if (strlen($marcRecord) > 0){
-			$marc = trim($marcRecord);
-			$marc = preg_replace('/#31;/', "\x1F", $marc);
-			$marc = preg_replace('/#30;/', "\x1E", $marc);
-			$marc = new File_MARC($marc, File_MARC::SOURCE_STRING);
+		$marc = trim($marcRecord);
+		$marc = preg_replace('/#31;/', "\x1F", $marc);
+		$marc = preg_replace('/#30;/', "\x1E", $marc);
+		$marc = new File_MARC($marc, File_MARC::SOURCE_STRING);
 
-			if (!($marcRecord = $marc->next())) {
-				PEAR::raiseError(new PEAR_Error('Could not load marc record for record ' . $record['id']));
-			}
-			$interface->assign('marcRecord', $marcRecord);
-			return 'RecordDrivers/Marc/staff.tpl';
-		}else{
-			return null;
+		if (!($marcRecord = $marc->next())) {
+			PEAR::raiseError(new PEAR_Error('Could not load marc record for record ' . $record['id']));
 		}
+		$interface->assign('marcRecord', $marcRecord);
+		return 'RecordDrivers/Marc/staff.tpl';
 	}
 
 	/**

@@ -18,80 +18,10 @@ function SendEContentSMS(id, to, provider, strings) {
 	sendAJAXSMS(url, params, strings);
 }
 
-function GetEContentEnrichmentInfo(id, isbn, upc, econtent) {
-	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
-	var params = "method=GetEnrichmentInfo&isbn=" + encodeURIComponent(isbn) + "&upc=" + encodeURIComponent(upc);
-	var fullUrl = url + "?" + params;
-	$.ajax( {
-		url : fullUrl,
-		success : function(data) {
-			var similarAuthorData = $(data).find("SimilarAuthors").text();
-			if (similarAuthorData) {
-				if (similarAuthorData.length > 0) {
-					$("#similarAuthorPlaceholder").html(similarAuthorData);
-					$("#similarAuthorsSidegroup").show();
-
-				}
-			}
-			var similarTitleData = $(data).find("SimilarTitles").text();
-			if (similarTitleData) {
-				if (similarTitleData.length > 0) {
-					$("#similarTitlePlaceholder").html(similarTitleData);
-					$("#relatedTitles").hide();
-					$("#similarTitles").show();
-					$("#similarTitlePlaceholder").show();
-					$("#similarTitlesSidegroup").show();
-				}
-			}
-			var seriesData = $(data).find("SeriesInfo").text();
-			if (seriesData && seriesData.length > 0) {
-				
-				seriesScroller = new TitleScroller('titleScrollerSeries', 'Series', 'seriesList');
-
-				seriesData = $.parseJSON(seriesData);
-				if (seriesData.titles.length > 0){
-					$('#list-series-tab').show();
-					$('#relatedTitleInfo').show();
-					seriesScroller.loadTitlesFromJsonData(seriesData);
-				}
-			}
-			var showGoDeeperData = $(data).find("ShowGoDeeperData").text();
-			if (showGoDeeperData) {
-				$('#goDeeperLink').show();
-			}
-		},
-		failure : function(jqXHR, textStatus, errorThrown) {
-		  alert('Error: Could Not Load Holdings information.  Please try again in a few minutes');
-	  }
-	});
-}
-
-function GetEContentProspectorInfo(id) {
-	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
-	var params = "method=GetProspectorInfo";
-	var fullUrl = url + "?" + params;
-	$.ajax( {
-		url : fullUrl,
-		success : function(data) {
-			var inProspectorData = $(data).find("InProspector").text();
-			if (inProspectorData) {
-				if (inProspectorData.length > 0) {
-					$("#inProspectorPlaceholder").html(inProspectorData);
-				}
-			}
-			var prospectorCopies = $(data).find("OwningLibrariesFormatted").text();
-			if (prospectorCopies && prospectorCopies.length > 0) {
-				$("#prospectorHoldingsPlaceholder").html(prospectorCopies);
-			}
-			$("#inProspectorSidegroup").show();
-		}
-	});
-}
-
 function GetEContentHoldingsInfo(id, type, callback) {
 	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=GetHoldingsInfo";
-	var fullUrl = url + "?" + params;
+	var fullUrl = url + "?" + params;//alert(url);
 	$.ajax( {
 		url : fullUrl,
 		success : function(data) {
@@ -99,15 +29,14 @@ function GetEContentHoldingsInfo(id, type, callback) {
 			if (holdingsData) {
 				if (holdingsData.length > 0) {
 					$("#holdingsPlaceholder").html(holdingsData);
-					$("#holdingsPlaceholder").trigger("create");
 				}
 			}
 			var holdingsSummary = $(data).find("HoldingsSummary").text();
 			if (holdingsSummary) {
 				if (holdingsSummary.length > 0) {
 					$("#holdingsSummaryPlaceholder").html(holdingsSummary);
-					$("#holdingsSummaryPlaceholder").trigger("create");
 				}
+				//alert(holdingsSummary)
 			}
 			var showPlaceHold = $(data).find("ShowPlaceHold").text();
 			if (showPlaceHold) {
@@ -133,10 +62,21 @@ function GetEContentHoldingsInfo(id, type, callback) {
 					$(".addToWishListLink").show();
 				}
 			}
-			var status = $(data).find("status").text();
-			$("#statusValue").html(status);
-			$("#statusValue").addClass($(data).find("class").text());
+			var SummaryDetails = $(data).find("status").text();
+			//ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;
+			//document.getElementById("access-online")
+			if(SummaryDetails =="Checked out in OverDrive"){
+				$("#access-online .action-lable-span").text("Request Now");
+				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
+			}else if(SummaryDetails =="Available from OverDrive"){
+				$("#access-online .action-lable-span").text("Checkout Now");
+				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
+			}else{
+				$("#access-online .action-lable-span").text("Access Online");
+				
+			}
 			
+			//alert(SummaryDetails);
 			if (typeof callback === 'function')
 			{
 				callback();
@@ -145,7 +85,6 @@ function GetEContentHoldingsInfo(id, type, callback) {
 		}
 	});
 }
-
 function SaveEContentComment(id, strings) {
 	if (loggedIn){
 		$('#userecontentreview' + id).slideUp();
@@ -251,6 +190,6 @@ function editItem(id, itemId){
 	return false;
 }
 function showEcontentPurchaseOptions(id){
-	var url = path + "/EcontentRecord/" + id + "/AJAX?method=getPurchaseOptions";
+	var url = path + "/EContentRecord/" + id + "/AJAX?method=getPurchaseOptions";
 	ajaxLightbox(url)
 }

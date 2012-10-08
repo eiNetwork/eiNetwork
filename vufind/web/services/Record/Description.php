@@ -37,12 +37,7 @@ class Description extends Record{
 	}
 
 	function loadData()    {
-		global $library;
-		$allowExternalDescription = true;
-		if (isset($library) && $library->preferSyndeticsSummary == 0){
-			$allowExternalDescription = false;
-		}
-		return Description::loadDescriptionFromMarc($this->marcRecord, $allowExternalDescription);
+		return Description::loadDescriptionFromMarc($this->marcRecord);
 
 	}
 
@@ -89,7 +84,6 @@ class Description extends Record{
 		$descriptionArray = $memcache->get("record_description_{$isbn}_{$upc}_{$allowExternalDescription}");
 		if (!$descriptionArray){
 			$marcDescription = null;
-			$description = '';
 			if ($descriptionField = $marcRecord->getField('520')) {
 				if ($descriptionSubfield = $descriptionField->getSubfield('a')) {
 					$description = trim($descriptionSubfield->getData());
@@ -100,7 +94,7 @@ class Description extends Record{
 			//Load the description
 			//Check to see if there is a description in Syndetics and use that instead if available
 			$useMarcSummary = true;
-			if ($allowExternalDescription){
+			if ($allowExternalDescription || is_null($marcDescription)){
 				if (!is_null($isbn) || !is_null($upc)){
 					require_once 'Drivers/marmot_inc/GoDeeperData.php';
 					$summaryInfo = GoDeeperData::getSummary($isbn, $upc);

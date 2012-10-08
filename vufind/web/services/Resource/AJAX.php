@@ -24,6 +24,8 @@ require_once 'sys/Proxy_Request.php';
 global $configArray;
 
 class AJAX extends Action {
+	
+
 
 	function AJAX() {
 	}
@@ -42,6 +44,9 @@ class AJAX extends Action {
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
+		}
+		if($_GET['hello'] == 'OK'){
+			$this->AddBookCartList();
 		}
 	}
 
@@ -125,5 +130,32 @@ class AJAX extends Action {
 
 		
 		return json_encode(array('result' => $return));
+	}
+	
+	function AddBookCartList(){
+		
+		$_REQUEST['title'] = 'lucky';
+		$_REQUEST['desc'] = '';
+		$_REQUEST['public'] = '';
+		require_once 'services/MyResearch/ListEdit.php';
+		$return = array();
+		if (UserAccount::isLoggedIn()) {
+			$listService = new ListEdit();
+			$result = $listService->addList();
+			if (!PEAR::isError($result)) {
+				$return['result'] = 'Done';
+				$return['newId'] = $result;
+			} else {
+				$error = $result->getMessage();
+				if (empty($error)) {
+					$error = 'Error';
+				}
+				$return['result'] = translate($error);
+			}
+		} else {
+			$return['result'] = "Unauthorized";
+		}
+
+		return json_encode($return);
 	}
 }

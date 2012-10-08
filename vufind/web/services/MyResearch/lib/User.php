@@ -18,7 +18,7 @@ class User extends DB_DataObject
 	public $firstname;                       // string(50)  not_null
 	public $lastname;                        // string(50)  not_null
 	public $email;                           // string(250)  not_null
-	public $phone;                           // string(30)
+	public $phone;                           // string(30)  
 	public $cat_username;                    // string(50)
 	public $cat_password;                    // string(50)
 	public $patronType;
@@ -102,9 +102,13 @@ class User extends DB_DataObject
 			}
 
 			if ($updateSolr){
-				$list->updateDetailed(true);
+				//Update Solr Index
+				global $configArray;
+				require_once 'User_list_solr.php';
+				$solrConnector = new User_list_solr($configArray['Index']['url']);
+				$solrConnector->saveList($list);
 			}
-
+				
 			//Make a call to strands to update that the item was added to the list
 			global $configArray;
 			if (isset($configArray['Strands']['APID'])){
@@ -115,7 +119,7 @@ class User extends DB_DataObject
 				}
 				$ret = file_get_contents($strandsUrl);
 			}
-
+				
 			return true;
 		} else {
 			return false;
@@ -153,7 +157,7 @@ class User extends DB_DataObject
 			for ($i=0; $i<count($tags); $i++) {
 				$sql .= " AND resource.id IN (SELECT DISTINCT resource_tags.resource_id " .
                     "FROM resource_tags, tags " .
-                    "WHERE resource_tags.tag_id=tags.id AND tags.tag = '" .
+                    "WHERE resource_tags.tag_id=tags.id AND tags.tag = '" . 
 				addslashes($tags[$i]) . "' AND resource_tags.user_id = '$this->id')";
 			}
 		}
@@ -176,9 +180,9 @@ class User extends DB_DataObject
 		$sql = "SELECT user_resource.*, user_list.title as list_title, user_list.id as list_id " .
                "FROM user_resource, resource, user_list " .
                "WHERE resource.id = user_resource.resource_id " .
-               "AND user_resource.list_id = user_list.id " .
+               "AND user_resource.list_id = user_list.id " . 
                "AND user_resource.user_id = '$this->id' " .
-               "AND resource.source = '$source' " .
+               "AND resource.source = '$source' " . 
                "AND resource.record_id = '$resourceId'";
 		if (!is_null($listId)) {
 			$sql .= " AND user_resource.list_id='$listId'";
@@ -201,9 +205,9 @@ class User extends DB_DataObject
 		$tagList = array();
 
 		$sql = "SELECT tags.id, tags.tag, COUNT(resource_tags.id) AS cnt " .
-               "FROM tags INNER JOIN resource_tags on tags.id = resource_tags.tag_id " .
-               "INNER JOIN resource on resource_tags.resource_id = resource.id WHERE " .
-               "resource_tags.user_id = '{$this->id}' ";
+               "FROM tags INNER JOIN resource_tags on tags.id = resource_tags.tag_id " . 
+               "INNER JOIN resource on resource_tags.resource_id = resource.id WHERE " . 
+               "resource_tags.user_id = '{$this->id}' "; 
 		if (!is_null($resourceId)) {
 			$sql .= "AND resource.record_id = '$resourceId' ";
 		}
@@ -225,12 +229,12 @@ class User extends DB_DataObject
 
 	function getLists() {
 		require_once 'User_list.php';
-
+		
 		$lists = array();
 
 		$sql = "SELECT user_list.*, COUNT(user_resource.id) AS cnt FROM user_list " .
                "LEFT JOIN user_resource ON user_list.id = user_resource.list_id " .
-               "WHERE user_list.user_id = '$this->id' " .
+               "WHERE user_list.user_id = '$this->id' " . 
                "GROUP BY user_list.id, user_list.user_id, user_list.title, " .
                "user_list.description, user_list.created, user_list.public " .
                "ORDER BY user_list.title";
@@ -304,8 +308,8 @@ class User extends DB_DataObject
 		if (!isset($this->homeLocationId)) $this->homeLocationId = 0;
 		if (!isset($this->myLocation1Id)) $this->myLocation1Id = 0;
 		if (!isset($this->myLocation2Id)) $this->myLocation2Id = 0;
-		if (!isset($this->bypassAutoLogout)) $this->bypassAutoLogout = 0;
-
+		if (!isset($this->bypassAutoLogout)) $this->bypassAutoLogout = 1;
+			
 		parent::insert();
 		$this->saveRoles();
 	}
@@ -324,10 +328,9 @@ class User extends DB_DataObject
           'id' => array('property'=>'id', 'type'=>'label', 'label'=>'Administrator Id', 'description'=>'The unique id of the in the system'),
           'firstname' => array('property'=>'firstname', 'type'=>'label', 'label'=>'First Name', 'description'=>'The first name for the user.'),
           'lastname' => array('property'=>'lastname', 'type'=>'label', 'label'=>'Last Name', 'description'=>'The last name of the user.'),
-          'password' => array('property'=>'password', 'type'=>'label', 'label'=>'Barcode', 'description'=>'The barcode for the user.'),
+          'username' => array('property'=>'username', 'type'=>'label', 'label'=>'Barcode', 'description'=>'The barcode for the user.'),
           'roles' => array('property'=>'roles', 'type'=>'multiSelect', 'listStyle' =>'checkbox', 'values'=>$roleList, 'label'=>'Roles', 'description'=>'A list of roles that the user has.'),
 		);
-
 		foreach ($structure as $fieldName => $field){
 			$field['propertyOld'] = $field['property'] . 'Old';
 			$structure[$fieldName] = $field;
@@ -345,7 +348,7 @@ class User extends DB_DataObject
 		array('filter'=>'cat_username', 'type'=>'text', 'label'=>'Name'),
 		);
 	}
-
+	
 	function hasRatings(){
 		require_once 'Drivers/marmot_inc/UserRating.php';
 

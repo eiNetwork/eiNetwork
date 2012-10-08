@@ -28,7 +28,6 @@ class Holdings extends Record
 	{
 		global $interface;
 		global $configArray;
-
 		// Do not cache holdings page
 		$interface->caching = 0;
 
@@ -51,18 +50,6 @@ class Holdings extends Record
 	{
 		global $interface;
 		global $configArray;
-		global $library;
-		$showCopiesLineInHoldingsSummary = true;
-		$showCheckInGrid = true;
-		if ($library && $library->showCopiesLineInHoldingsSummary == 0){
-			$showCopiesLineInHoldingsSummary = false;
-		}
-		$interface->assign('showCopiesLineInHoldingsSummary', $showCopiesLineInHoldingsSummary);
-		if ($library && $library->showCheckInGrid == 0){
-			$showCheckInGrid = false;
-		}
-		$interface->assign('showCheckInGrid', $showCheckInGrid);
-
 		try {
 			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
 		} catch (PDOException $e) {

@@ -27,6 +27,8 @@ require_once 'services/MyResearch/lib/FavoriteHandler.php';
  * This controller needs some cleanup and organization.
  *
  * @version  $Revision: 1.27 $
+ *
+ * @these pieces of code relies on magic, please beware
  */
 class Home extends MyResearch
 {
@@ -78,7 +80,7 @@ class Home extends MyResearch
 				}elseif ($profile['numHolds'] > 0){
 					$action ='Holds';
 				}else{
-					$action ='Favorites';
+					$action ='Profile ';
 				}
 				header("Location: /MyResearch/$action");
 			}else{

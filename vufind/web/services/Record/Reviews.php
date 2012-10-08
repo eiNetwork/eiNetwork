@@ -294,7 +294,7 @@ class Reviews extends Record
 		global $locationSingleton;
 		global $configArray;
 		global $timer;
-		global $logger;
+		$logger = new Logger();
 		
 		$review = array();
 		$location = $locationSingleton->getActiveLocation();

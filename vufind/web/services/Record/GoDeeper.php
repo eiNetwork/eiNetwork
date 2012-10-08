@@ -29,8 +29,8 @@ class GoDeeper extends Record
 		global $interface;
 		$goDeeperOptions = GoDeeperData::getGoDeeperOptions($this->isbn, $this->upc, true);
 		$interface->assign('options', $goDeeperOptions['options']);
-		if (isset($goDeeperOptions['defaultOption'])){
-			$defaultData = GoDeeperData::getHtmlData($goDeeperOptions['defaultOption'], 'Record', $this->isbn, $this->upc);
+		if ($goDeeperOptions['defaultOption']){
+			$defaultData = GoDeeperData::getHtmlData($goDeeperOptions['defaultOption'], $this->isbn, $this->upc);
 			$interface->assign('defaultGoDeeperData', $defaultData);
 		}
 

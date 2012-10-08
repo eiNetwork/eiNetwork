@@ -61,7 +61,7 @@ class Hold extends Action {
 		global $interface;
 		global $configArray;
 		global $user;
-		global $logger;
+		$logger = new Logger();
 
 		//TODO: Clean this up so there is only ever one id.
 		if (isset($_REQUEST['recordId'])) {
@@ -126,20 +126,14 @@ class Hold extends Action {
 				//set focus to the username field by default.
 				$interface->assign('focusElementId', 'username');
 			}
-
+			
 			global $librarySingleton;
 			$patronHomeBranch = $librarySingleton->getPatronHomeLibrary();
 			if ($patronHomeBranch != null){
-				if ($patronHomeBranch->defaultNotNeededAfterDays > 0){
-					$interface->assign('defaultNotNeededAfterDays', date('m/d/Y', time() + $patronHomeBranch->defaultNotNeededAfterDays * 60 * 60 * 24));
-				}else{
-					$interface->assign('defaultNotNeededAfterDays', '');
-				}
 				$interface->assign('showHoldCancelDate', $patronHomeBranch->showHoldCancelDate);
 			}else{
 				//Show the hold cancellation date for now.  It may be hidden later when the user logs in.
 				$interface->assign('showHoldCancelDate', 1);
-				$interface->assign('defaultNotNeededAfterDays', '');
 			}
 			$activeLibrary = $librarySingleton->getActiveLibrary();
 			if ($activeLibrary != null){
@@ -156,18 +150,18 @@ class Hold extends Action {
 		if ($record) {
 			$interface->assign('record', $record);
 		} else {
-			PEAR::raiseError(new PEAR_Error('Cannot find record ' . $_GET['id']));
+			PEAR::raiseError(new PEAR_Error('Cannot find record'));
 		}
 
 		$interface->assign('id', $_GET['id']);
 		if ($showMessage && isset($return)) {
 			$hold_message_data = array(
-				'successful' => $return['result'] == true ? 'all' : 'none',
-				'error' => isset($return['error']) ? $return['error'] : '',
-				'titles' => array(
-					$return,
-				),
-				'campus' => $_REQUEST['campus'],
+              'successful' => $return['result'] ? 'all' : 'none',
+              'error' => $return['error'],
+              'titles' => array(
+			$return,
+			),
+              'campus' => $_REQUEST['campus'],
 			);
 			//Check to see if there are item level holds that need follow-up by the user
 			if (isset($return['items']) && count($return['items']) > 0){

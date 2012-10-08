@@ -46,14 +46,7 @@ class Edit extends Action
 
 	private function saveChanges($user)
 	{
-		global $interface;
-		$resource = new Resource();
-		$resource->id = $_REQUEST['resourceId'];
-		if ($resource->find(true)){
-			$interface->assign('resource', $resource);
-		}else{
-			PEAR::raiseError(new PEAR_Error("Could not find resource {$_REQUEST['resourceId']}"));
-		}
+		$resource = Resource::staticGet('record_id', $_GET['id']);
 
 		// Loop through the list of lists on the edit screen:
 		foreach($_POST['lists'] as $listId) {
@@ -61,7 +54,6 @@ class Edit extends Action
 			$list = new User_list();
 			if ($listId != '') {
 				$list->id = $listId;
-				$list->find(true);
 			} else {
 				PEAR::raiseError(new PEAR_Error('List ID Missing'));
 			}
@@ -92,14 +84,8 @@ class Edit extends Action
 			// After changes are saved, send the user back to an appropriate page;
 			// either the list they were viewing when they started editing, or the
 			// overall favorites list.
-			if (isset($_REQUEST['list_id'])) {
-				$nextAction = 'MyList/' . $_REQUEST['list_id'];
-			} elseif (isset($_REQUEST['lists'])){
-				if (is_array($_REQUEST['lists'])){
-					$nextAction = 'MyList/' . $_REQUEST['lists'][0];
-				}else{
-					$nextAction = 'MyList/' . $_REQUEST['lists'];
-				}
+			if (isset($_GET['list_id'])) {
+				$nextAction = 'MyList/' . $_GET['list_id'];
 			} else {
 				$nextAction = 'Home';
 			}
@@ -119,10 +105,11 @@ class Edit extends Action
 		$resource->record_id = $_GET['id'];
 		$resource->source = $_GET['source'];
 		if ($resource->find(true)){
-			$interface->assign('resource', $resource);
+			$interface->assign('record', $resource);
 		}
 
 		// Record ID
+		
 		$interface->assign('recordId', $_GET['id']);
 
 		// Retrieve saved information about record

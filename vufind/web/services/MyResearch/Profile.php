@@ -76,7 +76,15 @@ class Profile extends MyResearch
 		}else{
 			$interface->assign('userIsStaff', false);
 		}
-
+		
+		//print out the card number
+		foreach($user as $key=>$value){
+			//echo $key.'=>'.$value.'</br>';
+			if($key == 'cat_username')
+			{
+				$interface->assign('card_number',$value);
+			}
+		}
 		$interface->setTemplate('profile.tpl');
 		$interface->setPageTitle(translate('My Profile'));
 		$interface->display('layout.tpl');

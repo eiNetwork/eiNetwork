@@ -22,6 +22,11 @@ require_once 'services/MyResearch/MyResearch.php';
 require_once("PHPExcel.php");
 require_once 'sys/Pager.php';
 
+//BEGIN overdrive holds
+require_once 'Drivers/OverDriveDriver.php';
+require_once 'sys/eContent/EContentRecord.php';
+//END overdrive holds
+
 class Holds extends MyResearch
 {
 	function launch()
@@ -33,7 +38,9 @@ class Holds extends MyResearch
 
 		if (isset($_REQUEST['multiAction'])){
 			$multiAction = $_REQUEST['multiAction'];
-			$locationId = isset($_REQUEST['location']) ? $_REQUEST['location'] : null;
+			$waitingHoldSelected = $_REQUEST['waitingHoldSelected'];
+			$availableHoldSelected = $_REQUEST['availableHoldSelected'];
+			$locationId = $_REQUEST['location'];
 			$i = 0;
 			$xnum = array();
 			$cancelId = array();
@@ -54,34 +61,25 @@ class Holds extends MyResearch
 				$type = 'update';
 				$freeze = '';
 			}
-			$result = $this->catalog->driver->updateHoldDetailed($requestId, $user->password, $type, '', null, $cancelId, $locationId, $freeze);
+			$result = $this->catalog->driver->updateHoldDetailed($requestId, $user->password, $type, $title, null, $cancelId, $locationId, $freeze);
 
 			//Redirect back here without the extra parameters.
-			$redirectUrl = $configArray['Site']['url'] . '/MyResearch/Holds?accountSort=' . ($selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title');
-			if (isset($_REQUEST['section'])){
-				$redirectUrl .= "&section=" . $_REQUEST['section'];
-			}
-			header("Location: " . $redirectUrl);
+			header("Location: " . $configArray['Site']['url'] . '/MyResearch/Holds?accountSort=' . ($selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title'));
 			die();
 		}
 
 		global $librarySingleton;
 		$interface->assign('allowFreezeHolds', true);
 
-		$ils = $configArray['Catalog']['ils'];
-		$showPosition = ($ils == 'Horizon');
-		$showExpireTime = ($ils == 'Horizon');
 		// Define sorting options
 		$sortOptions = array('title' => 'Title',
                          'author' => 'Author',
                          'format' => 'Format',
                          'placed' => 'Date Placed',
                          'location' => 'Pickup Location',
+                         'position' => 'Position',
                          'status' => 'Status',
 		);
-		if ($showPosition){
-			$sortOptions['position'] = 'Position';
-		}
 		$interface->assign('sortOptions', $sortOptions);
 		$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title';
 		$interface->assign('defaultSortOption', $selectedSortOption);
@@ -91,15 +89,44 @@ class Holds extends MyResearch
 		$libraryHoursMessage = Location::getLibraryHoursMessage($profile['homeLocationId']);
 		$interface->assign('libraryHoursMessage', $libraryHoursMessage);
 
+		$ils = $configArray['Catalog']['ils'];
 		$allowChangeLocation = ($ils == 'Millennium');
 		$interface->assign('allowChangeLocation', $allowChangeLocation);
 		$showPlacedColumn = ($ils == 'Horizon');
 		$interface->assign('showPlacedColumn', $showPlacedColumn);
 		$showDateWhenSuspending = ($ils == 'Horizon');
 		$interface->assign('showDateWhenSuspending', $showDateWhenSuspending);
-
+		$showPosition = ($ils == 'Horizon');
 		$interface->assign('showPosition', $showPosition);
-
+		
+		//BEGIN for OverdriveHolds
+		$overDriveDriver = new OverDriveDriver();
+		$overDriveHolds = $overDriveDriver->getOverDriveHolds($user);
+		foreach ($overDriveHolds['holds'] as $sectionKey => $sectionData){
+			foreach ($sectionData as $key => $item){
+				if ($item['recordId'] != -1){
+					$econtentRecord = new EContentRecord();
+					$econtentRecord->id = $item['recordId'];
+					$econtentRecord->find(true);
+					$item['record'] = clone($econtentRecord);
+				} else{
+					$item['record'] = null;
+				}
+				if ($sectionKey == 'available'){
+					$item['numRows'] = count($item['formats']) + 1;
+				}
+				$overDriveHolds['holds'][$sectionKey][$key] = $item;
+			}
+		}
+		$interface->assign('overDriveHolds', $overDriveHolds['holds']);
+	
+		$interface->assign('ButtonBack',true);
+		$interface->assign('ButtonHome',true);
+		$interface->assign('MobileTitle','OverDrive Holds');
+		$interface->setTemplate('overDriveHolds.tpl');
+		//END for OverdriveHolds
+		
+		
 		// Get My Transactions
 		if ($this->catalog->status) {
 			if ($user->cat_username) {
@@ -120,7 +147,7 @@ class Holds extends MyResearch
 					$recordsPerPage = -1;
 					$page = 1;
 				}
-
+				
 				$result = $this->catalog->getMyHolds($patron, $page, $recordsPerPage, $selectedSortOption);
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {
@@ -153,7 +180,7 @@ class Holds extends MyResearch
 									$interface->assign('pageLinks', $pager->getLinks());
 								}
 							}
-
+							
 							//Processing of freeze messages?
 							$timer->logTime("Got recordList of holds to display");
 						}
@@ -168,7 +195,7 @@ class Holds extends MyResearch
 							else {
 								$exportType = "unavailable";
 							}
-							$this->exportToExcel($result['holds'], $exportType, $showDateWhenSuspending, $showPosition, $showExpireTime);
+							$this->exportToExcel($result['holds'], $exportType, $showDateWhenSuspending);
 						}
 
 					} else {
@@ -177,29 +204,16 @@ class Holds extends MyResearch
 				}
 			}
 		}
-
-		$interface->assign('patron',$patron);
-
-		$hasSeparateTemplates = $interface->template_exists('MyResearch/availableHolds.tpl');
-		if ($hasSeparateTemplates){
-			$section = isset($_REQUEST['section']) ? $_REQUEST['section'] : 'available';
-			if ($section == 'available'){
-				$interface->setPageTitle('Available Holds');
-				$interface->setTemplate('availableHolds.tpl');
-			}else{
-				$interface->setPageTitle('On Hold');
-				$interface->setTemplate('unavailableHolds.tpl');
-			}
-		}else{
-			$interface->setPageTitle('My Holds');
-			$interface->setTemplate('holds.tpl');
-		}
-
+		
 		//print_r($patron);
+		$interface->assign('patron',$patron);
+		//$interface->setTemplate('checkedout.tpl');
+		$interface->setTemplate('holds.tpl');
+		$interface->setPageTitle('My Holds');
 		$interface->display('layout.tpl');
 	}
 
-	public function exportToExcel($result, $exportType, $showDateWhenSuspending, $showPosition, $showExpireTime) {
+	public function exportToExcel($result, $exportType, $showDateWhenSuspending) {
 		//PHPEXCEL
 		// Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
@@ -216,36 +230,25 @@ class Holds extends MyResearch
 		if ($exportType == "available") {
 			// Add some data
 			$objPHPExcel->setActiveSheetIndex(0)
-				->setCellValue('A1', 'Holds - '.ucfirst($exportType))
-				->setCellValue('A3', 'Title')
-				->setCellValue('B3', 'Author')
-				->setCellValue('C3', 'Format')
-				->setCellValue('D3', 'Placed')
-				->setCellValue('E3', 'Pickup')
-				->setCellValue('F3', 'Available')
-				->setCellValue('G3', 'Expires');
+			->setCellValue('A1', 'Holds - '.ucfirst($exportType))
+			->setCellValue('A3', 'Title')
+			->setCellValue('B3', 'Author')
+			->setCellValue('C3', 'Format')
+			->setCellValue('D3', 'Placed')
+			->setCellValue('E3', 'Pickup')
+			->setCellValue('F3', 'Available')
+			->setCellValue('G3', 'Expires');
 		} else {
 			$objPHPExcel->setActiveSheetIndex(0)
-				->setCellValue('A1', 'Holds - '.ucfirst($exportType))
-				->setCellValue('A3', 'Title')
-				->setCellValue('B3', 'Author')
-				->setCellValue('C3', 'Format')
-				->setCellValue('D3', 'Placed')
-				->setCellValue('E3', 'Pickup');
-
-			if ($showPosition){
-				$objPHPExcel->getActiveSheet()->setCellValue('F3', 'Position')
-					->setCellValue('G3', 'Status');
-				if ($showExpireTime){
-					$objPHPExcel->getActiveSheet()->setCellValue('H3', 'Expires');
-				}
-			}else{
-				$objPHPExcel->getActiveSheet()
-					->setCellValue('F3', 'Status');
-				if ($showExpireTime){
-					$objPHPExcel->getActiveSheet()->setCellValue('G3', 'Expires');
-				}
-			}
+			->setCellValue('A1', 'Holds - '.ucfirst($exportType))
+			->setCellValue('A3', 'Title')
+			->setCellValue('B3', 'Author')
+			->setCellValue('C3', 'Format')
+			->setCellValue('D3', 'Placed')
+			->setCellValue('E3', 'Pickup')
+			->setCellValue('F3', 'Position')
+			->setCellValue('G3', 'Status')
+			->setCellValue('H3', 'Expires');
 		}
 
 
@@ -257,7 +260,7 @@ class Holds extends MyResearch
 			if (isset ($row['title2'])){
 				$titleCell .= preg_replace("/(\/|:)$/", "", $row['title2']);
 			}
-
+				
 			if (isset ($row['author'])){
 				if (is_array($row['author'])){
 					$authorCell = implode(', ', $row['author']);
@@ -279,45 +282,35 @@ class Holds extends MyResearch
 				$availableTime = $row['availableTime'];
 				$availDate = getDate($availableTime);
 				$availableValue = $availDate["mon"]."/".$availDate["mday"]."/".$availDate["year"];
-
+					
 			}
 			else {
 				$availableValue = "Now";
 			}
 
 			if ($exportType == "available") {
-				$objPHPExcel->getActiveSheet()
-					->setCellValue('A'.$a, $titleCell)
-					->setCellValue('B'.$a, $authorCell)
-					->setCellValue('C'.$a, $formatString)
-					->setCellValue('D'.$a, isset($row['createTime']) ? date('M d, Y', $row['createTime']) : '')
-					->setCellValue('E'.$a, $row['location'])
-					->setCellValue('F'.$a, isset($row['availableTime']) ? date('M d, Y', strtotime($row['availableTime'])) : 'Now')
-					->setCellValue('G'.$a, date('M d, Y', $row['expire']));
+				$objPHPExcel->setActiveSheetIndex(0)
+				->setCellValue('A'.$a, $titleCell)
+				->setCellValue('B'.$a, $authorCell)
+				->setCellValue('C'.$a, $formatString)
+				->setCellValue('D'.$a, isset($row['createTime']) ? date('M d, Y', $row['createTime']) : '')
+				->setCellValue('E'.$a, $row['location'])
+				->setCellValue('F'.$a, isset($row['availableTime']) ? date('M d, Y', strtotime($row['availableTime'])) : 'Now')
+				->setCellValue('G'.$a, date('M d, Y', $row['expire']));
 			} else {
 				$statusCell = $row['status'];
 				if ($row['frozen'] && $showDateWhenSuspending){
 					$statusCell .= " until " . date('M d, Y', strtotime($row['reactivateTime']));
 				}
-				$objPHPExcel->getActiveSheet()
-					->setCellValue('A'.$a, $titleCell)
-					->setCellValue('B'.$a, $authorCell)
-					->setCellValue('C'.$a, $formatString)
-					->setCellValue('D'.$a, isset($row['createTime']) ? date('M d, Y', $row['createTime']) : '')
-					->setCellValue('E'.$a, $row['location']);
-				if ($showPosition){
-					$objPHPExcel->getActiveSheet()
-						->setCellValue('F'.$a, $row['position'])
-						->setCellValue('G'.$a, $statusCell);
-					if ($showExpireTime){
-						$objPHPExcel->getActiveSheet()->setCellValue('H'.$a, date('M d, Y', $row['expireTime']));
-					}
-				}else{
-					$objPHPExcel->getActiveSheet()->setCellValue('F'.$a, $statusCell);
-					if ($showExpireTime){
-						$objPHPExcel->getActiveSheet()->setCellValue('G'.$a, date('M d, Y', $row['expireTime']));
-					}
-				}
+				$objPHPExcel->setActiveSheetIndex(0)
+				->setCellValue('A'.$a, $titleCell)
+				->setCellValue('B'.$a, $authorCell)
+				->setCellValue('C'.$a, $formatString)
+				->setCellValue('D'.$a, isset($row['createTime']) ? date('M d, Y', $row['createTime']) : '')
+				->setCellValue('E'.$a, $row['location'])
+				->setCellValue('F'.$a, $row['position'])
+				->setCellValue('G'.$a, $statusCell)
+				->setCellValue('H'.$a, date('M d, Y', $row['expireTime']));
 			}
 			$a++;
 		}
@@ -329,8 +322,8 @@ class Holds extends MyResearch
 		$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
-
-
+		
+			
 		// Rename sheet
 		$objPHPExcel->getActiveSheet()->setTitle('Holds');
 
@@ -342,7 +335,7 @@ class Holds extends MyResearch
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		exit;
-
+			
 	}
 
 }

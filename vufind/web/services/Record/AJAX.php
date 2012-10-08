@@ -42,7 +42,6 @@ class AJAX extends Action {
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
-
 		}else{
 			header ('Content-type: text/xml');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
@@ -119,7 +118,7 @@ class AJAX extends Action {
 									$purchaseLinks[] = array(
 	                    'link' => $link,
 	                    'linkText' => 'Buy from Smashwords',
-	                  	'storeName' => 'Smashwords',
+	                  	'storeName' => 'Smashwords', 
 											'image' => '/images/smashwords.png',
 											'field856Index' => $field856Index,
 									);
@@ -127,7 +126,7 @@ class AJAX extends Action {
 									$purchaseLinks[] = array(
 	                    'link' => $link,
 	                    'linkText' => $linkText,
-	                  	'storeName' => 'Smashwords',
+	                  	'storeName' => 'Smashwords', 
 											'image' => '',
 											'field856Index' => $field856Index,
 									);
@@ -137,8 +136,8 @@ class AJAX extends Action {
 						}
 					}
 				} //End checking for purchase information in the marc record
-
-
+				
+				
 				if (count($purchaseLinks) > 0){
 					$interface->assign('purchaseLinks', $purchaseLinks);
 				}else{
@@ -146,12 +145,12 @@ class AJAX extends Action {
 					$resource->record_id = $id;
 					$resource->source = 'VuFind';
 					if ($resource->find(true)){
-
+					
 						$title = $resource->title;
 						$author = $resource->author;
 						require_once 'services/Record/Purchase.php';
 						$purchaseLinks = Purchase::getStoresForTitle($title, $author);
-
+						
 						if (count($purchaseLinks) > 0){
 							$interface->assign('purchaseLinks', $purchaseLinks);
 						}else{
@@ -169,7 +168,7 @@ class AJAX extends Action {
 			$errors = array("You must provide the id of the title to be purchased. ");
 			$interface->assign('errors', $errors);
 		}
-
+		
 		echo $interface->fetch('Record/ajax-purchase-options.tpl');
 	}
 
@@ -364,7 +363,7 @@ class AJAX extends Action {
 		$upc = $_REQUEST['upc'];
 		$isbn = $_REQUEST['isbn'];
 
-		$formattedData = GoDeeperData::getHtmlData($dataType, 'Record', $isbn, $upc);
+		$formattedData = GoDeeperData::getHtmlData($dataType, $isbn, $upc);
 		return $formattedData;
 
 	}
@@ -372,7 +371,6 @@ class AJAX extends Action {
 	function GetEnrichmentInfo(){
 		require_once 'Enrichment.php';
 		global $configArray;
-		global $library;
 		$isbn = $_REQUEST['isbn'];
 		$upc = $_REQUEST['upc'];
 		$id = $_REQUEST['id'];
@@ -381,7 +379,7 @@ class AJAX extends Action {
 		$interface->assign('id', $id);
 		$interface->assign('enrichment', $enrichmentData);
 		$showSimilarTitles = false;
-		if (isset($enrichmentData['novelist']) && isset($enrichmentData['novelist']['similarTitles']) && is_array($enrichmentData['novelist']['similarTitles']) && count($enrichmentData['novelist']['similarTitles']) > 0){
+		if (isset($enrichmentData['novelist']) && is_array($enrichmentData['novelist']['similarTitles']) && count($enrichmentData['novelist']['similarTitles']) > 0){
 			foreach ($enrichmentData['novelist']['similarTitles'] as $title){
 				if ($title['recordId'] != -1){
 					$showSimilarTitles = true;
@@ -389,16 +387,7 @@ class AJAX extends Action {
 				}
 			}
 		}
-		if (isset($library) && $library->showSimilarTitles == 0){
-			$interface->assign('showSimilarTitles', false);
-		}else{
-			$interface->assign('showSimilarTitles', $showSimilarTitles);
-		}
-		if (isset($library) && $library->showSimilarAuthors == 0){
-			$interface->assign('showSimilarAuthors', false);
-		}else{
-			$interface->assign('showSimilarAuthors', true);
-		}
+		$interface->assign('showSimilarTitles', $showSimilarTitles);
 
 		//Process series data
 		$titles = array();
@@ -423,7 +412,7 @@ class AJAX extends Action {
 				}
 				$titles[] = array(
 	        	  'id' => isset($record['id']) ? $record['id'] : '',
-			    		'image' => $cover,
+			    		'image' => $cover, 
 			    		'title' => $record['title'],
 			    		'author' => $record['author']
 				);
@@ -431,9 +420,9 @@ class AJAX extends Action {
 
 			foreach ($titles as $key => $rawData){
 				$formattedTitle = "<div id=\"scrollerTitleSeries{$key}\" class=\"scrollerTitle\">" .
-	    			'<a href="' . $configArray['Site']['path'] . "/Record/" . $rawData['id'] . '" id="descriptionTrigger' . $rawData['id'] . '">' .
-	    			"<img src=\"{$rawData['image']}\" class=\"scrollerTitleCover\" alt=\"{$rawData['title']} Cover\"/>" .
-	    			"</a></div>" .
+	    			'<a href="' . $configArray['Site']['path'] . "/Record/" . $rawData['id'] . '" id="descriptionTrigger' . $rawData['id'] . '">' . 
+	    			"<img src=\"{$rawData['image']}\" class=\"scrollerTitleCover\" alt=\"{$rawData['title']} Cover\"/>" . 
+	    			"</a></div>" . 
 	    			"<div id='descriptionPlaceholder{$rawData['id']}' style='display:none'></div>";
 				$rawData['formattedTitle'] = $formattedTitle;
 				$titles[$key] = $rawData;
@@ -443,16 +432,12 @@ class AJAX extends Action {
 		}
 
 		//Load go deeper options
-		if (isset($library) && $library->showGoDeeper == 0){
+		require_once('Drivers/marmot_inc/GoDeeperData.php');
+		$goDeeperOptions = GoDeeperData::getGoDeeperOptions($isbn, $upc);
+		if (count($goDeeperOptions['options']) == 0){
 			$interface->assign('showGoDeeper', false);
 		}else{
-			require_once('Drivers/marmot_inc/GoDeeperData.php');
-			$goDeeperOptions = GoDeeperData::getGoDeeperOptions($isbn, $upc);
-			if (count($goDeeperOptions['options']) == 0){
-				$interface->assign('showGoDeeper', false);
-			}else{
-				$interface->assign('showGoDeeper', true);
-			}
+			$interface->assign('showGoDeeper', true);
 		}
 
 		return $interface->fetch('Record/ajax-enrichment.tpl');
@@ -554,11 +539,11 @@ class AJAX extends Action {
 
 		// Build an XML tag representing the current comment:
 		$output .= "	<description><![CDATA[" . $descriptionArray['description'] . "]]></description>\n";
-		$output .= "	<length><![CDATA[" . (isset($descriptionArray['length']) ? $descriptionArray['length'] : '') . "]]></length>\n";
+		$output .= "	<length><![CDATA[" . $descriptionArray['length'] . "]]></length>\n";
 		$output .= "	<publisher><![CDATA[" . $descriptionArray['publisher'] . "]]></publisher>\n";
 
 		$output .= "</result>\n";
-
+			
 		return $output;
 	}
 }
