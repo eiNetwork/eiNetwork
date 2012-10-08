@@ -1,0 +1,94 @@
+@CHARSET "ISO-8859-1";
+
+#loginHome{
+	height: 400px;
+}
+.loginHome-left{
+	width: 232px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-right{
+	width: 254px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-center{
+	width:704px;
+	height: auto;
+	display: table-cell;
+	padding-top: 100px;
+	
+}
+
+.login{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-left:70px;
+	font-size: 13px;
+}
+
+
+.register{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-right: 70px;
+	padding-left: 10px;
+	font-size: 13px;
+}
+
+.login #loginButton{
+	border:1px solid grey;
+	height:25px;
+	width:70px;
+	border-radius: 8px;
+	text-align: center;
+	padding-top: 5px;
+	background-color: rgb(242,242,242);
+	cursor: pointer;
+	margin-left: 150px;
+	
+}
+
+.register #registerButton{
+	border:1px solid grey;
+	height:25px;
+	width:70px;
+	border-radius: 8px;
+	text-align: center;
+	padding-top: 5px;
+	background-color: rgb(242,242,242);
+	cursor: pointer;
+	margin-top: 20px;
+	margin-left: 170px;
+
+}
+
+#email{
+	margin-top: 10px;
+}
+
+#password{
+	margin-top:5px;
+	margin-bottom: 8px;
+}
+
+#description{
+	margin-top: 8px;
+	margin-bottom: 10px;
+}
+
+.loginFormInput{
+	width: 220px;
+	height: 25px;
+	font-size: 14px;
+}
+
+
+
+
+

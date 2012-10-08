@@ -1,0 +1,344 @@
+.myAccountLink{
+	margin: 0 10px 0px 20px;
+	padding: 0.1em 0 0.1em 10px;
+	text-align: left;
+	text-indent: -10px;
+}
+
+.myAccountLink .myAccountLink{
+	margin: 0px 0px 0px 10px;
+}
+
+
+.holdSection{
+	border: 1px solid #949494;
+    border-radius: 12px 12px 12px 12px;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+}
+.holdSectionBody{
+	padding: 10px;
+}
+.holdSectionTitle{
+	border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+    color: white;
+    font-weight: bold;
+    margin-top: 0;
+    padding: 0.5em 0;
+    text-align: center;
+    background-color: #011751;
+}
+
+.myAccountLink.active{
+	color: #011751;
+	font-weight: bold;
+}
+.libraryHours{
+	text-align: center;
+	font-style: italic;
+}
+.myAccountTitle{
+	color: #011751;
+	font-weight: bold;
+	font-size: 14px;
+}
+.selectAllControls{
+  line-height: 22px; /* Increase line height so sorting controls fit on this line */
+}
+
+
+
+#resultsTableHeaderRow{
+  font-weight: bold;
+}
+.resultsCell{
+  display: inline-block;
+  zoom: 1;
+  vertical-align: top;
+}
+.resultsId{
+  width: 25px;
+}
+.resultsFilename{
+  width: 400px;
+}
+.resultsRecords{
+  width:200px;
+}
+#resultsTable{
+  margin-bottom: 20px;
+}
+.myAccountTitleDetails{
+  vertical-align: top;
+  display: inline-block;
+  zoom: 1;
+}
+.myAccountCell{
+  vertical-align: top;
+}
+
+.myAccountTable{
+  border: 1px solid #949494;
+  border-radius: 6px;
+  border-collapse: collapse;
+  margin-top: 4px; 
+  margin-bottom: 4px;
+  width: 100%;
+}
+.myAccountTable td{
+	border-left: 1px solid rgb(255,255,255);
+	border-right: 1px solid rgb(255,255,255);
+	padding: 5px 10px;
+}
+.myAccountTable tbody tr{
+	background-color: rgb(221,221,221);
+}
+
+.myAccountTable th{
+	color: rgb(240,240,240);
+	background-color: rgb(32,32,32);
+	border: 1px solid rgb(244,213,56);
+	text-align: left;
+	padding: 5px 15px;
+}
+
+.myAccountTable thead{
+  border-bottom: 2px solid #949494;
+  text-align: center;
+  vertical-align: bottom;
+}
+.unsortedHeader{
+  background-image: url(/images/unsorted_icon.gif); 
+  cursor: pointer; 
+  font-weight: bold; 
+  background-repeat: no-repeat; 
+  background-position: center right; 
+  padding-right: 20px; 
+}
+.sortDescHeader{
+  background-image: url(/images/sort_desc_icon.gif);
+  background-color: #3399F;
+}
+.sortAscHeader{
+  background-image: url(/images/sort_asc_icon.gif);
+  background-color: #3399F;
+}
+
+#notice{
+  border: 1px solid #949494;;
+  border-radius: 5px;
+  margin: 5px 15px;
+  padding: 4px;
+  font-size: 11px;
+}
+.noticeTitle{
+  font-size: 13px;
+  font-weight: bold;
+}
+#pager{
+	margin: 5px;
+	font-size: 11px;
+}
+.myAccountPagination{
+	display: inline-block;
+	zoom: 1;
+}
+#recordsPerPage, #sortOptions{
+	margin-left: 5px;
+}
+.adminMenuLink{
+	font-size: 12px;
+	color: #256292;
+}
+.adminMenuHeader{
+	padding-top: 5px;
+	font-size:13px;
+	display:block;
+}
+.adminMenuLink 
+.adminMenuHeader:first{
+	padding-top: 0px;
+}
+
+
+/***** BEGIN My Account--->Profile *****/
+#info{
+	display: inline-block;
+	margin-top:10px;
+	font-weight: bolder;
+	font-size: 15px;
+}
+
+.profile{
+	margin-top: 15px;
+	margin-bottom: 25px;
+}
+
+.profile_row{
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.profile_row table td{
+	padding: 5px;
+	width:200px;
+}
+/***** END My Account--->Profile *****/
+
+
+
+/***** BEGIN My Account--->Fine*****/
+.account_balance{
+	text-align: center;
+}
+
+.account_balance  .button{
+	padding-left: 15px;
+	padding-right: 5px;
+	width:80px;
+
+}
+
+.account_balance div{
+	margin: 5px 5px 5px;
+	padding: 5px 5px 5px;
+}
+
+.pay_balance .button{
+	background-color: rgb(255,230,109);
+}
+.pay_balance .button:hover{
+	background-color: rgb(244,213,56);
+
+}
+/***** END My Account--->Fine *****/
+
+
+/***** BEGIN My Account--->My Items*****/
+
+.sortOptions {
+}
+
+.sortOptions select{
+	width:120px;
+}
+
+.checkout{
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 640px;
+}
+
+.checkout .button{
+	width: 100px;
+	height: 20px;
+	background: rgb(255,230,109);
+}
+
+.checkout .button:disabled{
+	background: rgb(192,192,192);
+}
+
+.checkout .button:hover{
+	background: rgb(244,213,56);
+	border-color: rgb(173,156,74);
+}
+
+.item_list{
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	height: 120px;
+	
+}
+.item_image{
+	display: inline-block;
+	width: 52px;
+	height: 80px;
+	padding: 10px 15px 15px 15px;
+}
+
+.item_image img{
+	width: 52px;
+	height: 80px;
+}
+
+.item_detail{
+	width:370px;
+	height: 115px;
+	margin-left: 20px;
+	display: inline-block;
+	vertical-align:top;
+}
+
+.item_subject{
+	padding-top: 10px;
+}
+
+.item_subject a{
+	text-decoration: none;
+	color: rgb(0,0,0);
+}
+
+.item_subject a:hover{
+	color: rgb(58,79,179);
+}
+
+.item_author{
+	margin: 5px 0px 0px 0px;
+}
+
+.item_rating{
+	margin: 5px 0px 0px 0px;
+}
+
+
+.item_renew .button{
+	background: rgb(255,230,109);
+	width:90px;
+	height: 20px;	
+}
+
+.item_renew .button:hover{
+	background: rgb(242,242,242);
+	border-color: rgb(173,156,74);
+}
+
+
+.item_type{
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+.item_status{
+	width: 120px;
+	height: 105px;
+	vertical-align:top;
+	display: inline-block;
+}
+
+.sort{
+	padding: 10px 50px 10px 50px;
+}
+
+
+/***** END My Account--->My Items*****/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

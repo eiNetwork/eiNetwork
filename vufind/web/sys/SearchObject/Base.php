@@ -40,7 +40,7 @@ abstract class SearchObject_Base
 	protected $defaultSort = 'relevance';
 	protected $defaultSortByType = array();
 	protected $searchSource = 'local';
-
+	
 	// Filters
 	protected $filterList = array();
 	// Page number
@@ -172,19 +172,10 @@ abstract class SearchObject_Base
 
 		// Check for duplicates -- if it's not in the array, we can add it
 		if (!$this->hasFilter($newFilter)) {
-			if ($field == 'literary-form'){
-				$field = 'literary_form';
-			}else if ($field == 'literary-form-full'){
-				$field = 'literary_form_full';
-			}else if ($field == 'target-audience'){
-				$field = 'target_audience';
-			}else if ($field == 'target-audience-full'){
-				$field = 'target_audience_full';
-			}
 			$this->filterList[$field][] = $value;
 		}
 	}
-
+	
 	/**
 	 * Remove a filter from the list.
 	 *
@@ -221,7 +212,7 @@ abstract class SearchObject_Base
 		return isset($this->facetConfig[$field]) ?
 		$this->facetConfig[$field] : ucwords(str_replace("_"," ",$field));
 	}
-
+	
 	/**
 	 * Clear all facets which will speed up searching if we won't be using the facets.
 	 */
@@ -255,12 +246,10 @@ abstract class SearchObject_Base
 					$facetLabel = $this->getFacetLabel($field);
 					if ($field == 'veteranOf' && $value == '[* TO *]'){
 						$display = 'Any War';
-					}elseif ($field == 'available_at' && $value == '*') {
-						$display = "Any Marmot Library";
 					}else{
 						$display = $translate ? translate($value) : $value;
 					}
-
+					
 					$list[$facetLabel][] = array(
                         'value'      => $value,     // raw value for use with Solr
                         'display'    => $display,   // version to display to user
@@ -474,21 +463,10 @@ abstract class SearchObject_Base
 						$type = $this->defaultIndex;
 					}
 
-					//Marmot - search both ISBN-10 and ISBN-13
-					//Check to see if the search term looks like an ISBN10 or ISBN13
-					$lookfor = strip_tags($_REQUEST['lookfor'.$groupCount][$i]);
-					if (($type == 'ISN' || $type == 'Keyword' || $type == 'AllFields') &&
-							(preg_match('/^\\d-?\\d{3}-?\\d{5}-?\\d$/',$lookfor) ||
-							preg_match('/^\\d{3}-?\\d-?\\d{3}-?\\d{5}-?\\d$/', $lookfor))) {
-						require_once('sys/ISBN.php');
-						$isbn = new ISBN($lookfor);
-						$lookfor = $isbn->get10() . ' OR ' . $isbn->get13();
-					}
-
 					// Add term to this group
 					$group[] = array(
                         'field'   => $type,
-                        'lookfor' => $lookfor,
+                        'lookfor' => strip_tags($_REQUEST['lookfor'.$groupCount][$i]),
                         'bool'    => strip_tags($_REQUEST['bool'.$groupCount][0])
 					);
 				}
@@ -604,7 +582,7 @@ abstract class SearchObject_Base
 				$this->sort = $this->defaultSort;
 			}
 		}
-		//Validate the sort to make sure it is corrct.
+		//Validate the sort to make sure it is corrct.  
 		if (!array_key_exists($this->sort, $this->sortOptions)){
 			$this->sort = $this->defaultSort;
 		}
@@ -681,7 +659,7 @@ abstract class SearchObject_Base
 		if (isset($_REQUEST['searchSource'])){
 			$params[] = "searchSource=" . urlencode(strip_tags($_REQUEST['searchSource']));
 		}
-
+		
 		// Join all parameters with an escaped ampersand,
 		//   add to the base url and return
 		return $url . join("&", $params);
@@ -843,7 +821,7 @@ abstract class SearchObject_Base
 		}
 		return $list;
 	}
-
+	
 	/**
 	 * Basic 'getters'
 	 *
@@ -900,9 +878,9 @@ abstract class SearchObject_Base
 	 */
 	protected function getLimitOptions()
 	{
-		return isset($this->limitOptions) ? $this->limitOptions : array();
+		return $this->limitOptions;
 	}
-
+	
 	/**
 	 * Reset a simple query against the default index.
 	 *
@@ -931,10 +909,6 @@ abstract class SearchObject_Base
 	public function setLimit($limit)
 	{
 		$this->limit = $limit;
-	}
-
-	public function setSearchSource($searchSource){
-		$this->searchSource = $searchSource;
 	}
 
 	/**
@@ -1283,7 +1257,7 @@ abstract class SearchObject_Base
 			if ($search->find(true)) {
 				// Found, make sure the user has the
 				//   rights to view this search
-				if ($search->session_id == session_id() || ($user && $search->user_id == $user->id)) {
+				if ($search->session_id == session_id() || $search->user_id == $user->id) {
 					// They do, deminify it to a new object.
 					$minSO = unserialize($search->search_object);
 					$savedSearch = SearchObjectFactory::deminify($minSO);

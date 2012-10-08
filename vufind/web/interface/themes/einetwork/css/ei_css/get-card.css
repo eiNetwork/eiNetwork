@@ -1,0 +1,207 @@
+#getcardSubmit{
+    background-color: rgb(255,230,109);
+}
+#getcardSubmit:hover{
+    background-color: rgb(244,213,56);
+}
+
+.require input {
+    background: url("/interface/themes/einetwork/images/Art/highlight.png") no-repeat;
+}
+
+.require .error{
+    display: none;
+}
+
+
+.short .text{
+    width:30px;
+}
+
+#first_name{
+    display: inline-block;
+}
+
+#first_name div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#middle_name{
+    display: inline-block;
+}
+
+#middle_name div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#last_name{
+    display: inline-block;
+}
+
+#last_name div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+#city{
+    display: inline-block;
+}
+#state{
+    display: inline-block;
+}
+#zip_code{
+    display: inline-block;
+}
+
+
+#street input.text{
+    width: 480px;
+}
+
+#city input.text{
+    width:200px
+}
+
+#state select{
+    width:50px;
+}
+
+#zip_code input.text{
+    width: 200px;
+}
+
+#apartment input.text{
+    width: 480px;
+}
+
+
+
+.title{
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+#street{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#street div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#apartment div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#city{
+}
+
+#city div{
+    margin-bottom: 5px;
+}
+
+#state{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#state div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#zip_code{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#zip_code div{
+    margin-top:5px;
+    margin-bottom: 5px;
+}
+
+.name{
+    margin-top: 10px;
+}
+
+.name input{
+    width:200px;
+}
+
+.birth_date select{
+    width:80px;
+}
+
+.birth_date #month{
+    width:110px;
+}
+
+
+
+.state select{
+    width:50px;
+}
+
+.gender{
+    display: inline-block;
+}
+
+.gender div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.gender select{
+    width:220px;
+}
+
+.birth_date{
+    display: inline-block;
+}
+
+.birth_date div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.phone{
+    margin-top: 5px;
+    margin-left:55px;
+    display: inline-block;
+}
+
+.phone div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.phone input.text{
+    width: 200px;
+}
+
+.email{
+    margin-top: 5px;
+    display: inline-block;
+}
+.email div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.email input.text{
+    width: 200px;
+}
+
+#getcardSubmit{
+    margin-top: 30px;
+    margin-left: 420px;
+}
+.agreement{
+    margin-top: 30px;
+    width: 500px;
+}

@@ -1,75 +1,184 @@
 <div id="page-content" class="content">
-	<div id="sidebar">
-    {include file="MyResearch/menu.tpl"}
-      
-    {include file="Admin/menu.tpl"}
-  </div>
-	
-  <div id="main-content">
-    {if $user->cat_username}
-      <div class="resulthead">
-      <h3>{translate text='Your Profile'}</h3></div>
-      {if $profileUpdateErrors}
-      <div class="error">{$profileUpdateErrors}</div>
-      {/if}
-      
-      <div class="page">
-      <form action='' method='post'>
-      <table class="citation" width="100%">
-        <tr><th width="100px">{translate text='Full Name'}:</th><td>{$profile.fullname|escape}</td></tr>
-        <tr><th>{translate text='Address'}:</th><td>{$profile.address1|escape}</td></tr>
-        <tr><th>{translate text='City'}:</th><td>{$profile.city|escape}</td></tr>
-        <tr><th>{translate text='State'}:</th><td>{$profile.state|escape}</td></tr>
-        <tr><th>{translate text='Zip'}:</th><td>{$profile.zip|escape}</td></tr>
-        <tr><th>{translate text='Phone Number'}:</th><td>{if $edit == true}<input name='phone' value='{$profile.phone|escape}' size='50' maxlength='75' />{else}{$profile.phone|escape}{/if}</td></tr>
-        <tr><th>{translate text='E-mail'}:</th><td>{if $edit == true}<input name='email' value='{$profile.email|escape}' size='50' maxlength='75' />{else}{$profile.email|escape}{/if}</td></tr>
-        <tr><th>{translate text='Receive Notices By'}:</th>
-        	<td>
-        		{if $edit == true}
-        			<input type="radio" name='notices' value='p' id='phoneNotice' {if $profile.notices == 'p'}checked='checked'{/if}/><label for='phoneNotice'>Phone</label>
-        			<input type="radio" name='notices' value='z' id='emailNotice' {if $profile.notices == 'z'}checked='checked'{/if}/><label for='emalNotice'>Email</label>
-        		{else}
-        			{if $profile.notices == 'p'}Phone{else}Email{/if}
-        		{/if}
-        	</td>
-        </tr>
-        <tr><th>{translate text='Fines'}:</th><td>{$profile.fines|escape}</td></tr>
-        <tr><th>{translate text='Expiration Date'}:</th><td>{$profile.expires|escape}</td></tr>
-        <tr><th>{translate text='Home Library'}:</th><td>{$profile.homeLocation|escape}</td></tr>
-        <tr><th>{translate text='My First Alternate Library'}:</th><td>{if $edit == true}{html_options name="myLocation1" options=$locationList selected=$profile.myLocation1Id}{else}{$profile.myLocation1|escape}{/if}</td></tr>
-        <tr><th>{translate text='My Second Alternate Library'}:</th><td>{if $edit == true}{html_options name="myLocation2" options=$locationList selected=$profile.myLocation2Id}{else}{$profile.myLocation2|escape}{/if}</td></tr>
-        {if $userIsStaff}
-        <tr><th>{translate text='Bypass Automatic Logout'}:</th><td>{if $edit == true}<input type='radio' name="bypassAutoLogout" value='yes' {if $profile.bypassAutoLogout==1}checked='checked'{/if}/>Yes&nbsp;&nbsp;<input type='radio' name="bypassAutoLogout" value='no' {if $profile.bypassAutoLogout==0}checked='checked'{/if}/>No{else}{if $profile.bypassAutoLogout==0}No{else}Yes{/if}{/if}</td></tr>
-        {/if}        
-      </table>
-      
-      {if $canUpdate}
-	      {if $edit == true}
-	      <input type='submit' value='Update Profile' name='update'/>
-	      {else}
-	      <input type='submit' value='Edit Personal Information' name='edit'/>
-	      {/if}
-      {/if}
-      </form>
-      
-      <a href="#" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm');return false;" class="button">Modify PIN Number</a>
-      
-      {* Display user roles if the user has any roles*}
-      {if count($user->roles) > 0}
-      <h3>{translate text='Your Roles'}</h3>
-      <table class='citation'>
-        {foreach from=$user->roles item=role}
-          <tr><td>{$role}</td></tr>
-        {/foreach} 
-      </table>
-      {/if}
-      
-    {else}
-      <div class="page">
-      You must login to view this information. Click <a href="{$path}/MyResearch/Login">here</a> to login.
-    {/if}</div>
-    <b class="bbot"><b></b></b>
-    </div>
-  
+{literal}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#phone').blur(function(){
+			var phone=$(this).val(),
+			    phoneReg=/^[2-9]\d{9}$/;
+			if(!phoneReg.test(phone)){
+				$('#phoneError').text('*please enter a valid phone number');
+				phoneValid=false;
+				return false;
+			}else{
+				$('#phoneError').html('&nbsp;');
+				return true;
+			}
+		});
+
+		$('#email').blur(function(){
+			var email=$('input[name="email"]').val(),
+		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+			if(!emailReg.test(email)||email==''){
+				$('#emailError').text("*please enter a vaild email address");
+				emailValid=false;
+				return false;
+			}else{
+				$('#emailError').html('&nbsp;');
+			}
+		});
+		
+	});
+	function checkWhenSubmit(){
+		var phone=$('input[name="phone"]').val(),
+		phoneReg=/^[2-9]\d{9}$/;
+		var email=$('input[name="email"]').val(),
+		emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		if(!phoneReg.test(phone)||!emailReg.test(email)||email==''){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+</script>
+{/literal}
+	 
+	<div id="left-bar">
+		<div class="account_balance">
+			<div>Account Balance</div>
+			{*<div class="fine_details">
+				<span>You have 2 overdue items accumulating fines</span>
+				<br/>
+				<input class="button" value="View Details"/>
+			</div>*}
+			<div class="pay_balance">
+				<span>{$profile.fines}  due in library fines</span>
+				<br/>
+				<a href="http://catalog.einetwork.net/patroninfo"><input class="button" value="Pay Balance"/></a>
+			</div>
+		</div>
 	</div>
+
+
+	<div id="main-content">
+		{if $profileUpdateErrors}
+		<div class="error">{$profileUpdateErrors}</div>
+		{/if}
+		{if $user->cat_username}
+		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
+		<div id="info">Information</div>
+			{if $canUpdate}
+				{if $edit == true}
+				<input  type='submit' value='Update Profile' name='update'  class='button'/>
+				{else}
+				<input type='submit' value='Edit Profile' name='edit' class='button'/>
+				{/if}
+			{/if}
+			<div class="profile">
+			<div id="name_notification" class="profile_row">
+				<table>
+				<tr style="font-weight: bolder">
+					<td>{translate text='Name'}</td>
+					<td>{translate text='Notification Preference'}</td>
+				</tr>
+				<tr>
+					<td>{$profile.fullname|escape}</td>
+					<td>
+						{if $edit == true}
+							<select name='notices'>
+							<option value='z' >E-mail</option>
+							<option value='p'>Phone</option>
+							</select>
+						{else}
+						{if $profile.notices == 'p'}Phone{else}Email{/if}
+						{/if}
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div id="card_expiration" class="profile_row">
+				<table>
+				<tr style="font-weight: bolder">
+					<td>{translate text='Library Card Number'}</td>
+					<td>{translate text='Card Expired'}</td>
+				</tr>
+				<tr>
+					<td>{$card_number}</td>
+					<td>{$profile.expires|escape}</td>
+				</tr>
+				</table>
+			</div>
+			<div id="address_library" class="profile_row">
+				<table>
+				<tr style="font-weight: bolder">
+					<td>{translate text='Address'}</td>
+					<td>{translate text='My Home Library'}</td>
+				</tr>
+				<tr>
+					<td>{$profile.address1|escape} {$profile.state|escape} {$profile.zip|escape}</td>
+					<td>{$profile.homeLocation|escape}</td>
+				</tr>
+				</table>
+			</div>
+			<div id="phone_email" class="profile_row">
+				<table>
+				<tr style="font-weight: bolder">
+					<td>{translate text='Phone Number'}</td>
+					<td>{translate text='Email'}</td>
+				</tr>
+				<tr>
+					<td>
+						{if $edit == true}
+						<input id="phone" name='phone' class="text" value='{$profile.phone|escape}' size='20' maxlength='10' />
+						<span id="phoneError" class="error">&nbsp;</span>
+						{else}{$profile.phone|escape}
+						{/if}
+					</td>
+					<td>
+						{if $edit == true}
+						<input id="email" name='email' class="text" value='{$profile.email|escape}' size='20' maxlength='30' />
+						<span id="emailError" class="error">&nbsp;</span>
+						{else}{$profile.email|escape}
+						{/if}
+					</td>
+				</tr>
+				</table>
+			</div>
+
+
+			<div id="preferred_alternative" class="profile_row">
+				<table>
+				<tr style="font-weight: bolder">
+					<td>{translate text='Preferred Pick-up Location'}</td>
+					<td>{translate text='Alternative Library'}</td>
+				</tr>
+				<tr>
+					<td>
+						{if $edit == true}
+						{html_options name="myLocation1" options=$locationList selected=$profile.myLocation1Id}
+						{else}{$profile.myLocation1|escape}
+						{/if}
+					</td>
+					<td>
+						{if $edit == true}
+						{html_options name="myLocation2" options=$locationList selected=$profile.myLocation2Id}
+						{else}{$profile.myLocation2|escape}
+						{/if}
+					</td>
+				</tr>
+				</table>
+			</div>	
+			
+		</div>
+		</form>
+		{/if}
+		<input class="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
+
+	</div>
+	
+	<div id="right-bar">
+		{include file="MyResearch/menu.tpl"}
+		{include file="Admin/menu.tpl"}
+	</div>
+	
 </div>

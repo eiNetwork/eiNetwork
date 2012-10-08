@@ -1,0 +1,71 @@
+
+#loginHome{
+	height: 400px;
+}
+.loginHome-left{
+	width: 232px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-right{
+	width: 254px;
+	height: auto;
+	display: table-cell;
+}
+
+.loginHome-center{
+	width:704px;
+	height: auto;
+	display: table-cell;
+	padding-top: 100px;
+	
+}
+
+.login{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-left:70px;
+	font-size: 16px;
+}
+
+.register{
+	width: 352px;
+	height: inherit;
+	display: table-cell;
+	padding-right: 70px;
+	padding-left: 10px;
+	font-size: 16px;
+}
+
+
+.login #email{
+	margin-top: 10px;
+}
+
+#loginForm .error{
+	font-size: 12px;
+}
+
+#cardError{
+	font-size: 12px;
+	color: rgb(255,0,0);
+}
+
+#pinError{
+	font-size: 12px;
+	color: rgb(255,0,0);	
+}
+
+#pin{
+	margin-top:0px;
+	margin-bottom: 8px;
+}
+
+#description{
+	font-size: 14px;
+}
+
+
+

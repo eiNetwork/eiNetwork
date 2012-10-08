@@ -1,0 +1,269 @@
+@CHARSET "ISO-8859-1";
+.full-result-content{
+	padding-left: 5px;
+}
+#record-header{
+	border-bottom: 1px solid #5D8EAC;
+	padding-bottom: 5px;
+	margin-bottom: 5px; 
+	position: relative;
+	min-height: 3em;
+}
+#recordTitleAuthorGroup{
+	width: 525px;
+	display: inline-block;
+	vertical-align: top;
+	
+	zoom: 1;
+	*display: inline;
+}
+#recordTitle{
+	color: #256292;
+	font-size: 14px;
+	font-weight: bold;
+}
+#recordTitleRight{
+	display: inline-block;
+	vertical-align: top;
+	
+	zoom: 1;
+	*display: inline;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	text-align: right;
+}
+#returnToSearch{
+	
+}
+#previousRecordLink, #nextRecordLink{
+	display: inline-block;
+	vertical-align: top;
+	
+	zoom: 1;
+	*display: inline;
+	margin: 5px 4px 0px 4px;
+}
+
+.resultitem {
+    margin-left:100px;
+    
+}
+.resulthead {
+    margin-bottom:.5em;
+    
+}
+.title {
+    font-size:120%;
+}
+.searchResultSectionInfo{
+  color:  #003399;
+  font-size: 110%;
+}
+
+
+.recordcoverWrapper{
+  display: inline-block;
+  position: relative;
+  width:136px;
+  text-align:center;
+  height:115px;
+  zoom: 1;
+  *display: inline;
+}
+
+.holdingsSummaryRecord{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	width: 330px;
+}
+
+#recordTools{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+}
+
+#record-details-header{
+	border-bottom: 1px solid #5D8EAC;
+}
+#image-column{
+	display: inline-block;
+	width: 210px;
+	vertical-align: top;
+	text-align: center;
+	
+	zoom: 1;
+	*display: inline;
+}
+#record-details-column{
+	display: inline-block;
+	width: 500px;
+	vertical-align: top;
+	zoom: 1;
+	*display: inline;
+}
+.resultInformationLabel{
+	color: #256292;
+	font-size: 14px;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+.resultInformation{
+	padding-top: 8px;	
+}
+.recordcover{
+	margin-bottom: 15px;
+	width:auto;
+	max-width:136px;
+	height:100%;
+	margin-left:auto;
+	margin-right:auto;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.35);
+}
+#myrating{
+	margin: 15px 0px;
+}
+/* Reviews */
+.reviewSource{
+	font-weight: bold;
+}
+.reviewProvider{
+	font-style: italic;
+	font-size: 11px;
+}
+.reviewCopyright{
+	font-size: 11px;
+}
+.reviewMoreLink{
+	font-weight: bold;
+	color: #003399;
+	cursor: pointer;
+}
+.reviewContent > p:last-of-type,
+.reviewTeaser > p:last-of-type{
+	margin-bottom: 2px;
+}
+
+#similarTitlesSidegroup{
+	display: block;
+}
+
+#similarAuthorsSidegroup{
+	display: none;
+}
+
+#readertab{
+	position: relative;
+}
+.userreview{
+	position:absolute; 
+	border-radius: 5px; 
+	box-shadow: 5px 5px 7px #888; 
+	padding: 5px; 
+	display: none; 
+	border: 2px solid darkgrey; 
+	background-color: white; 
+	width: 400px; 
+	right: 7px;
+	top: 7px;
+	z-index: 10;
+}
+.deleteComment, .closeReview, #userreviewlink{
+	cursor: pointer;
+}
+.comment{
+	margin-bottom: 5px;
+	width: 100%;
+}
+.commentHeader{
+	width: 75%;
+}
+.commentDate{
+	float: right;
+}
+
+#seriesList{
+	border: 1px solid #A9A9A9;
+	border-top: 4px solid #00125E;
+	margin-bottom: 15px;
+}
+.seriesLink{
+  float: right;
+}
+
+.epubLink{
+  cursor: pointer;
+}
+
+#editEContentLink, #deleteEContentLink, #archiveEContentLink{
+	font-size: 8px;
+}
+#eContentStatus{
+	color: red;
+}
+#econtentSource{
+	font-size: 10px;
+	margin-top: 8px;
+}
+
+/*====================new layout of the record page=====================*/
+#record_record{
+	width:100%;
+	height:auto;
+	margin-top:15px;
+}
+#record_record_up{
+	width:100%;
+	height:auto;
+}
+#record_record_down{
+	width:100%;
+	height:auto;
+	display:inline-block;
+}
+#record_record_up_middle{
+	width:367px;
+	height:auto;
+	display:inline-block;
+	vertical-align:top;
+}
+#record_action_button{
+	width:138px;
+	height:100px;
+	display:inline-block;
+	vertical-align:top;
+}
+
+#record_language{
+	margin-top:50px;
+}
+.godeeper_img{
+	width:100px;
+}
+#otherEditionCopies{
+	margin-top:60px;
+}
+#add-to-cart{
+	margin-bottom:13px;
+}
+#request-now{
+	border-radius:8px 8px 0px 0px;
+	/*background-color: rgb(13,30,60);*/
+}
+#add-to-wish-list{
+	border-radius:0px 0px 0px 0px;
+	border-width:0px 1px 1px 1px;
+}
+#find-in-library{
+	border-radius:0px 0px 8px 8px;
+	border-width:0px 1px 1px 1px;
+}
+.details_lable{
+	font-weight:700;
+	width:120px;
+}
+.itemUnavailable{
+	display:none;
+}
