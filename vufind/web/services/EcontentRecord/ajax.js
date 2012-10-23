@@ -65,7 +65,7 @@ function GetEContentHoldingsInfo(id, type, callback) {
 			var SummaryDetails = $(data).find("status").text();
 			//ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;
 			//document.getElementById("access-online")
-			if(SummaryDetails =="Checked out in OverDrive"){
+			if(SummaryDetails =="Checked Out"){
 				$("#access-online .action-lable-span").text("Request Now");
 				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else if(SummaryDetails =="Available from OverDrive"){

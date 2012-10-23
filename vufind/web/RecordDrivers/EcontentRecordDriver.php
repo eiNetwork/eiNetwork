@@ -224,5 +224,8 @@ class EcontentRecordDriver extends IndexRecord
 	{
 		return isset($this->fields['title_short']) ? $this->fields['title_short'] : $this->eContentRecord->title;
 	}
-
+	protected function getFormats()
+	{
+		return $this->eContentRecord->format();
+	}
 }

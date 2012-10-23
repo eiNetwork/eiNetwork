@@ -141,6 +141,9 @@ class AJAX extends Action {
 				echo "========".$keykey." => ".$valuevalue."<br/>";
 			}
 		}*/
+		/*echo "<pre style=\"border: 1px solid #000; height: {$height}; overflow: auto; margin: 0.5em;\">";
+		var_dump($holdings);
+		echo "</pre>\n";*/
 		return $interface->fetch('EcontentRecord/viewHoldingPopup.tpl');
 	}
 

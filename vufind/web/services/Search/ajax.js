@@ -250,13 +250,14 @@ function doGetStatusSummaries()
 				var items = $(data).find('item');
 				$(items).each(function(index, item){
 					var elemId = $(item).attr("id") ;
+					//alert(sta);
 					if(sta =="Available from OverDrive"){
 						$("#RequestWord"+elemId).text("Checkout Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
 						if(document.getElementById("selected"+elemId)){
 							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
 						}
-					}else if(sta == "Checked out in OverDrive"){
+					}else if(sta == "Checked Out"){
 						$("#RequestWord"+elemId).text("Request Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
 						if(document.getElementById("selected"+elemId)){

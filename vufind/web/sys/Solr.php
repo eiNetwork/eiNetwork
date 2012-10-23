@@ -329,11 +329,11 @@ class Solr implements IndexEngine {
 
 			// Query String Parameters
 			$options = array('q' => "id:\"$id\"");
+                        //$options = array('q' => "id:econtentRecord250923");
 			$result = $this->_select('GET', $options);
 			if (PEAR::isError($result)) {
 				PEAR::raiseError($result);
 			}
-
 			if (isset($result['response']['docs'][0])){
 				$record = $result['response']['docs'][0];
 				$memcache->set("solr_record_$id", $record, 0, $configArray['Caching']['solr_record']);

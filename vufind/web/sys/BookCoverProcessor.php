@@ -247,7 +247,7 @@ class BookCoverProcessor{
 			ob_clean();
 			flush();
 			readfile($localPath);
-			$this->log("Read file $localPath");
+			$this->log("Read file $localPath",  PEAR_LOG_INFO);
 			$this->logTime("echo file $localPath");
 		}else{
 			$this->logTime("Added modification headers");
@@ -455,7 +455,7 @@ class BookCoverProcessor{
 			// $cache is true or for temporary display purposes if $cache is false.
 			$tempFile = str_replace('.png', uniqid(), $this->cacheFile);
 			$finalFile = $cache ? $this->cacheFile : $tempFile . '.png';
-			$this->log("Processing url $url to $finalFile");
+			$this->log("Processing url $url to $finalFile",  PEAR_LOG_INFO);
 
 			// If some services can't provide an image, they will serve a 1x1 blank
 			// or give us invalid image data.  Let's analyze what came back before

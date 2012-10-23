@@ -11,9 +11,9 @@
 	</thead>
 	<tbody>
 	{foreach from=$holdings item=eContentItem key=index}
-		{if get_class($eContentItem) == 'OverdriveItem'}
+		{if $eContentItem->item_type == 'overdrive'}
 			<tr id="itemRow{$index}" style="height:30px">
-				<td>{$eContentItem->format}</td>
+				<td>{$eContentItem->externalFormat}</td>
 				<td>OverDrive</td>
 				<td>Must be checked out to read</td>
 				<td>{$eContentItem->size}</td>
@@ -22,6 +22,10 @@
 					{foreach from=$eContentItem->links item=link}
 						<input href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button" value="{if $link.text eq 'Place Hold'}Request Now{elseif $link.text eq 'Check Out'}Checkout Now{else}{$link.text}{/if}" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px"></a>
 					{/foreach}
+					{if $user && $user->hasRole('epubAdmin')}
+						<input value="Edit" href="#" onclick="return editItem('{$id}', '{$eContentItem->id}')" class="button" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px">
+						<input value="Delete"href="#" onclick="return deleteItem('{$id}', '{$eContentItem->id}')" class="button" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px">
+					{/if}
 				</td>
 			</tr>
 		{else}
@@ -34,11 +38,11 @@
 				<td>
 					{* Options for the user to view online or download *}
 					{foreach from=$eContentItem->links item=link}
-						<a href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button">{$link.text}</a>
+						<input value="{$link.text}" href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px" >
 					{/foreach}
 					{if $user && $user->hasRole('epubAdmin')}
-						<a href="#" onclick="return editItem('{$id}', '{$eContentItem->id}')" class="button">Edit</a>
-						<a href="#" onclick="return deleteItem('{$id}', '{$eContentItem->id}')" class="button">Delete</a>
+						<input value="Edit" href="#" onclick="return editItem('{$id}', '{$eContentItem->id}')" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px" class="button">
+						<input value="Delete" href="#" onclick="return deleteItem('{$id}', '{$eContentItem->id}')" class="button" style="background-color:rgb(244,213,56);width:77px;height:20px;padding-top:0px;padding-bottom:0px">
 					{/if}
 				</td>
 			</tr>
