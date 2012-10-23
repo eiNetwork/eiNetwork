@@ -379,8 +379,6 @@ class Results extends Action {
 
 		
 		// Done, display the page
-		require_once('services/Debug/Debugger.php');
-		Debugger::tailAt("a.out",$searchObject);
 		$interface->display('layout.tpl');
 	} // End launch()
 
