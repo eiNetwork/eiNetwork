@@ -1043,8 +1043,7 @@ public function getMyHoldsViaDB($patron)
 			}else{
 				$summaryInformation['inLibraryUseOnly'] = false;
 			}
-	
-	
+
 			if ($summaryInformation['availableCopies'] == 0 && $summaryInformation['isDownloadable'] == true){
 				$summaryInformation['showAvailabilityLine'] = false;
 			}else{

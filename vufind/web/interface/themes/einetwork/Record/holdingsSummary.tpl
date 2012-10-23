@@ -4,7 +4,7 @@
 		{if $holdingsSummary.callnumber}
 			<div class='callNumber'>
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-				It's here<a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
+				<a style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">It's here </a><a href='{$url}/Record/{$holdingsSummary.recordId|escape:"url"}#holdings'>{$holdingsSummary.callnumber}</a>
 			</div>
 		{elseif $holdingsSummary.isDownloadable}
 			<div><span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
@@ -15,15 +15,28 @@
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Noncirculating.png"/ alt="Noncirculating"></span>
 			Available for in library use only
 		</div>
+		<script>
+			var n = "{$holdingsSummary.recordId}".replace(/\./g, "");
+		{literal}
+			if(document.getElementById("request-now"+n)){
+				var t = document.getElementById("request-now"+n);
+				t.onclick = "";
+				t.style.backgroundColor = "rgb(192,192,192)";
+				t.style.color = "rgb(248,248,248)";
+				t.style.cursor = "default";
+			}
+		{/literal}
+		</script>
+
 	{elseif $holdingsSummary.class == 'nearby'}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-			Available at your preferred libraries
+			<span style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">Available at your preferred libraries</span>
 		</div>
 	{elseif $holdingsSummary.class == 'available'}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-			Available at other libraries
+			<span style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">Available at other libraries</span>
 		</div>
 	{elseif $holdingsSummary.class == 'unavailable'}
 		<div>

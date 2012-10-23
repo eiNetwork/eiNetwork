@@ -18,20 +18,29 @@
 
   <div id="main-content">
     <div id="searchInfo">
-	{*<div class="resulthead">
-		<div class="yui-u first">
+	<div class="resulthead" style="height:30px; ">
+		<div class="yui-u first" style="float:left; width:50%">
 		{if $recordCount}
 		{$recordCount}{translate text=" items found for"}
-		{if $searchType == 'basic'}'{$lookfor|escape:"html"}' {/if}
+		{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span> {/if}
 		{/if}
 		<br/><br/>
 		{if $spellingSuggestions}
 		{/if}
 		</div>
-	</div>*}
-	
+		<div style="float:right; width:50%">
+			<div class="round-rectangle-button" value="Advanced Search" onclick="window.location.href='/Search/Advanced'" style="float:right; margin-right:10px;">
+				{*<span class="resultAction_img_span">
+					<img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"/>
+				</span> *}
+				<div class="resultAction_span" style="padding-top:3px; padding-left:6px;">Advanced Search</div>
+			</div>
+		</div>
+	</div>
+	{if $pageLinks.all}<div class="pagination" style="border-bottom: 1px solid #999999; padding-bottom:3px;">{$pageLinks.all}</div>{/if}
+
 <!--	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
--->	<input class="button" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
+-->	
       {* End Listing Options *}
 
       {if $subpage}

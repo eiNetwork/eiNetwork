@@ -116,7 +116,9 @@
         $(document).ready(function(){literal} { {/literal}
   	resultDescription('{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}','{$summId}');
         {literal} }); {/literal}
+getItemStatusCart('{$summId|escape}');
     </script>
 </div>
 </div>
 </div>
+

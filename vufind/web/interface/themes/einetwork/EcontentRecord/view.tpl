@@ -260,6 +260,11 @@ function redrawSaveStatus() {literal}{{/literal}
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
 							</div>
 						{/if}
+						{if $eContentRecord->publishDate}
+							<div>
+								{$eContentRecord->publishDate}
+							</div>
+						{/if}
 						{if $showOtherEditionsPopup}
 						<div id="otherEditionCopies">
 							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
@@ -331,7 +336,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		  {/if}	
 	    {else}
 		  {if $eContentRecord->sourceUrl}
-		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'">
+		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			<span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
 			<span class="action-lable-span">Access Online</span>
 		  </div>
@@ -435,6 +440,8 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <div>
 		  {if $displayFormat eq "Video Download"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
+		  {elseif $format eq "Audio Book Download"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Audio Book Download"></span>
 		  {elseif $displayFormat eq "Adobe EPUB eBook"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
 		  {elseif $displayFormat eq "Adobe PDF"}
@@ -490,6 +497,8 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <div>
 		  {if $eContentRecord->format eq "Video Download"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
+		  {elseif $format eq "Audio Book Download"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Audio Book Download"></span>
 		  {elseif $eContentRecord->format eq "Adobe EPUB eBook"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
 		  {elseif $eContentRecord->format eq "Adobe PDF"}
@@ -552,7 +561,6 @@ function redrawSaveStatus() {literal}{{/literal}
 		  </div>
 	    </div>
       {/if}
-
 		  {if $summary}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Summary'}</div>
@@ -592,14 +600,13 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div class="resultInformationLabel">Details</div>
 				<div class="recordSubjects">
 					<table>
-					{if $published}
+					{if $eContentRecord->publisher}
 					<tr>
-						<td class="details_lable">Publish</td>
+						<td class="details_lable">Publisher</td>
 						<td>
 							<table>
-								{foreach from=$published item=publish name=loop}
-									<tr><td>{$publish|escape}</td></tr>
-								{/foreach}
+								<tr><td>{$eContentRecord->publishLocation|escape}{$eContentRecord->publisher|escape} {$eContentRecord->publishDate|escape}</td></tr>
+								
 							</table>
 						</td>
 					</tr>
@@ -616,29 +623,27 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $lang}
-						<tr>
-							<td class="details_lable">{translate text='Language'}</td>
-							<td>
-								<table>
-								{foreach from=$recordLanguage item=lang}
-									<tr><td>{$lang|escape}</td></tr>
-								{/foreach}
-								</table>
-							</td>
-						</tr>
-					{/if}
-					{if $physicalDescription}
+					
+					{if $eContentRecord->physicalDescription}
 					<tr>
 						<td class="details_lable">Description</td>
 						<td>
 							<table>
-								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
-									<tr><td>{$physicalDescription|escape}</td></tr>
-								{/foreach}
+								<tr><td>{$eContentRecord->physicalDescription|escape}</td></tr>
+								
 							</table>
 						</td>
 					</tr>
+					{/if}
+					{if $eContentRecord->language}
+						<tr>
+							<td class="details_lable">{translate text='Language'}</td>
+							<td>
+								<table>
+									<tr><td>{$eContentRecord->language|escape}</td></tr>
+								</table>
+							</td>
+						</tr>
 					{/if}
 					{if $note}
 					<tr>

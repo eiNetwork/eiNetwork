@@ -1,4 +1,3 @@
-<h4>Staff Reviews</h4>
 {foreach from=$staffCommentList item=comment}
   <div class='comment'>
   	<div class="commentHeader">

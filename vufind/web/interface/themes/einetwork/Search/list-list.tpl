@@ -23,7 +23,6 @@ $(document).ready(function() {literal} { {/literal}
 		    {$record}
 		  </div>
 		{/foreach}
-		
 		<input type="hidden" name="type" value="hold" />		
 		
 		{if !$enableBookCart}

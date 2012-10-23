@@ -372,17 +372,18 @@ class EContentRecord extends SolrDataObject {
 			'storeSolr' => true,
 		),
 
-		/*'format' => array(
-		 'property' => 'format',
-		 'type' => 'text',
-		 'size' => 100,
-		 'maxLength'=>100,
-		 'label' => 'Format',
-		 'description' => 'The Format of the item.',
-		 'required'=> true,
-		 'storeDb' => true,
-		 'storeSolr' => true,
-		 ),*/
+		//'format' => array(
+		// 'property' => 'format',
+		// 'type' => 'text',
+		// 'size' => 100,
+		// 'maxLength'=>100,
+		// 'label' => 'Format',
+		// 'description' => 'The Format of the item.',
+		// 'required'=> true,
+		// 'storeDb' => false,
+		// 'storeSolr' => true,
+		// ),
+		
 		'format_category' => array(
 			'property' => 'format_category',
 			'type' => 'method',
@@ -1036,7 +1037,7 @@ class EContentRecord extends SolrDataObject {
 				$formatValue = $item->externalFormat;
 			}else{
 				$formatValue = translate($item->item_type);
-			}
+			}	
 			$formats[$formatValue] = $formatValue;
 		}
 		return $formats;

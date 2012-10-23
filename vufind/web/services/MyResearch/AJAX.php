@@ -436,7 +436,8 @@ class AJAX extends Action {
 			$overDriveDriver = new OverDriveDriver();
 			$summary = $overDriveDriver->getOverDriveSummary($user);
 			$sumOfCheckoutItems += $summary["numCheckedOut"];
-			$sumOfRequestItems = $sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"];
+			//$sumOfRequestItems = $sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"];
+			$sumOfRequestItems = isset($summary["numEContentWishList"])?$sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"]:$sumOfRequestItems +  $summary["numUnavailableHolds"];
 			$sum["SumOfCheckoutItems"] = $sumOfCheckoutItems;
 			$sum["SumOfRequestItems"] = $sumOfRequestItems;
 			return json_encode($sum);
@@ -513,17 +514,6 @@ class AJAX extends Action {
 			}
 			$interface->assign('locationList', $locationList);
 			$returnwords  ="";
-			/*foreach($profile as $key=>$value){
-				echo "aaa";
-				if(is_array($value)){
-					echo $key."<br/>";
-					foreach($value as $keykey => $valuevalue){
-						echo $keykey."  =>  ".$valuevalue."<br/>";
-					}
-				}else{
-					echo $key."  =>  ".$value."<br/>";
-				}
-			}*/
 			return $interface->fetch('MyResearch/ajax-location.tpl');
 			
 		}

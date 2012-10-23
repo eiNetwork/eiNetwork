@@ -74,6 +74,7 @@ class EcontentRecordDriver extends IndexRecord
 			$this->eContentRecord->find(true);
 		}
 		$interface->assign('source', $this->eContentRecord->source);
+		$interface->assign('sourceUrl', $this->eContentRecord->sourceUrl);
 		$searchResultTemplate = parent::getSearchResult();
 		//Override fields as needed
 		return 'RecordDrivers/Econtent/result.tpl';

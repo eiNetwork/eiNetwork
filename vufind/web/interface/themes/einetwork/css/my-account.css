@@ -195,8 +195,7 @@
 
 .account_balance  .button{
 	padding-left: 15px;
-	padding-right: 5px;
-	width:80px;
+	padding-right: 15px;
 
 }
 
@@ -232,7 +231,6 @@
 
 .checkout .button{
 	width: 100px;
-	height: 20px;
 	background: rgb(255,230,109);
 }
 
@@ -295,9 +293,7 @@
 
 
 .item_renew .button{
-	background: rgb(255,230,109);
-	width:90px;
-	height: 20px;	
+	background: rgb(255,230,109);	
 }
 
 .item_renew .button:hover{

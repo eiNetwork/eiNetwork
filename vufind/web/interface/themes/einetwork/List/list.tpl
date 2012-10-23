@@ -87,9 +87,6 @@
 			</div>
 	        </div>
 		{if count($recordSet)>0}
-			<div style="padding-left:35px;">
-				After hitting the Request All button below, your items will be transfered to your pickup location. If any items are unavailable, you will be added to waitlist and notified when your items are ready.  
-			</div>
 			<div class='loginFormRow'>
 			<input type="hidden" name="holdType" value="hold"/>
 			</div>

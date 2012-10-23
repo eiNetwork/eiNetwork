@@ -4,7 +4,7 @@
     <div id="account-label" {if !$user} style="display: none;"{/if}>
         <a href="{$path}/MyResearch/Profile">
         {if strlen($user->displayName) > 0}{$user->displayName}
-        {else}{$user->lastname|capitalize}{$user->firstname|capitalize}
+        {else}{*{$user->lastname|capitalize}*}{$user->firstname|capitalize}
         {/if}
         </a>
     </div>

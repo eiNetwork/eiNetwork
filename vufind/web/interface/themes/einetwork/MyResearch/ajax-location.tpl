@@ -13,7 +13,7 @@
         {/if}
     </div>
     <div>
-        <input id="edit-button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
+        <input id="edit-button" type="button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
     </div>
 </div>
 {literal}

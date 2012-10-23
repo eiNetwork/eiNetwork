@@ -325,6 +325,8 @@ class CheckedOut extends MyResearch{
 		$interface->setTemplate('checkedout.tpl');
 		$interface->setPageTitle('My Holds');
 		$interface->display('layout.tpl');
+		unset($_SESSION['renew_message']);
+		
 		//END for holds
 	}
 

@@ -54,7 +54,7 @@
 			<div id="registerButton"
 			     onmouseover="mouseOver(event,'rgb(242,242,242)')"
 			     onmouseout="mouseOut(event,'rgb(255,255,255)')"
-			     onclick="location.href='http://vufindplus.einetwork.net/MyResearch/GetCard'; style='cursor: pointer;'">
+			     onclick="location.href='{$path}/MyResearch/GetCard'; style='cursor: pointer;'">
 				Register
 			</div>
 		</div>

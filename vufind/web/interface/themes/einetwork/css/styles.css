@@ -46,18 +46,26 @@ html,body {
 	width:680px;
 	padding-left:20px;
 	padding-top:20px;
+	background-color:#ffffff;
+	min-height: 880px;
+	border-right: 2px solid rgb(204, 204, 204);
+	border-left: 2px solid rgb(204, 204, 204);
+	border-right: 2px solid rgba(204, 204, 204, 0.506);
+	border-left: 2px solid rgba(204, 204, 204, 0.506);
+	-webkit-background-clip: padding-box; /* for Safari */
+	background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
 }
 #page-content{
 	min-height: 900px;
 	height: auto;
+	background-image: url("../images/Art/filmgrain.png");
+	background-repeat: repeat;
 }
 #right-bar {
-	width: 254px;
+	width: 251px;
 	display: inline-block;
 	vertical-align: top;
 	float: right;
-	background-image: url("../images/Art/filmgrain.png");
-	background-repeat: repeat;
 	font-size: 16px;
 
 }
@@ -378,11 +386,11 @@ ul.menu li {
 }
 
 .result {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #999;
 	background-color: #FFFFFF;
 	padding-top:15px;
 	padding-bottom:15px;
-	height: 130px;
+	min-height: 130px;
 }
 
 div.record {
@@ -777,8 +785,6 @@ ul.bulleted li {
 	display: inline-block;
 	vertical-align: top;
 	float: left;
-	background-image: url("../images/Art/filmgrain.png");
-	background-repeat: repeat;
 }
 
 .filter-header{
@@ -1003,6 +1009,7 @@ ul.bulleted li {
 .pagination {
 	font-size: 11px;
 	text-align: center;
+	margin-top:3px;
 }
 
 .pagination a {
@@ -2283,8 +2290,6 @@ ul.hold_items li {
 
 #readingListForm input.button{
 	background: rgb(255,230,109);
-	width:90px;
-	height: 20px;
 }
 
 #readingListForm input.button:hover{
@@ -2543,12 +2548,14 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 }
 
 #otherEditionsPopup{
-	min-width: 530px;
+	/*min-width: 530px;*/
+
 }
 #inner-main-content{
 	width:656px;
 	margin-left:24px;
 	margin-right:24px;
+	background-color: #ffffff;
 }
 /*=========== round rectangle button ===========*/
 .round-rectangle-button{
@@ -2588,4 +2595,17 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .errorMessage{
 	/*height:12px;*/
 	color: red;
+}
+/* Other Editions */
+.oeDisplay{
+	position:relative;
+	float:left;
+}
+.oeDetails{
+	width:252px !important;
+	max-width:252px !important;
+	min-width:252px !important;
+}
+.editEcontent input{
+	width: 565px;
 }

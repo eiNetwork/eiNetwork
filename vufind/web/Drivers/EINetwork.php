@@ -155,11 +155,12 @@ class EINetwork extends MillenniumDriver{
 		$Fullname = str_replace(";"," ",$Fullname);
 		$Fullname = str_replace(";","'",$Fullname);
 		$allNameComponents = preg_split('^[\s-]^', strtolower($Fullname));
+		//$allNameComponents = array_filter($allNameComponents);
 		$nameParts = explode(' ',$Fullname);
+		$nameParts = array_filter($nameParts);
 		$lastname = strtolower($nameParts[0]);
 		$middlename = isset($nameParts[2]) ? strtolower($nameParts[2]) : '';
 		$firstname = isset($nameParts[1]) ? strtolower($nameParts[1]) : $middlename;
-
 		if ($userValid){
 			$user = array(
                 'id'        => $barcode,
@@ -395,7 +396,7 @@ class EINetwork extends MillenniumDriver{
 			return "Please enter the new pin number again";
 		}
 		if ($pin1 != $pin2){
-			return "The pin numberdoes not match the confirmed number, please try again.";
+			return "The pin number does not match the confirmed number, please try again.";
 		}
 		
 		//Login to the patron's account

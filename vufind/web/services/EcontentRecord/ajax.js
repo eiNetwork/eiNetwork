@@ -186,7 +186,7 @@ function addItem(id){
 function editItem(id, itemId){
 	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=EditItem&itemId=" + encodeURIComponent(itemId);
-	ajaxLightbox(url+ "?" + params);
+	ajaxLightbox(url+ "?" + params, false,false,'600px',false,'auto');
 	return false;
 }
 function showEcontentPurchaseOptions(id){

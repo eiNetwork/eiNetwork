@@ -162,7 +162,7 @@
 				view your past searches and get personalized recommendations for items you might like.
 			</div>
 			<div>
-				<a href="http://vufindplus1.einetwork.net/MyResearch/GetCard">
+				<a href="{$path}/MyResearch/GetCard">
 					<input class="button" type="submit" name="submit" value="Register"/>
 				</a>
 			</div>

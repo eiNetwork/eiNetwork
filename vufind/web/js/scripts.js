@@ -176,7 +176,7 @@ function lightbox(left, width, top, height){
 	
 	var loadMsg = $('#lightboxLoading').html();
 
-	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><img src="' + url + '/images/loading_bar.gif" class="lightboxLoadingImage"/></div>');
+	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><img src="' + path + '/images/loading_bar.gif" class="lightboxLoadingImage"/></div>');
    
 	hideSelects('hidden');
 
@@ -211,14 +211,13 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	$('#lightbox').show();
 	$('#lightbox').css('height', documentHeight + 'px');
 	
-	$('#popupbox').html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
+	//$('#popupbox').html('<img src="' + path + '/images/loading.gif" /><br />' + loadMsg);
 	$('#popupbox').show();
 	$('#popupbox').css('top', '50%');
 	$('#popupbox').css('left', '50%');
 	
 	$.get(urlToLoad, function(data) {
 		$('#popupbox').html(data);
-		
 		$('#popupbox').show();
 		if (parentId){
 			//Automatically position the lightbox over the cursor
@@ -229,11 +228,16 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 				collision: "flip"
 			});
 		}else{
-			if (!left) left = '100px';
-			if (!top) top = '100px';
-			if (!width) width = 'auto';
-			if (!height) height = 'auto';
-			
+			if (!left) left = '30%';
+			if (!top) top = '30%';
+			if (!height) height = '300px';
+			if(width!=null||width){
+				var reg = /\d*/;
+				var newWidth = reg.exec(width);
+				var newHeight = reg.exec(height);
+				var left = ($(document).width()-parseInt(newWidth))/2;
+			}
+			if (!width) width = '400px';
 			$('#popupbox').css('top', top);
 			$('#popupbox').css('left', left);
 			$('#popupbox').css('width', width);
@@ -252,10 +256,10 @@ function showElementInLightbox(title, elementSelector){
 	var new_top =  document.body.scrollTop;
 
 	// Get the height of the document
-	var documentHeight = $(document).height();
+	
 
 	$('#lightbox').show();
-	$('#lightbox').css('height', documentHeight + 'px');
+	
 
 	$('#popupbox').show();
 	$('#popupbox').css('top', '100px');
@@ -268,6 +272,31 @@ function showElementInLightbox(title, elementSelector){
 	
 	$('#popupbox').html(lightboxContents);
 	
+}
+function newShowElementInLightbox(title, elementSelector,left,top,width,height){
+	
+	var new_top =  document.body.scrollTop;
+	var documentHeight = $(document).height();
+	$('#lightbox').show();
+	$('#lightbox').css('height', documentHeight + 'px');
+	if (!left) left = '30%';
+	if (!top) top = '30%';
+	if (!height) height = '300px';
+	if(width!=null||width){
+		var reg = /\d*/;
+		var newWidth = reg.exec(width);
+		var newHeight = reg.exec(height);
+		var left = ($(document).width()-parseInt(newWidth))/2;
+	}
+	if (!width) width = '400px';
+	$('#popupbox').show();
+	$('#popupbox').css('top', top);
+	$('#popupbox').css('left', left);
+	$('#popupbox').css('width', width);
+	$('#popupbox').css('height', height);
+	var lightboxContents = "<div onmouseup='this.style.cursor='default';' class='popupHeader'>" + "<span class='popupHeader-title'>"+title+"</span>" + "<span><img src='/interface/themes/einetwork/images/closeHUDButton.png' style='float:right' onclick='hideLightbox()'></span></div>";
+	lightboxContents += "<div class='content'>" + $(elementSelector).html() + "</div>";	
+	$('#popupbox').html(lightboxContents);
 }
 
 function hideLightbox(){
@@ -493,7 +522,7 @@ function getOverDriveSummary(){
 var ajaxCallback = null;
 function ajaxLogin(callback){
 	ajaxCallback = callback;
-	ajaxLightbox(path + '/MyResearch/AJAX?method=LoginForm');
+	ajaxLightbox(path + '/MyResearch/AJAX?method=LoginForm',false,false,'450px',false,'320px');
 }
 
 function processAjaxLogin(){
@@ -512,8 +541,6 @@ function processAjaxLogin(){
 					// Hide "log in" options and show "log out" options:
 					$('.loginOptions').hide();
 					$('.logoutOptions').show();
-					$('#loginOptions').hide();
-					$('#logoutOptions').show();
 					$('#myAccountNameLink').html(response.result.name);
 					hideLightbox();
 					if (ajaxCallback  && typeof(ajaxCallback) === "function"){
@@ -738,7 +765,7 @@ function addList(form, failMsg)
 					var newId = data.newId;
 					//Save the record to the list
 					var url = path + "/Resource/Save?lightbox=true&selectedList=" + newId + "&id=" + recordId + "&source=" + source;
-					ajaxLightbox(url);
+					ajaxLightbox(url,false,false,'450px',false,'350px');
 				} else {
 					alert(value.length > 0 ? value : failMsg);
 				}
@@ -862,7 +889,7 @@ function lessFacets(name)
 function getSaveToListForm(id, source){
 	if (loggedIn){
 		var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
-		ajaxLightbox(url);
+		ajaxLightbox(url,false,false,'450px',false,'auto');
 	}else{
 		ajaxLogin(function (){
 			getSaveToListForm(id, source);
@@ -905,6 +932,9 @@ function performSaveRecord(id, source, formElem, strings, service, successCallba
 					if (value == "Done") {
 							successCallback();
 							hideLightbox();
+							if($("#listId").val()!=null&&$("#listId").val()!=""){
+								deleteItemInList(id,source);
+							}
 					} else {
 							getLightbox('Record', 'Save', id, null, strings.add);
 					}
@@ -998,18 +1028,7 @@ function GetTags(id, elemId, strings) {
 
 function loadOtherEditionSummaries(id, isEcontent){
 	var url = path + "/Search/AJAX?method=getOtherEditions&id=" + id + "&isEContent=" + isEcontent;
-	ajaxLightbox(url);
-}
-
-function getQuerystringParameters(){
-	var vars = [];
-	var q = document.URL.split('?')[1];
-	if(q != undefined){
-		q = q.split('&');
-		for(var i = 0; i < q.length; i++){
-			var hash = q[i].split('=');
-			vars[hash[0]] = hash[1];
-		}
-	}
-	return vars;
+	ajaxLightbox(url,false,false,'400px',false, 'auto');
+}function testLightBox(){
+	showElementInLightbox('test','<p>hello</p>');
 }

@@ -315,7 +315,9 @@ class Results extends Action {
 			$recordSet = $searchObject->getResultRecordHTML();
 			$interface->assign('recordSet', $recordSet);
 			$timer->logTime('load result records');
-
+			/*echo "<pre style=\"border: 1px solid #000; height: {$height}; overflow: auto; margin: 0.5em;\">";
+			var_dump($result);
+			echo "</pre>\n";*/
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
 			if(isset($_REQUEST["iscart"])) //szheng: modified
@@ -350,7 +352,7 @@ class Results extends Action {
 			}
 			$timer->logTime('finish hits processing');
 		}
-
+		
 		if ($numProspectorTitlesToLoad > 0 && $enableProspectorIntegration){
 			$interface->assign('prospectorNumTitlesToLoad', $numProspectorTitlesToLoad);
 			$interface->assign('prospectorSavedSearchId', $searchObject->getSearchId());
@@ -366,14 +368,19 @@ class Results extends Action {
 			$searchStat = new SearchStat();
 			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : $_GET['basicType']), $searchObject->getResultTotal());
 		}
+		
+		if($searchObject->getResultTotal() != 1){
+			// Save the ID of this search to the session so we can return to it easily:
+			$_SESSION['lastSearchId'] = $searchObject->getSearchId();
 
-		// Save the ID of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
+			// Save the URL of this search to the session so we can return to it easily:
+			$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
+		}
 
-		// Save the URL of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
 		
 		// Done, display the page
+		require_once('services/Debug/Debugger.php');
+		Debugger::tailAt("a.out",$searchObject);
 		$interface->display('layout.tpl');
 	} // End launch()
 

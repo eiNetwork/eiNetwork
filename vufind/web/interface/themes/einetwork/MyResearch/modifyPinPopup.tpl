@@ -1,6 +1,6 @@
-<table>
-	<tbody>
-		<form method="post" name="modifyPinNumber" action="{$path}/MyResearch/Profile">
+<form method="post" name="modifyPinNumber" action="{$path}/MyResearch/Profile">
+	<table>
+		<tbody>
 			<tr>
 				<td>
 					<input type="hidden" class="text" name="updatePin" value="true"/>
@@ -29,6 +29,6 @@
 					<input type="submit" class="button" value="Set new PIN" style="margin-left:250px;background-color:rgb(244,213,56)"/>
 				</td>
 			</tr>
-		</form>
-	</tbody>
-</table>
+		</tbody>
+	</table>
+</form>

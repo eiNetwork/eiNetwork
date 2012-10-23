@@ -96,28 +96,6 @@ class AJAXGetCallNumber extends Record{
 					$interface->assign('holdings', $holdings);
 					$holdingsResult = $interface->fetch("Record/view-holdings.tpl");
 					echo $holdingsResult;
-					/*foreach($holdings as $key => $value)
-					{
-						if(is_array($value))
-						{
-							echo $key.' => ';
-							foreach($value as $keykey => $valuevalue)
-							{
-								if(is_array($valuevalue))
-								{
-									echo "\t".$keykey;
-									foreach($valuevalue as $keykeykey => $valuevaluevalue)
-									{
-										echo "\t\t".$keykeykey." => ".$valuevaluevalue."\n";
-									}
-								}else{
-									echo "\t".$keykey.' => '.$valuevalue."\n";
-								}
-							}
-						}else{
-							echo $key.' => '.$value."\n";
-						}
-					}*/
 					$holdingData->holdings = $holdings;
 				}
 			}else{

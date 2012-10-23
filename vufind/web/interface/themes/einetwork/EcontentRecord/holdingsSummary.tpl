@@ -29,15 +29,20 @@
 			{elseif $holdingsSummary.checkedOut}
 				{* Don't need to view copy information for checked out items *}
 			{else}
-				{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}, 
+<!--				{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}, 
 				{$holdingsSummary.availableCopies} {if $holdingsSummary.availableCopies == 1}is{else}are{/if} available. 
 				{if $holdingsSummary.onOrderCopies > 0}
 					{$holdingsSummary.onOrderCopies} {if $holdingsSummary.onOrderCopies == 1}is{else}are{/if} on order. 
 				{/if}
+-->			{/if}
+
+			<div class="holdableCopiesSummary">
+				{if $holdingsSummary.holdQueueLength > 0}
+				{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for
+				{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}. 
 			{/if}
-			{if $holdingsSummary.numHolds > 0}
-				<br/>{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person is{else}people are{/if} on the wait list.
-			{/if}
+	</div>
+
 		{/if} 
 		{if $showOtherEditionsPopup}
 		<div class="otherEditions">

@@ -56,7 +56,6 @@ class SearchAPI extends Action {
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
-
 		//setup the results array.
 		$jsonResults = array();
 

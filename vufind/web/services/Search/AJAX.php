@@ -192,7 +192,6 @@ class AJAX extends Action {
 		global $configArray;
 		global $interface;
 		global $timer;
-		
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
 
 		require_once 'CatalogConnection.php';
@@ -204,7 +203,6 @@ class AJAX extends Action {
 
 		$summaries = $catalog->getStatusSummaries($_GET['id']);
 		$timer->logTime("Retrieved status summaries");
-		
 		$result = array();
 		$result['items'] = array();
 

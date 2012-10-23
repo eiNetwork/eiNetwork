@@ -1,4 +1,6 @@
+
 <div id="record{$summId|escape}">
+
   <div class="selectTitle">
     <input type="checkbox" name="selected[{$summId|escape:"url"}]" id="selected{$summId|escape:"url"}" style="display:none" />&nbsp;
   </div>
@@ -33,4 +35,15 @@
     </div>
         
   </div>
+
 </div>
+{literal}
+    <script type="text/javascript">
+	    $("#record{$summId|escape}").ready(function(){
+              $("#record{$summId|escape}").parent().hide();
+	    }
+	);
+  </script>
+{/literal}
+
+

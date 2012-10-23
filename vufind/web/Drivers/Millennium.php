@@ -699,6 +699,7 @@ class MillenniumDriver implements DriverInterface
                             'libraryDisplayName' => $issueSummary['location'],
                             'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',
 						);
+						$summaryInformation['inLibraryUseOnly'] = true;
 						$summaryInformation['status'] = 'Available';
 						$summaryInformation['statusfull'] = 'Available';
 						$summaryInformation['class'] = 'available';
@@ -1010,11 +1011,11 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['status'] = $allItemStatus;
 			}
 		}
-		if ($allItemStatus == 'In Library Use Only'){
-			$summaryInformation['inLibraryUseOnly'] = true;
-		}else{
-			$summaryInformation['inLibraryUseOnly'] = false;
-		}
+		//if ($allItemStatus == 'In Library Use Only'){
+		//	$summaryInformation['inLibraryUseOnly'] = true;
+		//}else{
+		//	$summaryInformation['inLibraryUseOnly'] = false;
+		//}
 
 
 		if ($summaryInformation['availableCopies'] == 0 && $summaryInformation['isDownloadable'] == true){
@@ -1081,7 +1082,6 @@ class MillenniumDriver implements DriverInterface
 	public function patronLogin($username, $password)
 	{
 		global $timer;
-
 		//Strip any non digit characters from the password
 		$password = preg_replace('/[a-or-zA-OR-Z\W]/', '', $password);
 		$id2= $password;
@@ -1149,10 +1149,10 @@ class MillenniumDriver implements DriverInterface
 	 */
 	public function getMyProfile($patron)
 	{
+
 		global $timer;
 		global $user;
 		global $configArray;
-
 		if (is_object($patron)){
 			$patron = get_object_vars($patron);
 			$id2 = $this->_getBarcode();
@@ -1209,7 +1209,6 @@ class MillenniumDriver implements DriverInterface
 		$location = new Location();
 		$location->whereAdd("code = '$homeBranchCode'");
 		$location->find(1);
-
 		if ($user) {
 			if ($user->homeLocationId == 0) {
 				$user->homeLocationId = $location->locationId;
@@ -1653,9 +1652,7 @@ class MillenniumDriver implements DriverInterface
 
 		//Load the information from millenium using CURL
 		$pageContents = $this->_fetchPatronInfoPage($patronDump, 'readinghistory');
-
 		$sresult = preg_replace("/<[^<]+?><[^<]+?>Reading History.\(.\d*.\)<[^<]+?>\W<[^<]+?>/", "", $pageContents);
-
 		$s = substr($sresult, stripos($sresult, 'patFunc'));
 		$s = substr($s,strpos($s,">")+1);
 		$s = substr($s,0,stripos($s,"</table"));
@@ -1663,7 +1660,6 @@ class MillenniumDriver implements DriverInterface
 		$s = preg_replace ("/<br \/>/","", $s);
 
 		$srows = preg_split("/<tr([^>]*)>/",$s);
-
 		$scount = 0;
 		$skeys = array_pad(array(),10,"");
 		$readingHistoryTitles = array();
@@ -1680,6 +1676,9 @@ class MillenniumDriver implements DriverInterface
 					$skeys[$i] = $scols[$i];
 				} else if ($scount > 1) {
 					if (stripos($skeys[$i],"Mark") > -1) {
+						if(preg_match('@id="([^"]*)"@', $scols[$i], $m)){
+							$historyEntry['rsh'] = $m[1];
+						}
 						$historyEntry['deletable'] = "BOX";
 					}
 
@@ -2980,7 +2979,7 @@ class MillenniumDriver implements DriverInterface
 										if (preg_match('/\/search~S\\d+\\?\/.*?\/.*?\/.*?\/(.*?)&.*/', $checkInLink, $checkInGridInfo)) {
 											$issueSummary['checkInGridId'] = $checkInGridInfo[1];
 										}
-										$issueSummary['checkInGridLink'] = 'http://www.millenium.marmot.org' . $checkInLink;
+										$issueSummary['checkInGridLink'] = 'http://catalog.einetwork.net' . $checkInLink;
 									}
 									//Convert to camel case
 									$label = (preg_replace('/[^\\w]/', '', strip_tags($label)));

@@ -100,7 +100,7 @@
 .result_middle{
 	width:300px;
 	display:inline-block;
-	height:100px;
+	min-height:100px;
 }
 .holdingsImage{
 	vertical-align:middle;

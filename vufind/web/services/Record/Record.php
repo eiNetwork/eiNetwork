@@ -140,6 +140,8 @@ class Record extends Action
 				$published[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'c'));
 			}
 			$interface->assign('published', $published);
+			//$interface->assign('pubdate', str_replace('.', '', $this->getSubfieldData($marcField, 'c')));
+			$interface->assign('pubdate', ereg_replace("[^0-9]", "", $this->getSubfieldData($marcField, 'c')));
 		}
 
 		$marcFields = $marcRecord->getFields('250');
@@ -316,17 +318,39 @@ class Record extends Action
 		$interface->assign('recordLanguage', $record['language']);
 		
 		$timer->logTime('Got detailed data from Marc Record');
+		$marcFields505 = $marcRecord->getFields('505');
+		$toc = array();
+		if($marcFields505){
+			foreach ($marcFields505 as $marcField){
+				foreach ($marcField->getSubFields() as $subfield){
+					$note = $subfield->getData();
+					if ($subfield->getCode() == 't'){
+						$note = "<span style='color:red'>" . $note."</span>";
+					}else{
+						$note = $subfield->getCode().' '.$note;
+					}
+					$note = trim($note);
+					if (strlen($note) > 0){
+						$toc[] = $note;
+					}
+				}
+			}
+			$interface->assign('toc', $toc);
+		}
 		
 		$notes = array();
-
-		$marcFields500 = $marcRecord->getFields('500');
-		$marcFields504 = $marcRecord->getFields('504');
+/*		$marcFields500 = '';//$marcRecord->getFields('500');
+		$marcFields504 = '';//$marcRecord->getFields('504');
 		$marcFields505 = $marcRecord->getFields('505');
-		$marcFields511 = $marcRecord->getFields('511');
-		$marcFields518 = $marcRecord->getFields('518');
-		$marcFields520 = $marcRecord->getFields('520');
+		$marcFields511 = '';//$marcRecord->getFields('511');
+		$marcFields518 = '';//$marcRecord->getFields('518');
+		$marcFields520 = '';//$marcRecord->getFields('520');
+		if($marcFields505){
+			$interface->assign('toc', $marcFields505);
+		}
 		if ($marcFields500 || $marcFields504 || $marcFields505 || $marcFields511 || $marcFields518 || $marcFields520){
-			$allFields = array_merge($marcFields500, $marcFields504, $marcFields505, $marcFields511, $marcFields518, $marcFields520);
+			//$allFields = array_merge($marcFields500, $marcFields504, $marcFields505, $marcFields511, $marcFields518, $marcFields520);
+			$allFields = $marcFields505;
 			foreach ($allFields as $marcField){
 				foreach ($marcField->getSubFields() as $subfield){
 					$note = $subfield->getData();
@@ -363,7 +387,7 @@ class Record extends Action
 				}
 			}
 		}
-
+*/
 		if (count($notes) > 0){
 			$interface->assign('notes', $notes);
 		}

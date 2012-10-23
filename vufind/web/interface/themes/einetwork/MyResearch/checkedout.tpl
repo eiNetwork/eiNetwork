@@ -50,18 +50,10 @@
 	    <div class="item_renew">
 		{translate text='Checked Out Items'}
 		<a href="{$path}/MyResearch/RenewAll">
-		    <input id="item_select_all" class="button" value="Renew All"/>
+		    <input id="item_select_all" type="button" class="button" value="Renew All"/>
 		</a>
-		{*<select name="accountSort" id="sort" onchange="changeAccountSort($(this).val());">
-		    {foreach from=$sortOptions item=sortDesc key=sortVal}
-		    <option value="{$sortVal}"{if $defaultSortOption == $sortVal} selected="selected"{/if}>{translate text=$sortDesc}</option>
-		    {/foreach}
-		</select>*}
 	    </div>
 	    <div class="item_renew">
-		{*<a href="#" onclick="return renewSelectedTitles();">
-		    <input id="item_select"class="button" value="Renew Selected Items"/>
-		</a>*}
 	    </div>
 	    <div class="checkout">
 		{foreach from=$transList item=record name="recordLoop" }
@@ -339,9 +331,9 @@
 			    {assign var=shortId value=$record.shortId scope="global"}
 <!--			    disable renewals if the item is overdue   
 -->			    {if $record.overdue}
-				<input id="userreviewlink{$shortId}" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+				<input id="userreviewlink{$shortId}" type="button" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
 			    {else}
-				<input id="userreviewlink{$shortId}" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
 			    {/if}
 			    {if $record.renewMessage}
 				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">
@@ -401,10 +393,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					
-				    <a href="{$record.downloadLink}">
-					    <input class="button" value="Download"/>
-				    </a>
+					<input class="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 				</div>
 			</div>
 			{/foreach}
@@ -463,10 +452,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					
-				    <a href="{$record.downloadLink}">
-					    <input class="button" value="Download"/>
-				    </a>
+					<input class="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 				</div>
 			</div>
 			{/foreach}

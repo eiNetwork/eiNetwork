@@ -1,7 +1,7 @@
-<div class="header">
+<div class="popupHeader">
 	{$title}
-	<a href="#" onclick='hideLightbox();return false;' class="closeIcon">Close <img src="{$path}/images/silk/cancel.png" alt="close" /></a>
+	<a href="#" onclick='hideLightbox();return false;' class="closeIcon" style="float:right"><img src="{$path}/interface/themes/einetwork/images/closeHUDButton.png" alt="close" /></a>
 </div>
-<div class="content">
+<div class="content editEcontent">
 	{$editForm}
 </div>

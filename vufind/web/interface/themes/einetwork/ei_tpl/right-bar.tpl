@@ -43,12 +43,31 @@
 			if(data.SumOfRequestItems != 0){
 			    $("#my-ruest-item-placeHolder").text(" ("+data.SumOfRequestItems+")");
 			}
+			setInterval("getRequestAndCheckout()",2000);
 		    }
 		}
 		)
 	    }
 	);
 	</script>
+    {/literal}
+    {literal}
+	<script type="text/javascript">
+	    function getRequestAndCheckout(){
+	    $.getJSON(path + '/MyResearch/AJAX?method=getAllItems', function (data){
+		if (data.error){
+		}else{
+		    if(data.SumOfCheckoutItems != 0){
+			$("#my-item-PlaceHolder").text("("+data.SumOfCheckoutItems+")");
+		    }
+		    if(data.SumOfRequestItems != 0){
+			$("#my-ruest-item-placeHolder").text(" ("+data.SumOfRequestItems+")");
+		    }
+		}
+	    }
+	    )
+	    }
+        </script>
     {/literal}
     
     <div class="separator"><hr/></div>
@@ -57,10 +76,7 @@
         <div id="description">
             Your Preferred Branches
         </div>
-         {*}<a href="/MyResearch/Profile">
-	      <input id="edit-button" class="button" value="Edit"/>
-	</a>{*}
-	<input id="edit-button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
+	<input id="edit-button" class="button" type="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
     </div>
     {literal}
     <script type="text/javascript">

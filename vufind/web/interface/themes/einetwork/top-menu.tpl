@@ -18,7 +18,6 @@
      {translate text="Log Out"}
      </a>
      </span>
-
     {if $showLoginButton == 1}
     <span class="menu-account-link loginOptions top-menu-item"
     {if $user} style="display: none;"{/if}>

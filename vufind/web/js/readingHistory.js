@@ -35,4 +35,10 @@ function exportListAction(){
 	$('#readingListForm').submit();
 	return false;
 };
-
+function deleteOne(id){
+	if (confirm('The marked items will be irreversibly deleted.  Proceed?')){
+		$('#readingHistoryAction').val('delete_'+id);
+		$('#readingListForm').submit();
+	}
+	return false;
+};

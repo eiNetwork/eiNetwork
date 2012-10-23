@@ -37,11 +37,11 @@
 								{if $historyActive == true}
 									{if $transList}
 <!--										<input class="button" onclick='return deletedMarkedAction()' value="Delete Marked">
--->										<input class="button" onclick='return deleteAllAction()' value="Delete All">
+-->										<input class="button" type="button" onclick='return deleteAllAction()' value="Delete All">
 									{/if}
-									<input class="button" style="width: 95px" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
+									<input class="button" type="button" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
 									{else}
-									<input class="button" style="width: 212px" onclick='return optInAction()' value="Start Recording My Reading History">
+									<input class="button" type="button" onclick='return optInAction()' value="Start Recording My Reading History">
 								{/if}
 							</div>
 							
@@ -71,7 +71,6 @@
 							</div>    
 							{/if}
 							{if $transList}
-							
 							<table class="myAccountTable" id="readingHistoryTable">
 							  <thead>
 							    <tr>
@@ -79,22 +78,18 @@
 							      <th>{translate text='Title'}</th>
 							      <th>{translate text='Format'}</th>
 							      <th>{translate text='Out'}</th>
+								<th>{translate text=''}</th>
 							    </tr>
 							  </thead>
 							  <tbody> 
-          
-								{foreach from=$transList item=record name="recordLoop" key=recordKey}
-								{if ($smarty.foreach.recordLoop.iteration % 2) == 0}
-								<tr id="record{$record.recordId|escape}" class="result alt record{$smarty.foreach.recordLoop.iteration}">
-								{else}
-								<tr id="record{$record.recordId|escape}" class="result record{$smarty.foreach.recordLoop.iteration}">
-								{/if}
+      								{foreach from=$transList item=record name="recordLoop" key=recordKey }
+								<tr id="record{$record.recordId|escape}" class="result alt record{$smarty.foreach.recordLoop.iteration}">								
 								{*<td class="titleSelectCheckedOut myAccountCell">
 								<input type="checkbox" name="selected[{$record.recordId|escape:"url"}]" class="titleSelect" id="selected{$record.recordId|escape:"url"}" />
 								</td>*}
 								<td class="myAccountCell">
 								{if $user->disableCoverArt != 1}
-									<div class="imageColumn"> 		  
+									<div class="imageColumn">	  
 									<a href="{$url}/Record/{$record.recordId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" id="descriptionTrigger{$record.recordId|escape:"url"}">
 									<img src="{$path}/bookcover.php?id={$record.recordId}&amp;isn={$record.isbn|@formatISBN}&amp;size=small&amp;upc={$record.upc}&amp;category={$record.format_category|escape:"url"}" class="listResultImage" alt="{translate text='Cover Image'}"/>
 									</a>
@@ -114,7 +109,7 @@
 									</div>
 									{/if}
 								</div>
-										
+
 								<div class="resultItemLine2">
 									{if $record.author}
 										{translate text='by'}
@@ -152,6 +147,9 @@
 								  {literal} }); {/literal}
 								</script>
 							{/if}
+							<td class="myAccountCell">
+								<input class="button" type="button" style="margin-top: 0px;height: 25px;width: 80px" value="Delete" onclick="deleteOne('{$record.rsh|escape:"url"}')" />
+							</td>
 						</tr>
 					{/foreach}
 				</tbody>
@@ -171,11 +169,11 @@
 					{if $historyActive == true}
 						{if $transList}
 <!--						<input class="button" onclick="return deletedMarkedAction()" value="Delete Marked">
--->						<input class="button" onclick="return deletedAllAction()" value="Delete All">
+-->						<input class="button" type="button" onclick="return deletedAllAction()" value="Delete All">
 						{/if}
-						<input class="button" style="width: 95px" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
+						<input class="button" type="button" onclick='return optOutAction({if $transList}true{else}false{/if})' value="Stop Recording">
 						{else}
-						<input class="button" style="width: 212px" onclick="return optInAction()" value="Start Recording My Reading History">
+						<input class="button" type="button" onclick="return optInAction()" value="Start Recording My Reading History">
 						{/if}
 					</div>
 				{/if}

@@ -75,11 +75,19 @@ function performSaveToBookCart(id, source, strings, service, successCallback)
 		url: url+'?'+params,
 		dataType: "json",
 		success: function() {
+			disable(id);
                     if($("#listId").val()!=null&&$("#listId").val()!=''){
                         deleteItemInList(id,source);
                     }
                     getBookCartItemCount();
 		    document.body.style.cursor = 'default';
+			var text = '<img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"><span class="resultAction_span" >&nbsp;In Cart</span>';
+			/*if(document.getElementById("add-to-cart")){
+				document.getElementById("add-to-cart").innerHTML = text;
+			}else{
+				document.getElementById("selected"+id.replace(/\./g,"")).innerHTML = text;
+				//document.getElementById("selected"+id.replace(/\./g,"")).onclick = alert();//"deleteItemInList("+id+",'VuFind')";
+			}*/
 	},
 	error: function() {
 			document.getElementById('popupbox').innerHTML = strings.error;
@@ -122,6 +130,17 @@ function getWishList(){
 	}else{
 		ajaxLogin(function (){
 			window.location.href = '/List/Results'
+		});
+	}
+	return false;
+}
+
+function getToRequest(url){
+    if (loggedIn){	
+                window.location.href = url;
+	}else{
+		ajaxLogin(function (){
+			window.location.href = url;
 		});
 	}
 	return false;
@@ -353,6 +372,7 @@ function getDeleteList(listId){
                             "<span style='margin-left:140px'><input type='button' class='button' value = 'Yes' onclick='deleteList("+listId+")'/></span>"+
                             "<span><input type='button' class='button' value = 'No' onclick='hideLightbox()'/></span>"+
                             "</p></div>";
+			    
 	newShowElementInLightbox("Warning",element,false,false,'450px','180px');
 }
 function deleteList(listId){
@@ -471,4 +491,39 @@ function requestAllItems(listId){
 	    }
 	    
         })
+}
+function getItemStatusCart(id){
+	if(window.location.pathname == "/List/Results"){
+		return;
+	}
+	$.ajax({
+		type: 'post',
+		url: "/List/AJAX", 
+		dataType: "json", 
+		data: 'method=isInCart&id='+id,
+		success: function(data) {
+			//alert(data['inCart']);
+			if(data['inCart']){
+				disable(id);
+			}
+		},
+		error: function() {
+			//$('#popupbox').html(failMsg);
+			//setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
+function disable(id){
+	if($("#add-to-cart").length){
+		$("#add-to-cart").css('background-color','rgb(192,192,192)');
+		$("#add-to-cart").css("color","rgb(248,248,248)");
+		$("#add-to-cart .action-lable-span").text("In Cart");
+		$("#add-to-cart").css("cursor","default");
+	}else if($("#selected"+id.replace(/\./g, ""))){
+		var d = "#selected"+id.replace(/\./g, "");
+		$(d).css('background-color','rgb(192,192,192)');
+		$(d).css("color","rgb(248,248,248)");
+		$(d+" .resultAction_span").text("In Cart");
+		$(d).css("cursor","default");
+	}
 }

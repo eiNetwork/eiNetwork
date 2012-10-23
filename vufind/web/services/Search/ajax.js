@@ -107,7 +107,6 @@ function doGetStatusSummaries()
 			for (var i=0; i<items.length; i++) {
 				try{
 					elemId = items[i].shortId;
-
 					// Place hold link
 					if (items[i].showPlaceHold == null){
 						showPlaceHold = 0;
@@ -135,6 +134,7 @@ function doGetStatusSummaries()
 					}
 					
 					//Load eAudio link
+
 					if (items[i].eAudioLink != null){
 						var eAudioLink = items[i].eAudioLink;
 						if (eAudioLink) {

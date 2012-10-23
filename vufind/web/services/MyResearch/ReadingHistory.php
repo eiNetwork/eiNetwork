@@ -46,6 +46,10 @@ class ReadingHistory extends MyResearch
 					//Perform the requested action
 					$selectedTitles = isset($_REQUEST['selected']) ? $_REQUEST['selected'] : array();
 					$readingHistoryAction = $_REQUEST['readingHistoryAction'];
+					if(substr($readingHistoryAction, 0, 7) == 'delete_'){
+						$selectedTitles[]   = substr($readingHistoryAction, 7);
+						$readingHistoryAction = 'deleteMarked';
+					}
 					$this->catalog->doReadingHistoryAction($patron, $readingHistoryAction, $selectedTitles);
 					//redirect back to ourself without the action.
 					header("Location: {$configArray['Site']['url']}/MyResearch/ReadingHistory");

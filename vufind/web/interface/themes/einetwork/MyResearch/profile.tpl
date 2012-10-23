@@ -54,7 +54,7 @@
 			<div class="pay_balance">
 				<span>{$profile.fines}  due in library fines</span>
 				<br/>
-				<a href="http://catalog.einetwork.net/patroninfo"><input class="button" value="Pay Balance"/></a>
+				<a href="http://catalog.einetwork.net/patroninfo"><input type="button" class="button" value="Pay Balance"/></a>
 			</div>
 		</div>
 	</div>
@@ -67,13 +67,8 @@
 		{if $user->cat_username}
 		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
 		<div id="info">Information</div>
-			{if $canUpdate}
-				{if $edit == true}
-				<input  type='submit' value='Update Profile' name='update'  class='button'/>
-				{else}
-				<input type='submit' value='Edit Profile' name='edit' class='button'/>
-				{/if}
-			{/if}
+		<input class="button" type="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
+			
 			<div class="profile">
 			<div id="name_notification" class="profile_row">
 				<table>
@@ -170,10 +165,16 @@
 			</div>	
 			
 		</div>
+		{if $canUpdate}
+			{if $edit == true}
+			<input  type='submit' value='Update Profile' name='update'  class='button'/>
+			<input  type='button' value='Cancel' name='update' onclick='window.location.href="/MyResearch/Profile"' class='button'/>
+			{else}
+			<input type='submit' value='Edit Profile' name='edit' class='button'/>
+			{/if}
+		{/if}
 		</form>
 		{/if}
-		<input class="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
-
 	</div>
 	
 	<div id="right-bar">

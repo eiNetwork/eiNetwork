@@ -46,10 +46,7 @@
 						</div>
 					</div>
 					<div class="item_status">
-						
-						<a href="{$record.downloadLink}">
-							<input class="button" value="Download"/>
-						</a>
+						<input class="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 					</div>
 				</div>
 				{/foreach}

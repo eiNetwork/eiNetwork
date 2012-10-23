@@ -39,7 +39,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					</a>
 				</div>
 				<div id="record_record_up_middle">
-						<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape}</div>
+						<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape} </div>
 						{* Display more information about the title*}
 						{if $mainAuthor}
 							<div class="recordAuthor">
@@ -54,6 +54,11 @@ function redrawSaveStatus() {literal}{{/literal}
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
 							</div>
 						{/if}
+						{if $pubdate}
+							<div>
+								{$pubdate}
+							</div>
+						{/if}
 						{if $showOtherEditionsPopup}
 						<div id="otherEditionCopies">
 							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
@@ -65,7 +70,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
 						<span class="action-lable-span">Add to Cart</span>
 					</div>
-					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="window.location.href='{$path}/Record/{$id|escape:'url'}/Hold'">
+					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="getToRequest('{$path}/Record/{$id|escape:'url'}/Hold')">
 						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
 						<span class="action-lable-span">Request Now</span>
 					</div>
@@ -111,6 +116,16 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
+			{if $toc}
+			<div class = "resultInformation">
+				<div class="resultInformationLabel">{translate text='Contents'}</div>
+				<div class="recordDescription">
+					{foreach from=$toc item=line name=loop}
+						{$line}<br />
+					{/foreach}				
+				</div>
+			</div>
+			{/if}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
 				<div class="recordSubjects">
@@ -122,18 +137,28 @@ function redrawSaveStatus() {literal}{{/literal}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
 				<div class="recordSubjects">
+					<div id="">
+						{include file="$module/view-comments.tpl"}
+					</div>
+				</div>
+			</div>
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Staff Reviews'}</div>
+				<div class="recordSubjects">
 					<div id = "staffReviewtab" >
 						{include file="$module/view-staff-reviews.tpl"}
 					</div>
 				</div>
 			</div>
+
+
 			<div class="resultInformation">
 				<div class="resultInformationLabel">Details</div>
 				<div class="recordSubjects">
 					<table>
 					{if $published}
 					<tr>
-						<td class="details_lable">Publish</td>
+						<td class="details_lable">Publisher</td>
 						<td>
 							<table>
 								{foreach from=$published item=publish name=loop}
@@ -469,3 +494,4 @@ StrandsTrack.push({
 </script>
 {/literal}
 {/if}-->
+<script>getItemStatusCart('{$id|escape}')</script>

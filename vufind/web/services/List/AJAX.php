@@ -31,7 +31,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_REQUEST['method'];
-		if (in_array($method, array('GetAutoSuggestList', 'AddList','GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList','getBookCartItemCount','deleteList'))){
+		if (in_array($method, array('GetAutoSuggestList', 'AddList','GetRatings', 'RandomSysListTitles', 'SysListTitles', 'GetListTitles', 'GetStatusSummaries','processRequestItem','deleteItemInList','getBookCartItemCount','deleteList', 'isInCart'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -1004,6 +1004,28 @@ class AJAX extends Action {
 		}
 		echo 'success';
 		die();
+	}
+	function isInCart(){
+		global $user;
+		if($user && isset($_REQUEST['id'])){
+			$raw_wishLists= $user->getLists();
+			$reqID = $_REQUEST['id'];
+			foreach ($raw_wishLists as $list){
+				if($list->title == 'Book Cart'){
+					$bookCart = User_list::staticGet($list->id);
+					$bookCartItems = $bookCart->getResources();
+					foreach($bookCartItems as $bookCartItem){
+						if($bookCartItem->record_id == $reqID){
+							echo json_encode(array('inCart'=>true));
+							return;
+						}
+					}
+
+				}
+			}
+		}
+		echo json_encode(array('inCart'=>false));
+		return;
 	}
 }
 
