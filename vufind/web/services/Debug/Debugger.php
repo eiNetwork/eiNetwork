@@ -11,7 +11,12 @@ class Debugger {
             $result = ob_get_clean();
             file_put_contents($path,$result,FILE_APPEND);
             file_put_contents($path,"",FILE_APPEND);
-            file_put_contents($path,"\n================================================",FILE_APPEND);
+            file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
+        }else{
+            ob_start();
+            file_put_contents($path,"Object is null",FILE_APPEND);
+            file_put_contents($path,"",FILE_APPEND);
+            file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
         }
     }
     static function clean($filename){
@@ -27,6 +32,6 @@ class Debugger {
         $result = ob_get_clean();
         file_put_contents($path,$result,FILE_APPEND);
         file_put_contents($path,"",FILE_APPEND);
-        file_put_contents($path,"\n================================================\n",FILE_APPEND);
+        file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
     }
 }

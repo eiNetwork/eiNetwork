@@ -63,13 +63,22 @@
  </table>
   </div>
  </div>
-  <div id="actionButton" style="height:60px;padding-top:10px">
+  <div id="actionButton" style="height:60px;padding-top:10px;">
     <input type="button" class="button" id="emailButton" value="Email" style="margin-left:230px;width:80px"/>
     <input type="button" class="button" id="printButton" value="Print" style="width:80px" onclick="printFindLibrary()"/>
     <input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="Done" onclick="hideLightbox()"/>
   </div>
  {elseif isset($issueSummaries) && count($issueSummaries) > 0}
    {* Display Issue Summaries *}
+ <div id="holdingInfoPopup" style="height:auto;max-height:500px;width:auto;height:inherit;padding-left:12px;padding-right:12px;padding-bottom: 40px">
+  <div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)" id="headhead">
+    <span style="font-size:18px;">Library Holdings</span>
+    <span onclick="hideLightbox()" style="float:right"><img src="/interface/themes/einetwork/images/closeHUDButton.png"></span>
+  </div>
+  <div style="margin-top: 20px;overflow-y:auto;height:auto;max-height:400px;border-bottom:1px solid rgb(238,238,238);" id="callNumberBody">
+    <table>
+     <tbody>
+    
    {foreach from=$issueSummaries item=issueSummary name=summaryLoop}
    <tr class='issue-summary'>
    <td colspan='3' class='issue-summary-row'>
@@ -90,23 +99,24 @@
    <div class='issue-summary-line'><strong>Library Has:</strong> {$issueSummary.libHas}</div>
    {/if}
    
+
    {if count($issueSummary.holdings) > 0}
-   <span id='showHoldings-{$smarty.foreach.summaryLoop.iteration}' class='showIssuesLink'>Show Individual Issues</span>
+   <span id='showHoldings-{$smarty.foreach.summaryLoop.iteration}' class='showIssuesLink'>Show Issues</span>
    <script type="text/javascript">
      $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').click(function(){literal} { {/literal}
        if (!$('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').hasClass('expanded')){literal} { {/literal}
 			   $('#issue-summary-holdings-{$smarty.foreach.summaryLoop.iteration}').slideDown();
-			   $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').html('Hide Individual Issues');
+			   $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').html('Hide Issues');
 			   $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').addClass('expanded');
 			 {literal} }else{ {/literal}
 		     $('#issue-summary-holdings-{$smarty.foreach.summaryLoop.iteration}').slideUp();
 		     $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').removeClass('expanded');
-		     $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').html('Show Individual Issues');
+		     $('#showHoldings-{$smarty.foreach.summaryLoop.iteration}').html('Show Issues');
 			 {literal} } {/literal}
 		 {literal} }); {/literal}
    </script>
    {if $issueSummary.checkInGridId}
-   <span id='showCheckInGrid-{$smarty.foreach.summaryLoop.iteration}' class='showCheckinGrid'>Show Check-in Grid</span>
+   {*}<span id='showCheckInGrid-{$smarty.foreach.summaryLoop.iteration}' class='showCheckinGrid'>Show Check-in Grid</span>{*}
    {/if}
    <script type="text/javascript">
      $('#showCheckInGrid-{$smarty.foreach.summaryLoop.iteration}').click(function(){literal} { {/literal}
@@ -117,6 +127,7 @@
    
    <table id='issue-summary-holdings-{$smarty.foreach.summaryLoop.iteration}' class='issue-summary-holdings' style='display:none;'>
      {* Display all holdings within this summary. *}
+
      {foreach from=$issueSummary.holdings item=holding}
      <tr class='holdingsLine'>
       <td style = "padding-bottom:5px;"><span><strong>
@@ -127,7 +138,7 @@
 	    {$holding.callnumber|escape}
 	    {if $holding.link}
 	      {foreach from=$holding.link item=link}
-	        <a href='{$link.link}' target='_blank'>{$link.linkText}</a><br />
+	        <a href='{$link.link}' target='_blank'>{$link.linkText}</a><br/>
 	      {/foreach}
 	    {/if}
 	    </td>
@@ -147,12 +158,14 @@
      {/foreach}
    </table>
    {/if}
+
    </td>
    </tr>
    {/foreach}
 
  </tbody>
  </table>
+   </div>
  </div>
 
   {else}

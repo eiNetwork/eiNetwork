@@ -26,7 +26,6 @@ function redrawSaveStatus() {literal}{{/literal}
     getSaveStatus('{$id|escape:"javascript"}', 'saveLink');
 {literal}}{/literal}
 </script>
-
 <div id="page-content" class="content">
   {if $error}<p class="error">{$error}</p>{/if}
   {include file = "EcontentRecord/left-bar-record.tpl"}
@@ -36,8 +35,7 @@ function redrawSaveStatus() {literal}{{/literal}
     	{if $eContentRecord->author}
           <div class="sidebarLabel">{translate text='Main Author'}:</div>
           <div class="sidebarValue"><a href="{$path}/Author/Home?author={$eContentRecord->author|escape:"url"}">{$eContentRecord->author|escape}</a></div>
-          {/if}
-          
+          {/if}  
           {if count($additionalAuthorsList) > 0}
           <div class="sidebarLabel">{translate text='Additional Authors'}:</div>
           {foreach from=$additionalAuthorsList item=additionalAuthorsListItem name=loop}
@@ -233,6 +231,10 @@ function redrawSaveStatus() {literal}{{/literal}
 				    <a href="{$bookCoverUrl}">              
 				      <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
 				    </a>
+				     <div id="goDeeperLink" class="godeeper" style="display:none">
+					  <a href="{$path}/EcontentRecord/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/EcontentRecord/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '50px', '70%'); return false;">
+					  <img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
+				    </div>
 			      </div>
 			      <div id="record_record_up_middle">
 						<div id='recordTitle'>{$eContentRecord->title|regex_replace:"/(\/|:)$/":""|escape}
@@ -267,7 +269,6 @@ function redrawSaveStatus() {literal}{{/literal}
 						{/if}
 						{if $showOtherEditionsPopup}
 						<div id="otherEditionCopies">
-							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
 						</div>
 						{/if}
 				</div>
@@ -557,7 +558,16 @@ function redrawSaveStatus() {literal}{{/literal}
 	    <div class="resultInformation">
 		  <div class="resultInformationLabel">{translate text='Description'}</div>
 		  <div class="recordDescription">
-			{$eContentRecord->description|escape}
+			{if strlen($eContentRecord->description) > 300}
+				<span id="shortDesc">
+					{$eContentRecord->description|escape|truncate:300}
+					<a href='#' onclick='$("#shortDesc").slideUp();$("#fullDesc").slideDown()'>More</a>
+				</span>
+				<span id="fullDesc" style="display:none">
+					{$eContentRecord->description|escape}
+					<a href='#' onclick='$("#shortDesc").slideDown();$("#fullDesc").slideUp()'>Less</a>
+				</span>
+			{/if}
 		  </div>
 	    </div>
       {/if}
@@ -580,22 +590,42 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
+			{if $eContentRecord->contents}
 			<div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
+				<div class="resultInformationLabel">{translate text='Contents'}</div>
+				<div class="recordDescription">
+					{if strlen($eContentRecord->contents) > 300}
+						<span id="shortTOC">
+						{$eContentRecord->contents|truncate:300}
+						<a href='#' onclick='$("#shortTOC").slideUp();$("#fullTOC").slideDown()'>More</a>
+						</span>
+						<span id="fullTOC" style="display:none">
+						{$eContentRecord->contents}
+						<a href='#' onclick='$("#shortTOC").slideDown();$("#fullTOC").slideUp()'>Less</a>
+						</span>
+					{else}
+						{$eContentRecord->contents}
+					{/if}
+				</div>
+			</div>
+
+			{/if}
+			<div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Published Reviews'}</div>
 				<div class="recordSubjects">
 					{if $showAmazonReviews || $showStandardReviews}
 						<div id='reviewPlaceholder'></div>
 					{/if}
 				</div>
 			</div>
-			<div class="resultInformation">
+			{*<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
 				<div class="recordSubjects">
 					<div id = "staffReviewtab" >
 						{include file="$module/view-staff-reviews.tpl"}
 					</div>
 				</div>
-			</div>
+			</div> *}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">Details</div>
 				<div class="recordSubjects">
@@ -645,14 +675,14 @@ function redrawSaveStatus() {literal}{{/literal}
 							</td>
 						</tr>
 					{/if}
-					{if $note}
+					{if $eContentRecord->notes}
 					<tr>
 					<td class="details_lable">Note</td>
 					<td>
 						<table>
-							{foreach from=$notes item=note}
-								<tr><td>{$note}</td></tr>
-							{/foreach}
+
+								<tr><td>{$eContentRecord->notes}</td></tr>
+
 						</table>
 					</td>
 					</tr>

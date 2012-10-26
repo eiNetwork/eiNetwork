@@ -516,9 +516,8 @@ class Results extends Action {
 				if($_REQUEST['goToListID']=='BookCart'){
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
 				}else{
-					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results/goToListID="+$goToListID+"&",$value);
+					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$value);
 				}
-				//echo $tempPageLinks[$key];
 			}
 			$interface->assign('pageLinks', $tempPageLinks);
 			if ($pager->isLastPage()){

@@ -52,9 +52,17 @@
 				<a href="{$path}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
 			{/if}
 		{/if}
-<!-- 
-		{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if}
--->
+
+		{if $summDate}
+			<div>
+				{if $summDate.0|escape|count_characters == 4 }
+					{$summDate.0|escape}
+				{else}
+					{$summDate.0|escape|date_format:"%Y"}
+				{/if}
+			</div>
+		{/if}
+
 	</div>
 <!--	
 	<div class="resultItemLine3">

@@ -397,6 +397,7 @@ function deleteList(listId){
 //==================Find in library==================
 function findInLibrary(id,left,top,width,height){
     var url = "/Record/"+id+"/AJAXGetCallNumber?method=getCallNumber";
+    waitingLightbox(left,width,top,height);
     ajaxLightbox(url,false,left,width,top,height);
 }
 function findAllInLibrary(left,top,width,height){

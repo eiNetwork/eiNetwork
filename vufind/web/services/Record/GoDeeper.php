@@ -36,6 +36,8 @@ class GoDeeper extends Record
 
 		if (isset($_GET['lightbox'])) {
 			$interface->assign('title', translate("Additional information about this title"));
+			$interface->assign('isbn', $this->isbn);
+			//$interface->assign('upc', $this->upc);
 			echo $interface->fetch('Record/goDeeper.tpl');
 
 		} else {

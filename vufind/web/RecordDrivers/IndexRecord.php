@@ -475,7 +475,6 @@ class IndexRecord implements RecordInterface
 		$interface->assign('listFormatCategory', $this->getFormatCategory());
 		$interface->assign('listFormats', $this->getFormats());
 		$interface->assign('listDate', $this->getPublicationDates());
-
 		// Extract user metadata from the database:
 		if ($user != false){
 			$data = $user->getSavedData($id, $listId);
