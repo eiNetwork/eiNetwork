@@ -1,8 +1,4 @@
-<div onmouseup="this.style.cursor='default';" class="popupHeader">
-	<span class="popupHeader-title">{translate text='Create a new List'}</span>
-	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
-</div>
-<div id="popupboxContent" class="popupContent">
+
 	{if $listError}<p class="error">{$listError|translate}</p>{/if}
 	<form method="post" action="{$url}/MyResearch/ListEdit" name="listForm" style="margin-top:10px"
 	      onSubmit='newAddList(this, &quot;{translate text='add_list_fail'}&quot;); return false;'>
@@ -41,7 +37,7 @@
 				</tr>
 				<tr style="height:25px;vertical-align:middle">
 					<td>
-						<input type="submit" name="submit" class="button" value="{translate text="Save"}" style="margin-left:320px;width:70px;background-color:rgb(244,213,56)">
+						<input type="submit" name="submit" class="button yellow" value="{translate text="Save"}" style="margin-left:320px;width:70px;">
 					</td>
 				</tr>
 			</tbody>
@@ -53,4 +49,4 @@
 	  <input type="hidden" name="followupId" value="{$followupId}">
 	  <input type="hidden" name="followupText" value="{translate text='Add to Favorites'}">
 	</form>
-</div>
+

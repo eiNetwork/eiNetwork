@@ -263,6 +263,7 @@
 .details_lable{
 	font-weight:700;
 	width:120px;
+	vertical-align:top;
 }
 .itemUnavailable{
 	display:none;

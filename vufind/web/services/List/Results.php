@@ -212,7 +212,7 @@ class Results extends Action {
 		if(count($raw_wishLists)==1){
 			$interface->assign('onlyBookCart',true);
 		}
-		if($myFavoritesID ==null && count($wishLists)>0){
+		if(isset($myFavoritesID) && count($wishLists)>0){
 			$myFavoritesID = $wishLists[0]['id'];
 		}
 		$goToListID;

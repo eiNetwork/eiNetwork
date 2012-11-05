@@ -33,7 +33,7 @@
 			
 		}else{
 			if(!cardReg.test(card)){
-				$('#cardError').text('*please enter a valid 14 digits card number');
+				$('#cardError').text('*please enter a valid 14 digit card number');
 				cardValid=false;
 				return false;
 			}else{
@@ -52,7 +52,7 @@
 			
 		}else{
 			if(!pinReg.test(pin)){
-				$('#pinError').text('*please enter a valid 4 digits PIN');
+				$('#pinError').text('*please enter a valid 4 digit PIN');
 				pinValid=false;
 				return false;
 			}else{
@@ -62,6 +62,14 @@
 		}
 		
 	    });
+	    $('[placeholder]').parents('form').submit(function() {
+ 			$(this).find('[placeholder]').each(function() {
+    		var input = $(this);
+    		if (input.val() == input.attr('placeholder')) {
+     			input.val('');
+    		}
+  			})
+		});
 	});
 	
 </script>
@@ -72,11 +80,11 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="text" type="text" name="username" title="Library Card Number"  value="{$username|escape}"/>
+					<input id="card" class="text" type="text" name="username" title="Library Card Number"  value="{$username|escape}" placeholder="Library Card Number"/>
 					<div id="cardError">&nbsp;</div>
 				</div>
 				<div id="password">
-					<input id="pin" class="text" type="text" name="password" title="4 digits PIN number" />
+					<input id="pin" class="text" type="text" name="password" title="4 digit PIN number" placeholder="4 digit PIN number"/>
 					<div id="pinError">&nbsp;</div>
 					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
 				</div>

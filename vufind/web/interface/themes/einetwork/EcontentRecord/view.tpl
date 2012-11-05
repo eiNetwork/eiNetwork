@@ -231,8 +231,8 @@ function redrawSaveStatus() {literal}{{/literal}
 				    <a href="{$bookCoverUrl}">              
 				      <img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
 				    </a>
-				     <div id="goDeeperLink" class="godeeper" style="display:none">
-					  <a href="{$path}/EcontentRecord/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/EcontentRecord/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '50px', '70%'); return false;">
+				     <div id="goDeeperLink" class="godeeper" style="display: none">
+					  <a href="{$path}/EcontentRecord/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/EcontentRecord/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '110px', '70%'); return false;">
 					  <img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
 				    </div>
 			      </div>
@@ -262,7 +262,7 @@ function redrawSaveStatus() {literal}{{/literal}
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
 							</div>
 						{/if}
-						{if $eContentRecord->publishDate}
+						{if $eContentRecord->publishDate && $eContentRecord->publishDate != '01/01/0001'}
 							<div>
 								{$eContentRecord->publishDate}
 							</div>
@@ -333,6 +333,11 @@ function redrawSaveStatus() {literal}{{/literal}
 			      <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
 			      <span class="action-lable-span">Access Online</span>
 			</div>
+				{else}
+				 <div class="round-rectangle-button" id="access-online"  style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
+			      <span class="action-img-span"><img id="find-in-library-img" alt="Loading..." class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Loading..."/></span>
+			      <span class="action-lable-span">Loading...</span>
+			      </div>
 			{/if}	  
 		  {/if}	
 	    {else}
@@ -635,7 +640,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<td class="details_lable">Publisher</td>
 						<td>
 							<table>
-								<tr><td>{$eContentRecord->publishLocation|escape}{$eContentRecord->publisher|escape} {$eContentRecord->publishDate|escape}</td></tr>
+								<tr><td>{$eContentRecord->publishLocation|escape}{$eContentRecord->publisher|escape} {if $eContentRecord->publishDate && $eContentRecord->publishDate != '01/01/0001'}{$eContentRecord->publishDate|escape}{/if}</td></tr>
 								
 							</table>
 						</td>

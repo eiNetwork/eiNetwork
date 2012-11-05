@@ -34,7 +34,6 @@ function getSaveToBookCart(id, source,obj){
 		ajaxLogin(function (){
 			
 			saveToBookCart(id, source,successCallback);
-			
 		});
 	}
 	return false;
@@ -81,7 +80,8 @@ function performSaveToBookCart(id, source, strings, service, successCallback)
                     }
                     getBookCartItemCount();
 		    document.body.style.cursor = 'default';
-			var text = '<img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"><span class="resultAction_span" >&nbsp;In Cart</span>';
+		    var text = '<img alt="bad result" src="/interface/themes/einetwork/images/Art/ActionIcons/BadResult.png" class="resultAction_img"><span class="resultAction_span" >&nbsp;In Cart</span>';
+		    successCallback();
 			/*if(document.getElementById("add-to-cart")){
 				document.getElementById("add-to-cart").innerHTML = text;
 			}else{
@@ -192,7 +192,6 @@ function getAccountSetting(){
 
 
 function requestItem(id,listId){
-        //alert($("#campus").val());
         document.body.style.cursor = 'wait';
         var tags = "";
         var notes = '';
@@ -411,7 +410,6 @@ function findAllInLibrary(left,top,width,height){
                     dataType:"html",
                     data:"",
                     success:function(data){
-                        //alert(data);
                     }
                 })
         });
@@ -527,4 +525,16 @@ function disable(id){
 		$(d+" .resultAction_span").text("In Cart");
 		$(d).css("cursor","default");
 	}
+}
+
+function getSaveToListForm(id, source){
+	if (loggedIn){
+		var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
+		ajaxLightbox(url,false,false,'450px',false,'auto');
+	}else{
+		ajaxLogin(function (){
+			getSaveToListForm(id, source);
+		});
+	}
+	return false;
 }

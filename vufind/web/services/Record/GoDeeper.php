@@ -38,7 +38,10 @@ class GoDeeper extends Record
 			$interface->assign('title', translate("Additional information about this title"));
 			$interface->assign('isbn', $this->isbn);
 			//$interface->assign('upc', $this->upc);
-			echo $interface->fetch('Record/goDeeper.tpl');
+			$interface->assign('popupTitle', 'Additional information about this title');
+			$pageContent = $interface->fetch('Record/goDeeper.tpl');
+			$interface->assign('popupContent', $pageContent);
+			echo $interface->fetch('popup-wrapper.tpl');
 
 		} else {
 			$interface->setPageTitle(translate('Go Deeper'));

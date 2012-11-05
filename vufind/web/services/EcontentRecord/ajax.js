@@ -231,7 +231,10 @@ function GetEnrichmentInfo(id, isbn, upc) {
 					seriesScroller.loadTitlesFromJsonData(seriesData);
 				}
 			}
-			
+			var showGoDeeperData = $(data).find("ShowGoDeeperData").text();
+			if (showGoDeeperData) {
+				$('#goDeeperLink').show();
+			}
 			
 		},
 		failure : function(jqXHR, textStatus, errorThrown) {

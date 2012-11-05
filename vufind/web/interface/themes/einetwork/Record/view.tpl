@@ -38,7 +38,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
 					</a>
 					<div id="goDeeperLink" class="godeeper" style="display:none">
-							<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '50px', '70%'); return false;">
+							<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '110px', '70%'); return false;">
 							<img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
 						</div>
 				</div>
@@ -279,7 +279,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					{if $notes}
 					{foreach from=$notes item=note key=k name=loop}
 					<tr>
-						<td class="details_lable" style="vertical-align:top">{$k}</td>
+						<td class="details_lable">{$k}</td>
 						<td>
 							<table>
 								<tr><td>							

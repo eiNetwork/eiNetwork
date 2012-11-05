@@ -21,6 +21,14 @@
 		    }
 		});
 	    });
+	    $('[placeholder]').parents('form').submit(function() {
+ 			$(this).find('[placeholder]').each(function() {
+    		var input = $(this);
+    		if (input.val() == input.attr('placeholder')) {
+     			input.val('');
+    		}
+  			})
+		});
 	});
 </script>
 {/literal}
@@ -30,10 +38,10 @@
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to EINetwork</b></div>
 				<div id="email">
-					<input id="card" class="loginFormInput" type="text" title="Library Card Number" size="15" value="{$username|escape}"/>
+					<input id="card" class="loginFormInput" type="text" title="Library Card Number" size="15" value="{$username|escape}" placeholder="Library Card Number"/>
 				</div>
 				<div id="password">
-					<input id="pin" class="loginFormInput" type="text" title="4 digits PIN number" size="15"/>
+					<input id="pin" class="loginFormInput" type="text" title="4 digit PIN number" size="15" placeholder="4 digit PIN number"/>
 					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
 				</div>
 				<div id="loginButton" name="submit" onmouseover="mouseOver(event,'rgb(242,242,242)')" onmouseout="mouseOut(event,'rgb(255,255,255)')" onclick="document.forms['loginForm'].submit();">

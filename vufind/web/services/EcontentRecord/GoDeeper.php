@@ -36,11 +36,12 @@ class GoDeeper extends Action
 		$goDeeperOptions = GoDeeperData::getGoDeeperOptions($eContentRecord->getIsbn(), $eContentRecord->upc, true);
 		$interface->assign('options', $goDeeperOptions['options']);
 		if (isset($goDeeperOptions['defaultOption'])){
-			$defaultData = GoDeeperData::getHtmlData($goDeeperOptions['defaultOption'], 'eContentRecord', $eContentRecord->getIsbn(), $eContentRecord->upc);
+			$defaultData = GoDeeperData::getHtmlData($goDeeperOptions['defaultOption'], $eContentRecord->getIsbn(), $eContentRecord->upc);
 			$interface->assign('defaultGoDeeperData', $defaultData);
 		}
-
-		$interface->assign('title', translate("Additional information about this title"));
-		echo $interface->fetch('Record/goDeeper.tpl');
+		$interface->assign('popupTitle', 'Additional information about this title');
+		$pageContent = $interface->fetch('Record/goDeeper.tpl');
+		$interface->assign('popupContent', $pageContent);
+		echo $interface->fetch('popup-wrapper.tpl');
 	}
 }

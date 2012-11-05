@@ -93,6 +93,10 @@ li{
     background-color: rgb(244,213,56);
     
 }
+
+.close-button{
+    cursor: pointer;
+}
 .yellow{
     background-color: rgb(255,230,109);
     text-align:center;
