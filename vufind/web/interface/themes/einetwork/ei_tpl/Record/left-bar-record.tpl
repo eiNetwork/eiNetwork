@@ -214,22 +214,4 @@
 				{/foreach}
 		</div>
 		{/if}
-		
-		{if $enablePospectorIntegration == 1}
-		<div class="sidegroup">
-		{* Display in Prospector Sidebar *}
-		<div id="inProspectorPlaceholder"></div>
-		</div>
-		{/if}
-                <div class="sidegroup">
-		{if $linkToAmazon == 1 && $isbn}
-                    <div class="titledetails">
-                            <a href="http://amazon.com/dp/{$isbn|@formatISBN}" class='amazonLink'> {translate text = "View on Amazon"}</a>
-                    </div>
-		{/if}
-		
-		{if $classicId}
-		<div id = "classicViewLink"><a href ="{$classicUrl}/record={$classicId|escape:"url"}" target="_blank">Classic View</a></div>
-		{/if}
-                </div>
 	</div>

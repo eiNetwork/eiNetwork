@@ -86,7 +86,7 @@ function redrawSaveStatus() {literal}{{/literal}
 			</div>	
 			<div id="record_record_down">
 				<div id="book_format_options_lable">
-					<b>Book Format Options</b>
+					<b>Book Format Options test</b>
 				</div>
 				{include file="Record/formatType.tpl"}	
 			</div>
