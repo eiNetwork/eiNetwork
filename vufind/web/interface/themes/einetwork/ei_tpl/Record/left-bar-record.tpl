@@ -1,27 +1,15 @@
 	<div id="left-bar">
-			{if $wishLists}
-			<div class="sidegroup" id="wishLists">
-				 <dl class="narrowList navmenu narrowbegin">
-					<dt>{translate text='View Wish List'}</dt>
-						<dd>
-							<select id="wishListID" name='wishListID'>
-							{foreach from=$wishLists item = list name = loop}
-								<option value=$list['id']>$list['title']</option>
-							{/foreach}
-						</dd>
-				 </dl>
-			</div>
-		{/if}
             	{if $series}
 		<div class="sidegroup" id="series">
                     <dl class="narrowList navmenu narrowbegin">
                         <dt>{translate text='Series'}:</dt>
 			{foreach from=$series item=seriesItem name=loop}
-					<dd><a href="{$path}/Search/Results?lookfor=%22{$seriesItem|escape:"url"}%22&amp;type=Series">{$seriesItem|escape}</a></dd>
+					<dd class="left-bar-value"><a href="{$path}/Search/Results?lookfor=%22{$seriesItem|escape:"url"}%22&amp;type=Series">{$seriesItem|escape}</a></dd>
 			{/foreach}
                     </dl>
 		</div>
                 {/if}
+		
                 {if $subjects}
 		<div class="sidegroup" id="subjects">
                 <dl class="narrowList navmenu narrowbegin">
@@ -39,8 +27,19 @@
                 </dl>
 		</div>
 		{/if}
+ 
+            	{if $literary_form_full}
+		<div class="sidegroup" id="litform">
+                    <dl class="narrowList navmenu narrowbegin">
+                        <dt>{translate text='Literary Form'}:</dt>
+			{foreach from=$literary_form_full item=litformItem name=loop}
+					<dd><a href="{$path}/Search/Results?lookfor=%22{$litformItem|escape:"url"}%22&amp;type=Series">{$litformItem|escape}</a></dd>
+			{/foreach}
+                    </dl>
+		</div>
+                {/if}
                 
-		<div class="sidegroup" id="titleDetailsSidegroup" style="display:none">
+<!--		<div class="sidegroup" id="titleDetailsSidegroup" style="display:none">
 			<h4>{translate text="Title Details"}</h4>
 					{if $mainAuthor}
 					<div class="sidebarLabel">{translate text='Main Author'}:</div>
@@ -143,26 +142,7 @@
 					{/if}
 					
 		</div>
-		
-		{if $showTagging == 1}
-		<div class="sidegroup" id="tagsSidegroup" style="display:none">
-			<h4>{translate text="Tags"}</h4>
-			<div id="tagList">
-			{if $tagList}
-				{foreach from=$tagList item=tag name=tagLoop}
-					<div class="sidebarValue"><a href="{$path}/Search/Results?tag={$tag->tag|escape:"url"}">{$tag->tag|escape:"html"}</a> ({$tag->cnt})</div>
-				{/foreach}
-			{else}
-				<div class="sidebarValue">{translate text='No Tags'}, {translate text='Be the first to tag this record'}!</div>
-			{/if}
-			</div>
-			<div class="sidebarValue">
-				<a href="{$path}/Resource/AddTag?id={$id|escape:"url"}&amp;source=VuFind" class="tool add"
-					 onclick="GetAddTagForm('{$id|escape}', 'VuFind'); return false;">{translate text="Add Tag"}</a>
-			</div>
-		</div>
-		{/if}
-		
+-->	
 		<div class="sidegroup" id="similarTitlesSidegroup" style="display:none">
 		 {* Display either similar tiles from novelist or from the catalog*}
 		 <div id="similarTitlePlaceholder"></div>
@@ -214,4 +194,10 @@
 				{/foreach}
 		</div>
 		{/if}
+		
+                <div class="sidegroup">
+		{if $classicId}
+		<div id = "classicViewLink"><a href ="{$classicUrl}/record={$classicId|escape:"url"}" target="_blank">Classic View</a></div>
+		{/if}
+                </div>
 	</div>

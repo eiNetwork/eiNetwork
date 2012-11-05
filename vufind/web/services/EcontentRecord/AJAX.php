@@ -482,7 +482,18 @@ class AJAX extends Action {
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to cancel holds.'));
 		}
 	}
-	
+	function GetGoDeeperData(){
+		require_once('Drivers/marmot_inc/GoDeeperData.php');
+		$id = $_REQUEST['id'];
+		$dataType = $_REQUEST['dataType'];
+		$upc = $_REQUEST['upc'];
+		$isbn = $_REQUEST['isbn'];
+
+		$formattedData = GoDeeperData::getHtmlData($dataType, $isbn, $upc);
+		return $formattedData;
+
+	}
+
 	function getPurchaseOptions(){
 		global $interface;
 		if (isset($_REQUEST['id'])){

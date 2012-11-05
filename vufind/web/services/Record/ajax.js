@@ -186,6 +186,7 @@ function GetEnrichmentInfo(id, isbn, upc) {
 	var url = path + "/Record/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=GetEnrichmentInfo&isbn=" + encodeURIComponent(isbn) + "&upc=" + encodeURIComponent(upc);
 	var fullUrl = url + "?" + params;
+	//alert(" ");
 	$.ajax( {
 		url : fullUrl,
 		success : function(data) {
@@ -221,6 +222,7 @@ function GetEnrichmentInfo(id, isbn, upc) {
 			}
 			var showGoDeeperData = $(data).find("ShowGoDeeperData").text();
 			if (showGoDeeperData) {
+				//
 				$('#goDeeperLink').show();
 			}
 		},

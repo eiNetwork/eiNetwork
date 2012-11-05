@@ -1164,7 +1164,6 @@ class MillenniumDriver implements DriverInterface
 			$timer->logTime('Retrieved Cached Profile for Patron');
 			return $this->patronProfiles[$patron['id']];
 		}
-
 		//Load the raw information about the patron
 		$patronDump = $this->_getPatronDump($id2);
 

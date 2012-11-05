@@ -503,7 +503,7 @@ class GoDeeperData{
 		return array('link' => "http://books.google.com/books?id=$googleBookId&printsec=frontcover");
 	}
 
-	function getHtmlData($dataType, $recordType, $isbn, $upc){
+	function getHtmlData($dataType, $isbn, $upc){
 		global $interface;
 		$interface->assign('recordType', $recordType);
 		$interface->assign('id', $_REQUEST['id']);
@@ -545,4 +545,73 @@ class GoDeeperData{
 			return "Loading data for $dataType still needs to be handled.";
 		}
 	}
+	/**
+	Removed Memcache support for series (didnt want to make any configuration changes)
+	*/
+	public static function getSeries($isbn){
+		global $configArray;
+		global $memcache;
+		//$return = $memcache->get("syndetics_series_{$isbn}_{$upc}");
+		$return = array();
+		//if (!$return){
+			$clientKey = $configArray['Syndetics']['key'];
+
+			//Load the index page from syndetics
+			$requestUrl = "http://syndetics.com/index.aspx?isbn=$isbn/series.html&client=$clientKey&type=rn12";
+		
+			try{
+				//Get the XML from the service
+				$ctx = stream_context_create(array(
+					  'http' => array(
+					  'timeout' => 2
+				)
+				));
+				$response =file_get_contents($requestUrl, 0, $ctx);
+
+				$matches = array();
+				preg_match_all(
+					'#<a\s
+					(?:(?= [^>]* href="   (?P<href>  [^"]*) ")|)
+					(?:(?= [^>]* title="  (?P<title> [^"]*) ")|)
+					(?:(?= [^>]* target=" (?P<target>[^"]*) ")|)
+					[^>]*>
+					(?P<text>[^<]*)
+					</a>
+					#xi', $response, $matches, PREG_SET_ORDER);
+				for($i = 1; $i < count($matches); $i++) {
+					$return[] = GoDeeperData::titleCase($matches[$i]['text']);
+				}
+				//$memcache->set("syndetics_series_{$isbn}_{$upc}", $excerptData, 0, $configArray['Caching']['syndetics_excerpt']);
+			}catch (Exception $e) {
+				global $logger;
+				$logger->log("Error fetching data from Syndetics $e", PEAR_LOG_ERR);
+				$return = array();
+			}
+		//}
+		return $return;
+	}
+	public static function titleCase($string, $delimiters = array(" ", "-", "O'"), $exceptions = array("to", "a", "the", "of", "by", "and", "with", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")) { 
+        /* 
+         * Exceptions in lower case are words you don't want converted 
+         * Exceptions all in upper case are any words you don't want converted to title case 
+         *   but should be converted to upper case, e.g.: 
+         *   king henry viii or king henry Viii should be King Henry VIII 
+         */ 
+        	foreach ($delimiters as $delimiter){ 
+        	        $words = explode($delimiter, $string); 
+        	        $newwords = array(); 
+         	       foreach ($words as $word){ 
+         	               if (in_array(strtoupper($word), $exceptions)){ 
+                                // check exceptions list for any words that should be in upper case 
+          	                      $word = strtoupper($word); 
+          	              } elseif (!in_array($word, $exceptions)){ 
+                                // convert to uppercase 
+           	                     $word = ucfirst($word); 
+            	            } 
+           	             array_push($newwords, $word); 
+         	       } 
+          	      $string = join($delimiter, $newwords); 
+     	   } 
+       	 return $string; 
+ 	}
 }

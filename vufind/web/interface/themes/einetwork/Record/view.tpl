@@ -37,6 +37,10 @@ function redrawSaveStatus() {literal}{{/literal}
 					<a href="{$bookCoverUrl}">							
 						<img alt="{translate text='Book Cover'}" class="recordcover" src="{$bookCoverUrl}" />
 					</a>
+					<div id="goDeeperLink" class="godeeper" style="display:none">
+							<a href="{$path}/Record/{$id|escape:"url"}/GoDeeper" onclick="ajaxLightbox('{$path}/Record/{$id|escape}/GoDeeper?lightbox', false,false, '700px', '110px', '70%'); return false;">
+							<img alt="{translate text='Go Deeper'}" src="{$path}/images/deeper.png" /></a>
+						</div>
 				</div>
 				<div id="record_record_up_middle">
 						<div id='recordTitle'>{$recordTitleSubtitle|regex_replace:"/(\/|:)$/":""|escape} </div>
@@ -59,11 +63,13 @@ function redrawSaveStatus() {literal}{{/literal}
 								{$pubdate}
 							</div>
 						{/if}
+						{*}
 						{if $showOtherEditionsPopup}
 						<div id="otherEditionCopies">
 							<div style="font-weight:bold"><a href="#" onclick="loadOtherEditionSummaries('{$id}', false)">{translate text="Other Formats and Languages"}</a></div>
 						</div>
 						{/if}
+						{*}
 				</div>
 				<div id="record_action_button">
 					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','VuFind');return false;"{/if}>
@@ -85,9 +91,6 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>	
 			<div id="record_record_down">
-				<div id="book_format_options_lable">
-					<b>Book Format Options test</b>
-				</div>
 				{include file="Record/formatType.tpl"}	
 			</div>
 		</div>
@@ -96,7 +99,6 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord"></div>
 				<div class="clearer">&nbsp;</div>
 			</div>
-			
 			{if $summary}
 			<div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Summary'}</div>
@@ -116,40 +118,85 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			{/if}
+{*  Blocked out because character count includes tags - using crappier verison below
+			
 			{if $toc}
+			{assign var="con" value=""}
 			<div class = "resultInformation">
 				<div class="resultInformationLabel">{translate text='Contents'}</div>
 				<div class="recordDescription">
 					{foreach from=$toc item=line name=loop}
-						{$line}<br />
-					{/foreach}				
+						{if $line.code == 't'}
+							{assign var="con" value="`$con`<span style='font-weight:bold'>`$line.content`</span>"}
+						{else}
+							{assign var="con" value ="`$con`<span>`$line.content`</span>"}
+
+						{/if}
+					{/foreach}		
+					{if strlen($con) > 300}
+						<span id="shortTOC">
+							{$con|truncate:300}
+							<a href='#' onclick='$("#shortTOC").slideUp();$("#fullTOC").slideDown()'>More</a>
+						</span>
+						<span id="fullTOC" style="display:none">
+							{$con|escape}
+							<a href='#' onclick='$("#shortTOC").slideDown();$("#fullTOC").slideUp()'>Less</a>
+						</span>
+					{else}
+						{$con}
+					{/if}		
 				</div>
 			</div>
 			{/if}
+*}
+			{if $toc}
+			{assign var="con" value=""}
+			<div class = "resultInformation">
+				<div class="resultInformationLabel">{translate text='Contents'}</div>
+				<div class="recordDescription">
+					{foreach from=$toc item=line name=loop}
+						{assign var="con" value="`$con``$line.content`"}
+					{/foreach}
+					{if strlen($con) > 300}
+						<span id="shortTOC">
+							{$con|truncate:300}
+							<a href='#' onclick='$("#shortTOC").slideUp();$("#fullTOC").slideDown()'>More</a>
+						</span>
+						<span id="fullTOC" style="display:none">
+							{$con|escape}
+							<a href='#' onclick='$("#shortTOC").slideDown();$("#fullTOC").slideUp()'>Less</a>
+						</span>
+					{else}
+						{$con}
+					{/if}	
+				</div>
+			</div>
+
+			{/if}
 			<div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Publish Reviews'}</div>
+				<div class="resultInformationLabel">{translate text='Published Reviews'}</div>
 				<div class="recordSubjects">
 					{if $showAmazonReviews || $showStandardReviews}
-						<div id='reviewPlaceholder'></div>
+						<div id='reviewPlaceholder'>No published reviews available</div>
 					{/if}
 				</div>
 			</div>
-			<div class="resultInformation">
+			{* <div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
 				<div class="recordSubjects">
 					<div id="">
 						{include file="$module/view-comments.tpl"}
 					</div>
 				</div>
-			</div>
-			<div class="resultInformation">
+			</div> *}
+			{* <div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Staff Reviews'}</div>
 				<div class="recordSubjects">
 					<div id = "staffReviewtab" >
 						{include file="$module/view-staff-reviews.tpl"}
 					</div>
 				</div>
-			</div>
+			</div> *}
 
 
 			<div class="resultInformation">
@@ -162,7 +209,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						<td>
 							<table>
 								{foreach from=$published item=publish name=loop}
-									<tr><td>{$publish|escape}</td></tr>
+									<tr><td>{$publish|escape|trim}</td></tr>
 								{/foreach}
 							</table>
 						</td>
@@ -180,49 +227,26 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $lang}
-						<tr>
-							<td class="details_lable">{translate text='Language'}</td>
-							<td>
-								<table>
-								{foreach from=$recordLanguage item=lang}
-									<tr><td>{$lang|escape}</td></tr>
-								{/foreach}
-								</table>
-							</td>
-						</tr>
-					{/if}
-					{if $physicalDescription}
+					{if $physicalDescriptions}
 					<tr>
 						<td class="details_lable">Description</td>
 						<td>
 							<table>
 								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
-									<tr><td>{$physicalDescription|escape}</td></tr>
+									<tr><td>{$physicalDescription|escape|trim}</td></tr>
 								{/foreach}
 							</table>
 						</td>
 					</tr>
 					{/if}
-					{if $note}
-					<tr>
-					<td class="details_lable">Note</td>
-					<td>
-						<table>
-							{foreach from=$notes item=note}
-								<tr><td>{$note}</td></tr>
-							{/foreach}
-						</table>
-					</td>
-					</tr>
-					{/if}
+					
 					{if $corporateAuthor}
 					<tr>
 					<td class="details_lable">Addit Author</td>
 					<td>
 						<table>
 							<tr>
-								<a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape}</a>
+								<td><a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape|trim}</a></td>
 							</tr>
 						</table>
 					</td>
@@ -230,16 +254,54 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 					{if $contributors}
 					<tr>
-						<td>{translate text='Contributors'}</td>
+						<td class="details_lable">{translate text='Contributors'}</td>
 						<td>
 							<table>
 							{foreach from=$contributors item=contributor name=loop}
-							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape}</a></td></tr>
+							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape|trim}</a></td></tr>
 							{/foreach}
 							</table>
 						</td>
 					</tr>
 					{/if}
+					{if $recordLanguage}
+						<tr>
+							<td class="details_lable">{translate text='Language'}</td>
+							<td>
+								<table>
+								{foreach from=$recordLanguage item=lang}
+									<tr><td>{$lang|escape|trim}</td></tr>
+								{/foreach}
+								</table>
+							</td>
+						</tr>
+					{/if}
+					{if $notes}
+					{foreach from=$notes item=note key=k name=loop}
+					<tr>
+						<td class="details_lable">{$k}</td>
+						<td>
+							<table>
+								<tr><td>							
+								{if strlen($note) > 300}
+									<span id="shortNote{$smarty.foreach.loop.iteration}">
+										{$note|truncate:300}
+										<a onclick='$("#shortNote{$smarty.foreach.loop.iteration}").slideUp();$("#fullNote{$smarty.foreach.loop.iteration}").slideDown()'>More</a>
+									</span>
+									<span id="fullNote{$smarty.foreach.loop.iteration}" style="display:none">
+										{$note}
+										<a  onclick='$("#shortNote{$smarty.foreach.loop.iteration}").slideDown();$("#fullNote{$smarty.foreach.loop.iteration}").slideUp()'>Less</a>
+									</span>
+								{else}
+									{$note}
+								{/if}
+								</td></tr>
+							</table>
+						</td>
+					</tr>
+					{/foreach}
+					{/if}
+
 					{if $tmpIsbn}
 					<tr>
 						<td class="details_lable">ISBN</td>

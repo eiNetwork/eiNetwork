@@ -85,6 +85,7 @@ class Profile extends MyResearch
 				$interface->assign('card_number',$value);
 			}
 		}
+
 		$interface->setTemplate('profile.tpl');
 		$interface->setPageTitle(translate('My Profile'));
 		$interface->display('layout.tpl');

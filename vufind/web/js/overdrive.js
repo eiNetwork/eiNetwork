@@ -18,8 +18,8 @@ function checkoutOverDriveItemStep2(overdriveId, formatId){
 		success: function(data){
 			alert(data.message);
 			if (data.result){
-				//window.location.href = path + "/MyResearch/OverdriveCheckedOut";
-				window.location.href = path + "/MyResearch/CheckedOut";
+				
+				//window.location.href = path + "/MyResearch/CheckedOut";
 			}else{
 				hideLightbox();
 			}
@@ -27,7 +27,8 @@ function checkoutOverDriveItemStep2(overdriveId, formatId){
 		},
 		dataType: 'json',
 		error: function(){
-			alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");
+			
+			setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
 			hideLightbox();
 		}
 	});

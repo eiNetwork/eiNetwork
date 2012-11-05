@@ -40,6 +40,7 @@ class GetCard extends Action
 			
 			$registrationResult = $driver->selfRegister();
 			$interface->assign('registrationResult', $registrationResult);
+			sleep(10.0);
 			$interface->setTemplate('getcardresult.tpl');
 		}else{
 			global $servername;

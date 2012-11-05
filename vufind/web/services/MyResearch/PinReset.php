@@ -42,7 +42,12 @@ class PinReset extends Action
 			//function doesn't require an argument
 			$pinresetResult = $driver->patronPinreset();
 			$interface->assign('pinresetResult', $pinresetResult);
-			$interface->setTemplate('getpinresetresult.tpl');
+			if(isset($_REQUEST['ispinset'])){
+				$interface->setTemplate('getpinsetresult.tpl');
+			}else{
+				$interface->setTemplate('getpinresetresult.tpl');
+			}
+			
 		}else{
 			global $servername;
 		

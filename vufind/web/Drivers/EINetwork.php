@@ -456,10 +456,11 @@ class EINetwork extends MillenniumDriver{
 		unlink($cookieJar);
 		
 		if ($sresult){
-			if (preg_match('/<FONT COLOR=RED SIZE= 2><EM>(.*?)</EM></FONT>/i', $sresult, $matches)){
+			if (preg_match('/<font color=red.*?>.*?<em>(.*?)<\/em>.*?<\/font>/msi', $sresult, $matches)){
 				return $matches[1];
 			}else{
 				$user->cat_password = $pin1;
+				$user->password = $pin1;
 				$user->update();
 				UserAccount::updateSession($user);
 				return "Your pin number was updated sucessfully.";

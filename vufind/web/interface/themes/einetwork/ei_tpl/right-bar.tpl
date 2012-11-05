@@ -70,7 +70,7 @@
         </script>
     {/literal}
     
-    <div class="separator"><hr/></div>
+    <div class="separator" id="topBar" style="display:none;"><hr/></div>
     
     <div class="prefer-branch" id="prefer-branch">
         <div id="description">
@@ -87,6 +87,9 @@
 		dataType:"html",
 		success: function(data) {
 		    $("#prefer-branch").html(data);
+			 if(data){
+				$("#topBar").css("display","block");
+			}
 		},
 		error: function() {
 			$('#popupbox').html(failMsg);

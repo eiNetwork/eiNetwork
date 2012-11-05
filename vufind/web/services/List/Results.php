@@ -212,7 +212,7 @@ class Results extends Action {
 		if(count($raw_wishLists)==1){
 			$interface->assign('onlyBookCart',true);
 		}
-		if($myFavoritesID ==null && count($wishLists)>0){
+		if(isset($myFavoritesID) && count($wishLists)>0){
 			$myFavoritesID = $wishLists[0]['id'];
 		}
 		$goToListID;
@@ -516,9 +516,8 @@ class Results extends Action {
 				if($_REQUEST['goToListID']=='BookCart'){
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
 				}else{
-					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results/goToListID="+$goToListID+"&",$value);
+					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$value);
 				}
-				//echo $tempPageLinks[$key];
 			}
 			$interface->assign('pageLinks', $tempPageLinks);
 			if ($pager->isLastPage()){

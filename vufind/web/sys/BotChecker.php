@@ -41,7 +41,7 @@ class BotChecker{
 			}
 
 			$isBot = false;
-			$userAgent = $_SERVER['HTTP_USER_AGENT'];
+			$userAgent = isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:"";
 			while (($curAgent = fgets($fhnd, 4096)) !== false) {
 				//Remove line separators
 				$curAgent = str_replace("\r", '', $curAgent);

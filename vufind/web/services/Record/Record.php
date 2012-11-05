@@ -215,7 +215,6 @@ class Record extends Action
 			}
 		}
 
-
 		if ($issnField = $this->marcRecord->getField('022')) {
 			if ($issnField = $issnField->getSubfield('a')) {
 				$this->issn = trim($issnField->getData());
@@ -243,26 +242,35 @@ class Record extends Action
 				$interface->assign('streetDate', $streetDate);
 			}
 		}
-
-		$marcField440 = $marcRecord->getFields('440');
-		$marcField490 = $marcRecord->getFields('490');
-		$marcField830 = $marcRecord->getFields('830');
-		if ($marcField440 || $marcField490 || $marcField830){
-			$series = array();
-			foreach ($marcField440 as $field){
-				$series[] = $this->getSubfieldData($field, 'a');
+		$useMarcSeries = true;
+		if ($this->isbn){
+			require_once 'Drivers/marmot_inc/GoDeeperData.php';
+			$series = GoDeeperData::getSeries($this->isbn);
+			if (isset($series)){
+				$interface->assign('series', $series);
+				$useMarcSeries = false;
 			}
-			foreach ($marcField490 as $field){
-				if ($field->getIndicator(1) == 0){
+		}
+		if($useMarcSeries){
+			$marcField440 = $marcRecord->getFields('440');
+			$marcField490 = $marcRecord->getFields('490');
+			$marcField830 = $marcRecord->getFields('830');
+			if ($marcField440 || $marcField490 || $marcField830){
+				$series = array();
+				foreach ($marcField440 as $field){
 					$series[] = $this->getSubfieldData($field, 'a');
 				}
+				foreach ($marcField490 as $field){
+					if ($field->getIndicator(1) == 0){
+						$series[] = $this->getSubfieldData($field, 'a');
+					}
+				}
+				foreach ($marcField830 as $field){
+					$series[] = $this->getSubfieldData($field, 'a');
+				}
+				$interface->assign('series', $series);
 			}
-			foreach ($marcField830 as $field){
-				$series[] = $this->getSubfieldData($field, 'a');
-			}
-			$interface->assign('series', $series);
 		}
-
 		//Load description from Syndetics
 		$useMarcSummary = true;
 		if ($this->isbn || $this->upc){
@@ -313,8 +321,8 @@ class Record extends Action
 		
 		$format = $record['format'];
 		$interface->assign('recordFormat', $record['format']);
-		$format_category = $record['format_category'][0];
-		$interface->assign('format_category', $record['format_category'][0]);
+		$format_category =(isset($record['format_category']))?$record['format_category'][0]:"";
+		$interface->assign('format_category', $format_category);
 		$interface->assign('recordLanguage', $record['language']);
 		
 		$timer->logTime('Got detailed data from Marc Record');
@@ -324,14 +332,12 @@ class Record extends Action
 			foreach ($marcFields505 as $marcField){
 				foreach ($marcField->getSubFields() as $subfield){
 					$note = $subfield->getData();
-					if ($subfield->getCode() == 't'){
+					/*if ($subfield->getCode() == 't'){
 						$note = "<span style='color:red'>" . $note."</span>";
-					}else{
-						$note = $subfield->getCode().' '.$note;
-					}
+					}*/
 					$note = trim($note);
 					if (strlen($note) > 0){
-						$toc[] = $note;
+						$toc[] = array('code'=>$subfield->getCode(), 'content'=>$note);
 					}
 				}
 			}
@@ -339,33 +345,31 @@ class Record extends Action
 		}
 		
 		$notes = array();
-/*		$marcFields500 = '';//$marcRecord->getFields('500');
-		$marcFields504 = '';//$marcRecord->getFields('504');
-		$marcFields505 = $marcRecord->getFields('505');
-		$marcFields511 = '';//$marcRecord->getFields('511');
-		$marcFields518 = '';//$marcRecord->getFields('518');
-		$marcFields520 = '';//$marcRecord->getFields('520');
-		if($marcFields505){
-			$interface->assign('toc', $marcFields505);
-		}
-		if ($marcFields500 || $marcFields504 || $marcFields505 || $marcFields511 || $marcFields518 || $marcFields520){
-			//$allFields = array_merge($marcFields500, $marcFields504, $marcFields505, $marcFields511, $marcFields518, $marcFields520);
-			$allFields = $marcFields505;
-			foreach ($allFields as $marcField){
-				foreach ($marcField->getSubFields() as $subfield){
-					$note = $subfield->getData();
-					if ($subfield->getCode() == 't'){
-						$note = "&nbsp;&nbsp;&nbsp;" . $note;
+		$noteFields = array();
+		$noteFields['Notes'] = $marcRecord->getFields('500');
+		$noteFields['System Details'] = $marcRecord->getFields('538');
+		$noteFields['Awards'] = $marcRecord->getFields('586');
+		if ($noteFields){
+			foreach ($noteFields as $key => $marcField){
+				if(is_array($marcField)){
+					$notes_all = '';
+					foreach($marcField as $mf){
+						$notes_all .= $this->getNotes($mf)."<br/>";
 					}
-					$note = trim($note);
-					if (strlen($note) > 0){
-						$notes[] = $note;
+					$note = substr($notes_all, 0, -5);//remove last <br/>
+					if(!empty($note)){
+						$notes[$key] = $note;
+					}
+				}else{
+					$note = $this->getNotes($marcField);
+					if(!empty($note)){
+						$notes[$key] = $note;
 					}
 				}
-
+	
 			}
 		}
-
+/*
 		$additionalNotesFields = array(
           '310' => 'Current Publication Frequency',
           '321' => 'Former Publication Frequency',
@@ -705,5 +709,19 @@ class Record extends Action
 			}
 		}
 		return $value;
+	}
+	private function getNotes($marcField){
+		$notes = '';
+		foreach ($marcField->getSubFields() as $subfield){
+			$note = $subfield->getData();
+			if ($subfield->getCode() == 't'){
+				$note = "&nbsp;&nbsp;&nbsp;" . $note;
+			}
+			$note = trim($note);
+			if (strlen($note) > 0){
+				$notes .= $note;
+			}
+		}
+		return $notes;
 	}
 }
