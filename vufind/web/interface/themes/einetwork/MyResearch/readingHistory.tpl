@@ -53,10 +53,10 @@
 								Records Per Page:
 								<select id="pagesize" class="pagesize" onchange="changePageSize()">
 									<option value="10" {if $recordsPerPage == 10}selected="selected"{/if}>10</option>
-									<option value="25" {if $recordsPerPage == 25}selected="selected"{/if}>20</option>
-									<option value="50" {if $recordsPerPage == 50}selected="selected"{/if}>30</option>
-									<option value="75" {if $recordsPerPage == 75}selected="selected"{/if}>40</option>
-									<option value="100" {if $recordsPerPage == 100}selected="selected"{/if}>50</option>
+									<option value="20" {if $recordsPerPage == 25}selected="selected"{/if}>20</option>
+									<option value="30" {if $recordsPerPage == 50}selected="selected"{/if}>30</option>
+									<option value="40" {if $recordsPerPage == 75}selected="selected"{/if}>40</option>
+									<option value="50" {if $recordsPerPage == 100}selected="selected"{/if}>50</option>
 								</select>
 								</span>
 								
@@ -177,6 +177,31 @@
 						{/if}
 					</div>
 				{/if}
+				{if $transList}
+							<div id="pager" class="pager">
+								{if $pageLinks.all}<div class="myAccountPagination pagination">Page: {$pageLinks.all}</div>{/if}
+								
+								<span id="recordsPerPage">
+								Records Per Page:
+								<select id="pagesize" class="pagesize" onchange="changePageSize()">
+									<option value="10" {if $recordsPerPage == 10}selected="selected"{/if}>10</option>
+									<option value="20" {if $recordsPerPage == 25}selected="selected"{/if}>20</option>
+									<option value="30" {if $recordsPerPage == 50}selected="selected"{/if}>30</option>
+									<option value="40" {if $recordsPerPage == 75}selected="selected"{/if}>40</option>
+									<option value="50" {if $recordsPerPage == 100}selected="selected"{/if}>50</option>
+								</select>
+								</span>
+								
+								<span id="sortOptions">
+								Sort By:
+								<select class="sortMethod" id="sortMethod" name="accountSort" onchange="changeAccountSort($(this).val())">
+									{foreach from=$sortOptions item=sortOptionLabel key=sortOption}
+										<option value="{$sortOption}" {if $sortOption == $defaultSortOption}selected="selected"{/if}>{$sortOptionLabel}</option>
+									{/foreach}
+								</select>
+								</span>
+							</div>    
+							{/if}
 		</div>
 	</form>
 	</div>{else}

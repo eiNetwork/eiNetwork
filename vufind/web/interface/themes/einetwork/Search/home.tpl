@@ -24,21 +24,48 @@
 	    });
 	    
 	    
+	$('#loginForm').submit(function(){
+			var pin=$("#pin").val();
+			var pinReg=/^[0-9]\d{3}$/;
+			var card=$("#card").val();
+			var cardReg=/^[1-9]\d{13}$/;
+			var cardReg1=/^[1-9]\d{6}$/;
+			if(card==""||!card||pin==""||!pin){
+				$('#cardError').html('&nbsp;');
+				return false;
+				
+			}else{
+				if((cardReg.test(card)||cardReg1.test(card))&&pinReg.test(pin)){
+					$('#cardError').html('&nbsp;');
+					return true;
+				}else{
+					if(!(cardReg.test(card)||cardReg1.test(card))){
+						$('#cardError').text('*please enter a valid 14 or 7 digit card number');
+					}
+					if(!pinReg.test(pin)){
+						$('#pinError').text('*please enter a valid 4 digit PIN');
+					}
+					cardValid=false;
+					return false;
+				}
+			}
+		}); 
 	    $('#card').focusout(function(){
 		var card=$(this).val(),
 		    cardReg=/^[1-9]\d{13}$/;
+		cardReg1=/^[1-9]\d{6}$/;
 		if(!card){
 			$('#cardError').html('&nbsp;');
 			return false;
 			
 		}else{
-			if(!cardReg.test(card)){
-				$('#cardError').text('*please enter a valid 14 digit card number');
-				cardValid=false;
-				return false;
-			}else{
+			if(cardReg.test(card)||cardReg1.test(card)){
 				$('#cardError').html('&nbsp;');
 				return true;
+			}else{
+				$('#cardError').text('*please enter a valid 14 or 7 digit card number');
+				cardValid=false;
+				return false;
 			}
 		}
 	    });

@@ -4,8 +4,8 @@
 		<div><h3 style="margin-bottom:0px"><b>{translate text='Pin Set Results'}</b></h3></div>
 		{if $pinresetResult == true}
 			<div>
-				<p>Please check your email.   An email from helpdesk@einetwork.net will be sent to the email address in your patron record</p>
-				<p>with a link to set your password.</p> 
+				<p>Please check your email.   An email from helpdesk@einetwork.net was sent to your email address with a link to set your pin.</p>
+				<p></p> 
 			</div>
 		{else}
 			<p>Sorry, we could not set you PIN.  Please check the barcode you entered and try again.</p>

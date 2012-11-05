@@ -73,6 +73,7 @@
   vertical-align: top;
   display: inline-block;
   zoom: 1;
+  width:228px;
 }
 .myAccountCell{
   vertical-align: top;
@@ -320,21 +321,7 @@
 
 
 /***** END My Account--->My Items*****/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.pagesize{
+	width:auto;	
+}
+}
