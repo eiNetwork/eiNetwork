@@ -76,7 +76,7 @@
 			 </select>
 			 </span>
 			 <span>
-				<input type="button" onclick="requestAllItems('{$wishListID}')" class="button" style="margin-top: 0px;float:right;width:130px;background-color:rgb(244,213,56)" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
+				<input type="button" onclick="requestAllItems('{$wishListID}')" class="button yellow" style="margin-top: 0px;float:right;width:130px;" name="submit" id="requestTitleButton" value="{translate text='Request All'}" {if (!isset($profile))}disabled="disabled"{/if}/>
 			 </span>
 			 {if $showHoldCancelDate == 1}
 			       <div id='cancelHoldDate'><b>{translate text="Automatically cancel this hold if not filled by"}:</b>

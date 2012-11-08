@@ -12,24 +12,18 @@
 			To receive your permanent card, you will need to bring a picture ID to the library. 
 			</p>
 		</div>
-			<form method="post" action="{$url}/MyResearch/Home" id="loginForm">
-				<div id='loginFormFields'>
-					<div><h3 style="margin-bottom:0px"><b>{translate text='Login now'}</b></h3></div>
-					<div style="padding-top:20px;padding-left:8px">
-						<div id ='loginUsernameRow' class='loginFormRow'>
-							<div class='loginLabel' style="padding-bottom:8px">{translate text='Username'}: </div>
-							<div class='loginField'><input type="text" name="username" id="username" value="{$registrationResult.barcode|escape}" size="15" class="text"/></div>
-						</div>
-						<div id ='loginPasswordRow' class='loginFormRow' style="padding-top:8px">
-							<div class='loginLabel' style="padding-bottom:8px">{translate text='Password'}: </div>
-							<div class='loginField'><input type="password" name="password" size="15" class="text"/></div>
-						</div>
-						<div id='loginSubmitButtonRow' class='loginFormRow'>
-							<input id="loginButton" type="submit" class="button" name="submit" value="Login" alt='{translate text="Login to your account"}' />
-						</div>
-					</div>
+		<div style="padding-left:8px">
+			<form id="pinresetform" class="getacard" method="POST" action="{$path}/MyResearch/PinReset">
+				<div><p>An email from helpdesk@einetwork.net will be sent to the email address in your patron record with a link to set your password.</p></div>
+				<div>
+					<input name="barcode" type="hidden" class="text" title="Barcode for PIN Reset" value="{$registrationResult.barcode}"/>
+				</div>
+				<input name="ispinset" type="hidden"/>
+				<div> 
+					<input class="button" type="submit" name="submit" value="Set Pin" alt='{translate text="Login"}' />
 				</div>
 			</form>
+		</div>
 		{else}
 			<p>Sorry, we could not process your registration.  Please visit our local library to register for a library card.</p> 
 		{/if}

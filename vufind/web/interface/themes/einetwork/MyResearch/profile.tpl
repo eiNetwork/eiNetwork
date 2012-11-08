@@ -68,7 +68,6 @@
 		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
 		<div id="info">Information</div>
 		<input class="button" type="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
-			
 			<div class="profile">
 			<div id="name_notification" class="profile_row">
 				<table>
@@ -77,7 +76,14 @@
 					<td>{translate text='Notification Preference'}</td>
 				</tr>
 				<tr>
-					<td>{$profile.fullname|escape}</td>
+					<td>
+						{if $profile.fullname}
+							{$profile.fullname|escape}
+						{else}
+							{$user->lastname|escape|upper}, {$user->firstname|escape|upper}
+						{/if}
+					
+					</td>
 					<td>
 						{if $edit == true}
 							<select name='notices'>
@@ -95,7 +101,7 @@
 				<table>
 				<tr style="font-weight: bolder">
 					<td>{translate text='Library Card Number'}</td>
-					<td>{translate text='Card Expired'}</td>
+					<td>{translate text='Card Expires'}</td>
 				</tr>
 				<tr>
 					<td>{$card_number}</td>
@@ -126,14 +132,24 @@
 						{if $edit == true}
 						<input id="phone" name='phone' class="text" value='{$profile.phone|escape}' size='20' maxlength='10' />
 						<span id="phoneError" class="error">&nbsp;</span>
-						{else}{$profile.phone|escape}
+						{else}
+							{if $profile.phone}
+								{$profile.phone|escape}
+							{else}
+								{$user->phone|escape}
+							{/if}
 						{/if}
 					</td>
 					<td>
 						{if $edit == true}
 						<input id="email" name='email' class="text" value='{$profile.email|escape}' size='20' maxlength='30' />
 						<span id="emailError" class="error">&nbsp;</span>
-						{else}{$profile.email|escape}
+						{else}
+							{if $profile.email}
+								{$profile.email|escape}
+							{else}
+								{$user->email|escape}
+							{/if}
 						{/if}
 					</td>
 				</tr>

@@ -1,6 +1,6 @@
 <div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
 	{translate text='Login to your account'}
-	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
+	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" class="close-button" style="float:right" onclick="hideLightbox()"></span>
 </div>
 <div id="popupboxContent" class="popupContent" style="margin-top:10px">
 	<div id='ajaxLoginForm'>

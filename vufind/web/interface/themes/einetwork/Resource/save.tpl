@@ -1,6 +1,6 @@
 <div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
 	<span class="popupHeader-title">{translate text='add_favorite_prefix'} {$record->title|escape:"html"} {translate text='add_favorite_suffix'}</span>
-	<span onclick="hideLightbox()"><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" ></span>
+	<span onclick="hideLightbox()"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" ></span>
 </div>
 <div id="popupboxContent" class="popupContent">
 <form onSubmit="saveRecord('{$id|escape}', '{$source|escape}', this, {literal}{{/literal}add: '{translate text='Add to favorites'}', error: '{translate text='add_favorite_fail'}'{literal}}{/literal}); return false;">

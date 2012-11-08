@@ -75,7 +75,6 @@ function getLightbox(module, action, id, lookfor, message, followupModule,
 			+ '&followupModule=' + encodeURIComponent(followupModule)
 			+ '&followupAction=' + encodeURIComponent(followupAction)
 			+ '&followupId=' + encodeURIComponent(followupId);
-	
 	$.ajax({
 		url: url + '?' + params,
 		success : function(data) {
@@ -231,7 +230,8 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 			if (!left) left = '30%';
 			if (!top) top = '30%';
 			if (!height) height = '300px';
-			if(width!=null||width){
+			
+			if(width!=null||width.indexOf("%")<=0){
 				var reg = /\d*/;
 				var newWidth = reg.exec(width);
 				var newHeight = reg.exec(height);
@@ -294,8 +294,31 @@ function newShowElementInLightbox(title, elementSelector,left,top,width,height){
 	$('#popupbox').css('left', left);
 	$('#popupbox').css('width', width);
 	$('#popupbox').css('height', height);
-	var lightboxContents = "<div onmouseup='this.style.cursor='default';' class='popupHeader'>" + "<span class='popupHeader-title'>"+title+"</span>" + "<span><img src='/interface/themes/einetwork/images/closeHUDButton.png' style='float:right' onclick='hideLightbox()'></span></div>";
+	var lightboxContents = "<div onmouseup='this.style.cursor='default';' class='popupHeader'>" + "<span class='popupHeader-title'>"+title+"</span>" + "<span><img src='/interface/themes/einetwork/images/closeHUDButton.png' class='close-button' style='float:right' onclick='hideLightbox()'></span></div>";
 	lightboxContents += "<div class='content'>" + $(elementSelector).html() + "</div>";	
+	$('#popupbox').html(lightboxContents);
+}
+function waitingLightbox(left,top,width,height){
+	var new_top =  document.body.scrollTop;
+	var documentHeight = $(document).height();
+	$('#lightbox').show();
+	$('#lightbox').css('height', documentHeight + 'px');
+	if (!left) left = '30%';
+	if (!top) top = '30%';
+	if (!height) height = '300px';
+	if(width!=null||width){
+		var reg = /\d*/;
+		var newWidth = reg.exec(width);
+		var newHeight = reg.exec(height);
+		var left = ($(document).width()-parseInt(newWidth))/2;
+	}
+	if (!width) width = '400px';
+	$('#popupbox').show();
+	$('#popupbox').css('top', top);
+	$('#popupbox').css('left', left);
+	$('#popupbox').css('width', width);
+	$('#popupbox').css('height', height);
+	var lightboxContents = "<div style='margin-left: auto;margin-right: auto;width:150px;height:50p;font-size: 25px;padding-left:20px;padding-right:20px;padding-top:8px;padding-bottom: 3px'>"+"Loading.." + "</div>";	
 	$('#popupbox').html(lightboxContents);
 }
 
@@ -886,17 +909,7 @@ function lessFacets(name)
 	document.getElementById("narrowGroupHidden_" + name).style.display="none";
 }
 
-function getSaveToListForm(id, source){
-	if (loggedIn){
-		var url = path + "/Resource/Save?lightbox=true&id=" + id + "&source=" + source;
-		ajaxLightbox(url,false,false,'450px',false,'auto');
-	}else{
-		ajaxLogin(function (){
-			getSaveToListForm(id, source);
-		});
-	}
-	return false;
-}
+
 
 function saveRecord(id, source, formElem, strings) {
 	successCallback = function() {

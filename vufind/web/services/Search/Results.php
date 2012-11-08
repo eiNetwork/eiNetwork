@@ -369,10 +369,10 @@ class Results extends Action {
 			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : $_GET['basicType']), $searchObject->getResultTotal());
 		}
 		
+		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
 		if($searchObject->getResultTotal() != 1){
 			// Save the ID of this search to the session so we can return to it easily:
-			$_SESSION['lastSearchId'] = $searchObject->getSearchId();
-
+			
 			// Save the URL of this search to the session so we can return to it easily:
 			$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
 		}

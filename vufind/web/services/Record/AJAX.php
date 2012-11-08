@@ -55,8 +55,12 @@ class AJAX extends Action {
 				$xmlResponse .= '<Error>Invalid Method</Error>';
 			}
 			$xmlResponse .= '</AJAXResponse>';
-
 			echo $xmlResponse;
+			if($method == 'GetEnrichmentInfo'){
+				require_once 'services/Debug/Debugger.php';
+				//Debugger::tailAt('a.out',$xmlResponse);
+			}
+
 		}
 	}
 
@@ -374,7 +378,9 @@ class AJAX extends Action {
 		$isbn = $_REQUEST['isbn'];
 		$upc = $_REQUEST['upc'];
 		$id = $_REQUEST['id'];
+
 		$enrichmentData = Enrichment::loadEnrichment($isbn);
+		
 		global $interface;
 		$interface->assign('id', $id);
 		$interface->assign('enrichment', $enrichmentData);
@@ -430,7 +436,7 @@ class AJAX extends Action {
 			$seriesInfo = array('titles' => $titles, 'currentIndex' => $enrichmentData['novelist']['seriesDefaultIndex']);
 			$interface->assign('seriesInfo', json_encode($seriesInfo));
 		}
-
+		
 		//Load go deeper options
 		require_once('Drivers/marmot_inc/GoDeeperData.php');
 		$goDeeperOptions = GoDeeperData::getGoDeeperOptions($isbn, $upc);
@@ -439,8 +445,9 @@ class AJAX extends Action {
 		}else{
 			$interface->assign('showGoDeeper', true);
 		}
-
-		return $interface->fetch('Record/ajax-enrichment.tpl');
+		
+		$re =  $interface->fetch('Record/ajax-enrichment.tpl');
+		return $re;
 	}
 
 	function GetSeriesTitles(){
@@ -466,7 +473,10 @@ class AJAX extends Action {
 		$id = strip_tags($_REQUEST['id']);
 		$interface->assign('id', $id);
 		$holdings = Holdings::loadHoldings($id);
-		return $interface->fetch('Record/ajax-holdings.tpl');
+		$re = $interface->fetch('Record/ajax-holdings.tpl');
+		require_once("services/Debug/Debugger.php");
+		Debugger::tailAt("a.out",$re);
+		return $re;
 	}
 
 	function GetProspectorInfo(){

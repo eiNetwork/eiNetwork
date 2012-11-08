@@ -52,9 +52,18 @@
 				<a href="{$path}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
 			{/if}
 		{/if}
-<!-- 
-		{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if}
--->
+
+		{if $summDate}
+			<div>
+				{if $summDate.0|escape|count_characters == 4 }
+					{$summDate.0|escape}
+				{else}
+					{* Some Overdrive Items don't have a bib record and will show up as 01/01/0001 - which date_format turns into '1'.  Any year less than 10 gets hidden.*}
+					{if $summDate.0|date_format:"%Y"|count_characters > 1 }{$summDate.0|escape|date_format:"%Y"}{/if}
+				{/if}
+			</div>
+		{/if}
+
 	</div>
 <!--	
 	<div class="resultItemLine3">

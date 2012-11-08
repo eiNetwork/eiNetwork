@@ -1,16 +1,10 @@
-<div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="header">
-	<a onclick="hideLightbox(); return false;" href="">close</a>
-	{$title}
+{* Generate links for each go deeper option *}
+<div id='goDeeperContent'>
+<div id='goDeeperLinks'>
+{foreach from=$options item=option key=dataAction}
+<div class='goDeeperLink'><a href='#' onclick="getGoDeeperData('{$dataAction}', '{$id}', '{$isbn}', '{$upc}');return false;" style="color: rgb(153,153,255);">{$option}</a></div>
+{/foreach}
 </div>
-<div id="popupboxContent" class="content">
-	{* Generate links for each go deeper option *}
-	<div id='goDeeperContent'>
-	<div id='goDeeperLinks'>
-	{foreach from=$options item=option key=dataAction}
-	<div class='goDeeperLink'><a href='#' onclick="getGoDeeperData('{$dataAction}', '{$id}', '{$isbn}', '{$upc}');return false;">{$option}</a></div>
-	{/foreach}
-	</div>
-	<div id='goDeeperOutput'>{$defaultGoDeeperData}</div>
-	</div>
-	<div id='goDeeperEnd'>&nbsp;</div>
+<div id='goDeeperOutput'>{$defaultGoDeeperData}</div>
 </div>
+<div id='goDeeperEnd'>&nbsp;</div>

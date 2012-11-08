@@ -38,7 +38,11 @@
         <a href="{$url}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
       {/if}
     {/if} 
-    {*{if $summDate}{translate text='Published'} {$summDate.0|escape}{/if} //szheng: commented*}
+	{if $summDate}
+		<div>
+			{$summDate.0|escape}
+		</div>
+	{/if}
   </div>
   
   {* //szheng:commented

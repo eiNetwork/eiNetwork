@@ -24,6 +24,9 @@
 				t.style.backgroundColor = "rgb(192,192,192)";
 				t.style.color = "rgb(248,248,248)";
 				t.style.cursor = "default";
+				if($("#request-now"+n+" .resultAction_span")!=null)$("#request-now"+n+" .resultAction_span").text("In Library Only");
+				if($("#request-now"+n+" .action-lable-span")!=null)$("#request-now"+n+" .action-lable-span").text("In Library Only");
+				
 			}
 		{/literal}
 		</script>

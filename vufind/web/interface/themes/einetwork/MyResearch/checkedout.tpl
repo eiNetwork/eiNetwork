@@ -393,7 +393,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					<input class="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 				</div>
 			</div>
 			{/foreach}
@@ -452,7 +452,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					<input class="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 				</div>
 			</div>
 			{/foreach}

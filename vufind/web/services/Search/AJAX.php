@@ -266,7 +266,9 @@ class AJAX extends Action {
 			echo '  <showaddtowishlist>' . ($record['showAddToWishlist'] ? '1' : '0') . '</showaddtowishlist>';
 			echo '  <availablecopies>' . htmlspecialchars($record['showAccessOnline']) . '</availablecopies>';
 			echo '  <numcopies>' . htmlspecialchars($record['totalCopies']) . '</numcopies>';
-			echo '  <holdQueueLength>' . htmlspecialchars($record['holdQueueLength']) . '</holdQueueLength>';
+			if(isset($record['holdQueueLength'])){ //they should probably all be set to check, but this one in particular brings up a lot of errors in the error log.
+				echo '  <holdQueueLength>' . htmlspecialchars($record['holdQueueLength']) . '</holdQueueLength>';
+			}
 			echo '  <isDownloadable>1</isDownloadable>';
 			echo '  <formattedHoldingsSummary>' . htmlspecialchars($formattedHoldingsSummary) . '</formattedHoldingsSummary>';
 			echo ' </item>';

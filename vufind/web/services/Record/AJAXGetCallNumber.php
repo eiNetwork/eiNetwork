@@ -91,6 +91,8 @@ class AJAXGetCallNumber extends Record{
 				if (isset($issueSummaries) && count($issueSummaries) > 0){
 					$interface->assign('issueSummaries', $issueSummaries);
 					$holdingData->issueSummaries = $issueSummaries;
+					$issueSummariesResult = $interface->fetch("Record/view-holdings.tpl");
+					echo $issueSummariesResult;
 				}else{
 					$interface->assign('allAvailableItem',$allAvailableItem);
 					$interface->assign('holdings', $holdings);
