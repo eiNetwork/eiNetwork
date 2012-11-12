@@ -1,5 +1,5 @@
 	<div id="left-bar">
-            	{if $series}
+            	{if $series && !in_array("Syndetics.com", $series)}
 		<div class="sidegroup" id="series">
                     <dl class="narrowList navmenu narrowbegin">
                         <dt>{translate text='Series'}:</dt>
