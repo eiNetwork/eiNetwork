@@ -26,8 +26,7 @@ function checkoutOverDriveItemStep2(overdriveId, formatId){
 			getRequestAndCheckout();
 		},
 		dataType: 'json',
-		error: function(){
-			
+		error: function(){	
 			setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
 			hideLightbox();
 		}

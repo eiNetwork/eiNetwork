@@ -105,7 +105,7 @@
 	<div class="loginHome-center">
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-				<div><b>Log In to EINetwork</b></div>
+				<div><b>Log In to the Catalog</b></div>
 				<div id="email">
 					<input id="card" class="text" type="text" name="username" title="Library Card Number"  value="{$username|escape}" placeholder="Library Card Number"/>
 					<div id="cardError">&nbsp;</div>

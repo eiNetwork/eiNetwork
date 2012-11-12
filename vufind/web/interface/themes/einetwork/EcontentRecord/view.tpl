@@ -565,11 +565,11 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <div class="recordDescription">
 			{if strlen($eContentRecord->description) > 300}
 				<span id="shortDesc">
-					{$eContentRecord->description|escape|truncate:300}
+					{$eContentRecord->description|strip_tags|truncate:300}
 					<a href='#' onclick='$("#shortDesc").slideUp();$("#fullDesc").slideDown()'>More</a>
 				</span>
 				<span id="fullDesc" style="display:none">
-					{$eContentRecord->description|escape}
+					{$eContentRecord->description|strip_tags}
 					<a href='#' onclick='$("#shortDesc").slideDown();$("#fullDesc").slideUp()'>Less</a>
 				</span>
 			{/if}

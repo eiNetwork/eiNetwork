@@ -5,7 +5,7 @@
   
   <div id="main-content">
         {if $user->cat_username}
-          <div class="resulthead"><h3>{translate text='Your Reading History'}</h3></div>
+          <div class="resulthead"><h2>{translate text='Your Reading History'}</h3></div>
           <div class="page">
           {if $transList}
           <ul class="filters">

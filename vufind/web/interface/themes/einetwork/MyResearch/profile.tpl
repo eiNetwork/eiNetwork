@@ -65,8 +65,9 @@
 		<div class="error">{$profileUpdateErrors}</div>
 		{/if}
 		{if $user->cat_username}
+		<div><h2>Account Settings</h2></div>
 		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
-		<div id="info">Information</div>
+		<h3 id="info">Information</h3>
 		<input class="button" type="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
 			<div class="profile">
 			<div id="name_notification" class="profile_row">
