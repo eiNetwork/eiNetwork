@@ -1,0 +1,24 @@
+133d132
+< 		<field name="id_sort" type="integer" indexed="true" stored="false"/>
+151c150
+< 		<field name="available_at" type="building_code" indexed="true" stored="false" multiValued="true" omitNorms="false"/>
+---
+> 		<field name="available_at" type="building_code" indexed="true" stored="true" multiValued="true" omitNorms="false"/>
+185c184
+< 		<field name="contents_proper" type="text" indexed="true" stored="false" multiValued="true"/>
+---
+> 		<field name="contents_proper" type="text" indexed="true" stored="true" multiValued="true"/>
+223,226d221
+< 		<field name="topic_browse" type="string" indexed="true" stored="false" multiValued="true"/>
+< 		<field name="author_browse" type="string" indexed="true" stored="false" multiValued="true"/>
+< 		<field name="dewey_browse" type="string" indexed="true" stored="false" multiValued="true"/>
+< 		<field name="callnumber_browse" type="string" indexed="true" stored="false" multiValued="true"/>
+243c238
+< 		<field name="barcode" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+---
+> 		<field name="barcode" type="textFacet" indexed="true" stored="true" multiValued="true"/> 
+301,304d295
+< 	<!-- CopyFields for Alphabetic Browse -->
+< 	<copyField source="topic"    dest="topic_browse"/>
+< 	<copyField source="author"    dest="author_browse"/>
+< 	<copyField source="author2"    dest="author_browse"/> 

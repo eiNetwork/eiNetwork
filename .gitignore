@@ -1,6 +1,6 @@
 # Specific locations within VuFind #
 ####################################
-sites/*
+!sites/*
 !sites/default
 !sites/packaging_default
 vufind/documentation/

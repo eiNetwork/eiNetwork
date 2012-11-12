@@ -32,6 +32,7 @@
 		{if $recordCount}
 		{translate text="Showing"}
 		<b>{$recordStart}</b> - <b>{$recordEnd}</b>
+
 		{translate text='of'} <b>{$recordCount}</b>
 		{if $searchType == 'basic'}{translate text='for search'}: <b>'{$lookfor|escape:"html"}'</b>,{/if}
 		{/if}
@@ -58,7 +59,7 @@
 	          {translate text='Sort'}
 	          <select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
 	          {foreach from=$sortList item=sortData key=sortLabel}
-	            <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc}</option>
+	            <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc} <p>ganesha</p></option>
 	          {/foreach}
 	          </select>
 	        {/if}

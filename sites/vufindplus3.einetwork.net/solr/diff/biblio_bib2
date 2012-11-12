@@ -1,0 +1,4 @@
+264c264
+< 		<field name="rating" type="float" indexed="true" stored="true" multiValued="false"/>
+---
+>     <field name="rating" type="float" indexed="true" stored="true" multiValued="false"/>

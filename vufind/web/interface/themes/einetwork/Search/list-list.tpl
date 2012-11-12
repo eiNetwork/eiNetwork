@@ -10,6 +10,8 @@ $(document).ready(function() {literal} { {/literal}
 
 <form id="addForm" action="{$url}/MyResearch/HoldMultiple">
 	<div id="addFormContents">
+
+
 		{* Make sure to trigger the proper events when selecting and deselecting *}
 		{*<div class='selectAllControls'> 
 		  <a href="#" onclick="$('.titleSelect').not(':checked').attr('checked', true).trigger('click').attr('checked', true);return false;">Select All</a> /
@@ -19,11 +21,14 @@ $(document).ready(function() {literal} { {/literal}
 		{foreach from=$recordSet item=record name="recordLoop"}
 		  {*<div class="result {if ($smarty.foreach.recordLoop.iteration % 2) == 0}alt{/if} record{$smarty.foreach.recordLoop.iteration}">*}
 		    {* This is raw HTML -- do not escape it: *}
-		  <div <div class="result record{$smarty.foreach.recordLoop.iteration}">
+		  
+
+<div <div class="result record{$smarty.foreach.recordLoop.iteration}">
 		    {$record}
-		  </div>
+
+		  </div></td></tr>
 		{/foreach}
-		
+
 		<input type="hidden" name="type" value="hold" />
 		<div class='selectAllControls'>
 		  <a href="#" onclick="$('.titleSelect').not(':checked').attr('checked', true).trigger('click').attr('checked', true);return false;">Select All</a> /

@@ -28,6 +28,127 @@ class Prioritize extends Action {
 		global $interface;
 		global $configArray;
 		global $user;
+		
+// Workning 1
+/*$title = "the girl with dragon tattoo";
+$bookid = array(".b29407291", ".b31397025", ".b29181306");
+$myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
+$fh = fopen($myFile, 'a') or die("Can't open file");
+$stringData = "<query text=\"".$title."\">\n";
+fwrite($fh, $stringData);
+foreach ($bookid as &$bookid) {
+$stringData = "\t<doc id=\"".$bookid."\"/>\n";
+fwrite($fh, $stringData);
+}
+$stringData = "</query>\n";
+fwrite($fh, $stringData);
+fclose($fh);
+*/
+
+//Working 2
+/*
+$myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
+$title = "the girl with dragon tattoo";
+$arr = file($myFile);
+$i = 0;
+echo(count($arr));
+while($i< count($arr)){
+	if(preg_match("/".$title."/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
+		unset($arr[$i]);
+		$i++;
+		while(!preg_match("/query/", $arr[$i])) {
+			unset($arr[$i]);
+			$i++;
+		}
+		unset($arr[$i]);
+	}
+	$i++;
+}
+$arr = array_values($arr);
+file_put_contents($myFile,implode($arr));
+*/
+
+$myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
+$bookid = array(".b29407291", ".b31397025", ".b29181306");
+$title = "the girl with dragon tattoo2";
+$arr = file($myFile);
+$i = 0;
+$elevate_count = 0;
+echo(count($arr));
+$arr_count = count($arr);
+while($i< $arr_count){
+        if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
+                unset($arr[$i]);
+                $i++;
+                while(!preg_match("/query/", $arr[$i])) {
+                        unset($arr[$i]);
+                        $i++;
+                }
+                unset($arr[$i]);
+        }
+        $i++;
+	if($i == $arr_count)
+		unset($arr[$arr_count-1]);
+}
+$arr = array_values($arr);
+file_put_contents($myFile,implode($arr));
+$fh = fopen($myFile, 'a') or die("Can't open file");
+$stringData = "<query text=\"".$title."\">\n";
+fwrite($fh, $stringData);
+foreach ($bookid as &$bookid) {
+$stringData = "\t<doc id=\"".$bookid."\"/>\n";
+fwrite($fh, $stringData);
+}
+$stringData = "</query>\n";
+fwrite($fh, $stringData);
+$stringData = "</elevate>";
+fwrite($fh, $stringData);
+fclose($fh);
+
+
+/*$myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
+$title = "the girl with dragon tattoo";
+$data = file_get_contents($myfile);
+$lines = explode(PHP_EOL, $data);
+$lineNo = 1;
+foreach($lines as $lines)
+{
+$linesArray[$lineNo] = $line;
+echo($lines);
+if(stristr($line, "i"))
+$lineNo++;
+}
+//unset($linesArray[$lineToRemove]);
+implode("\n", $linesArray);
+echo($lineNo);
+*/
+
+
+
+/*$myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
+$title = "the girl with dragon tattoo";
+$fileptr = fopen($myFile, 'r');
+$i = 0;
+$line = fgets($fileptr);
+while($line) {
+if ( stristr($line, $title) ) 
+    {
+	echo("HIT");
+	$line = fgets($fileptr);
+	while( !stristr($line, "query") ) {
+		echo("Into 2\n");
+		$line = fgets($fileptr);
+		$i++;
+	} 
+	echo("Hit2");
+	$i++;
+    }   
+
+echo($line);
+echo("\n");
+//echo($i);
+$line = fgets($fileptr);
+}*/
 
 		//If the user isn't logged in, take them to the login page
 		if (!$user){

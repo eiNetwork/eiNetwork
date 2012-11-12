@@ -1,0 +1,7 @@
+Found JAVA=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java in JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+Found JAVA=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java in JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+Shutting down VuFind ... 
+Found JAVA=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java in JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+Starting VuFind ... 
+/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java -server -Xms1900m -Xmx1900m -XX:+UseParallelGC -XX:NewRatio=5 -Djetty.port=8080 -Dsolr.solr.home=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr -Djetty.logs=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/logs/jetty -Djetty.home=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/jetty  -Djetty.port=8080 -Dsolr.solr.home=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr -Djetty.logs=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/logs/jetty -Djetty.home=/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/jetty  -jar /usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/jetty/start.jar  /usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/jetty/etc/jetty.xml
+VuFind running pid=15265

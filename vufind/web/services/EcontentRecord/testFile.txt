@@ -1,0 +1,28 @@
+12
+asdf
+asdf
+sd
+
+
+
+<query text="the girl with dragon tattoo3">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181303"/>
+</query>
+<query text="the girl with dragon tattoo4">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181304"/>
+</query>
+<query text="the girl with dragon tattoo">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181305"/>
+</query>
+<query text="the girl with dragon tattoo2">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181306"/>
+</query>
+</elevate>

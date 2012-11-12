@@ -16,8 +16,9 @@
   </div>
 
   <div id="myAccountLinks">
-    <div class="myAccountLink">Print Titles
-	    <div class="myAccountLink{if $pageTemplate=="checkedout.tpl"} active{/if}"><a href="{$path}/MyResearch/CheckedOut">{translate text='Checked Out Items'}{if $profile.numCheckedOut} ({$profile.numCheckedOut}){/if}</a></div>
+<div class="myAccountLink{if $pageTemplate=="analytics.tpl"} activ{/if}"><a href="{$path}/MyResearch/analytics">{translate text='View Analytics'}{if $profile.numCheckedOut}_({$profile.numCheckedOut}){if}</a></div>
+<p>Datta</p>
+    <div class="myAccountLink">Print Title, datta   <div class="myAccountLink{if $pageTemplate=="checkedout.tpl"} active{/if}"><a href="{$path}/MyResearch/CheckedOut">{translate text='Checked Out Items'}{if $profile.numCheckedOut} ({$profile.numCheckedOut}){/if}</a></div>
 	    <div class="myAccountLink{if $pageTemplate=="holds.tpl"} active{/if}"><a href="{$path}/MyResearch/Holds">{translate text='Available Holds'}{if $profile.numHoldsAvailable} ({$profile.numHoldsAvailable}){/if}</a></div>
       <div class="myAccountLink{if $pageTemplate=="holds.tpl"} active{/if}"><a href="{$path}/MyResearch/Holds">{translate text='Unavailable Holds'}{if $profile.numHoldsRequested} ({$profile.numHoldsRequested}){/if}</a></div>
     </div>
