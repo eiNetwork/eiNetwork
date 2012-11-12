@@ -593,7 +593,6 @@ function showProcessingIndicator(message){
 function searchSubmit(){
 	// Stop auto complete since there is a search running already
 	$('#lookfor').autocomplete( "disable" );
-	
 	document.forms.searchForm.action='/Union/Search'
 	document.forms.searchForm.submit();
 }
