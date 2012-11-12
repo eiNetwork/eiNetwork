@@ -44,14 +44,16 @@
 	    <div class='libraryHours'>{$libraryHoursMessage}</div>
 	{/if}
 	{if $transList}
-	   
+	<div>
+	    <h2>Checked Out Items</h2>
+	</div>
 	<form id="renewForm" action="{$path}/MyResearch/RenewMultiple">
 	    {*******BEGIN checked out item list*****}
 	    <div class="item_renew">
-		{translate text='Checked Out Items'}
+		<h3>{translate text='Physical Checked Out Items'}
 		<a href="{$path}/MyResearch/RenewAll">
 		    <input id="item_select_all" type="button" class="button" value="Renew All"/>
-		</a>
+		</a></h3>
 	    </div>
 	    <div class="item_renew">
 	    </div>
@@ -352,7 +354,7 @@
 	    
 	    {*******BEGIN Overdrive items*********}
 	    <div>
-		{translate text='eContent Checked Out Items'}
+		<h3>{translate text='eContent Checked Out Items'}</h3>
 	    </div>
 	    {if $user}
 	    {if count($overDriveCheckedOutItems) > 0}
@@ -399,7 +401,7 @@
 			{/foreach}
 		</div>
 	    {else}
-		<div class='noItems'>You do not have any titles from OverDrive checked out</div>
+		<div class='noItems' style="margin-left: 15px;">You do not have any titles from OverDrive checked out</div>
 	    {/if}
 	    {/if}
 	    {*******END Overdrive items*********}
@@ -474,19 +476,3 @@
     </div>
     
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

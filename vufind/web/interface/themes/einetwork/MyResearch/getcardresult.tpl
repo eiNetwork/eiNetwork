@@ -14,7 +14,7 @@
 		</div>
 		<div style="padding-left:8px">
 			<form id="pinresetform" class="getacard" method="POST" action="{$path}/MyResearch/PinReset">
-				<div><p>An email from helpdesk@einetwork.net will be sent to the email address in your patron record with a link to set your password.</p></div>
+				<div><p>An email from helpdesk@einetwork.net will be sent to the email address in your patron record with a link to set your pin after you click the button below.</p></div>
 				<div>
 					<input name="barcode" type="hidden" class="text" title="Barcode for PIN Reset" value="{$registrationResult.barcode}"/>
 				</div>

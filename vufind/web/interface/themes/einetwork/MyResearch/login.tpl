@@ -87,27 +87,32 @@
 		});
 	    });
 	    
-		/*$('#loginForm').submit(function(){
-			var card=$(this).val(),
-			    cardReg=/^[1-9]\d{13}$/;
-			cardReg1=/^[1-9]\d{6}$/;
-			return false;
-			if(!card){
+		$('#loginForm').submit(function(){
+			var pin=$("#pin").val();
+			var pinReg=/^[0-9]\d{3}$/;
+			var card=$("#card").val();
+			var cardReg=/^[1-9]\d{13}$/;
+			var cardReg1=/^[1-9]\d{6}$/;
+			if(card==""||!card||pin==""||!pin){
 				$('#cardError').html('&nbsp;');
 				return false;
 				
 			}else{
-				if(cardReg.test(card)||cardReg1.test(card)){
+				if((cardReg.test(card)||cardReg1.test(card))&&pinReg.test(pin)){
 					$('#cardError').html('&nbsp;');
 					return true;
 				}else{
-					$('#cardError').text('*please enter a valid 14 or 7 digit card number');
+					if(!(cardReg.test(card)||cardReg1.test(card))){
+						$('#cardError').text('*please enter a valid 14 or 7 digit card number');
+					}
+					if(!pinReg.test(pin)){
+						$('#pinError').text('*please enter a valid 4 digit PIN');
+					}
 					cardValid=false;
-					alert("false");
 					return false;
 				}
 			}
-		});*/
+		}); 
 	    $('#card').focusout(function(){
 		var card=$(this).val(),
 		    cardReg=/^[1-9]\d{13}$/;
@@ -163,7 +168,7 @@
 	<div class="loginHome-center">
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-				<div><b>Log In to EINetwork</b></div>
+				<div><b>Log In to the Catalog</b></div>
 				{if $message}
 					{*<div class="error">{$message|translate}</div>*}
 					<div class="error">Sorry, the account information you entered does not match our records. Please check and try again.</div>
