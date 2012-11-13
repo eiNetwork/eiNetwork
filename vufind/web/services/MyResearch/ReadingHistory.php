@@ -76,7 +76,7 @@ class ReadingHistory extends MyResearch
 				$interface->assign('defaultSortOption', $selectedSortOption);
 				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
 
-				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 25;
+				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 20;
 				$interface->assign('recordsPerPage', $recordsPerPage);
 				if (isset($_REQUEST['readingHistoryAction']) && $_REQUEST['readingHistoryAction'] == 'exportToExcel'){
 					$recordsPerPage = -1;
@@ -101,6 +101,7 @@ class ReadingHistory extends MyResearch
 					                 );
 					$pager = new VuFindPager($options);
 					$interface->assign('pageLinks', $pager->getLinks());
+					$interface->assign('page', $pager->pager->_currentPage);
 				}
 				if (!PEAR::isError($result)) {
 					$interface->assign('historyActive', $result['historyActive']);

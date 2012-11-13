@@ -38,18 +38,20 @@
 				</script>
 			{/if}
 			
-			<div>
-				{translate text='Requested Book Items'}
+			<div> 
+				<h2>{translate text='Requested Items'}</h2>
 				
 			</div>
-			<div id='holdsUpdateBranchSelction'>
+			<div style="margin-top: 30px">
+				<h3>Physical Requests</h3>
+			</div>
+			<div id='holdsUpdateBranchSelction' style=";padding-bottom: 10px;width: 660px">
 				Change Pickup Location to: 
 				{html_options name="withSelectedLocation" options=$pickupLocations selected=$resource.currentPickupId}
 				{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
 			</div>
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
-
 				<div class="checkout">
 					{foreach from=$recordList.$sectionKey item=record name="recordLoop"}
 						<div id="record{$record.recordId|escape}" class="item_list  record{$smarty.foreach.recordLoop.iteration}">
@@ -279,17 +281,17 @@
 
 				{else}
 					{if $sectionKey=='unavailable'}
-						{translate text='You do not have any holds that are not available yet'}.
+						<div style="margin-left: 15px">{translate text='You do not have any physical request that are not available yet'}.</div>
 					{/if}
 				{/if}
 			{/foreach}
 			
 			{*****BEGIN Overdrive Holds******}
-			<div>{translate text='Your eContent Holds'}</div>
+			<div style="margin-top: 20px;margin-bottom: 20px"><h3>{translate text='eContent Requests'}</h3></div>
 			
 			{if count($overDriveHolds.available) > 0}
 				
-				<div>Titles available for checkout</div>
+				<div >Titles available for checkout</div>
 				<div class="checkout">
 					{foreach from=$overDriveHolds.available item=record}
 					<div id="record">
@@ -482,7 +484,7 @@
 				    {/foreach}
 				</div>	
 			{else}
-			<div>{translate text="Empty"}</div>
+			<div style="margin-left: 10px">{translate text="You do not have any eContent requests that are not available yet. "}</div>
 			{/if}
 			{*****END Overdrive Holds*****}
 			

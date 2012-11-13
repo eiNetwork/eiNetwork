@@ -13,7 +13,7 @@
 					<option value="{$loanPeriod}">{$loanPeriod} days</option>
 				{/foreach}
 			</select> 
-			<input class="button" style="background-color:rgb(244,213,56);width:77px;height:30px;padding-top:0px;padding-bottom:0px" type="submit" name="submit" value="Check Out" onclick="return checkoutOverDriveItemStep2('{$overDriveId}', '{$formatId}')"/>
+			<input class="button" style="background-color:rgb(244,213,56);width:77px;height:30px;padding-top:0px;padding-bottom:0px" type="button" name="submit" value="Check Out" onclick="return checkoutOverDriveItemStep2('{$overDriveId}', '{$formatId}')"/>
 		</div>
 	</form>
 </div>

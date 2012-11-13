@@ -29,6 +29,7 @@
 		
 	});
 	function checkWhenSubmit(){
+		//$('input[name="phone"]').val($('input[name="phone"]').val().replace(/\D/g,'')) ;
 		var phone=$('input[name="phone"]').val(),
 		phoneReg=/^[2-9]\d{9}$/;
 		var email=$('input[name="email"]').val(),
@@ -65,8 +66,9 @@
 		<div class="error">{$profileUpdateErrors}</div>
 		{/if}
 		{if $user->cat_username}
+		<div><h2>Account Settings</h2></div>
 		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
-		<div id="info">Information</div>
+		<h3 id="info">Information</h3>
 		<input class="button" type="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>
 			<div class="profile">
 			<div id="name_notification" class="profile_row">
@@ -88,7 +90,7 @@
 						{if $edit == true}
 							<select name='notices'>
 							<option value='z' >E-mail</option>
-							<option value='p'>Phone</option>
+							<option value='p' {if $profile.notices == 'p'}selected="selected"{/if}>Phone</option>
 							</select>
 						{else}
 						{if $profile.notices == 'p'}Phone{else}Email{/if}
@@ -130,13 +132,13 @@
 				<tr>
 					<td>
 						{if $edit == true}
-						<input id="phone" name='phone' class="text" value='{$profile.phone|escape}' size='20' maxlength='10' />
+						<input id="phone" name='phone' class="text" value='{$profile.phone|regex_replace:"/\D/":""}' size='20' maxlength='10' />
 						<span id="phoneError" class="error">&nbsp;</span>
 						{else}
 							{if $profile.phone}
-								{$profile.phone|escape}
+								{$profile.phone|regex_replace:"/\D/":""}
 							{else}
-								{$user->phone|escape}
+								{$user->phone|regex_replace:"/\D/":""}
 							{/if}
 						{/if}
 					</td>

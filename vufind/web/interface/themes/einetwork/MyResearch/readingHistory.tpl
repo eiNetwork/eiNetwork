@@ -8,13 +8,28 @@
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
 	<div id="left-bar">
-		 &nbsp;
+		  {* Narrow Search Options *}
+  <div id="left-bar">
+	{if $sortOptions}
+		 <dl class="narrowList navmenu narrowbegin">
+			<dt>{translate text='Sort'}</dt>
+			<dd>
+				<select name="sort" onchange="document.location.href = '/MyResearch/ReadingHistory?page={$page|escape}&accountSort='+this.options[this.selectedIndex].value;">
+				{foreach from=$sortOptions item=sortLabel key=sortData}
+				  <option value="{$sortData|escape}"{if $sortData == $defaultSortOption} selected="selected"{/if}>{translate text=$sortLabel}</option>
+				{/foreach}
+				</select>
+			</dd>
+		 </dl>	
+	{/if}
+  </div>
+  {* End Narrow Search Options *}
 	</div>
   
 	<div id="main-content">
 		{if $user->cat_username}
 			<div class="resulthead">
-				<div class="myAccountTitle">{translate text='My Reading History'} {if $historyActive == true}<span id='readingListWhatsThis' onclick="$('#readingListDisclaimer').toggle();">(What's This?)</span>{/if}</div>
+				<div><h2>{translate text='Reading History'} {if $historyActive == true}<span id='readingListWhatsThis' onclick="$('#readingListDisclaimer').toggle();">(What's This?)</span>{/if}</h2></div>
 					{if $userNoticeFile}
 						{include file=$userNoticeFile}
 					{/if}
@@ -46,29 +61,7 @@
 							</div>
 							
 							{if $transList}
-							<div id="pager" class="pager">
-								{if $pageLinks.all}<div class="myAccountPagination pagination">Page: {$pageLinks.all}</div>{/if}
-								
-								<span id="recordsPerPage">
-								Records Per Page:
-								<select id="pagesize" class="pagesize" onchange="changePageSize()">
-									<option value="10" {if $recordsPerPage == 10}selected="selected"{/if}>10</option>
-									<option value="25" {if $recordsPerPage == 25}selected="selected"{/if}>20</option>
-									<option value="50" {if $recordsPerPage == 50}selected="selected"{/if}>30</option>
-									<option value="75" {if $recordsPerPage == 75}selected="selected"{/if}>40</option>
-									<option value="100" {if $recordsPerPage == 100}selected="selected"{/if}>50</option>
-								</select>
-								</span>
-								
-								<span id="sortOptions">
-								Sort By:
-								<select class="sortMethod" id="sortMethod" name="accountSort" onchange="changeAccountSort($(this).val())">
-									{foreach from=$sortOptions item=sortOptionLabel key=sortOption}
-										<option value="{$sortOption}" {if $sortOption == $defaultSortOption}selected="selected"{/if}>{$sortOptionLabel}</option>
-									{/foreach}
-								</select>
-								</span>
-							</div>    
+								{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}  
 							{/if}
 							{if $transList}
 							<table class="myAccountTable" id="readingHistoryTable">
@@ -176,6 +169,9 @@
 						<input class="button" type="button" onclick="return optInAction()" value="Start Recording My Reading History">
 						{/if}
 					</div>
+				{/if}
+				{if $transList}
+					{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}  
 				{/if}
 		</div>
 	</form>
