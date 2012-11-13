@@ -43,7 +43,7 @@
 	<input type="hidden" value="{$wishListID}" id="listId"/>
     <div id="searchInfo">
 	<div class="resulthead">
-            <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish list now."}</div>
+            <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
 	</div>
       {* End Listing Options *}
 
