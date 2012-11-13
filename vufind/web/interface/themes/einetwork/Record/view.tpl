@@ -302,7 +302,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/foreach}
 					{/if}
 
-					{if $tmpIsbn}
+					{if $isbns}
 					<tr>
 						<td class="details_lable">ISBN</td>
 						<td>
