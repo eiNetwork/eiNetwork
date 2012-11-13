@@ -214,7 +214,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		
 		{if $linkToAmazon == 1 && $isbn}
 		<div class="titledetails">
-			<a href="http://amazon.com/dp/{$isbn|@formatISBN}" class='amazonLink'> {translate text = "View on Amazon test"}</a>
+			<a href="http://amazon.com/dp/{$isbn|@formatISBN}" class='amazonLink'> {translate text = "View on Amazon"}</a>
 		</div>
 		{/if}
 		

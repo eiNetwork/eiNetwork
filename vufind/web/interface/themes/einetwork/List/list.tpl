@@ -28,11 +28,11 @@
 	<div class="resulthead" style="font-size:16px;height:30px">
 		
 			{if count($recordSet)>1}
-				Items in Your Book Cart
+				Items in your book cart
 			{elseif count($recordSet) == 1}
-				Item in Your Book Cart
+				Item in your book cart
 			{else}
-				No Item in Your Book Cart
+				Your book cart is empty
 			{/if}
 		
 	</div>
