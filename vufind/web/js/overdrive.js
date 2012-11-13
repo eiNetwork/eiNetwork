@@ -23,6 +23,7 @@ function checkoutOverDriveItemStep2(overdriveId, formatId){
 			}else{
 				hideLightbox();
 			}
+			hideLightbox();
 			getRequestAndCheckout();
 		},
 		dataType: 'json',
