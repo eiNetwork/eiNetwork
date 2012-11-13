@@ -172,7 +172,12 @@ function lightbox(left, width, top, height){
 	if (!top) top = '100px';
 	if (!width) width = 'auto';
 	if (!height) height = 'auto';
-	
+	if(width!=null||width){
+		var reg = /\d*/;
+		var newWidth = reg.exec(width);
+		var newHeight = reg.exec(height);
+		left = ($(document).width()-parseInt(newWidth))/2;
+	}
 	var loadMsg = $('#lightboxLoading').html();
 
 	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><img src="' + path + '/images/loading_bar.gif" class="lightboxLoadingImage"/></div>');
@@ -587,13 +592,12 @@ function showProcessingIndicator(message){
 	if (message != undefined){
 		$('#lightboxLoading').html(message);
 	}
-	lightbox();
+	lightbox(null,"400px","250px");
 }
 
 function searchSubmit(){
 	// Stop auto complete since there is a search running already
 	$('#lookfor').autocomplete( "disable" );
-	
 	document.forms.searchForm.action='/Union/Search'
 	document.forms.searchForm.submit();
 }

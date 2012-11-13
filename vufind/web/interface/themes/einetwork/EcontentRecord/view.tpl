@@ -716,12 +716,12 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $tmpIsbn}
+					{if $eContentRecord->isbn}
 					<tr>
 						<td class="details_lable">ISBN</td>
 						<td>
 							<table>
-							{foreach from=$isbns item=tmpIsbn name=loop}
+							{foreach from=$eContentRecord->getIsbn() item=tmpIsbn name=loop}
 								<tr><td>{$tmpIsbn|escape}</td></tr>
 							{/foreach}
 							</table>
