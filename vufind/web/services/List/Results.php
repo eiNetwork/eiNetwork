@@ -53,96 +53,96 @@ class Results extends Action {
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
 		//Check to see if the year has been set and if so, convert to a filter and resend.
-		$dateFilters = array('publishDate');
-		
-		foreach ($dateFilters as $dateFilter){
-			if (isset($_REQUEST[$dateFilter . 'yearfrom']) || isset($_REQUEST[$dateFilter . 'yearto'])){
-				$queryParams = $_GET;
-				$yearFrom = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearfrom']) ? $_REQUEST[$dateFilter . 'yearfrom'] : '*';
-				$yearTo = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearto']) ? $_REQUEST[$dateFilter . 'yearto'] : '*';
-				if (strlen($yearFrom) == 2){
-					$yearFrom = '19' . $yearFrom;
-				}else if (strlen($yearFrom) == 3){
-					$yearFrom = '0' . $yearFrom;
-				}
-				if (strlen($yearTo) == 2){
-					$yearTo = '19' . $yearTo;
-				}else if (strlen($yearFrom) == 3){
-					$yearTo = '0' . $yearTo;
-				}
-				if ($yearTo != '*' && $yearFrom != '*' && $yearTo < $yearFrom){
-					$tmpYear = $yearTo;
-					$yearTo = $yearFrom;
-					$yearFrom = $tmpYear;
-				}
-				unset($queryParams['module']);
-				unset($queryParams['action']);
-				unset($queryParams[$dateFilter . 'yearfrom']);
-				unset($queryParams[$dateFilter . 'yearto']);
-				if (!isset($queryParams['sort'])){
-					$queryParams['sort'] = 'year';
-				}
-				$queryParamStrings = array();
-				foreach($queryParams as $paramName => $queryValue){
-					if (is_array($queryValue)){
-						foreach ($queryValue as $arrayValue){
-							if (strlen($arrayValue) > 0){
-								$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
-							}
-						}
-					}else{
-						if (strlen($queryValue)){
-							$queryParamStrings[] = $paramName . '=' . $queryValue;
-						}
-					}
-				}
-				if ($yearFrom != '*' || $yearTo != '*'){
-					$queryParamStrings[] = "&filter[]=$dateFilter:[$yearFrom+TO+$yearTo]";
-				}
-				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
-				exit;
-			}
-		}
-		
-		$rangeFilters = array('lexile_score', 'accelerated_reader_reading_level', 'accelerated_reader_point_value');
-		foreach ($rangeFilters as $filter){
-			if (isset($_REQUEST[$filter . 'from']) || isset($_REQUEST[$filter . 'to'])){
-				$queryParams = $_GET;
-				$from = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'from']) ? $_REQUEST[$filter . 'from'] : '*';
-				$to = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'to']) ? $_REQUEST[$filter . 'to'] : '*';
-				
-				if ($to != '*' && $from != '*' && $to < $from){
-					$tmpFilter = $to;
-					$to = $from;
-					$from = $tmpFilter;
-				}
-				unset($queryParams['module']);
-				unset($queryParams['action']);
-				unset($queryParams[$filter . 'from']);
-				unset($queryParams[$filter . 'to']);
-				$queryParamStrings = array();
-				foreach($queryParams as $paramName => $queryValue){
-					if (is_array($queryValue)){
-						foreach ($queryValue as $arrayValue){
-							if (strlen($arrayValue) > 0){
-								$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
-							}
-						}
-					}else{
-						if (strlen($queryValue)){
-							$queryParamStrings[] = $paramName . '=' . $queryValue;
-						}
-					}
-				}
-				if ($yearFrom != '*' || $yearTo != '*'){
-					$queryParamStrings[] = "&filter[]=$filter:[$from+TO+$to]";
-				}
-				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
-				exit;
-			}
-		}
+		//$dateFilters = array('publishDate');
+		//
+		//foreach ($dateFilters as $dateFilter){
+		//	if (isset($_REQUEST[$dateFilter . 'yearfrom']) || isset($_REQUEST[$dateFilter . 'yearto'])){
+		//		$queryParams = $_GET;
+		//		$yearFrom = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearfrom']) ? $_REQUEST[$dateFilter . 'yearfrom'] : '*';
+		//		$yearTo = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearto']) ? $_REQUEST[$dateFilter . 'yearto'] : '*';
+		//		if (strlen($yearFrom) == 2){
+		//			$yearFrom = '19' . $yearFrom;
+		//		}else if (strlen($yearFrom) == 3){
+		//			$yearFrom = '0' . $yearFrom;
+		//		}
+		//		if (strlen($yearTo) == 2){
+		//			$yearTo = '19' . $yearTo;
+		//		}else if (strlen($yearFrom) == 3){
+		//			$yearTo = '0' . $yearTo;
+		//		}
+		//		if ($yearTo != '*' && $yearFrom != '*' && $yearTo < $yearFrom){
+		//			$tmpYear = $yearTo;
+		//			$yearTo = $yearFrom;
+		//			$yearFrom = $tmpYear;
+		//		}
+		//		unset($queryParams['module']);
+		//		unset($queryParams['action']);
+		//		unset($queryParams[$dateFilter . 'yearfrom']);
+		//		unset($queryParams[$dateFilter . 'yearto']);
+		//		if (!isset($queryParams['sort'])){
+		//			$queryParams['sort'] = 'year';
+		//		}
+		//		$queryParamStrings = array();
+		//		foreach($queryParams as $paramName => $queryValue){
+		//			if (is_array($queryValue)){
+		//				foreach ($queryValue as $arrayValue){
+		//					if (strlen($arrayValue) > 0){
+		//						$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
+		//					}
+		//				}
+		//			}else{
+		//				if (strlen($queryValue)){
+		//					$queryParamStrings[] = $paramName . '=' . $queryValue;
+		//				}
+		//			}
+		//		}
+		//		if ($yearFrom != '*' || $yearTo != '*'){
+		//			$queryParamStrings[] = "&filter[]=$dateFilter:[$yearFrom+TO+$yearTo]";
+		//		}
+		//		$queryParamString = join('&', $queryParamStrings);
+		//		header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
+		//		exit;
+		//	}
+		//}
+		//
+		//$rangeFilters = array('lexile_score', 'accelerated_reader_reading_level', 'accelerated_reader_point_value');
+		//foreach ($rangeFilters as $filter){
+		//	if (isset($_REQUEST[$filter . 'from']) || isset($_REQUEST[$filter . 'to'])){
+		//		$queryParams = $_GET;
+		//		$from = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'from']) ? $_REQUEST[$filter . 'from'] : '*';
+		//		$to = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'to']) ? $_REQUEST[$filter . 'to'] : '*';
+		//		
+		//		if ($to != '*' && $from != '*' && $to < $from){
+		//			$tmpFilter = $to;
+		//			$to = $from;
+		//			$from = $tmpFilter;
+		//		}
+		//		unset($queryParams['module']);
+		//		unset($queryParams['action']);
+		//		unset($queryParams[$filter . 'from']);
+		//		unset($queryParams[$filter . 'to']);
+		//		$queryParamStrings = array();
+		//		foreach($queryParams as $paramName => $queryValue){
+		//			if (is_array($queryValue)){
+		//				foreach ($queryValue as $arrayValue){
+		//					if (strlen($arrayValue) > 0){
+		//						$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
+		//					}
+		//				}
+		//			}else{
+		//				if (strlen($queryValue)){
+		//					$queryParamStrings[] = $paramName . '=' . $queryValue;
+		//				}
+		//			}
+		//		}
+		//		if ($yearFrom != '*' || $yearTo != '*'){
+		//			$queryParamStrings[] = "&filter[]=$filter:[$from+TO+$to]";
+		//		}
+		//		$queryParamString = join('&', $queryParamStrings);
+		//		header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
+		//		exit;
+		//	}
+		//}
 
 		//=======================Get wish list information======================
 		$raw_wishLists= $user->getLists();
@@ -212,7 +212,7 @@ class Results extends Action {
 		if(count($raw_wishLists)==1){
 			$interface->assign('onlyBookCart',true);
 		}
-		if(isset($myFavoritesID) && count($wishLists)>0){
+		if($myFavoritesID ==null && count($wishLists)>0){
 			$myFavoritesID = $wishLists[0]['id'];
 		}
 		$goToListID;
@@ -409,7 +409,10 @@ class Results extends Action {
 		$interface->assign('showRatings', $showRatings);
 
 		$numProspectorTitlesToLoad = 0;
-		if ($searchObject->getResultTotal() == 0) {
+		
+		if(count($raw_wishLists)==1 and $_REQUEST['goToListID'] != 'BookCart'){
+			$interface->setTemplate('noList.tpl');
+		} elseif ($searchObject->getResultTotal() == 0) {
 			
 			//Var for the IDCLREADER TEMPLATE
 			$interface->assign('ButtonBack',true);
@@ -556,14 +559,7 @@ class Results extends Action {
 		$interface->display('layout.tpl');
 	} // End launch()
 
-	/**
-	 * Process the "jumpto" parameter.
-	 *
-	 * @access  private
-	 * @param   array       $result         Solr result returned by SearchObject
-	 */
-	
-	function getLists() {
+	private function getLists() {
 		require_once 'services/MyResearch/lib/User_list.php';
 		
 		$lists = array();
@@ -583,7 +579,12 @@ class Results extends Action {
 		}
 		return $lists;
 	}
-	
+	/**
+	 * Process the "jumpto" parameter.
+	 *
+	 * @access  private
+	 * @param   array       $result         Solr result returned by SearchObject
+	 */
 	private function processJumpto($result)
 	{
 		if (isset($_REQUEST['jumpto']) && is_numeric($_REQUEST['jumpto'])) {
