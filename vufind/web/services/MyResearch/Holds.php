@@ -116,6 +116,8 @@ class Holds extends MyResearch
 					$item['numRows'] = count($item['formats']) + 1;
 				}
 				$overDriveHolds['holds'][$sectionKey][$key] = $item;
+				require_once "services/Debug/Debugger.php";
+				Debugger::tailAt("a.out",$item);
 			}
 		}
 		$interface->assign('overDriveHolds', $overDriveHolds['holds']);

@@ -42,7 +42,6 @@ class AJAX extends Action {
 			$xmlResponse .= '</AJAXResponse>';
 
 			echo $xmlResponse;
-			
 		}
 	}
 	function GetHoldingsInfo(){
