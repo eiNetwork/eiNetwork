@@ -270,7 +270,7 @@ class EINetwork extends MillenniumDriver{
 		return $user->cat_username;
 	}
 	
-	protected function _getHoldResult($holdResultPage){
+	/*protected function _getHoldResult($holdResultPage){
 		$hold_result = array();
 		//Get rid of header and footer information and just get the main content
 		$matches = array();
@@ -294,7 +294,7 @@ class EINetwork extends MillenniumDriver{
 		}
 
 		return $hold_result;
-	}
+	}*/
 	
 	public function updatePatronInfo($patronId){
 		global $user;
