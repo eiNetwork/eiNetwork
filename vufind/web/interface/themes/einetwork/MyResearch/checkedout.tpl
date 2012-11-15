@@ -394,7 +394,10 @@
 					    {$record.format}
 					</div>
 				</div>
-				<div class="item_status">
+				<div class="item_status" style="width: 140px">
+					{if $record.expiresOn}
+					    Expires on&nbsp;{$record.expiresOn|date_format}
+					{/if}
 					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
 				</div>
 			</div>
