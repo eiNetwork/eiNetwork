@@ -10,13 +10,14 @@ class Debugger {
             var_dump($obj);
             $result = ob_get_clean();
             file_put_contents($path,$result,FILE_APPEND);
-            file_put_contents($path,"",FILE_APPEND);
-            file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
+            file_put_contents($path,"\n",FILE_APPEND);
+            ob_end_clean();
         }else{
             ob_start();
             file_put_contents($path,"Object is null",FILE_APPEND);
             file_put_contents($path,"",FILE_APPEND);
             file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
+            ob_end_clean();
         }
     }
     static function clean($filename){
@@ -34,4 +35,16 @@ class Debugger {
         file_put_contents($path,"",FILE_APPEND);
         file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
     }
+    static function printTitle($filename){
+        $pre = "/usr/local/VuFind-Plus/vufind/web/";
+        $path = $pre.$filename;
+        ob_start();
+        debug_print_backtrace();
+        $result = ob_get_clean();
+        $trace = split("\n",$result);
+        file_put_contents($path,"\n==============".$trace[1]."===========\n",FILE_APPEND);
+        file_put_contents($path,"",FILE_APPEND);
+        //file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
+    }
+    
 }

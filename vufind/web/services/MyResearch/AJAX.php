@@ -37,7 +37,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_GET['method'];
-		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches'))){
+		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches','getUnavailableHoldingInfo'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -88,7 +88,26 @@ class AJAX extends Action {
 
 		return json_encode($return);
 	}
+	function getUnavailableHoldingInfo(){
+		global $interface;
+		global $configArray;
+		//$id = strip_tags($_REQUEST['id']);
+		$id = $_REQUEST['rid'];
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $id;
+		$eContentRecord->find(true);
 
+		$holdings = $driver->getHolding($id);
+		$holdingsSummary = $driver->getStatusSummary($id, $holdings);
+		$interface->assign("holdingsSummary",$holdingsSummary);
+		$result = $interface->fetch("MyResearch/holdingsSummary.tpl");
+		return $result;
+	
+	}
 	/**
 	 * Get a list of preferred hold pickup branches for a user.
 	 *

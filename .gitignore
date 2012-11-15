@@ -1,5 +1,6 @@
 # Specific locations within VuFind #
 ####################################
+vufind/web/a.out
 sites/*
 !sites/default
 !sites/packaging_default

@@ -56,10 +56,6 @@ class AJAX extends Action {
 			}
 			$xmlResponse .= '</AJAXResponse>';
 			echo $xmlResponse;
-			if($method == 'GetEnrichmentInfo'){
-				require_once 'services/Debug/Debugger.php';
-				//Debugger::tailAt('a.out',$xmlResponse);
-			}
 
 		}
 	}
@@ -474,8 +470,6 @@ class AJAX extends Action {
 		$interface->assign('id', $id);
 		$holdings = Holdings::loadHoldings($id);
 		$re = $interface->fetch('Record/ajax-holdings.tpl');
-		require_once("services/Debug/Debugger.php");
-		Debugger::tailAt("a.out",$re);
 		return $re;
 	}
 

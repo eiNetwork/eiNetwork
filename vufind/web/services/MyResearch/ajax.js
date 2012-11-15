@@ -25,6 +25,30 @@ function getListTitles(listId){
 	});
 }
 
+$(document).ready(function(){
+		$(".record.overdrive-unavailable").each(function(){
+			var id = $(this).attr("id");
+			var reg = /[0-9]+/;
+			var res = reg.exec(id);
+			var url = path + "/MyResearch/AJAX?method=getUnavailableHoldingInfo&rid="+res;
+			var data ="";
+			$.ajax({
+				url:url,
+				dataType:'text',
+				type:'get',
+				success:function(data){
+					if(data!=null){
+						$("#item_status"+res).text(data);
+					}
+					
+				},
+				error: function(){
+					var a= 1;
+				}
+			})
+		})
+})
+
 function changePageSize(){
 	var url = window.location.href;
 	if (url.match(/[&?]pagesize=\d+/)) {
