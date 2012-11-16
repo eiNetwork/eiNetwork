@@ -36,18 +36,20 @@
 		  </span>
 		  <br /><span class='{if $title_data.result == true}hold_result_title_ok{else}hold_result_title_failed{/if}'>{$title_data.message}</span>
 		  {if $title_data.items}
+		  <div>
 		    <select  name="title[{$title_data.bid}]">
 		    <option class='hold_item' value="-1">Select an item</option>
 		    {foreach from=$title_data.items item=item_data}
 		    <option class='hold_item' value="{$item_data.itemNumber}">{$item_data.location}- {$item_data.callNumber} - {$item_data.status}</option>
 		    {/foreach}
 		    </select>
+		  </div>
 		  {/if}
 		  </li>
 		{/foreach}
 		</ol>
 		{if $hold_message_data.showItemForm}
-		<input type='submit' value='Place Item Holds' />
+		<input type='submit' class="button" value='Place Item Holds' />
 		</form>
 		{/if}
 	</div>

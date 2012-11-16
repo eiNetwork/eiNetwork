@@ -10,7 +10,7 @@
   <div id="left-bar">
 	{if $sideRecommendations}
 		{foreach from=$sideRecommendations item="recommendations"}
-		{include file=$recommendations}
+		{include file=$recommendations sideFacetSet=false}
 		{/foreach}
 	{/if}
   </div>
@@ -21,22 +21,25 @@
 	<script type="text/javascript" src="/services/List/ajax.js"></script>
     <div id="searchInfo">
 	{if $pageType eq 'WishList'}
+		<h2>Wish Lists</h2>
 		<span><input type="button" value="Move All Physical Items to Book Cart" onclick="saveAllToBookCart()" class="button"></span>
 		<span  style="margin-left:10px;"><input type="button" value="Delete This Wish List" onclick="getDeleteList('{$wishListID}')" class="button"></span>
+		{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
 	{/if}
 	{if $pageType eq 'BookCart'}
 	<div class="resulthead" style="font-size:16px;height:30px">
 		
 			{if count($recordSet)>1}
-				Items in Your Book Cart
+				Items in your book cart
 			{elseif count($recordSet) == 1}
-				Item in Your Book Cart
+				Item in your book cart
 			{else}
-				No Item in Your Book Cart
+				Your book cart is empty
 			{/if}
 		
 	</div>
 	{/if}
+	
 	{if $pageType eq 'BookCart'}
 	<form name='placeHoldForm' id='placeHoldForm' action="{$url}/MyResearch/HoldMultiple" method="post">
 	<div>
@@ -44,7 +47,7 @@
 				<div id="holdDisclaimer">{$holdDisclaimer}</div>
 			{/if}
 			
-	    <div id="loginFormWrapper" style="border-bottom-color: rgb(238,238,238);border-bottom-style: solid;border-bottom-width: 1px;padding-bottom: 10px;">
+	    <div id="loginFormWrapper" style="border-bottom-color: rgb(238,238,238);border-bottom-style: solid;border-bottom-width: 1px;padding-bottom: 10px;padding-left: 2px;width: 638px;padding-top: 0px">
 		  {foreach from=$ids item=id}
 		     <input type="hidden" name="selected[{$id|escape:url}]" value="on" id="selected{$id|escape:url}" class="selected"/>
 		  {/foreach}
@@ -63,7 +66,7 @@
 		{/if}
 		<div id='holdOptions' {if (!isset($profile)) }style='display:none'{/if}>
 	        <div class='loginFormRow'>
-			<div style="margin-top:15px;padding-left:35px;margin-bottom:15px"> <span style="margin-right:15px;font-size:15px"class='loginLabel'>{translate text="Pickup Location"}: </span>
+			<div style="margin-top:15px;padding-left:5px;text-align: left;margin-bottom:15px"> <span style="margin-right:15px;font-size:15px">{translate text="Pickup Location"}: </span>
 			 <span class='loginField'>
 			 <select name="campus" id="campus" style="width:260px">
 			   {if count($pickupLocations) > 0}
@@ -86,6 +89,7 @@
 			 {/if}
 			</div>
 	        </div>
+	        {if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
 		{if count($recordSet)>0}
 			<div class='loginFormRow'>
 			<input type="hidden" name="holdType" value="hold"/>

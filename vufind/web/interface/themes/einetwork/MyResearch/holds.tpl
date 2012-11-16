@@ -38,18 +38,20 @@
 				</script>
 			{/if}
 			
-			<div>
-				{translate text='Requested Book Items'}
+			<div> 
+				<h2>{translate text='Requested Items'}</h2>
 				
 			</div>
-			<div id='holdsUpdateBranchSelction'>
-				Change Pickup Location to: 
+			<div style="margin-top: 30px">
+				<h3>Physical Requests</h3>
+			</div>
+			<div id='holdsUpdateBranchSelction' style=";padding-bottom: 10px;width: 660px">
+				&nbsp&nbsp&nbsp&nbspChange Pickup Location to: 
 				{html_options name="withSelectedLocation" options=$pickupLocations selected=$resource.currentPickupId}
 				{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
 			</div>
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
-
 				<div class="checkout">
 					{foreach from=$recordList.$sectionKey item=record name="recordLoop"}
 						<div id="record{$record.recordId|escape}" class="item_list  record{$smarty.foreach.recordLoop.iteration}">
@@ -279,20 +281,20 @@
 
 				{else}
 					{if $sectionKey=='unavailable'}
-						{translate text='You do not have any holds that are not available yet'}.
+						<div style="margin-left: 15px">{translate text='You do not have any physical request that are not available yet'}.</div>
 					{/if}
 				{/if}
 			{/foreach}
 			
 			{*****BEGIN Overdrive Holds******}
-			<div>{translate text='Your eContent Holds'}</div>
+			<div style="margin-top: 20px;margin-bottom: 20px"><h3>{translate text='eContent Requests'}</h3></div>
 			
 			{if count($overDriveHolds.available) > 0}
 				
-				<div>Titles available for checkout</div>
+				<div >&nbsp&nbsp&nbsp&nbspTitles available for checkout</div>
 				<div class="checkout">
 					{foreach from=$overDriveHolds.available item=record}
-					<div id="record">
+					<div id="overdrive-request-available{$record.recordId}" class="record overdrive-available">
 						<div class="item_image">
 							<img src="{$record.imageUrl}">
 						</div>
@@ -316,10 +318,11 @@
 						<div class="item_status">
 							
 							{foreach from=$record.formats item=format}
-							<div>{$format.name}</div>
+							<div style="text-align: center;{if count($record.formats)==1}font-size:12px{else}font-size:11px{/if}">{$format.name}</div>
 							
 							<div>
-									<input class="round-rectangle-button" onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')"  value="Remove"  style="color: #6D6D6D;" />	
+									<input class="button yellow" type="button"  onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')"  value="Checkout Now"  style="color: #6D6D6D;{if count($record.formats)>1}height: 25px;{/if}padding-left: 10px" />
+
 							</div>
 							{/foreach}
 						</div>
@@ -330,12 +333,12 @@
 					{/foreach}
 				</div>
 			
-			
-			{elseif count($overDriveHolds.unavailable) > 0}
-				<div>Requested items not yet available</div>
+			{/if}
+			{if count($overDriveHolds.unavailable) > 0}
+				<div>&nbsp&nbsp&nbsp&nbspRequested items not yet available</div>
 				<div class="checkout">
 					{foreach from=$overDriveHolds.unavailable item=record}
-					<div id="record">
+					<div id="overdrive-request-unavailable{$record.recordId}" class="record overdrive-unavailable">
 						<div class="item_image">
 							<img src="{$record.imageUrl}">
 						</div>
@@ -471,9 +474,9 @@
 							</div>
 						</div>
 						
-						<div class="item_status">
-							{$record.holdQueuePosition} out of {$record.holdQueueLength}
-								<input class="round-rectangle-button" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" value="Remove" style="color: #6D6D6D;"/>
+						<div class="item_status" >
+							<span id="item_status{$record.recordId}">Total {$record.holdQueueLength} {if $record.holdQueueLength == 1}copy{else}copies{/if}</span>
+								<input type="button" class="button yellow" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" value="Remove" style="color: #6D6D6D;"/>
 						</div>
 						
 						
@@ -482,7 +485,7 @@
 				    {/foreach}
 				</div>	
 			{else}
-			<div>{translate text="Empty"}</div>
+			<div style="margin-left: 10px">{translate text="You do not have any eContent requests that are not available yet. "}</div>
 			{/if}
 			{*****END Overdrive Holds*****}
 			
@@ -495,3 +498,8 @@
 		{include file="Admin/menu.tpl"}
 	</div>
 </div>
+{literal}
+<script type="text/javascript">
+	
+</script>
+{/literal}

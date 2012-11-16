@@ -73,7 +73,7 @@ class CheckedOut extends MyResearch{
 				$interface->assign('defaultSortOption', $selectedSortOption);
 				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
 
-				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 25;
+				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 20;
 				$interface->assign('recordsPerPage', $recordsPerPage);
 				if (isset($_GET['exportToExcel'])) {
 					$recordsPerPage = -1;
@@ -293,7 +293,10 @@ class CheckedOut extends MyResearch{
 		$overDriveDriver = new OverDriveDriver();
 		$overDriveCheckedOutItems = $overDriveDriver->getOverDriveCheckedOutItems($user);
 		//Load the full record for each item in the wishlist
+		require_once "services/Debug/Debugger.php";
+		Debugger::tailAt("a.out",$overDriveCheckedOutItems);
 		foreach ($overDriveCheckedOutItems['items'] as $key => $item){
+
 			if ($item['recordId'] != -1){
 				$econtentRecord = new EContentRecord();
 				$econtentRecord->id = $item['recordId'];

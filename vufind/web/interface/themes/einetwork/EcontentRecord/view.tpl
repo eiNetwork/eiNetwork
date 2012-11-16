@@ -565,11 +565,11 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <div class="recordDescription">
 			{if strlen($eContentRecord->description) > 300}
 				<span id="shortDesc">
-					{$eContentRecord->description|escape|truncate:300}
+					{$eContentRecord->description|strip_tags|truncate:300}
 					<a href='#' onclick='$("#shortDesc").slideUp();$("#fullDesc").slideDown()'>More</a>
 				</span>
 				<span id="fullDesc" style="display:none">
-					{$eContentRecord->description|escape}
+					{$eContentRecord->description|strip_tags}
 					<a href='#' onclick='$("#shortDesc").slideDown();$("#fullDesc").slideUp()'>Less</a>
 				</span>
 			{/if}
@@ -716,12 +716,12 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $tmpIsbn}
+					{if $eContentRecord->isbn}
 					<tr>
 						<td class="details_lable">ISBN</td>
 						<td>
 							<table>
-							{foreach from=$isbns item=tmpIsbn name=loop}
+							{foreach from=$eContentRecord->getIsbn() item=tmpIsbn name=loop}
 								<tr><td>{$tmpIsbn|escape}</td></tr>
 							{/foreach}
 							</table>

@@ -3,13 +3,11 @@
     &nbsp;
   </div>
   
-  <div id="main-content">
-        
-      <div class="page">
+  <div id="main-content"> 
       {if !$noHistory}
       {if $saved}
         <div class="myAccountTitle">{translate text="history_saved_searches"}</div>
-        <table class="datagrid" width="100%">
+        <table class="datagrid" width="640px" >
           <tr>
             <th width="25%">{translate text="history_time"}</th>
             <th width="30%">{translate text="history_search"}</th>
@@ -37,7 +35,7 @@
       {/if}
 
       {if $links}
-        <div class="resulthead"><h3>{translate text="history_recent_searches"}</h3></div>
+        <div class="resulthead"><h2>{translate text="Search History"}</h2></div>
         <table class="datagrid" width="100%">
           <tr>
             <th width="25%">{translate text="history_time"}</th>
@@ -69,7 +67,6 @@
         <div class="resulthead"><h3>{translate text="history_recent_searches"}</h3></div>
         {translate text="history_no_searches"}
       {/if}
-      </div>
     </div>
   <div id="right-bar">
     {include file="MyResearch/menu.tpl"}
