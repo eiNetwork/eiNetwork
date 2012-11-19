@@ -152,7 +152,7 @@ class Holds extends MyResearch
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {
 						$location = new Location();
-						$pickupBranches = $location->getPickupBranches($patronResult, null);
+						$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
 						$locationList = array();
 						foreach ($pickupBranches as $curLocation) {
 							$locationList[$curLocation->locationId] = $curLocation->displayName;
