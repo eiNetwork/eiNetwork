@@ -42,6 +42,25 @@ class Results extends Action {
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
 
+		if ($user->hasRole('epubAdmin')){
+			require_once "services/Search/VinBoost.php";
+			$module = 'Search';
+                        $interface->assign('module', $module);
+                        $action = 'VinBoost';
+                        $interface->assign('action', $action);
+                        if ($searchSource == 'econtent'){
+                                if (!isset($_REQUEST['shard'])){
+                                        $_SESSION['shards'] = array('eContent');
+                                }
+                        }else{
+                                if (!isset($_REQUEST['shard'])){
+                                        $_SESSION['shards'] = array('eContent', 'Main Catalog');
+                                }
+                        }
+                        $results = new VinBoost();
+                        return $results->launch();
+                }
+
 		//Check to see if the year has been set and if so, convert to a filter and resend.
 		$dateFilters = array('publishDate');
 		foreach ($dateFilters as $dateFilter){
@@ -273,7 +292,9 @@ class Results extends Action {
 				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
 			}else{
 				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
+				echo($record['id']);
 			}
+
 			
 		} else {
 			$timer->logTime('save search');

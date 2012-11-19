@@ -563,9 +563,9 @@
  
   <!--<requestHandler name="/elevate" class="org.apache.solr.handler.component.SearchHandler" startup="lazy">-->
   <requestHandler name="/elevate" class="org.apache.solr.handler.component.SearchHandler">
-    <!--<lst name="defaults">
+<!--    <lst name="defaults">
       <str name="echoParams">explicit</str>
-    </lst>-->
+    </lst> -->
     <arr name="last-components">
       <str>elevator</str>
     </arr>

@@ -38,10 +38,26 @@
    <doc id=".b29663842" />
  </query>
 
- <query text="the girl with dragon tattoo">
-   <doc id=".b31397025" />
-   <doc id=".b29181306" exclude="true" />
-   <doc id=".b28308311" exclude="true" />
-   <doc id=".b31602654" />
- </query>
+
+<query text="full">
+   <doc id="19466"/>
+   <doc id=".26707056"/>
+</query>
+
+<query text="dad">
+	<doc id=".b24401845"/>
+	<doc id=".b30744167"/>
+	<doc id=".b29085445"/>
+	<doc id="2220"/>
+	<doc id=".b22095056"/>
+</query>
+<query text="the girl with dragon tattoo">
+	<doc id=".b3170766x"/>
+</query>
+<query text="Inglorious Bastards">
+	<doc id=".b31704074"/>
+</query>
+<query text="Harry potter and the chamber of secrets">
+	<doc id=".b31612088"/>
+</query>
 </elevate>

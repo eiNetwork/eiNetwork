@@ -2,9 +2,9 @@ var XHR;
 function sendMessage() //send comment data to the servlet;
 { 
     req = createXHR();
-    var stringToSend = "";
+    var stringToSend = "selected[.b16492675]=on&campus=xa&autologout=false";
     req.onreadystatechange = responseHandler;
-    req.open("GET", "http://10.69.1.61/MyResearch/HoldMultiple?selected[.b26362302]=on&campus=xa&holdType=hold&autologout=false", true);
+    req.open("POST", "http://10.69.1.61/MyResearch/HoldMultiple", true);
     req.send(stringToSend);
 }
 function createXHR() //create a XMLHttpRequest;
@@ -62,3 +62,60 @@ function loading()
 {
 	//loading function
 }
+
+ function swapDiv(event,elem){
+         var curr = elem.parentElement;
+        // alert(curr.id);
+         //alert(elem.parentElement.nextSibling.nextSibling.innerHTML);
+         var current = curr.id;
+      // alert("Source:" + current );
+         var prev = elem.previousSibling.previousSibling;
+         var Targetdiv  = prev.value;
+         //alert(Targetdiv);
+         var currentdiv = elem.parentElement.id.substring(0,1);
+         //alert(currentdiv);
+         var Id = Targetdiv +'Y';
+   //      alert("target :" + Id);
+         var target = document.getElementById(Id.toString()).nextSibling.nextSibling;
+ //        alert("fIRSRT TIME----->"+target.innerHTML);
+        // var parent = elem.parentElement.innerHTML; 
+         //alert(Targetdiv.value);
+         //alert(currentdiv);
+         
+         if(currentdiv > Targetdiv)
+           {
+              // alert("in.....>");
+              var prevnode = target.innerHTML;
+               //alert( "fIRSRT TIME----->" + prevnode);
+              var temp34;
+              document.getElementById(Id.toString()).nextSibling.nextSibling.innerHTML = document.getElementById(current.toString()).nextSibling.nextSibling.innerHTML;
+              for(var i = parseInt(Targetdiv)+ parseInt(1) ; i <= currentdiv  ; i++)
+                  {
+                    var Id = i+'Y';
+                    var curenode = document.getElementById(Id.toString()).nextSibling.nextSibling;
+                //    alert(curenode.innerHTML);
+                    temp34 = curenode.innerHTML;
+                    curenode.innerHTML = prevnode;
+                    prevnode = temp34;  
+                  }
+              //alert ('Bubble-UP');
+           }
+         else if (Targetdiv > currentdiv)
+           {
+               //bubble Down
+               var prevnode = target.innerHTML;
+              //alert( "out---->");
+              var temp34;
+              document.getElementById(Id.toString()).nextSibling.nextSibling.innerHTML = document.getElementById(current.toString()).nextSibling.nextSibling.innerHTML;
+              for(var i = parseInt(Targetdiv)- parseInt(1) ; i >= currentdiv  ; i--)
+                  {
+                    var Id = i+'Y';
+                    var curenode = document.getElementById(Id.toString()).nextSibling.nextSibling;
+                //    alert(curenode.innerHTML);
+                    temp34 = curenode.innerHTML;
+                    curenode.innerHTML = prevnode;
+                    prevnode = temp34;  
+                  } 
+
+           }
+    }

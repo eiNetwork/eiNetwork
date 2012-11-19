@@ -2,7 +2,7 @@
 <table style="width:752px; border-bottom:1px solid #eee;">
   <tr>
 	  {foreach from=$recordSet item=record name="recordLoop"}
-	   <td width="25%">{* This is raw HTML -- do not escape it: *}{$record} <p>ganesha</p> </td>
+	   <td width="25%">{* This is raw HTML -- do not escape it: *}{$record} <p></p> </td>
     {if (($smarty.foreach.recordLoop.iteration % 4) == 0) && (!$smarty.foreach.recordLoop.last)}</tr>ddddd<tr>{/if}
   {/foreach}
   </tr>

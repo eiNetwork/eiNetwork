@@ -40,6 +40,14 @@ class Search extends Action {
 		global $module;
 		global $action;
 		global $interface;
+		global $user;
+
+/*		if ($user->hasRole('epubAdmin')){
+			echo("HIT");
+			if(isset($_REQUEST['boost']))
+				echo("SUPER");
+                } */
+
 		if (isset($searchInfo['external']) && $searchInfo['external'] == true){
 			//Reset to a local search source so the external search isn't remembered
 			$_SESSION['searchSource'] = 'local';
@@ -69,6 +77,27 @@ class Search extends Action {
 				$results = new Results();
 				return $results->launch();
 			}else{
+				if ($user)
+				{
+					if($user->hasRole('epubAdmin')) {
+						require_once ('services/Search/VinBoost.php');
+						$module = 'Search';
+						$interface->assign('module', $module);
+						$action = 'VinBoost';
+						$interface->assign('action', $action);
+						if ($searchSource == 'econtent'){
+							if (!isset($_REQUEST['shard'])){
+								$_SESSION['shards'] = array('eContent');  
+							}
+						}else{
+							if (!isset($_REQUEST['shard'])){
+								$_SESSION['shards'] = array('eContent', 'Main Catalog');  
+							}
+						}
+						$results = new VinBoost();
+						return $results->launch();
+					}
+				}
 				require_once ('services/Search/Results.php');
 				$module = 'Search';
 				$interface->assign('module', $module);

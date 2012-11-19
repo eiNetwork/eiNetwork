@@ -70,7 +70,7 @@ file_put_contents($myFile,implode($arr));
 
 $myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
 $bookid = array(".b29407291", ".b31397025", ".b29181306");
-$title = "the girl with dragon tattoo2";
+$title = "the boy4 with dragon tattoo2";
 $arr = file($myFile);
 $i = 0;
 $elevate_count = 0;

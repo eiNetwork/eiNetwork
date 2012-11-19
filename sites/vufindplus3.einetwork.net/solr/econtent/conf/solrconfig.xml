@@ -551,7 +551,8 @@
     <str name="config-file">elevate.xml</str>
   </searchComponent>
  
-  <requestHandler name="/elevate" class="org.apache.solr.handler.component.SearchHandler" startup="lazy">
+  <!--<requestHandler name="/elevate" class="org.apache.solr.handler.component.SearchHandler" startup="lazy"> -->
+   <requestHandler name="/elevate" class="org.apache.solr.handler.component.SearchHandler">
     <lst name="defaults">
       <str name="echoParams">explicit</str>
     </lst>

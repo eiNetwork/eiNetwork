@@ -17,17 +17,22 @@ $(document).ready(function() {literal} { {/literal}
 		  <a href="#" onclick="$('.titleSelect').not(':checked').attr('checked', true).trigger('click').attr('checked', true);return false;">Select All</a> /
 		  <a href="#" onclick="$('.titleSelect:checked').attr('checked', false).trigger('click').attr('checked', false);return false;">Deselect All</a>
 		</div>
-		*}
-		{foreach from=$recordSet item=record name="recordLoop"}
+		*} 
+		
+
+		{foreach from=$recordSet item=record name="recordLoop" key=val}
 		  {*<div class="result {if ($smarty.foreach.recordLoop.iteration % 2) == 0}alt{/if} record{$smarty.foreach.recordLoop.iteration}">*}
 		    {* This is raw HTML -- do not escape it: *}
-		  
+
+<td><form action="" method="post"> <input type="text" value={$val+1} name="bookID"  style="width:14px;"/> <input type="hidden" value={$val+1}  name="Init" /> <input type="submit" value="Boost" name="Boost" /> </form></td>
+
 
 <div <div class="result record{$smarty.foreach.recordLoop.iteration}">
-		    {$record datta prasad }
+		    {$record}
 
 		  </div></td></tr>
 		{/foreach}
+
 
 		<input type="hidden" name="type" value="hold" />
 		<div class='selectAllControls'>

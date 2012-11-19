@@ -59,7 +59,7 @@
 	          {translate text='Sort'}
 	          <select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
 	          {foreach from=$sortList item=sortData key=sortLabel}
-	            <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc} <p>ganesha</p></option>
+	            <option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc} <p></p></option>
 	          {/foreach}
 	          </select>
 	        {/if}

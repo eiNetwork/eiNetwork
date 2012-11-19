@@ -511,6 +511,125 @@ class SearchObject_Solr extends SearchObject_Base
 	}
 
 	/**
+	 * Use the record driver to build an array of HTML displays from the search
+	 * results.
+	 *
+	 * @access  public
+	 * @return  array   Array of HTML chunks for individual records.
+	 */
+	public function getRecordSortedHTML($initial, $final)
+	{
+		global $interface;
+		$html = array();
+		$incr = 0;
+		if($final < $initial) {
+			for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+				if($x == $final) {
+					$current = & $this->indexResult['response']['docs'][$initial];
+					$interface->assign('recordIndex', $x + 1);
+					$record = RecordDriverFactory::initRecordDriver($current);
+					$html[] = $interface->fetch($record->getSearchResult());
+				} else {
+					$current = & $this->indexResult['response']['docs'][$incr];
+					if($x == $initial)
+						$incr = $incr+2;
+					else
+						$incr++;
+					$interface->assign('recordIndex', $x + 1);
+					$record = RecordDriverFactory::initRecordDriver($current);
+					$html[] = $interface->fetch($record->getSearchResult());
+				}
+			}
+		} else {
+			for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+				if(!($x == $initial)) {
+					if($x == $final)
+						$current = & $this->indexResult['response']['docs'][$initial];
+					else
+						$current = & $this->indexResult['response']['docs'][$incr];
+					$incr++;
+					$interface->assign('recordIndex', $x + 1);
+					$record = RecordDriverFactory::initRecordDriver($current);
+					$html[] = $interface->fetch($record->getSearchResult());
+				} else {
+					$current = & $this->indexResult['response']['docs'][$initial+1];
+					$incr++;
+					$interface->assign('recordIndex', $x + 1);
+					$record = RecordDriverFactory::initRecordDriver($current);
+					$html[] = $interface->fetch($record->getSearchResult());
+				}
+			}
+		}
+		return $html;
+	}
+
+	/**
+         * Use the record driver to build an array of unique ids from the search
+         * results.
+         *
+         * @access  public
+         * @return  array   Array of unique ids for individual records.
+         */
+	public function getRecordID($initial, $final)
+	{
+		global $interface;
+                $bookId = array();
+		$incr = 0;
+		if($final < $initial) {
+                        for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+                                if($x == $final) {
+                                        $current = & $this->indexResult['response']['docs'][$initial];
+                                        $record = RecordDriverFactory::initRecordDriver($current);
+                        		$bookId[] = $record->getUniqueID();
+                                } else {
+                                        $current = & $this->indexResult['response']['docs'][$incr];
+                                        if($x == $initial)
+                                                $incr = $incr+2;
+                                        else
+                                                $incr++;
+                                        $record = RecordDriverFactory::initRecordDriver($current);
+                        		$bookId[] = $record->getUniqueID();
+                                }
+                        }
+                } else {
+                        for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+                                if(!($x == $initial)) {
+                                        if($x == $final)
+                                                $current = & $this->indexResult['response']['docs'][$initial];
+                                        else
+                                                $current = & $this->indexResult['response']['docs'][$incr];
+                                        $incr++;
+                                        $record = RecordDriverFactory::initRecordDriver($current);
+                        		$bookId[] = $record->getUniqueID();
+                                } else {
+                                        $current = & $this->indexResult['response']['docs'][$initial+1];
+                                        $incr++;
+                                        $record = RecordDriverFactory::initRecordDriver($current);
+                        		$bookId[] = $record->getUniqueID();
+                                } 
+                        }
+                }
+
+/*		for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+			$current = & $this->indexResult['response']['docs'][$x];
+			$record = RecordDriverFactory::initRecordDriver($current);
+                        $bookId[] = $record->getUniqueID();
+		}*/
+		return $bookId;
+	}
+
+	/**
+         * Return the query to get the title
+         *
+         * @access  public
+         * @return  String 	Title of the query.
+         */
+	public function getTitle()
+	{
+		return ($this->query);
+	}
+
+	/**
 	 * Set an overriding array of record IDs.
 	 *
 	 * @access  public

@@ -1,1 +1,22 @@
-1
+<query text="the boy with dragon tattoo2">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181306"/>
+</query>
+<query text="the boy2 with dragon tattoo2">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181306"/>
+</query>
+<query text="the boy4 with dragon tattoo2">
+	<doc id=".b29407291"/>
+	<doc id=".b31397025"/>
+	<doc id=".b29181306"/>
+<query text="abc">
+	<doc id=".b23179661"/>
+	<doc id=".b17381745"/>
+	<doc id=".b31259200"/>
+	<doc id=".b17019953"/>
+	<doc id=".b25102734"/>
+</query>
+</elevate>
