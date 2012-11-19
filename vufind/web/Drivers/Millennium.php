@@ -2314,6 +2314,7 @@ class MillenniumDriver implements DriverInterface
 			$post_data['locx00']= str_pad($campus, 5-strlen($campus), '+');
 			if (!is_null($itemId) && $itemId != -1){
 				$post_data['radio']=$itemId;
+				$post_data['submit']="REQUEST SELECTED ITEM";
 			}
 			$post_data['x']="48";
 			$post_data['y']="15";
@@ -2401,13 +2402,24 @@ class MillenniumDriver implements DriverInterface
 					$message = 'There are no holdable items for this title.';
 				}
 			}else{
-				$message = 'Unable to contact the circulation system.  Please try again in a few minutes.';
+				if (preg_match('/success/', $holdResultPage) && preg_match('/request denied/', $holdResultPage) == 0){
+					//Hold was successful
+					$hold_result['result'] = true;
+					if (!isset($reason) || strlen($reason) == 0){
+						$hold_result['message'] = 'Your hold was placed successfully';
+					}else{
+						$hold_result['message'] = $reason;
+					}
+					return $hold_result;
+				}else{
+					$message = 'Unable to contact the circulation system.  Please try again in a few minutes.';
+				}
 			}
 			$hold_result['result'] = false;
 			$hold_result['message'] = $message;
 
-			global $logger;
-			$logger->log('Place Hold Full HTML\n' . $holdResultPage, PEAR_LOG_INFO);
+			//global $logger;
+			//$logger->log('Place Hold Full HTML\n' . $holdResultPage, PEAR_LOG_INFO);
 		}
 		return $hold_result;
 	}
