@@ -1011,11 +1011,11 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['status'] = $allItemStatus;
 			}
 		}
-		//if ($allItemStatus == 'In Library Use Only'){
-		//	$summaryInformation['inLibraryUseOnly'] = true;
-		//}else{
-		//	$summaryInformation['inLibraryUseOnly'] = false;
-		//}
+		if ($allItemStatus == 'In Library Use Only'){
+			$summaryInformation['inLibraryUseOnly'] = true;
+		}else{
+			$summaryInformation['inLibraryUseOnly'] = false;
+		}
 
 
 		if ($summaryInformation['availableCopies'] == 0 && $summaryInformation['isDownloadable'] == true){

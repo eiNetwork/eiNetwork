@@ -118,7 +118,7 @@ class Hold extends Action {
 
 				global $locationSingleton;
 				//Get the list of pickup branch locations for display in the user interface.
-				$locations = $locationSingleton->getPickupBranches($profile, $profile['homeLocationId']);
+				$locations = $locationSingleton->getPickupBranchesPreferLocationFirst($profile, $profile['homeLocationId']);
 				$interface->assign('pickupLocations', $locations);
 				//set focus to the submit button if the user is logged in since the campus will be correct most of the time.
 				$interface->assign('focusElementId', 'submit');
