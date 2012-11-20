@@ -1,8 +1,33 @@
 <script type="text/javascript" src="{$path}/services/EcontentRecord/ajax.js"></script>
+ <script type="text/javascript" src="/js/ei_js/search.js"></script>
 {* Main Listing *}
 {if (isset($title)) }
 <script type="text/javascript">
 	alert("{$title}");
+</script>
+{/if}
+{if $recordCount}
+<script>
+{literal}
+function checkFilters(){
+	return window.location.search.toString().indexOf("filter");
+}
+function showRemove(){
+	if(checkFilters() != -1){
+		$("#removeFilters").show();
+	}  
+}
+function removeFilters(){
+	var qs = parseQS();
+	if(qs["filter[]"]){
+		delete qs["filter[]"];
+	}
+	window.location = "/Search/Results?"+serialize(qs);
+}
+$(document).ready(function() {
+ 	showRemove();
+});
+{/literal}
 </script>
 {/if}
 <div id="page-content" class="content">
@@ -13,22 +38,24 @@
 		{include file=$recommendations}
 		{/foreach}
 	{/if}
+
+
   </div>
   {* End Narrow Search Options *}
 
   <div id="main-content">
     <div id="searchInfo">
 	<div class="resulthead" style="height:30px; ">
-		<div class="yui-u first" style="float:left; width:50%">
+		<div class="yui-u first" style="float:left; width:75%">
 		{if $recordCount}
 		{$recordCount}{translate text=" items found for"}
-		{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span> {/if}
+		{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span>  <span style="display:none" id="removeFilters">with current filters. <div style="float:right"><a href="#" onclick="removeFilters();">remove all filters</a></div></span>{/if}
 		{/if}
 		<br/><br/>
 		{if $spellingSuggestions}
 		{/if}
 		</div>
-		<div style="float:right; width:50%">
+		<div style="float:right; width:25%">
 			<div class="round-rectangle-button" value="Advanced Search" onclick="window.location.href='/Search/Advanced'" style="float:right; margin-right:10px;">
 				{*<span class="resultAction_img_span">
 					<img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"/>
@@ -70,6 +97,3 @@
   {*right-bar template*}
   {include file="ei_tpl/right-bar.tpl"}
 </div>
-
-
-
