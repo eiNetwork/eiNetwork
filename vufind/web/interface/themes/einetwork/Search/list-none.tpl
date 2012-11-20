@@ -74,6 +74,7 @@
 		{if $enableMaterialsRequest}
     Can't find what you are looking for? Try our <a href="{$path}/MaterialsRequest/NewRequest">Materials Request Service</a>.</div>
     {/if}
-		
     </div>
+    		 {*right-bar template*}
+  {include file="ei_tpl/right-bar.tpl"}
 </div>
