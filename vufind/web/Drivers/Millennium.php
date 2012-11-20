@@ -694,10 +694,10 @@ class MillenniumDriver implements DriverInterface
 						//Create a fake holding for subscriptions so something
 						//will be displayed in the holdings summary.
 						$holdings[$issueSummary['location']] = array(
-                            'availability' => '1',
-                            'location' => $issueSummary['location'],
-                            'libraryDisplayName' => $issueSummary['location'],
-                            'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',
+						'availability' => '1',
+						'location' => $issueSummary['location'],
+						'libraryDisplayName' => $issueSummary['location'],
+						'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',			
 						);
 						$summaryInformation['inLibraryUseOnly'] = true;
 						$summaryInformation['status'] = 'Available';
@@ -707,7 +707,7 @@ class MillenniumDriver implements DriverInterface
 				}
 			}
 		}
-
+	
 		global $library;
 		global $locationSingleton;
 		$location = $locationSingleton->getActiveLocation();
@@ -1011,12 +1011,11 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['status'] = $allItemStatus;
 			}
 		}
-		//if ($allItemStatus == 'In Library Use Only'){
-		//	$summaryInformation['inLibraryUseOnly'] = true;
-		//}else{
-		//	$summaryInformation['inLibraryUseOnly'] = false;
-		//}
-
+		if ($allItemStatus == 'Noncirculating'||($summaryInformation["inLibraryUseOnly"]&&$allItemStatus==""&&!is_null($allItemStatus))){
+			$summaryInformation['inLibraryUseOnly'] = true;
+		}else{
+			$summaryInformation['inLibraryUseOnly'] = false;
+		}
 
 		if ($summaryInformation['availableCopies'] == 0 && $summaryInformation['isDownloadable'] == true){
 			$summaryInformation['showAvailabilityLine'] = false;
