@@ -293,8 +293,6 @@ class CheckedOut extends MyResearch{
 		$overDriveDriver = new OverDriveDriver();
 		$overDriveCheckedOutItems = $overDriveDriver->getOverDriveCheckedOutItems($user);
 		//Load the full record for each item in the wishlist
-		require_once "services/Debug/Debugger.php";
-		Debugger::tailAt("a.out",$overDriveCheckedOutItems);
 		foreach ($overDriveCheckedOutItems['items'] as $key => $item){
 
 			if ($item['recordId'] != -1){

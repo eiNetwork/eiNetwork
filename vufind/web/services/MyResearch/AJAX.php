@@ -281,7 +281,7 @@ class AJAX extends Action {
 			$patronProfile = $catalog->getMyProfile($patron);
 
 			$location = new Location();
-			$locationList = $location->getPickupBranches($patronProfile, $patronProfile['homeLocationId']);
+			$locationList = $location->getPickupBranchesPreferLocationFirst($patronProfile, $patronProfile['homeLocationId']);
 
 			foreach ($locationList as $location){
 				$output .= "<Location id='{$location->code}' selected='{$location->selected}'>$location->displayName</Location>";
