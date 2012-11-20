@@ -556,6 +556,7 @@ class Results extends Action {
 		//echo $rec['isbn'];
 		
 		// Done, display the page
+
 		$interface->display('layout.tpl');
 	} // End launch()
 
