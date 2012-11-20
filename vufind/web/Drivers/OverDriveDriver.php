@@ -621,7 +621,7 @@ class OverDriveDriver {
 						$logger->log($waitingListConfirm, PEAR_LOG_INFO);
 						$holdResult['result'] = false;
 						$holdResult['message'] = 'You must provide an e-mail address to request titles from OverDrive.  Please add an e-mail address to your account.';
-					}elseif (preg_match('/reached the request \(hold\) limit of \d+ titles./', $waitingListConfirm)){
+					}elseif (preg_match('/reached the request \(hold\) limit of \d+ titles./', $waitingListConfirm) || preg_match('/reached the requests limit of \d+ titles./', $waitingListConfirm)){
 						$holdResult['result'] = false;
 						$holdResult['message'] = 'You have reached the maximum number of holds for your account.';
 					}elseif (preg_match('/You have successfully placed a hold on the selected title./', $waitingListConfirm)){
