@@ -16,11 +16,7 @@ class AJAX extends Action {
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-			require_once "services/Debug/Debugger.php";
-			Debugger::tailAt("a.out",$_GET['method']);
 			$result = $this->$method();
-			Debugger::tailAt("a.out","result is ");
-			Debugger::tailAt("a.out",$result);
 			echo $result;
 		}else if (in_array($method, array('GetGoDeeperData', 'AddItem', 'EditItem', 'GetOverDriveLoanPeriod', 'getPurchaseOptions','GetHoldingsInfoPopup'))){
 			header('Content-type: text/html');
@@ -399,8 +395,6 @@ class AJAX extends Action {
 	
 	function CheckoutOverDriveItem(){
 		global $user;
-		require_once "services/Debug/Debugger.php";
-		Debugger::tailAt("a.out","hello");
 		$overDriveId = $_REQUEST['overDriveId'];
 		$format = $_REQUEST['formatId'];
 		$lendingPeriod = $_REQUEST['lendingPeriod'];
@@ -410,8 +404,6 @@ class AJAX extends Action {
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
 			$result = $driver->checkoutOverDriveItem($overDriveId, $format, $lendingPeriod, $user);
-			require_once "services/Debug/Debugger.php";
-			Debugger::tailAt("a.out",$result);
 			return json_encode($result);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to checkout an item.'));
