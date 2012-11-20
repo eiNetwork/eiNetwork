@@ -3,7 +3,7 @@
 class Debugger {
     
     static function tailAt($filename,$obj){
-        $pre = "/usr/local/VuFind-Plus/vufind/web/";
+        $pre = getcwd()."/";
         $path = $pre.$filename;
         if($obj != null){
             ob_start();
@@ -21,12 +21,12 @@ class Debugger {
         }
     }
     static function clean($filename){
-        $pre = "/usr/local/VuFind-Plus/vufind/web/";
+        $pre = getcwd()."/";
         $path = $pre.$filename;
         file_put_contents($path,"");
     }
     static function printBacktrace($filename){
-        $pre = "/usr/local/VuFind-Plus/vufind/web/";
+        $pre = getcwd()."/";
         $path = $pre.$filename;
         ob_start();
         debug_print_backtrace();
@@ -36,7 +36,7 @@ class Debugger {
         file_put_contents($path,"\n================================================\n\n\n",FILE_APPEND);
     }
     static function printTitle($filename){
-        $pre = "/usr/local/VuFind-Plus/vufind/web/";
+        $pre = getcwd()."/";
         $path = $pre.$filename;
         ob_start();
         debug_print_backtrace();
