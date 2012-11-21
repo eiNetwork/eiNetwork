@@ -974,7 +974,6 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['numAvailableOther'] = count($additionalAvailableLocations);
 			}
 		}
-
 		//If Status is still not set, apply some logic based on number of copies
 		if (!isset($summaryInformation['status'])){
 			if ($numCopies == 0){
@@ -991,6 +990,7 @@ class MillenniumDriver implements DriverInterface
 					$summaryInformation['class'] = 'unavailable';
 				}
 			}else{
+
 				if ($numHoldableCopies == 0 && $canShowHoldButton){
 					$summaryInformation['status'] = "Not Available For Checkout";
 					$summaryInformation['showPlaceHold'] = false;
@@ -999,6 +999,11 @@ class MillenniumDriver implements DriverInterface
 					$summaryInformation['status'] = "Checked Out";
 					$summaryInformation['showPlaceHold'] = $canShowHoldButton;
 					$summaryInformation['class'] = 'checkedOut';
+				}
+				if($summaryInformation["unavailableStatus"]=="IN PROCESSING"){
+					$summaryInformation['status'] = "Unavailable";
+					$summaryInformation['showPlaceHold'] = false;
+					$summaryInformation['class'] = 'unavailable';
 				}
 			}
 		}

@@ -37,7 +37,7 @@ class Profile extends MyResearch
 		}elseif (isset($_POST['updatePin'])) {
 			$result = $this->catalog->updatePin();
 			$_SESSION['profileUpdateErrors'] = $result;
-
+			//sleep(5);
 			header("Location: " . $configArray['Site']['url'] . '/MyResearch/Profile');
 			exit();
 		}else if (isset($_POST['edit'])){
