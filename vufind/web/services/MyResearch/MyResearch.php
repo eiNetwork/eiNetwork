@@ -91,6 +91,10 @@ class MyResearch extends Action
 			if ($this->catalog->status) {
 				if ($user->cat_username) {
 					$patron = $this->catalog->patronLogin($user->cat_username, $user->cat_password);
+					while(is_null($patron)){
+						$patron = $this->catalog->patronLogin($user->cat_username, $user->cat_password);
+						$counter++;
+					}
 					if (PEAR::isError($patron)){
 						PEAR::raiseError($patron);
 					}
