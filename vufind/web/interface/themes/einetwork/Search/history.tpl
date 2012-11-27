@@ -3,10 +3,11 @@
     &nbsp;
   </div>
   
-  <div id="main-content"> 
+  <div id="main-content">
+    <h2>Search History</h2>
       {if !$noHistory}
       {if $saved}
-        <div class="myAccountTitle">{translate text="history_saved_searches"}</div>
+        <div><h3>{translate text="history_saved_searches"}</h3></div>
         <table class="datagrid" width="640px" >
           <tr>
             <th width="25%">{translate text="history_time"}</th>
@@ -35,8 +36,8 @@
       {/if}
 
       {if $links}
-        <div class="resulthead"><h2>{translate text="Search History"}</h2></div>
-        <table class="datagrid" width="100%">
+        <div class="resulthead"><h3>{translate text="My Unsaved Searches"}</h3></div>
+        <table class="datagrid" width="640px">
           <tr>
             <th width="25%">{translate text="history_time"}</th>
             <th width="30%">{translate text="history_search"}</th>
@@ -56,7 +57,7 @@
               <b>{translate text=$field|escape}</b>: {$filter.display|escape}<br/>
             {/foreach}{/foreach}</td>
             <td>{$info.hits}</td>
-            <td><a href="{$path}/MyResearch/SaveSearch?save={$info.searchId|escape:"url"}&amp;mode=history" class="add">{translate text="history_save_link"}</a></td>
+            <td style="text-align: center"><a onclick='getToRequest("{$path}/MyResearch/SaveSearch?save={$info.searchId|escape:"url"}&amp;mode=history")' style="cursor: pointer;padding-left: 0px;padding-right: 0px;"   class="add">{translate text="history_save_link"}</a></td>
           </tr>
           {/foreach}
         </table>
