@@ -741,17 +741,16 @@ function redrawSaveStatus() {literal}{{/literal}
 						</tr>
 						{/if}
 					{/if}
-					{assign name=showTitle value=1}
 					{foreach from=$eContentRecord->getItems() item=eRec}
 						{if $eRec->sampleName_1}
 							<tr>
-								<td class="details_lable">{if showTitle}Additional Links{assign name=showTitle value=0}{/if}</td>
+								<td class="details_lable">Additional Links</td>
 								<td><a href="{$eRec->sampleUrl_1}" target="_blank">{$eRec->sampleName_1}</a></td>
 							</tr>
 						{/if}
 						{if $eRec->sampleName_2}
 							<tr>
-								<td class="details_lable">{if showTitle}Additional Links{assign name=showTitle value=0}{/if}</td>
+								<td class="details_lable"></td>
 								<td><a href="{$eRec->sampleUrl_2}" target="_blank">{$eRec->sampleName_2}</a></td>
 							</tr>
 						{/if}
