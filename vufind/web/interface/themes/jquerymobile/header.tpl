@@ -1,4 +1,4 @@
-<div data-role="header" data-theme="b">
+<div data-role="header" data-theme="a">
   <h1>{$pageTitle|trim:':/'|escape}</h1>
   {if $mainAuthor}
   <h2>{$mainAuthor}</h2>
