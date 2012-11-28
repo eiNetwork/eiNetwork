@@ -17,12 +17,14 @@
 <div class="center-header-top">&nbsp;</div>
 
 <div class="center-header-middle">
-    {if $searchType == 'advanced'}
-    <a href="{$path}/Search/Advanced?edit={$searchId}" class="small">{translate text="Edit this Advanced Search"}</a> |
-    <a href="{$path}/Search/Advanced" class="small">{translate text="Start a new Advanced Search"}</a> |
-    <a href="{$url}" class="small">{translate text="Start a new Basic Search"}</a>
-    <br />{translate text="Your search terms"} : "<b>{$lookfor|escape:"html"}</b>"
-  {else}
+	{*}
+	{if $searchType == 'advanced'}
+		<a href="{$path}/Search/Advanced?edit={$searchId}" class="small">{translate text="Edit this Advanced Search"}</a> |
+		<a href="{$path}/Search/Advanced" class="small">{translate text="Start a new Advanced Search"}</a> |
+		<a href="{$url}" class="small">{translate text="Start a new Basic Search"}</a>
+		<br />{translate text="Your search terms"} : "<b>{$lookfor|escape:"html"}</b>"
+	{else}
+	{*}
   <form method="get" action="{$path}/Union/Search" id="searchForm" class="search" onsubmit='startSearch();'>
 
     <span id="search-label">Search</span>
@@ -64,7 +66,6 @@
       <input type="button" name="repeatSearch" value="{translate text="Go"}" onclick="window.open(document.getElementById('repeatSearchIn').options[document.getElementById('repeatSearchIn').selectedIndex].value)">
     </div>
     {/if}
-  {/if}
     <span id="disclaimer">&nbsp;&nbsp;&nbsp; This website is integrated with the live millennium & Overdrive systems.
     Holds, Renewals, Econtent & Checkouts are all live.</span>
 
