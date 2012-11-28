@@ -48,8 +48,11 @@ $(document).ready(function() {
 	<div class="resulthead" style="height:30px; ">
 		<div class="yui-u first" style="float:left; width:75%">
 		{if $recordCount}
-		{$recordCount}{translate text=" items found for"}
+		{$recordCount}{translate text=" items found for"}{/if}
 		{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span>  <span style="display:none" id="removeFilters">with current filters. <div style="float:right"><a href="#" onclick="removeFilters();">remove all filters</a></div></span>{/if}
+		{if $searchType == 'advanced'}
+			<span style="font-style:italic; font-weight:570;">"{$lookfor|escape:"html"}"</span>
+			<a  style="margin-left: 10px" href="{$path}/Search/Advanced?edit={$searchId}" class="small">{translate text="Edit this Advanced Search"}</a>
 		{/if}
 		<br/><br/>
 		{if $spellingSuggestions}

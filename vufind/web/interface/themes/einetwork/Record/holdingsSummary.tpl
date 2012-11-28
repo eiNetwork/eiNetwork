@@ -1,5 +1,4 @@
 <div id = "holdingsSummary" class="holdingsSummary {$holdingsSummary.class}">
-
 	{if $holdingsSummary.class == 'here'}
 		{if $holdingsSummary.callnumber}
 			<div class='callNumber'>
@@ -49,12 +48,12 @@
 	{elseif $holdingsSummary.class == 'reserve' or $holdingsSummary.numCopies == 0}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
-			All copies checked out
+			<span style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">All copies checked out</span>
 		</div>
 	{else $holdingsSummary.class == 'checkedOut'}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
-			All copies checked out
+			<span style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">All copies checked out</span>
 		</div>
 	{/if}
 	<div class="holdableCopiesSummary">
