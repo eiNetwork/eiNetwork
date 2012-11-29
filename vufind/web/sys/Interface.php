@@ -55,7 +55,6 @@ class UInterface extends Smarty
 			if ($_COOKIE['ui'] == 'mobile') {
 				//Add library specific themes after the mobile theme so we can get images
 				$this->vufindTheme = $configArray['Site']['mobile_theme'] . "," . $this->vufindTheme;
-
 				$this->isMobile = true;
 			}
 		}

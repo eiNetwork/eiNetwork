@@ -71,7 +71,7 @@ class Home extends Action {
 		$cacheId = 'homepage|' . $interface->lang;
 		//Disable Home page caching for now.
 		if (!$interface->is_cached('layout.tpl', $cacheId)) {
-			$interface->setPageTitle('EINetwork Home');
+			$interface->setPageTitle('Allegheny County Library Catalog');
 			$interface->setTemplate('home.tpl');
 		}
 		$interface->display('layout.tpl', $cacheId);
