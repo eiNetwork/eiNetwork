@@ -115,7 +115,7 @@
 		  <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Search Results"}</span></p>
 		</div>
 	    {/if}
-	    {if $searchType == 'advanced'}
+	    {if $searchType == 'advanced'&&$pageType!='advanced'}
 		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;"  onclick='window.location.href="{$path}/Search/Advanced?edit={$searchId}"' >
 		    <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Advanced Search"}</span></p>
 		</div>
