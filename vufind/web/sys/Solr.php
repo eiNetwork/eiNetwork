@@ -1342,7 +1342,16 @@ class Solr implements IndexEngine {
 		if (PEAR::isError($result)) {
 			PEAR::raiseError($result);
 		}
-
+		// START OF FIX 		
+		if (array_key_exists('error', $result)) {
+			$server_err_msg = "</pre></p><hr/><i><small>PoweredbyJetty://</small></i><br/><br/><br/>";
+			$tmp = preg_replace('/\s+/', '', $result["error"]);
+			if (strlen(strpos($tmp, $server_err_msg))>0) {
+				$result = array("response" => array("numfound" => 0, "docs" => array()), "error" => false);
+			}		
+		}		
+		// END OF FIX
+           
 		return $result;
 	}
 
