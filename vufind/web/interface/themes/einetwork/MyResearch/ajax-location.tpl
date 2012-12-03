@@ -1,6 +1,9 @@
 <div id="preferred_alternative" class="profile_row">
     <div style="font-size:16px;margin-bottom:5px">Your Preferred Branches</div>
     <div style="font-size:14px;margin-left:10px">
+    	{$home->displayName|escape} (Home)
+    </div>
+    <div style="font-size:14px;margin-left:10px">
         {if $edit == true}
         {html_options name="myLocation1" options=$locationList selected=$profile.myLocation1Id}
         {else}{$profile.myLocation1|escape}

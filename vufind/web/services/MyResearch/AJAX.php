@@ -235,7 +235,6 @@ class AJAX extends Action {
 		}else{
 			$interface->assign('userIsStaff', false);
 		}*/
-		
 		foreach($user as $key=>$value){
 			//echo $key.'=>'.$value.'</br>';
 			if($key == 'cat_username')
@@ -532,6 +531,7 @@ class AJAX extends Action {
 				$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
 			}
 			$interface->assign('locationList', $locationList);
+			$interface->assign('home', $locationSingleton->getUserHomeLocation());
 			$returnwords  ="";
 			return $interface->fetch('MyResearch/ajax-location.tpl');
 			
