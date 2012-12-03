@@ -51,6 +51,8 @@ class CheckedOut extends MyResearch{
 				PEAR::raiseError($patron);
 
 				$patronResult = $this->catalog->getMyProfile($patron);
+				$profile = $this->catalog->getMyProfile($user);
+				$sumOfCheckoutItems = $profile["numCheckedOut"];
 				if (!PEAR::isError($patronResult)) {
 					$interface->assign('profile', $patronResult);
 				}
@@ -73,7 +75,7 @@ class CheckedOut extends MyResearch{
 				$interface->assign('defaultSortOption', $selectedSortOption);
 				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
 
-				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 20;
+				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : $sumOfCheckoutItems;
 				$interface->assign('recordsPerPage', $recordsPerPage);
 				if (isset($_GET['exportToExcel'])) {
 					$recordsPerPage = -1;
@@ -222,7 +224,7 @@ class CheckedOut extends MyResearch{
 				$selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'dueDate';
 				$interface->assign('defaultSortOption', $selectedSortOption);
 				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
-
+				$patronResult = $this->catalog->getMyProfile($patron);
 				$recordsPerPage = isset($_REQUEST['pagesize']) && (is_numeric($_REQUEST['pagesize'])) ? $_REQUEST['pagesize'] : 25;
 				$interface->assign('recordsPerPage', $recordsPerPage);
 				if (isset($_GET['exportToExcel'])) {
