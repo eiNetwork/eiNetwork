@@ -6,6 +6,9 @@
 <p style="font-size: 15px">Update Your Preferred Branches</p>
 <form id="profileForm" onsubmit="updatePreferredBranches();return false;">
 <div class="profile" style="padding-bottom: 0px;padding-top: 0px;margin-top: 0px">
+		<div style="font-size: 14px;">
+			{$profile.homeLocation} (Home)
+		</div>
         <div id="name_notification" class="profile_row" style="display:none">
                 <table>
                 <tr style="font-weight: bolder">
