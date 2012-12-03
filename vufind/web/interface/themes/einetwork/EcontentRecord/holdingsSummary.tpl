@@ -37,10 +37,10 @@
 -->			{/if}
 
 			<div class="holdableCopiesSummary">
-				{if $holdingsSummary.holdQueueLength > 0}
+			{if $holdingsSummary.holdQueueLength > 0}
 				{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for
-				{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}. 
 			{/if}
+			{if $holdingsSummary.totalCopies != 999999}{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}.{/if} 
 	</div>
 
 		{/if} 

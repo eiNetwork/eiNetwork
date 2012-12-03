@@ -12,7 +12,7 @@
 	{elseif $holdingsSummary.inLibraryUseOnly}
 		<div>
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Noncirculating.png"/ alt="Noncirculating"></span>
-			Available for in library use only
+			<span style="cursor:pointer" onclick="findInLibrary('{$holdingsSummary.recordId|escape:"url"}',false,'150px','570px','auto')">Available for in library use only</span>
 		</div>
 		<script>
 			var n = "{$holdingsSummary.recordId}".replace(/\./g, "");
@@ -58,9 +58,9 @@
 	{/if}
 	<div class="holdableCopiesSummary">
 		{if $holdingsSummary.holdQueueLength > 0}
-			{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for
-			{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}. 
+			{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for 
 		{/if}
+		{$holdingsSummary.numCopies} total {if $holdingsSummary.numCopies == 1}copy{else}copies{/if}.
 	</div>
 			
 	{if $showOtherEditionsPopup}
