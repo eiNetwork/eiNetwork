@@ -111,7 +111,7 @@
 					<div id="cardError">&nbsp;</div>
 				</div>
 				<div id="password">
-					<input id="pin" class="text" type="text" name="password" title="4 digit PIN number" placeholder="4 digit PIN number"/>
+					<input id="pin" class="text" type="password" name="password" title="4 digit PIN number" placeholder="4 digit PIN number"/>
 					<div id="pinError">&nbsp;</div>
 					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
 				</div>
