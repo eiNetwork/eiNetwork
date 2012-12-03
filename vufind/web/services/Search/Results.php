@@ -69,7 +69,7 @@ class Results extends Action {
 				unset($queryParams[$dateFilter . 'yearfrom']);
 				unset($queryParams[$dateFilter . 'yearto']);
 				if (!isset($queryParams['sort'])){
-					$queryParams['sort'] = 'year';
+					$queryParams['sort'] = 'relevance';
 				}
 				$queryParamStrings = array();
 				foreach($queryParams as $paramName => $queryValue){
