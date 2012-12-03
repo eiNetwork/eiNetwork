@@ -55,7 +55,7 @@ class Advanced extends Action {
 			$interface->assign('formatCategoryLimit', $facets[$label]);
 			unset($facets[$label]);
 		}
-
+		$interface->assign('pageType','advanced');
 		$interface->assign('facetList', $facets);
 
 		// Integer for % width of each column (be careful to avoid divide by zero!)

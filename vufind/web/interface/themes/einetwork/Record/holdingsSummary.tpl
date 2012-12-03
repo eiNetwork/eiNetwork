@@ -1,5 +1,4 @@
 <div id = "holdingsSummary" class="holdingsSummary {$holdingsSummary.class}">
-
 	{if $holdingsSummary.class == 'here'}
 		{if $holdingsSummary.callnumber}
 			<div class='callNumber'>

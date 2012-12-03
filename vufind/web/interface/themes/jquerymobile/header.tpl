@@ -1,5 +1,6 @@
-<div data-role="header" data-theme="b">
-  <h1>{$pageTitle|trim:':/'|escape}</h1>
+<div data-role="header" data-theme="a">
+  <div><h1 style="text-align: center;font-size: inherit">{$pageTitle|trim:':/'|escape}</h1></div>
+ 
   {if $mainAuthor}
   <h2>{$mainAuthor}</h2>
   {else if $corporateAuthor}
