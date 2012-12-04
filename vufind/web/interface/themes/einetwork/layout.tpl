@@ -101,7 +101,6 @@
     {* End LightBox *}
     
     {include file="bookcart.tpl"}
-    
     {*<div id="pageBody" class="{$page_body_style}">*}
     <div id="pageBody">  
     {*<div class="searchheader">*}
@@ -172,7 +171,6 @@
       {include file="ei_tpl/footer.tpl"}
       
     </div> {* End page body *}
-    
     {* add analytics tracking code*}
 	{if $productionServer}
 	{literal}
