@@ -1,8 +1,26 @@
 # Specific locations within VuFind #
 ####################################
-!sites/*
+vufind/web/a.out
+sites/*
 !sites/default
 !sites/packaging_default
+!sites/vufindplus3.einetwork.net/marc/*
+!sites/vufindplus3.einetwork.net/logs/*
+!sites/vufindplus3.einetwork.net/solr/biblio/index/*
+!sites/vufindplus3.einetwork.net/solr/biblio/spellchecker/*
+!sites/vufindplus3.einetwork.net/solr/biblio/spellShingle/*
+!sites/vufindplus3.einetwork.net/solr/biblio2/index/*
+!sites/vufindplus3.einetwork.net/solr/biblio2/spellchecker/*
+!sites/vufindplus3.einetwork.net/solr/biblio2/spellShingle/*
+!sites/vufindplus3.einetwork.net/solr/econtent/index/*
+!sites/vufindplus3.einetwork.net/solr/econtent/spellchecker/*
+!sites/vufindplus3.einetwork.net/solr/econtent/spellShingle/*
+!sites/vufindplus3.einetwork.net/solr/authority/index/*
+!sites/vufindplus3.einetwork.net/solr/genealogy/index/*
+!sites/vufindplus3.einetwork.net/solr/genealogy/spellchecker/*
+!sites/vufindplus3.einetwork.net/solr/genealogy/spellShingle/*
+!sites/vufindplus3.einetwork.net/solr/bin/*
+!sites/vufindplus3.einetwork.net/solr/jetty/*
 vufind/documentation/
 vufind/admin/sql/
 vufind/packaging_app/config.ini

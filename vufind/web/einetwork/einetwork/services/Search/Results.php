@@ -26,15 +26,10 @@ require_once 'Drivers/marmot_inc/Prospector.php';
 require_once 'sys/SolrStats.php';
 require_once 'sys/Pager.php';
 
-class VinBoost extends Action {
+class Results extends Action {
 
 	private $solrStats = false;
 	private $query;
-        
-        function VinBoost()
-        {
-            
-        }
 
 	function launch() {
 		global $interface;
@@ -46,6 +41,25 @@ class VinBoost extends Action {
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
+
+		if ($user->hasRole('epubAdmin')){
+			require_once "services/Search/VinBoost.php";
+			$module = 'Search';
+                        $interface->assign('module', $module);
+                        $action = 'VinBoost';
+                        $interface->assign('action', $action);
+                        if ($searchSource == 'econtent'){
+                                if (!isset($_REQUEST['shard'])){
+                                        $_SESSION['shards'] = array('eContent');
+                                }
+                        }else{
+                                if (!isset($_REQUEST['shard'])){
+                                        $_SESSION['shards'] = array('eContent', 'Main Catalog');
+                                }
+                        }
+                        $results = new VinBoost();
+                        return $results->launch();
+                }
 
 		//Check to see if the year has been set and if so, convert to a filter and resend.
 		$dateFilters = array('publishDate');
@@ -94,7 +108,7 @@ class VinBoost extends Action {
 					$queryParamStrings[] = "&filter[]=$dateFilter:[$yearFrom+TO+$yearTo]";
 				}
 				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/VinBoost?$queryParamString");
+				header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
 				exit;
 			}
 		}
@@ -134,7 +148,7 @@ class VinBoost extends Action {
 					$queryParamStrings[] = "&filter[]=$filter:[$from+TO+$to]";
 				}
 				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/VinBoost?$queryParamString");
+				header("Location: {$configArray['Site']['path']}/Search/Results?$queryParamString");
 				exit;
 			}
 		}
@@ -268,9 +282,7 @@ class VinBoost extends Action {
 
 		} else if ($searchObject->getResultTotal() == 1){
 			//Redirect to the home page for the record
-			
-$recordSet = $searchObject->getResultRecordSet();
-                        
+			$recordSet = $searchObject->getResultRecordSet();
 			$record = reset($recordSet);
 			if ($record['recordtype'] == 'list'){
 				$listId = substr($record['id'], 4);
@@ -280,7 +292,9 @@ $recordSet = $searchObject->getResultRecordSet();
 				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
 			}else{
 				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
+				echo($record['id']);
 			}
+
 			
 		} else {
 			$timer->logTime('save search');
@@ -318,161 +332,10 @@ $recordSet = $searchObject->getResultRecordSet();
 			$interface->assign('categorySelected', $categorySelected);
 			$timer->logTime('load selected category');
 
-			// Trial to get a record
-			$recordIndividual = $searchObject->getRecordUser(".b24401845");
-			$interface->assign('recordIndividual', $recordIndividual);
-
 			// Big one - our results
 			$recordSet = $searchObject->getResultRecordHTML();
 			$interface->assign('recordSet', $recordSet);
 			$timer->logTime('load result records');
-
-			// Get the Title
-			$title = $searchObject->getTitle();
-
-			$IntialPos;
-			$FinalPos;
-
-			$InitialPos =  $_POST['Init'];
-			$FinalPos =  $_POST['bookID'];
-
-			// Construct the array and diaplay it
-			// if we are boosting up, then finalposition will be lesser than initial
-
-			/*$PositionArray = array();
-			if($FinalPos < $InitialPos)//Boosting up
-			{
-				for($ind=0;$ind<$FinalPos-1;$ind++)
-				{
-					$PositionArray[$ind]=$recordId[$ind];
-				}
-				$PositionArray[$FinalPos-1]=$recordId[$InitialPos-1];
-			}
-			else //else condition, Boosting Down
-			{
-				for($ind=0, $inc=0;$ind<=$FinalPos-1;$ind++)
-				{
-					if($recordId[$ind]==$recordId[$InitialPos-1])
-					{
-					}
-					else
-					{
-						$PositionArray[$inc]=$recordId[$ind];
-						$inc++;
-					}
-				}
-				$PositionArray[$FinalPos-1]=$recordId[$InitialPos-1];
-			} */
-
-			if($_POST['Boost'])
-			{
-				if($InitialPos <= 20 && $FinalPos <=20)
-				{
-					$recordSet = $searchObject->getRecordSortedHTML($InitialPos-1, $FinalPos-1);
-					$interface->assign('recordSet', $recordSet);
-					$recordId = $searchObject->getRecordID($InitialPos-1, $FinalPos-1);
-					$interface->assign('recordId', $recordId);
-					$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
-							"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
-							"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
-					foreach($myFile as &$myFile)
-					{
-						$this->elevate_xml($myFile, $title, $recordId, $FinalPos);
-					} 
-				}
-				else
-				{
-					$records = array();
-					$full = array();
-					$final = array();
-					if($FinalPos > $InitialPos)
-					{
-						for($x=intval($InitialPos/20); $x<=intval($FinalPos/20); $x++)
-						{
-							$records[] = $searchObject->getResultNextPage($x);
-						}
-						
-						foreach($records as &$value)
-							for($x=0 ; $x<20; $x++)
-							{
-								array_push($full, $value[$x]);
-							}
-						$temp = $full[$InitialPos-1];
-						for($x=$InitialPos-1; $x<$FinalPos; $x++)
-						{
-							if($x!=$FinalPos-1 && $x<$FinalPos-1)
-								$full[$x] = $full[$x+1];
-							else if($x==$FinalPos-1)
-								$full[$x] = $temp;
-						}
-						for($x=0; $x<$FinalPos; $x++)
-							$final[] = $full[$x];
-					} else
-					{
-						for($x=0; $x<=intval($FinalPos/20)+1; $x++)
-						{
-							$records[] = $searchObject->getResultNextPage($x);
-						}
-
-						foreach($records as &$value)
-                                                        for($x=0 ; $x<20; $x++)
-                                                        {
-                                                                array_push($full, $value[$x]);
-                                                        }
-						$temp = $full[$InitialPos-1];
-						for($x=0; $x<$FinalPos-1; $x++)
-						{
-							$final[] = $full[$x];
-							if($x+1 == $FinalPos-1)
-								$final[] = $temp;
-						}
-					}
-					$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
-                                                        "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
-                                                        "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
-                                        foreach($myFile as &$myFile)
-                                        {
-                                                $this->elevate_xml($myFile, $title, $final, $FinalPos);
-                                        }
-				}
-			}
-
-			if($_POST['Irrelevant'])
-			{
-				$bookid = $searchObject->getIndividualID($InitialPos-1);
-				$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
-					 	"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
-                                                "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
-                                foreach($myFile as &$myFile)
-                                {
-                                	$this->irrelevant_xml($myFile, $title, $bookid);
-                                }
-			}
-
-			// Get the record ids
-
-			if($_POST['Commit'])
-			{
-				echo("Done");
-				exec('vufindplus.sh restart', $output);
-			} /*
-				$recordId = $searchObject->getRecordID($InitialPos-1, $FinalPos-1);
-				$interface->assign('recordId', $recordId);
-				$PositionArray = array();
-				echo("HIT".$FinalPos);
-				for($incr = 0; $incr<$FinalPos; $incr++)
-				{
-					$PostionArray[$incr] = $recordId[$incr];
-					echo($PostionArray[$incr]);
-				}
-				$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
-                                                "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
-                                                "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
-                                foreach($myFile as &$myFile)
-                                {
-                                        $this->elevate_xml($myFile, $PositionArray, $title);
-                                }*/
-
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
@@ -482,7 +345,7 @@ $recordSet = $searchObject->getResultRecordSet();
 				$interface->setTemplate('../ei_tpl/Cart/list.tpl');
 			}
 			else{
-				$interface->assign('subpage', 'Search/prioritize-list.tpl');
+				$interface->assign('subpage', 'Search/list-list.tpl');
 				$interface->setTemplate('list.tpl');
 			}
 			
@@ -553,97 +416,4 @@ $recordSet = $searchObject->getResultRecordSet();
 			}
 		}
 	}
-
-	/**
-	 * Function elevate_xml().
-	 *
-	 * @access  private
-	 * @param   array       $bookid 	Array of Book IDs for the searched result
-	 */
-	function elevate_xml($myFile, $title, $recordId, $FinalPos)
-	{
-		$bookid = array();
-		for($incr = 0; $incr<$FinalPos; $incr++)
-                {
-                	$bookid[$incr] = $recordId[$incr];
-                }
-		$arr = file($myFile);
-		$i = 0;
-		$elevate_count = 0;
-		$arr_count = count($arr);
-		while($i< $arr_count){
-		        if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
-		                unset($arr[$i]);
-		                $i++;
-		                while(!preg_match("/query/", $arr[$i])) {
-		                        unset($arr[$i]);
-		                        $i++;
-		                }
-		                unset($arr[$i]);
-		        }
-		        $i++;
-		        if($i == $arr_count)
-		                unset($arr[$arr_count-1]);
-		}
-		$arr = array_values($arr);
-		file_put_contents($myFile,implode($arr));
-		$fh = fopen($myFile, 'a') or die("Can't open file");
-		$stringData = "<query text=\"".$title."\">\n";
-		fwrite($fh, $stringData);
-		foreach ($bookid as &$bookid) {
-			if(preg_match("/.b/", $bookid))
-				$stringData = "\t<doc id=\"".$bookid."\"/>\n";
-			else
-				$stringData = "\t<doc id=\"econtentRecord".$bookid."\"/>\n";
-			fwrite($fh, $stringData);
-		}
-		$stringData = "</query>\n";
-		fwrite($fh, $stringData);
-		$stringData = "</elevate>";
-		fwrite($fh, $stringData);
-		fclose($fh);
-	}
-
-	/**
-         * Function irrelevant_xml().
-         *
-         * @access  private
-         * @param   $bookid         Array of Book IDs for the searched result
-         */
-        function irrelevant_xml($myFile, $title, $bookid)
-	{
-		$arr = file($myFile);
-                $i = 0;
-                $arr_count = count($arr);
-                while($i< $arr_count){
-                        if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
-                                unset($arr[$i]);
-                                $i++;
-                                while(!preg_match("/query/", $arr[$i])) {
-                                        unset($arr[$i]);
-                                        $i++;
-                                }
-                                unset($arr[$i]);
-                        }
-                        $i++;
-                        if($i == $arr_count)
-                                unset($arr[$arr_count-1]);
-                }
-                $arr = array_values($arr);
-                file_put_contents($myFile,implode($arr));
-
-		$fh = fopen($myFile, 'a') or die("Can't open file");
-		$stringData = "<query text=\"".$title."\">\n";
-		fwrite($fh, $stringData);
-		if(preg_match("/.b/", $bookid))
-			$stringData = "\t<doc id=\"".$bookid."\" exclude=\"true\"/>\n";
-		else
-			$stringData = "\t<doc id=\"econtentRecord".$bookid."\" exclude=\"true\"/>\n";
-		fwrite($fh, $stringData);
-		$stringData = "</query>\n";
-		fwrite($fh, $stringData);
-		$stringData = "</elevate>";
-		fwrite($fh, $stringData);
-		fclose($fh); 
-	} 
 }

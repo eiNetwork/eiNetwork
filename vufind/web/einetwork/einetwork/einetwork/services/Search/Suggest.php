@@ -17,15 +17,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-require_once 'PEAR.php';
 
-// Abstract Base Class for Actions
-class Action extends PEAR
-{
-    function launch()
-    {
-    }
-        
+require_once 'Action.php';
+
+class Suggest extends Action {
+
+	function launch()
+	{
+		global $configArray;
+
+		//header('Content-type: application/x-suggestions+json');
+		header('Content-type: application/json');
+
+		// Setup Search Engine Connection
+		$class = $configArray['Index']['engine'];
+		$db = new $class($configArray['Index']['url']);
+		if ($configArray['System']['debugSolr']) {
+			$db->debug = true;
+		}
+
+		$results = $db->getSuggestion(strtolower(strip_tags($_GET['lookfor'])), 'title_sort', 10);
+		echo json_encode($results);
+	}
 }
-
-?>

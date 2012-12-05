@@ -1,528 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><title>eiNetwork Catalog -- CMU Maze Hackers | Catalog Home</title><link rel="search" type="application/opensearchdescription+xml" title="Library Catalog Search" href="http://vufindplus3.einetwork.net/Search/OpenSearch?method=describe" /><!-- szheng: judge if it is search result page.--><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/search-results.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/holdingsSummary.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/jqueryui.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/styles.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/basicHtml.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/top-menu.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/ei_css/Record/record.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/search_result/search-results.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/holdingsSummary.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/center-header.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/right-header.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/right-bar.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/footer.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css//ei_css/login.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/my-account.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/ratings.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/book-bag.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/jquery.tooltip.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/tooltip.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/suggestions.css" /><link rel="stylesheet" type="text/css" href="/interface/themes/einetwork/css/reports.css" /><link rel="stylesheet" type="text/css" media="print" href="/interface/themes/einetwork/css/print.css" /><script type="text/javascript">path = '';loggedIn = true;</script><script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script><script type="text/javascript" src="/js/jqueryui/jquery-ui-1.8.18.custom.min.js"></script><script type="text/javascript" src="/js/jquery.plugins.js"></script><script type="text/javascript" src="/js/scripts.js"></script><script type="text/javascript" src="/js/tablesorter/jquery.tablesorter.min.js"></script><script type="text/javascript" src="/js/ei_js/page.js"></script><script type="text/javascript" src="/js/bookcart/json2.js"></script><script type="text/javascript" src="/js/bookcart/bookcart.js"></script><script type="text/javascript" src="/js/title-scroller.js"></script><script type="text/javascript" src="/services/Search/ajax.js"></script><script type="text/javascript" src="/services/Record/ajax.js"></script><script type="text/javascript" src="/js/ei_js/bookcart.js"></script><script type="text/javascript" src="/js/overdrive.js"></script></head><body class="Search Home"><script type="text/javascript">
+    jQuery(function (){
+      jQuery('#lookfor').focus();
+    });</script><!-- Current Physical Location:  --><div id="lightboxLoading" class="lightboxLoading" style="display: none;">Loading...</div><div id="lightboxError" style="display: none;">Error: Cannot Load Popup Box</div><div id="lightbox" onclick="hideLightbox(); return false;"></div><div id="popupbox" class="popupBox"></div><div id="book_bag" style="display:none;">
+    <div id="bag_open_button">
+    <div class = "icon plus" id="bag_summary_holder">
+      <span id ="bag_summary"></span> 
+      <a href="#" id="bag_empty_button" class="empty_cart">empty cart</a> 
+    </div>
+  </div>
+   
+    <div id="book_bag_canvas" class="round left-side-round" style="display: none;">
+        <div id="bag_items"></div>
+    
+     
+    <div id="bag_actions">
+            <div id="email_to_box" class="bag_box">
+         <h3>Email Your Items</h3>
+         To: 
+         <input type="text" id="email_to_field" size="40" /><input type="button" class="bag_perform_action_button" value="Send" /> <a href="#" class="button round less-round bag_hide_button">Cancel</a>               
+      </div>
+      
+      <div id="bookcart_login" class="bag_box">
+        <h3>Login</h3>
+          <div id='bag_login'>
+            <form method="post" action="/MyResearch/Home" id="loginForm_bookbag">
+              <div>
+              Your Name: <br />
+              <input type="text" name="username" id="bag_username" value="" size="25"/>
+              <br />
+              Library Card Number:<br />
+              <input type="password" name="password" id="bag_password" size="25"/>
+              <br />
+              <a href="#" class="button round less-round" id="bag_login_submit">Login</a>
+              <a href="#" class="button round less-round bag_hide_button" id="bag_login_cancel">Cancel</a>
+              </div>
+           </form>
+         </div>
+        
+      </div>
+      
+                
+      <div id="save_to_my_list_tags" class="bag_box">
+        <h3>Add Items To List</h3>
+        <div id='bag_choose_list'>
+	        <a href="#" class="button round less-round longer-button" id="new_list">Create a new List</a>
+	        	        <div id='new_list_controls' style='display:none'>
+												<form method="post" action="http://vufindplus3.einetwork.net/MyResearch/ListEdit" id="listForm"
+						      onsubmit='bagAddList(this, &quot;Error: List not created&quot;); return false;'>
+						  <div>
+						  List:<br />
+						  <input type="text" id="listTitle" name="title" value="" size="50"/><br />
+						  Description:<br />
+						  <textarea name="desc" id="listDesc" rows="2" cols="40"></textarea><br />
+						  Access:<br />
+						  Public <input type="radio" name="public" value="1" />
+						  Private <input type="radio" name="public" value="0" checked="checked" /><br />
+						  <input type="submit" name="submit" value="Create List" />
+              <a href="#" class="button round less-round longer-button" id="choose_existing_list">Select Existing List</a>
+              <a href="#" class="button round less-round bag_hide_button">Cancel</a>
+              </div>
+						</form>
+	        </div>
+	        
+	        	        <div id='existing_list_controls'>
+		        - or -<br />
+		        Choose a List:<br />
+		        <select name="bookbag_list_select" id="bookbag_list_select">
+		          		          <option value="">My Favorites</option>
+		          		        </select>
+		        <div id='bag_tags'>
+		          Tags:<br /> <input type="text" id="save_tags_field" size="40"/><br />
+		          Tags will apply to all items being added.  Use commas to separate tags. If you would like to have a comma within a tag, enclose it within quotes.
+		        </div>
+		        <input type="button" class="bag_perform_action_button" value="Add"/> 
+		        <a href="#" class="button round less-round bag_hide_button">Cancel</a>
+	        </div>
+	      </div>
+      </div>
+      <div id="bag_action_in_progress" class="bag_box">                
+          <span id="bag_action_in_progress_text">Processing....</span>
+      </div>
+      <div id="bag_errors" class="bag_box">Warning: <span id="bag_error_message"></span></div> 
+    </div>
+    
+    <div id="bag_links">
+      <div class="button round less-round longer-button logged-in-button" style="display: none;"><a href="#" id="bag_add_to_my_list_button" class="icon fav_bag">Save To List</a></div>  
+      <div class="button round less-round"><a href="#" id="bag_email_button" class="icon email_bag">Email</a></div>    
+      <div class="button round less-round longer-button" ><a href="#" id="bag_request_button" class="icon request_bag">Place Request</a></div>
+      <div class="button round less-round"><a href="#" id="bag_print_button" class="icon print_bag">Print</a></div>
+      <div class="button round less-round longer-button logged-out-button icon" id="login_bag">Login to Save to List</div>
+   </div>
+       
+  </div>
+</div> <div id="pageBody"><div class="header"><div class="left-header"></div><div class ="center-header">
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		$("#GoButton").hide();
+		
+		$("#lookfor").focus(function(){
+			$("#GoButton").show();
+		}).blur(function(){
+			$("#GoButton").hide();
+		});
+		*/
+	});
+</script>
+
+
+<div class="center-header-top">&nbsp;</div>
+
+<div class="center-header-middle">
+      <form method="get" action="/Union/Search" id="searchForm" class="search" onsubmit='startSearch();'>
+
+    <span id="search-label">Search</span>
+    <span id="search-type">
+	  <select id="search-select" name="basicType">
+	    	      <option value="Keyword">
+		Keyword
+	      </option>
+	    	      <option value="AllFields">
+		All Fields
+	      </option>
+	    	      <option value="Title">
+		Title
+	      </option>
+	    	      <option value="Author">
+		Author
+	      </option>
+	    	      <option value="Subject">
+		Subject
+	      </option>
+	    	      <option value="ISN">
+		ISBN/ISSN/UPC
+	      </option>
+	    	      <option value="tag">
+		Tag
+	      </option>
+	    	      <option value="econtentText">
+		Full Text
+	      </option>
+	    	      <option value="id">
+		Record Number
+	      </option>
+	    	      <option value="browseTitle">
+		Title Browse
+	      </option>
+	    	      <option value="browseAuthor">
+		Author Browse
+	      </option>
+	    	      <option value="browseSubject">
+		Subject Browse
+	      </option>
+	    	      <option value="browseCallnumber">
+		Call Number Browse
+	      </option>
+	    	  </select>
+    </span>
+    <span id="for-label">for</span>
+    <div>
+      <input id="lookfor" class="text" type="text" name="lookfor" value=""  />
+      <input id="GoButton" class="button" type="submit" value=""/>
+    </div>
+
+        </form>
+          <span id="disclaimer"></span>
+
+</div>
+
+
+<div class="center-header-buttom">&nbsp;</div>
+</div><div class="right-header"><div class="right-header-left">
+    <div id="welcome-label">Search Analytics,</div>
+    <div id="account-label" >
+        <a href="/MyResearch/Profile">
+       Go to Profile Information
+                </a>
+    </div>
+</div>
+<div class="right-header-right">
+    <div id="sign-out-label">
+        <a href="/MyResearch/Logout">Sign Out</a>
+    </div>    
+</div>
+
+
+
+</div></div>
+ <div id="main-content">
+    <div id="searchInfo">
+                  	<div class="resulthead">
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $('input[title]').each(function(i) {
+		if (!$(this).val()) {
+		    $(this).val($(this).attr('title'));
+		}
+		$(this).focus(function() {
+		    if ($(this).val() == $(this).attr('title')) {
+			$(this).val('');
+		    }
+		    if($(this).attr('id')=='pin'){
+			$('#pin').get(0).type = 'password';
+		    }
+		
+		});
+		$(this).blur( function() {
+		    if ($(this).val() == '') {
+			$(this).val($(this).attr('title'));
+			$('#pin').get(0).type='text';
+		    }
+		    
+		    
+		});
+	    });
+	});
+	
+</script>
+
+
+
+
+
+	
 <?php
-/**
- *
- * Copyright (C) Andrew Nagy 2009
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
+$con = mysql_connect("localhost","vufind","vufind");
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }
+global $result;
+mysql_select_db("vufind", $con);
+$result = mysql_query("select phrase,numSearches from search_stats ORDER BY numSearches DESC");
 
-require_once 'Action.php';
-require_once 'services/MyResearch/lib/User.php';
-require_once 'services/MyResearch/lib/Search.php';
-require_once 'Drivers/marmot_inc/Prospector.php';
 
-require_once 'sys/SolrStats.php';
-require_once 'sys/Pager.php';
+echo "<form method='post' action=''>&nbsp &nbsp &nbsp
+&nbsp
+&nbsp &nbsp &nbsp
+&nbsp
+&nbsp &nbsp &nbsp
+&nbsp
 
-class Analytics extends Action {
+Cateory: <select name='cat'>
+         <option value='the dummmmy value'> </option>
+         <option value='Keyword'> Keyword  </option>
+         <option value='AllFields'> All Fields </option>
+         <option value='Title'> Title </option>
+         <option value='Author'> Author </option>
+         <option value='Subject'> Subject </option>
+         <option value='ISN'> ISBN/ISSN/UPC </option>
+         <option value='tag'> Tag </option>
+         <option value='econtentText'> Full Text </option>
+         <option value='id'> Record Number </option>
+         <option value='browseTitle'> Title Browse </option>
+         <option value='browseAuthor'> Author Browse </option>
+         <option value='browseSubject'> Subject Browse </option>
+         <option value='browseCallnumber'> Call Number Browse </option>
+         </select> &nbsp &nbsp
+Display Range: <select name='ran'>
+        <option value=''></option>
+        <option VALUE='10'> Top - 10 </option>
+        <option VALUE='50'> Top - 50 </option>
+        <option VALUE='100'> Top - 100 </option>
+    </select> </br></br>&nbsp &nbsp &nbsp
+&nbsp
+&nbsp &nbsp &nbsp
+&nbsp
 
-	private $solrStats = false;
-	private $query;
+Time Range: <select name='time'>
+        <option value='' ></option>
+        <option VALUE='10'> Recent - 10 </option>
+        <option VALUE='50'> Recent - 50 </option>
+        <option VALUE='100'> Recent - 100 </option>
+    </select>
 
-	function launch() {
-		global $interface;
-		global $configArray;
-		global $timer;
-		global $user;
-		echo("Entering VinBoost");
-		debug_print_backtrace();
+    <INPUT TYPE='submit' name='submit' />
+</form>";
 
-		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
-		// Include Search Engine Class
-		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
-		$timer->logTime('Include search engine');
 
-		//Check to see if the year has been set and if so, convert to a filter and resend.
-		$dateFilters = array('publishDate');
-		foreach ($dateFilters as $dateFilter){
-			if (isset($_REQUEST[$dateFilter . 'yearfrom']) || isset($_REQUEST[$dateFilter . 'yearto'])){
-				$queryParams = $_GET;
-				$yearFrom = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearfrom']) ? $_REQUEST[$dateFilter . 'yearfrom'] : '*';
-				$yearTo = preg_match('/^\d{2,4}$/', $_REQUEST[$dateFilter . 'yearto']) ? $_REQUEST[$dateFilter . 'yearto'] : '*';
-				if (strlen($yearFrom) == 2){
-					$yearFrom = '19' . $yearFrom;
-				}else if (strlen($yearFrom) == 3){
-					$yearFrom = '0' . $yearFrom;
-				}
-				if (strlen($yearTo) == 2){
-					$yearTo = '19' . $yearTo;
-				}else if (strlen($yearFrom) == 3){
-					$yearTo = '0' . $yearTo;
-				}
-				if ($yearTo != '*' && $yearFrom != '*' && $yearTo < $yearFrom){
-					$tmpYear = $yearTo;
-					$yearTo = $yearFrom;
-					$yearFrom = $tmpYear;
-				}
-				unset($queryParams['module']);
-				unset($queryParams['action']);
-				unset($queryParams[$dateFilter . 'yearfrom']);
-				unset($queryParams[$dateFilter . 'yearto']);
-				if (!isset($queryParams['sort'])){
-					$queryParams['sort'] = 'year';
-				}
-				$queryParamStrings = array();
-				foreach($queryParams as $paramName => $queryValue){
-					if (is_array($queryValue)){
-						foreach ($queryValue as $arrayValue){
-							if (strlen($arrayValue) > 0){
-								$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
-							}
-						}
-					}else{
-						if (strlen($queryValue)){
-							$queryParamStrings[] = $paramName . '=' . $queryValue;
-						}
-					}
-				}
-				if ($yearFrom != '*' || $yearTo != '*'){
-					$queryParamStrings[] = "&filter[]=$dateFilter:[$yearFrom+TO+$yearTo]";
-				}
-				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/Analytics?$queryParamString");
-				exit;
-			}
-		}
-		
-		
-		$rangeFilters = array('lexile_score', 'accelerated_reader_reading_level', 'accelerated_reader_point_value');
-		foreach ($rangeFilters as $filter){
-			if (isset($_REQUEST[$filter . 'from']) || isset($_REQUEST[$filter . 'to'])){
-				$queryParams = $_GET;
-				$from = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'from']) ? $_REQUEST[$filter . 'from'] : '*';
-				$to = preg_match('/^\d*(\.\d*)?$/', $_REQUEST[$filter . 'to']) ? $_REQUEST[$filter . 'to'] : '*';
-				
-				if ($to != '*' && $from != '*' && $to < $from){
-					$tmpFilter = $to;
-					$to = $from;
-					$from = $tmpFilter;
-				}
-				unset($queryParams['module']);
-				unset($queryParams['action']);
-				unset($queryParams[$filter . 'from']);
-				unset($queryParams[$filter . 'to']);
-				$queryParamStrings = array();
-				foreach($queryParams as $paramName => $queryValue){
-					if (is_array($queryValue)){
-						foreach ($queryValue as $arrayValue){
-							if (strlen($arrayValue) > 0){
-								$queryParamStrings[] = $paramName . '[]=' . $arrayValue;
-							}
-						}
-					}else{
-						if (strlen($queryValue)){
-							$queryParamStrings[] = $paramName . '=' . $queryValue;
-						}
-					}
-				}
-				if ($yearFrom != '*' || $yearTo != '*'){
-					$queryParamStrings[] = "&filter[]=$filter:[$from+TO+$to]";
-				}
-				$queryParamString = join('&', $queryParamStrings);
-				header("Location: {$configArray['Site']['path']}/Search/Analytics?$queryParamString");
-				exit;
-			}
-		}
 
-		// Initialise from the current search globals
-		$searchObject = SearchObjectFactory::initSearchObject();
-		$searchObject->init($searchSource);
-		$timer->logTime("Init Search Object");
 
-		// Build RSS Feed for Results (if requested)
-		if ($searchObject->getView() == 'rss') {
-			// Throw the XML to screen
-			echo $searchObject->buildRSS();
-			// And we're done
-			exit();
-		}else if ($searchObject->getView() == 'excel'){
-			// Throw the Excel spreadsheet to screen for download
-			echo $searchObject->buildExcel();
-			// And we're done
-			exit();
-		}
 
-		// TODO : Investigate this... do we still need
-		// If user wants to print record show directly print-dialog box
-		if (isset($_GET['print'])) {
-			$interface->assign('print', true);
-		}
+echo "<div class='loginHome-left'></div>";
+echo "<div class='loginHome-center'>";
+echo "<div class='main-content'>";
+echo "<div class='resulthead'>";
+echo "<div style='overflow: auto; width:800px;  height:630px;'>";
 
-		// Set Interface Variables
-		// Those we can construct BEFORE the search is executed
-		$interface->setPageTitle('Search Results');
-		$interface->assign('sortList',   $searchObject->getSortList());
-		$interface->assign('rssLink',    $searchObject->getRSSUrl());
-		$interface->assign('excelLink',  $searchObject->getExcelUrl());
+//global $result;
+//mysql_select_db("vufind", $con);
+$result = mysql_query("select phrase,numSearches from search_stats ORDER BY numSearches DESC");
 
-		$timer->logTime('Setup Search');
-		
-		// Process Search
-		$result = $searchObject->processSearch(true, true);
-		if (PEAR::isError($result)) {
-			PEAR::raiseError($result->getMessage());
-		}
-		$timer->logTime('Process Search');
-
-		// Some more variables
-		//   Those we can construct AFTER the search is executed, but we need
-		//   no matter whether there were any results
-		$interface->assign('qtime',               round($searchObject->getQuerySpeed(), 2));
-		$interface->assign('spellingSuggestions', $searchObject->getSpellingSuggestions());
-		$interface->assign('lookfor',             $searchObject->displayQuery());
-		$interface->assign('searchType',          $searchObject->getSearchType());
-		// Will assign null for an advanced search
-		$interface->assign('searchIndex',         $searchObject->getSearchIndex());
-
-		// We'll need recommendations no matter how many results we found:
-		$interface->assign('topRecommendations',
-		$searchObject->getRecommendationsTemplates('top'));
-		$interface->assign('sideRecommendations',
-		$searchObject->getRecommendationsTemplates('side'));
-
-		// 'Finish' the search... complete timers and log search history.
-		$searchObject->close();
-		$interface->assign('time', round($searchObject->getTotalSpeed(), 2));
-		// Show the save/unsave code on screen
-		// The ID won't exist until after the search has been put in the search history
-		//    so this needs to occur after the close() on the searchObject
-		$interface->assign('showSaved',   true);
-		$interface->assign('savedSearch', $searchObject->isSavedSearch());
-		$interface->assign('searchId',    $searchObject->getSearchId());
-		$currentPage = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
-		$interface->assign('page', $currentPage);
-
-		//Enable and disable functionality based on library settings
-		//This must be done before we process each result
-		global $library;
-		global $locationSingleton;
-		$location = $locationSingleton->getActiveLocation();
-		if (isset($library) && $location != null){
-			$interface->assign('showFavorites', $library->showFavorites);
-			$interface->assign('showHoldButton', (($location->showHoldButton == 1) && ($library->showHoldButton == 1)) ? 1 : 0);
-		}else if ($location != null){
-			$interface->assign('showFavorites', 1);
-			$interface->assign('showHoldButton', $location->showHoldButton);
-		}else if (isset($library)){
-			$interface->assign('showFavorites', $library->showFavorites);
-			$interface->assign('showHoldButton', $library->showHoldButton);
-		}else{
-			$interface->assign('showFavorites', 1);
-			$interface->assign('showHoldButton', 1);
-		}
-		$interface->assign('page_body_style', 'sidebar_left');
-
-		$enableProspectorIntegration = isset($configArray['Content']['Prospector']) ? $configArray['Content']['Prospector'] : false;
-		$showRatings = 1;
-		if (isset($library)){
-			$enableProspectorIntegration = ($library->enablePospectorIntegration == 1);
-			$showRatings = $library->showRatings;
-		}
-		$interface->assign('showRatings', $showRatings);
-
-		$numProspectorTitlesToLoad = 0;
-		if ($searchObject->getResultTotal() < 1) {
-			
-			//Var for the IDCLREADER TEMPLATE
-			$interface->assign('ButtonBack',true);
-			$interface->assign('ButtonHome',true);
-			$interface->assign('MobileTitle','No Results Found');
-			
-			// No record found
-			$interface->setTemplate('list-none.tpl');
-			$interface->assign('recordCount', 0);
-
-			// Was the empty result set due to an error?
-			$error = $searchObject->getIndexError();
-			if ($error !== false) {
-				// If it's a parse error or the user specified an invalid field, we
-				// should display an appropriate message:
-				if (stristr($error, 'org.apache.lucene.queryParser.ParseException') ||
-				preg_match('/^undefined field/', $error)) {
-					$interface->assign('parseError', true);
-
-					// Unexpected error -- let's treat this as a fatal condition.
-				} else {
-					PEAR::raiseError(new PEAR_Error('Unable to process query<br />' .
-                        'Solr Returned: ' . $error));
-				}
-			}
-
-			$numProspectorTitlesToLoad = 10;
-			$timer->logTime('no hits processing');
-
-		} else if ($searchObject->getResultTotal() == 1){
-			//Redirect to the home page for the record
-			
-$recordSet = $searchObject->getResultRecordSet();
-                        
-			$record = reset($recordSet);
-			if ($record['recordtype'] == 'list'){
-				$listId = substr($record['id'], 4);
-				header("Location: " . $interface->getUrl() . "/MyResearch/MyList/{$listId}");
-			}elseif ($record['recordtype'] == 'econtentRecord'){
-				$shortId = str_replace('econtentRecord', '', $record['id']);
-				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
-			}else{
-				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
-			}
-			
-		} else {
-			$timer->logTime('save search');
-			
-			if(isset($_REQUEST["iscart"])){
-				$interface->assign('IsCart',true);
-			}else{
-				$interface->assign('IsCart',false);
-			}
-			// If the "jumpto" parameter is set, jump to the specified result index:
-			$this->processJumpto($result);
-
-			// Assign interface variables
-			$summary = $searchObject->getResultSummary();
-			$interface->assign('recordCount', $summary['resultTotal']);
-			$interface->assign('recordStart', $summary['startRecord']);
-			$interface->assign('recordEnd',   $summary['endRecord']);
-
-			$facetSet = $searchObject->getFacetList();
-			$interface->assign('facetSet',       $facetSet);
-
-			//Check to see if a format category is already set
-			$categorySelected = false;
-			if (isset($facetSet['top'])){
-				foreach ($facetSet['top'] as $title=>$cluster){
-					if ($cluster['label'] == 'Category'){
-						foreach ($cluster['list'] as $thisFacet){
-							if ($thisFacet['isApplied']){
-								$categorySelected = true;
-							}
-						}
-					}
-				}
-			}
-			$interface->assign('categorySelected', $categorySelected);
-			$timer->logTime('load selected category');
-
-			// Big one - our results
-			$recordSet = $searchObject->getResultRecordHTML();
-			$interface->assign('recordSet', $recordSet);
-			$timer->logTime('load result records');
-
-			// Get the record ids
-			$recordId = $searchObject->getRecordID();
-			$interface->assign('recordId', $recordId);
-			
-			// Get the Title
-			$title = $searchObject->getTitle();
-
-echo "ganesha";
-//echo $_POST['bookID'];
-
-$InitialPos =  $_POST['Init'];
-$FinalPos =  $_POST['bookID'];
-echo "Initial Position is ";
-echo $InitialPos;
-echo "Final Position is ";
-echo $FinalPos;
-//echo $recordId;
-
-// Construct the array and diaplay it
-// if we are boosting up, then finalposition will be lesser than initial
-
-$PositionArray = array();
-//$ind = 0;
-if($FinalPos < $InitialPos)//Boosting up
+if(isset($_POST['cat']))
 {
+$categ=$_POST['cat'];
+//select * from search_stats where type="keyword";
+$result = mysql_query("select phrase,numSearches from search_stats where type='$categ'");
 
-for($ind=0;$ind<$FinalPos;$ind++)
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics Based on Keyword Category-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >KeyWord</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+
+while($row = mysql_fetch_array($result))
 {
-$PositionArray[$ind]=$recordId[$ind];
-echo $PositionArray[$ind];
-}
+$name =  $row['phrase'];
+$name =  str_replace(" ","+",$name);
+  echo "<tr>";
+  echo "<td>" . $row['phrase'] . "</td>";
+  echo "<td>" . $row['numSearches'] . "</td>";
+  echo "<td><a href=http://vufindplus3.einetwork.net/Union/Search?basicType=Keyword&lookfor=" . $name . "> Details </a> </td>";
+  echo "</tr>";
+  }
+echo "</table>";
 
-$PositionArray[$FinalPos]=$recordId[$InitialPos];
-echo $PositionArray[$FinalPos];
+$result=null;
+
+
+unset($_POST['cat']);
 }
-else //else condition, Boosting Down
+if(isset($_POST['ran']))
 {
-for($ind=0;$ind<=$FinalPos;$ind++)
+$ran=  $_POST['ran'];
+$result = mysql_query("select phrase,numSearches from search_stats ORDER BY numSearches DESC LIMIT $ran");
+
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Anayltics filtered based on number of results-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >KeyWord</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+
+while($row = mysql_fetch_array($result))
 {
-if($recordId[$ind]==$recordId[$InitialPos])
+$name =  $row['phrase'];
+$name =  str_replace(" ","+",$name);
+  echo "<tr>";
+  echo "<td>" . $row['phrase'] . "</td>";
+  echo "<td>" . $row['numSearches'] . "</td>";
+  echo "<td><a href=http://vufindplus3.einetwork.net/Union/Search?basicType=Keyword&lookfor=" . $name . "> Details </a> </td>";
+  echo "</tr>";
+  }
+echo "</table>";
+$result=null;
+
+
+unset ($_POST['ran']);
+}
+if(isset($_POST['time']))
 {
-}
-else
+$timelimit= $_POST['time'];
+$result=mysql_query("select phrase,numSearches from search_stats ORDER BY lastSearch DESC  LIMIT $timelimit");
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics based on most recent occurence-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >KeyWord</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+
+while($row = mysql_fetch_array($result))
 {
+$name =  $row['phrase'];
+$name =  str_replace(" ","+",$name);
+  echo "<tr>";
+  echo "<td>" . $row['phrase'] . "</td>";
+  echo "<td>" . $row['numSearches'] . "</td>";
+  echo "<td><a href=http://vufindplus3.einetwork.net/Union/Search?basicType=Keyword&lookfor=" . $name . "> Details </a> </td>";
+  echo "</tr>";
+  }
+echo "</table>";
+$result=null;
 
-$PositionArray[$ind]=$recordId[$ind];
-echo $PositionArray[$ind];
+unset ($_POST['time']);
+
 }
-}
-$PositionArray[$FinalPos]=$recordId[$InitialPos];
-echo $PositionArray[$FinalPos];
-}
-			if($_POST['Boost'])
-			{
-				$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
-						"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
-						"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
-				foreach($myFile as &$myFile)
-				{
-					$this->elevate_xml($myFile, $PositionArray, $title);
-				}
-			}
 
 
+mysql_close($con);
+echo "</div>";
+echo "</div>";
+echo "</div>";
+echo "</div>";
 
+echo "<div class='loginHome-right'></div>";
 
-			// Setup Display
-			$interface->assign('sitepath', $configArray['Site']['path']);
-			if(isset($_REQUEST["iscart"])) //szheng: modified
-			{
-				$interface->assign('subpage', 'ei_tpl/Cart/list-list.tpl');
-				$interface->setTemplate('../ei_tpl/Cart/list.tpl');
-			}
-			else{
-				$interface->assign('subpage', 'Search/Analytics.tpl');
-				$interface->setTemplate('list.tpl');
-			}
-			
-			
-			//Var for the IDCLREADER TEMPLATE
-			$interface->assign('ButtonBack',true);
-			$interface->assign('ButtonHome',true);
-			$interface->assign('MobileTitle','Search Results');
-			
+?>
 
-			// Process Paging
-			$link = $searchObject->renderLinkPageTemplate();
-			$options = array('totalItems' => $summary['resultTotal'],
-                             'fileName'   => $link,
-                             'perPage'    => $summary['perPage']);
-			$pager = new VuFindPager($options);
-			$interface->assign('pageLinks', $pager->getLinks());
-			if ($pager->isLastPage()){
-				$numProspectorTitlesToLoad = $summary['perPage'] - $pager->getNumRecordsOnPage();
-				if ($numProspectorTitlesToLoad < 5){
-					$numProspectorTitlesToLoad = 5;
-				}
-			}
-			$timer->logTime('finish hits processing');
-		}
+	
 
-		if ($numProspectorTitlesToLoad > 0 && $enableProspectorIntegration){
-			$interface->assign('prospectorNumTitlesToLoad', $numProspectorTitlesToLoad);
-			$interface->assign('prospectorSavedSearchId', $searchObject->getSearchId());
-		}else{
-			$interface->assign('prospectorNumTitlesToLoad', 0);
-		}
-		
-		//Determine whether or not materials request functionality should be enabled
-		$interface->assign('enableMaterialsRequest', MaterialsRequest::enableMaterialsRequest());
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+    <div class="left-footer"></div>
+    
+    <div class="center-footer">
+        <div id="top">
+            <ul>
+                <li><a href="#">Mobile Catalog</a></li>
+                <li><a href="#">Suggest a Purchase</a></li>
+                <li><a href="http://www.einetwork.net"> Contact us</a></li>
+            </ul>
+        </div>
+        <div id="middle">
+            <span>
+                The Catalog is a Service of eiNetwork, a collaboration of the<br/>
+            <a href="http://www.aclalibraries.org/">Allegheny County Library Association</a> and <a href="http://www.carnegielibrary.org/">Carnegie Library of Pittsburgh</a>
+            </span>
+        </div>
+        <div id="bottom">
+            <a href="http://radworkshere.org/">
+                <img width=103px height=63px alt="RAD" src="/interface/themes/einetwork/images/Art/Logos/RADLogo.png"/>
+            </a>
+            
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <a href="http://www.einetwork.net/">
+                <img width=103px height=63px href="#"  alt="eiNetwork"src="/interface/themes/einetwork/images/Art/Logos/EINLogo.png"/>
+            </a>
+        </div>
+    </div>
+    
+    <div class="right-footer"></div>
+</div></div> </body></html>
 
-		if ($configArray['Statistics']['enabled'] && isset( $_GET['lookfor'])) {
-			require_once('Drivers/marmot_inc/SearchStat.php');
-			$searchStat = new SearchStat();
-			$searchStat->saveSearch( strip_tags($_GET['lookfor']),  strip_tags(isset($_GET['type']) ? $_GET['type'] : $_GET['basicType']), $searchObject->getResultTotal());
-		}
-
-		// Save the ID of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchId'] = $searchObject->getSearchId();
-
-		// Save the URL of this search to the session so we can return to it easily:
-		$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
-		
-		// Done, display the page
-		$interface->display('layout.tpl');
-	} // End launch()
-
-	/**
-	 * Process the "jumpto" parameter.
-	 *
-	 * @access  private
-	 * @param   array       $result         Solr result returned by SearchObject
-	 */
-	private function processJumpto($result)
-	{
-		if (isset($_REQUEST['jumpto']) && is_numeric($_REQUEST['jumpto'])) {
-			$i = intval($_REQUEST['jumpto'] - 1);
-			if (isset($result['response']['docs'][$i])) {
-				$record = RecordDriverFactory::initRecordDriver($result['response']['docs'][$i]);
-				$jumpUrl = '../Record/' . urlencode($record->getUniqueID());
-				header('Location: ' . $jumpUrl);
-				die();
-			}
-		}
-	}
-
-	/**
-	 * Function elevate_xml().
-	 *
-	 * @access  private
-	 * @param   array       $bookid 	Array of Book IDs for the searched result
-	 */
-	private function elevate_xml($myFile, $bookid, $title)
-	{
-//		$bookid = array(".b29407291", ".b31397025", ".b29181306");
-//		$title = "the boy4 with dragon tattoo2";
-		$arr = file($myFile);
-		$i = 0;
-		$elevate_count = 0;
-		echo(count($arr));
-		$arr_count = count($arr);
-		while($i< $arr_count){
-		        if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
-		                unset($arr[$i]);
-		                $i++;
-		                while(!preg_match("/query/", $arr[$i])) {
-		                        unset($arr[$i]);
-		                        $i++;
-		                }
-		                unset($arr[$i]);
-		        }
-		        $i++;
-		        if($i == $arr_count)
-		                unset($arr[$arr_count-1]);
-		}
-		$arr = array_values($arr);
-		file_put_contents($myFile,implode($arr));
-		$fh = fopen($myFile, 'a') or die("Can't open file");
-		$stringData = "<query text=\"".$title."\">\n";
-		fwrite($fh, $stringData);
-		foreach ($bookid as &$bookid) {
-		echo("Book".$bookid);
-		$stringData = "\t<doc id=\"".$bookid."\"/>\n";
-		fwrite($fh, $stringData);
-		}
-		$stringData = "</query>\n";
-		fwrite($fh, $stringData);
-		$stringData = "</elevate>";
-		fwrite($fh, $stringData);
-		fclose($fh);
-	}
-
-	private function arrayCopy( array $array ) {
-        $result = array();
-        foreach( $array as $key => $val ) {
-            if( is_array( $val ) ) {
-                $result[$key] = $this->arrayCopy( $val );
-            } elseif ( is_object( $val ) ) {
-                $result[$key] = clone $val;
-            } else {
-                $result[$key] = $val;
-            }
-        }
-        return $result;
-	}
-}
