@@ -93,6 +93,10 @@ li{
     background-color: rgb(244,213,56);
     
 }
+ .button[disabled], .button[disabled]:hover, .button[disabled]:active{
+    background-color: rgb(192,192,192);
+    color: rgb(255,255,255);
+}
 
 .close-button{
     cursor: pointer;

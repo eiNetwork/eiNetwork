@@ -11,11 +11,14 @@
 	    <div id = 'review{php}$index ++;echo $index;{/php}'>
 	    {if $review.Teaser}
 	       <div class="reviewTeaser" id="reviewTeaser{php}echo $index;{/php}">
-	       {$review.Teaser} <span onclick="$('#reviewTeaser{php}echo $index;{/php}').hide();$('#reviewContent{php}echo $index;{/php}').show();" class='reviewMoreLink'>(more)</span>
+		 
+	       {$review.Teaser}<a href='#' onclick='$("#reviewTeaser{php}echo $index;{/php}").slideUp();$("#reviewContent{php}echo $index;{/php}").slideDown()'> ...More</a>
+	       {*<span onclick="$('#reviewTeaser{php}echo $index;{/php}').hide();$('#reviewContent{php}echo $index;{/php}').show();" class='reviewMoreLink'>More</span>*}
 	       </div>
          <div class="reviewTeaser" id="reviewContent{php}echo $index;{/php}" style='display:none'>
          {$review.Content}
-         <span onclick="$('#reviewTeaser{php}echo $index;{/php}').show();$('#reviewContent{php}echo $index;{/php}').hide();" class='reviewMoreLink'> (less)</span>
+	<a href='#' onclick='$("#reviewContent{php}echo $index;{/php}").slideUp();$("#reviewTeaser{php}echo $index;{/php}").slideDown()'> Less</a>
+         {*<span onclick="$('#reviewTeaser{php}echo $index;{/php}').show();$('#reviewContent{php}echo $index;{/php}').hide();" class='reviewMoreLink'> Less</span>*}
          </div>
 	    {else}
 	       <div class="reviewContent">{$review.Content}</div>
