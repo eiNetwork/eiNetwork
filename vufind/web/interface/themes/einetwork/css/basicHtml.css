@@ -119,6 +119,13 @@ li{
     width: 180px;
     height: 30px;
 }
+textarea{
+    border-radius: 5px;
+    padding: 1px 10px 1px 10px;
+    margin: 0px 0px 5px;
+    border-style: solid;
+    border-width: 1px;
+}
 .text:focus{
     box-shadow: 0px 1px 2px;
     color: rgb(0,0,0);
