@@ -1110,7 +1110,7 @@ public class MarcRecordDetails {
 					retval = getLexileCode();
 					returnType = String.class;
 				}else{
-					logger.debug("Using reflection to invoke custom method " + functionName);
+					//logger.debug("Using reflection to invoke custom method " + functionName);
 					method = marcProcessor.getCustomMethodMap().get(functionName);
 					if (method == null) method = classThatContainsMethod.getMethod(functionName, parmClasses);
 					returnType = method.getReturnType();
@@ -3008,7 +3008,7 @@ public class MarcRecordDetails {
 				while (iter2.hasNext()) {
 					String curCode = iter2.next();
 					if (curCode.matches(manualSuppressionValue)) {
-						//logger.debug("Suppressing due to manual suppression field " + curCode + " matched " + manualSuppressionValue);
+						logger.debug("Suppressing due to manual suppression field " + curCode + " matched " + manualSuppressionValue);
 						suppressRecord = true;
 						break;
 					}
@@ -3217,7 +3217,7 @@ public class MarcRecordDetails {
 						try {
 							ArrayList<LibrarySpecificLink> urls = this.getSourceUrls();
 							if (urls.size() == 0){
-								logger.debug("Marking record as not eContent because we did not find any source urls for the external content");
+								//logger.debug("Marking record as not eContent because we did not find any source urls for the external content");
 								isEContent = false;
 								isMatch = false;
 							}
@@ -3484,7 +3484,7 @@ public class MarcRecordDetails {
 			if (libraryId == -1L){
 				itemAvailability.add("Digital Collection");
 				itemAvailability = addSharedAvailability(source, itemAvailability);
-				logger.debug("Available at " + itemAvailability.size() + " locations");
+				//logger.debug("Available at " + itemAvailability.size() + " locations");
 				buildings.add("Digital Collection");
 				buildings = addSharedAvailability(source, buildings);
 			}else{
