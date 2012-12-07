@@ -314,14 +314,14 @@ public class UpdateResourceInformation implements IMarcRecordProcessor, IEConten
 		results.incRecordsProcessed();
 		try {
 			//Get the existing resource if any
-			logger.debug("Checking to see if we have an existing resource for the record.");
+			//logger.debug("Checking to see if we have an existing resource for the record.");
 			Long existingResourceId = existingResourceIds.get(recordInfo.getId());
 			
 			if (recordInfo.isEContent()){
 				results.incSkipped();
-				logger.debug("Skipping updating resource for record because it is eContent");
+				//logger.debug("Skipping updating resource for record because it is eContent");
 				if (existingResourceId != null ){
-					logger.debug("Removing print resource for eContent record");
+					//logger.debug("Removing print resource for eContent record" );
 					existingResourceIds.remove(recordInfo.getId());
 					//Record is eContent, but we have a print resource for it, transfer from the 
 					//Old to new and delete the resource
@@ -347,11 +347,11 @@ public class UpdateResourceInformation implements IMarcRecordProcessor, IEConten
 				boolean updateResource = false; 
 				//BasicResourceInfo basicResourceInfo = existingResources.get(recordInfo.getId());
 				if (existingChecksum != null && existingChecksum == -1){
-					logger.debug("Forcing resource update because checksum is -1");
+					//logger.debug("Forcing resource update because checksum is -1");
 					updateResource = true;
 				}
 				if (!updateResource){
-					logger.debug("Skipping record because it hasn't changed");
+					//logger.debug("Skipping record because it hasn't changed");
 					results.incSkipped();
 					return true;
 				}
@@ -577,7 +577,7 @@ public class UpdateResourceInformation implements IMarcRecordProcessor, IEConten
 				boolean updateResource = false; 
 				//BasicResourceInfo basicResourceInfo = existingResources.get(recordInfo.getId());
 				if (!updateResource){
-					logger.debug("Skipping record because it hasn't changed");
+					//logger.debug("Skipping record because it hasn't changed");
 					results.incSkipped();
 					return true;
 				}
