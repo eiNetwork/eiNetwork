@@ -131,7 +131,7 @@ public class MarcIndexer implements IMarcRecordProcessor, IRecordProcessor {
 					return false;
 				}
 			}else{
-				logger.info("Skipping record because it is eContent");
+				//logger.info("Skipping record because it is eContent");
 				results.incSkipped();
 				return false;
 			}

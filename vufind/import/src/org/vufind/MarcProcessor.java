@@ -141,7 +141,7 @@ public class MarcProcessor {
 		idsToProcess = Util.cleanIniValue(configIni.get("Reindex", "idsToProcess"));
 		if (idsToProcess == null || idsToProcess.length() == 0){
 			idsToProcess = null;
-			logger.debug("Did not load a set of idsToProcess");
+			//logger.debug("Did not load a set of idsToProcess");
 		}else{
 			logger.debug("idsToProcess = " + idsToProcess);
 		}
@@ -748,7 +748,7 @@ public class MarcProcessor {
 								recordStatus = RECORD_UNCHANGED;
 							}
 						} else {
-							logger.debug("Record is new");
+							//logger.debug("Record is new");
 							recordStatus = RECORD_NEW;
 						}
 						
