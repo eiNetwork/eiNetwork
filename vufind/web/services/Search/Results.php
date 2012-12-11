@@ -183,7 +183,6 @@ class Results extends Action {
 		$interface->assign('searchType',          $searchObject->getSearchType());
 		// Will assign null for an advanced search
 		$interface->assign('searchIndex',         $searchObject->getSearchIndex());
-
 		// We'll need recommendations no matter how many results we found:
 		$interface->assign('topRecommendations',
 		$searchObject->getRecommendationsTemplates('top'));
@@ -379,6 +378,12 @@ class Results extends Action {
 
 		
 		// Done, display the page
+		$interface->assign('pageType',"search");
+		if($searchObject->getSearchType()=="advanced"){
+			$interface->assign("lookfor","");
+			$_SESSION['lastSearchURL'] = "";
+			$_SESSION['lastSearchId'] = "";
+		}
 		$interface->display('layout.tpl');
 	} // End launch()
 

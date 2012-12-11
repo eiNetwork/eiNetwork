@@ -153,7 +153,7 @@
   {/if}
 {literal}
 	if($("#lookfor").length > 0 && $('input[name="lookfor0[]"]').length){
-		$('input[name="lookfor0[]"]:first').val( $("#lookfor").val());
+		//$('input[name="lookfor0[]"]:first').val( $("#lookfor").val());
 		$('select[name="type0[]"]:first').val( $("#search-select").val());
 	}
 {/literal}
