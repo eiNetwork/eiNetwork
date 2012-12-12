@@ -241,21 +241,21 @@
 									<div id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Change Pick Up</span></div>
 								{elseif $record.status eq "In Transit"}
 									{*You can't do anything because item is in transit*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{elseif $record.status eq "Ready"}
 									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{elseif $record.status eq "Frozen"}
 									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);color: border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{else}
 									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="freezeSelectedHolds(this)"style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" ><span class="resultAction_span">Freeze</span></div>

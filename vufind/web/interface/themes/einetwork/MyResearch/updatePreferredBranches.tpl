@@ -81,14 +81,20 @@
 
 
         <div id="preferred_alternative" class="profile_row">
+
             <p>
+		
             {if $edit == true}
+	    	<p style="font-size: 12px">Preferred Branch</p>
             {html_options name="myLocation1" id="preferredBranch_myLocation1" options=$locationList selected=$profile.myLocation1Id}
             {else}{$profile.myLocation1|escape}
             </p>
+	    
+	    
             <p>
             {/if}
             {if $edit == true}
+	    <p style="font-size: 12px">Alternative Branch</p>
             {html_options name="myLocation2" id="preferredBranch_myLocation2" options=$locationList selected=$profile.myLocation2Id}
             {else}{$profile.myLocation2|escape}
             {/if}
