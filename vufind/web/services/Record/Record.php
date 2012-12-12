@@ -309,8 +309,16 @@ class Record extends Action
 								$subject[] = array(
 		                            'search' => trim($searchSubject),
 		                            'title'  => $subField->getData(),
+									'code'	 => $subField->getCode()
 								);
 							}
+						}
+						
+						if($subject[0]['code'] == 'a' && $subject[1]['code'] == 'v'){
+							
+							$subject = array(array("search"=>$subject[1]["search"], "title"=>$subject[0]['title'].' '.$subject[1]['title']));
+						}else{
+							unset($subject['code']);
 						}
 						$subjects[] = $subject;
 					}
