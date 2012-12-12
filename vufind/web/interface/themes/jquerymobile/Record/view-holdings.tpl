@@ -16,7 +16,7 @@
   	{* Location *}
   	<td style = "padding-bottom:5px;"><span><strong>
   	{$holding.location|escape}
-    {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
+    {*if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if*}
   	</strong></span></td>
   	
   	{* Collection *}
