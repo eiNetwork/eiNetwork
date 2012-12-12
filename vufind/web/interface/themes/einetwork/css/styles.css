@@ -629,7 +629,7 @@ div.popupBox {
 	-webkit-transition-duration: 0.25s;
 	-webkit-transition-delay: 0.25s;
 }
-
+@media all { div.popupBox { background-color: rgb(46,46,46)\0/; } } /* IE8 uses \0/ */
 div.popupBox .header a {
 	float: right;
 	text-decoration: none;
@@ -775,6 +775,7 @@ ul.bulleted li {
 
 .sidegroup ul {
 	padding-left: 20px;
+	width: 211px;
 }
 
 
