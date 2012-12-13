@@ -1,5 +1,5 @@
 <div id="preferred_alternative" class="profile_row">
-    <div style="font-size:16px;margin-bottom:5px">Your Preferred Branches</div>
+    <div style="font-size:16px;margin-bottom:5px">Your Preferred Libraries</div>
     <div style="font-size:14px;margin-left:10px">
     	{$home->displayName|escape} (Home)
     </div>

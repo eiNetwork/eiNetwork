@@ -162,7 +162,7 @@
 			<div id="preferred_alternative" class="profile_row">
 				<table>
 				<tr style="font-weight: bolder">
-					<td>{translate text='Preferred Pick-up Location'}</td>
+					<td>{translate text='Preferred Library'}</td>
 					<td>{translate text='Alternative Library'}</td>
 				</tr>
 				<tr>

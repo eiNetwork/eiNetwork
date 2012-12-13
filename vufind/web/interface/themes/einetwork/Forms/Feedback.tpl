@@ -45,21 +45,27 @@
 <script type="text/javascript">
 {literal}
 var nameValid = false;
-var emailValid = false;
+var emailValid = true;
 var feedbackVaild = false;
 	$(document).ready(function(){
 		//$("#getacard").validate();
 		$("#useragent").val(navigator.userAgent);
                 $('#email').blur(function(){
-			//alert("adf");
 			var email=$('[name=email]').val(),
 		            emailReg=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-                        if(!emailReg.test(email)){
+		        if(email){
+		    	    if(!emailReg.test(email)){
 				$('#emailError').text("*please enter a vaild email address");
-			}else{
+				emailValid = false;
+			    }else{
 				emailValid = true;
 				$('#emailError').html('&nbsp;');
+			    }
+			}else{
+			    emailValid = true;
+			    $('#emailError').html('&nbsp;');
 			}
+                      
 		});
                 //alert(navigator.userAgent);
 		/*
@@ -79,7 +85,7 @@ var feedbackVaild = false;
 				$('#feedbackError').text("*required");
 				feedbackVaild = false;
 			}else{
-				$('#nameError').text("");
+				$('#feedbackError').text("");
 				feedbackVaild = true;
 			}
 		});	
@@ -88,6 +94,7 @@ var feedbackVaild = false;
 		if(feedbackVaild&&emailValid){
 			return true;
 		}else{
+		    //if()
 			/*
                          *window.scrollTo(0,0);
                          *var name = $('#name_input').val();
@@ -102,8 +109,8 @@ var feedbackVaild = false;
 				$('#emailError').text("*required");
 				emailValid=false;
 			}*/
-                        var feedback=$('#feedback').val();
-			if(!email){
+                        //var feedback=$('#feedback').val();
+			if(!feedback){
 				$('#feedbackError').text("*required");
 				feedbackVaild=false;
 			}
