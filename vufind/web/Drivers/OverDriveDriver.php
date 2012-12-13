@@ -948,7 +948,7 @@ class OverDriveDriver {
 
 			if (preg_match('/now available for download/si', $processCartConfirmation) || preg_match('/<td class="collhead">Download<\/td>/si', $processCartConfirmation) || preg_match('/<h1>Digital Media - Download<\/h1>/si', $processCartConfirmation)){
 				$processCartResult['result'] = true;
-				$processCartResult['message'] = "Your titles were checked out successfully. You may now download the titles from your Account.";
+				$processCartResult['message'] = "Your titles were checked out successfully. Please go to Checked Out Items to download the titles from your Account.";
 				//Remove all cached account information since th user can checkout from holds or wishlist page
 				global $memcache;
 				$memcache->delete('overdrive_checked_out_' . $user->id);

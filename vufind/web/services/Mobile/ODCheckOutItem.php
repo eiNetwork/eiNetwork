@@ -61,7 +61,7 @@ class ODCheckOutItem extends Action {
 				
 				if ($status->result)
 				{
-					$msg = 'Your titles were checked out successfully. You may now download the titles from your Account.';
+					$msg = 'Your titles were checked out successfully. Please go to Checked Out Items to download the titles from your Account.';
 				}
 				else
 				{
