@@ -220,13 +220,19 @@ class AJAX extends Action {
 		}
 		
 		//Get the list of locations for display in the user interface.
-		global $locationSingleton;
+		/*global $locationSingleton;
 		$locationSingleton->whereAdd("validHoldPickupBranch = 1");
 		$locationSingleton->find();
 
 		$locationList = array();
 		while ($locationSingleton->fetch()) {
 			$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
+		}*/
+		$location = new Location();
+		$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
+		$locationList = array();
+		foreach ($pickupBranches as $curLocation) {
+			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
 		$interface->assign('locationList', $locationList);
 		/*if ($this->catalog->checkFunction('isUserStaff')){
