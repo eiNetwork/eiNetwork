@@ -230,6 +230,9 @@ if ($locationSingleton->getActiveLocation() != null){
 if ($locationSingleton->getIPLocation() != null){
 	$interface->assign('inLibrary', true);
 	$interface->assign('physicalLocation', $locationSingleton->getIPLocation()->displayName);
+	if(!isset($_SESSION['useLocation'])){
+		$_SESSION['useLocation'] = 1;
+	}
 }else{
 	$interface->assign('inLibrary', false);
 	$interface->assign('physicalLocation', 'Home');
@@ -510,7 +513,8 @@ if ($action == "AJAX" || $action == "JSON"){
 	$searchObject->init();
 	$timer->logTime('Create Search Object');
 	//Add browse types as well.
-	$includeAlphaBrowse = true;
+	$includeAlphaBrowse = false;
+	//set Browsing to false - as this feature is disabled 12/13/12 -Derek
 	if (isset($library) && $library->enableAlphaBrowse == false){
 		$includeAlphaBrowse = false;
 	}
@@ -577,7 +581,7 @@ if ($action == "AJAX" || $action == "JSON"){
 $ipLocation = $locationSingleton->getIPLocation();
 $ipId = $locationSingleton->getIPid();
 
-if (!is_null($ipLocation) && $ipLocation != false && $user){
+if (!is_null($ipLocation) && $ipLocation != false){
 	$interface->assign('onInternalIP', true);
 	if (isset($user->bypassAutoLogout) && $user->bypassAutoLogout == 1){
 		$interface->assign('includeAutoLogoutCode', false);
@@ -591,7 +595,7 @@ if (!is_null($ipLocation) && $ipLocation != false && $user){
 			if ($userIsStaff){
 				//Check to see if the user has overridden the auto logout code.
 				if ($user->bypassAutoLogout != 0){
-					$includeAutoLogoutCode = false;
+					$includeAutoLogoutCode = true;
 				}
 			}
 		}
