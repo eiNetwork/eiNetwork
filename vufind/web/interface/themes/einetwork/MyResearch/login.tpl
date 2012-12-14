@@ -98,6 +98,9 @@
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to the Catalog</b></div>
+				{if $message}
+					<div class="error">Sorry, the account information you entered does not match our records. Please check and try again.</div>
+				{/if}
 				<div id="email">
 					<input id="card" class="text" type="text" name="username" title="Library Card Number"  value="{$username|escape}" placeholder="Library Card Number" maxlength="14"/>
 					<div id="cardError">&nbsp;</div>
