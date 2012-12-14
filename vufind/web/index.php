@@ -513,10 +513,9 @@ if ($action == "AJAX" || $action == "JSON"){
 	$searchObject->init();
 	$timer->logTime('Create Search Object');
 	//Add browse types as well.
-	$includeAlphaBrowse = false;
-	//set Browsing to false - as this feature is disabled 12/13/12 -Derek
-	if (isset($library) && $library->enableAlphaBrowse == false){
-		$includeAlphaBrowse = false;
+	$includeAlphaBrowse = true;
+	if (isset($library) && $library->enableAlphaBrowse == true){
+		$includeAlphaBrowse = true;
 	}
 	if ($interface->isMobile()){
 		$includeAlphaBrowse = false;
