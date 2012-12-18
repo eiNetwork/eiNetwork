@@ -42,11 +42,12 @@ class Results extends Action {
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
 		$timer->logTime('Include search engine');
 
+		if($user)
 		if ($user->hasRole('epubAdmin')){
-			require_once "services/Search/VinBoost.php";
+			require_once "services/Search/Prioritize.php";
 			$module = 'Search';
                         $interface->assign('module', $module);
-                        $action = 'VinBoost';
+                        $action = 'Prioritize';
                         $interface->assign('action', $action);
                         if ($searchSource == 'econtent'){
                                 if (!isset($_REQUEST['shard'])){
@@ -57,7 +58,7 @@ class Results extends Action {
                                         $_SESSION['shards'] = array('eContent', 'Main Catalog');
                                 }
                         }
-                        $results = new VinBoost();
+                        $results = new Prioritize();
                         return $results->launch();
                 }
 

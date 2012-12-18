@@ -69,18 +69,24 @@ file_put_contents($myFile,implode($arr));
 */
 
 $myFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile.txt";
-$bookid = array(".b29407291", ".b31397025", ".b29181306");
-$title = "the boy4 with dragon tattoo2";
+$newFile = "/usr/local/VuFind-Plus/vufind/web/services/EcontentRecord/testFile_temp.txt";
+//$bookid = array(".b29407291", ".new");
+//$bookid = array(".b29407291", ".b29407292", ".b29407293");
+$bookid = array(".b29407291", ".b29407292", ".b29407293", "diff1", "diff2");
+$title = "the boy5 with dragon tattoo2";
+$finalpos = 5;
+$flag = false;
+$f=fopen($newFile,'w') or die("couldn't open $newFile"); 
 $arr = file($myFile);
 $i = 0;
-$elevate_count = 0;
-echo(count($arr));
 $arr_count = count($arr);
 while($i< $arr_count){
         if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
+		$flag = true;
                 unset($arr[$i]);
                 $i++;
                 while(!preg_match("/query/", $arr[$i])) {
+			fwrite($f, $arr[$i]);
                         unset($arr[$i]);
                         $i++;
                 }
@@ -92,13 +98,30 @@ while($i< $arr_count){
 }
 $arr = array_values($arr);
 file_put_contents($myFile,implode($arr));
+fclose($f);
+
+$temp_val = file($newFile);
+$temp_count = count($temp_val);
 $fh = fopen($myFile, 'a') or die("Can't open file");
 $stringData = "<query text=\"".$title."\">\n";
 fwrite($fh, $stringData);
+
+if(($finalpos <= $temp_count) && $flag) {
+	$ctr = 0;
+	while($ctr<=$temp_count) {
+		if($finalpos-1 == $ctr)
+			fwrite($fh, "\t<doc id=\"".$bookid[$ctr]."\"/>\n");
+		fwrite($fh, $temp_val[$ctr]);
+		$ctr++;
+	}
+}
+else {
 foreach ($bookid as &$bookid) {
 $stringData = "\t<doc id=\"".$bookid."\"/>\n";
 fwrite($fh, $stringData);
 }
+}
+
 $stringData = "</query>\n";
 fwrite($fh, $stringData);
 $stringData = "</elevate>";

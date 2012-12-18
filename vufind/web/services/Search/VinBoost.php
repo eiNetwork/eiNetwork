@@ -30,11 +30,6 @@ class VinBoost extends Action {
 
 	private $solrStats = false;
 	private $query;
-        
-        function VinBoost()
-        {
-            
-        }
 
 	function launch() {
 		global $interface;
@@ -319,8 +314,8 @@ $recordSet = $searchObject->getResultRecordSet();
 			$timer->logTime('load selected category');
 
 			// Trial to get a record
-			$recordIndividual = $searchObject->getRecordUser(".b24401845");
-			$interface->assign('recordIndividual', $recordIndividual);
+			//$recordIndividual = $searchObject->getRecordUser(".b24401845");
+			//$interface->assign('recordIndividual', $recordIndividual);
 
 			// Big one - our results
 			$recordSet = $searchObject->getResultRecordHTML();
@@ -366,6 +361,7 @@ $recordSet = $searchObject->getResultRecordSet();
 
 			if($_POST['Boost'])
 			{
+				$write_once = true;
 				if($InitialPos <= 20 && $FinalPos <=20)
 				{
 					$recordSet = $searchObject->getRecordSortedHTML($InitialPos-1, $FinalPos-1);
@@ -377,11 +373,19 @@ $recordSet = $searchObject->getResultRecordSet();
 							"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
 					foreach($myFile as &$myFile)
 					{
-						$this->elevate_xml($myFile, $title, $recordId, $FinalPos);
+						$this->elevate_xml($myFile, $title, $recordId, $FinalPos, $write_once);
+						$write_once = false;
 					} 
 				}
 				else
 				{
+					if(intval($InitialPos/20) == intval($FinalPos/20)) {
+						$recordSet = $searchObject->getRecordSortedHTML(($InitialPos%20)-1, ($FinalPos%20)-1);
+	                                        $interface->assign('recordSet', $recordSet);
+					} else {
+						$recordSet = $searchObject->getRecordBoostedHTML($InitialPos-1, $FinalPos-1);
+                                                $interface->assign('recordSet', $recordSet);
+					}
 					$records = array();
 					$full = array();
 					$final = array();
@@ -432,20 +436,25 @@ $recordSet = $searchObject->getResultRecordSet();
                                                         "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
                                         foreach($myFile as &$myFile)
                                         {
-                                                $this->elevate_xml($myFile, $title, $final, $FinalPos);
+                                                $this->elevate_xml($myFile, $title, $final, $FinalPos, $write_once);
+						$write_once = false;
                                         }
 				}
 			}
 
 			if($_POST['Irrelevant'])
 			{
+				$write_once = true;
+				$recordSet = $searchObject->getRecordIrrelevant($InitialPos-1, $currentPage);
+				$interface->assign('recordSet', $recordSet);
 				$bookid = $searchObject->getIndividualID($InitialPos-1);
 				$myFile = array("/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/elevate.xml",
 					 	"/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/elevate.xml",
                                                 "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/elevate.xml");
                                 foreach($myFile as &$myFile)
                                 {
-                                	$this->irrelevant_xml($myFile, $title, $bookid);
+                                	$this->irrelevant_xml($myFile, $title, $bookid, $write_once);
+					$write_once = false;
                                 }
 			}
 
@@ -560,9 +569,20 @@ $recordSet = $searchObject->getResultRecordSet();
 	 * @access  private
 	 * @param   array       $bookid 	Array of Book IDs for the searched result
 	 */
-	function elevate_xml($myFile, $title, $recordId, $FinalPos)
+	private function elevate_xml($myFile, $title, $recordId, $FinalPos, $write_once)
 	{
+		if(preg_match("/\b"."biblio"."\b/", $myFile)) {
+			$newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/tempFile.txt";
+		} else if(preg_match("/\b"."biblio2"."\b/", $myFile)) {
+			$newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/tempFile.txt";
+                } else {
+			$newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/tempFile.txt";
+                }
+
+
 		$bookid = array();
+		$flag = false;
+		$f=fopen($newFile,'w') or die("couldn't open $newFile");
 		for($incr = 0; $incr<$FinalPos; $incr++)
                 {
                 	$bookid[$incr] = $recordId[$incr];
@@ -573,9 +593,12 @@ $recordSet = $searchObject->getResultRecordSet();
 		$arr_count = count($arr);
 		while($i< $arr_count){
 		        if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
+				$flag = true;
 		                unset($arr[$i]);
 		                $i++;
 		                while(!preg_match("/query/", $arr[$i])) {
+					if(!preg_match("/".$bookid."/", $arr[$i]) || preg_match("/exclude/", $arr[$i]))
+						fwrite($f, $arr[$i]);
 		                        unset($arr[$i]);
 		                        $i++;
 		                }
@@ -587,21 +610,58 @@ $recordSet = $searchObject->getResultRecordSet();
 		}
 		$arr = array_values($arr);
 		file_put_contents($myFile,implode($arr));
-		$fh = fopen($myFile, 'a') or die("Can't open file");
+		fclose($f);
+
+		$temp_val = file($newFile);
+		$temp_count = count($temp_val);
+		$fh = fopen($myFile, 'a') or die("Can't open file".$myFile);
 		$stringData = "<query text=\"".$title."\">\n";
 		fwrite($fh, $stringData);
-		foreach ($bookid as &$bookid) {
-			if(preg_match("/.b/", $bookid))
-				$stringData = "\t<doc id=\"".$bookid."\"/>\n";
-			else
-				$stringData = "\t<doc id=\"econtentRecord".$bookid."\"/>\n";
-			fwrite($fh, $stringData);
+	
+		if(($FinalPos<= $temp_count) && $flag) {
+		        $ctr = 0;
+		        while($ctr<=$temp_count) {
+               		if($FinalPos-1 == $ctr) {
+				if(preg_match("/.b/", $bookid))
+                    	    		fwrite($fh, "\t<doc id=\"".$bookid[$ctr]."\"/>\n");
+				else
+                    	    		fwrite($fh, "\t<doc id=\"econtentRecord".$bookid[$ctr]."\"/>\n");
+			}
+       		        fwrite($fh, $temp_val[$ctr]);
+               		$ctr++;
+  		      }
+		}
+		else {
+			foreach ($bookid as &$bookid) {
+				if(preg_match("/.b/", $bookid))
+					$stringData = "\t<doc id=\"".$bookid."\"/>\n";
+				else
+					$stringData = "\t<doc id=\"econtentRecord".$bookid."\"/>\n";
+				fwrite($fh, $stringData);
+			}
 		}
 		$stringData = "</query>\n";
 		fwrite($fh, $stringData);
 		$stringData = "</elevate>";
 		fwrite($fh, $stringData);
 		fclose($fh);
+
+		if($write_once) {
+		$alterfile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/undoBoost.txt";
+		$content = file($alterfile);
+		$count = count($content);
+		for($ctr=0; $ctr<$count; $ctr++) {
+			if(preg_match("/\b".trim($title)."\b/", trim($content[$ctr]))) {
+				unset($content[$ctr]);
+			}
+			$ctr++;
+		}
+		$content = array_values($content);
+		file_put_contents($alterfile,implode($content));
+		$filealter = fopen($alterfile, 'a') or die("Cant open to write".$alterfile);
+		fwrite($filealter, trim($title)."\n");
+		fclose($filealter);
+		}
 	}
 
 	/**
@@ -610,16 +670,29 @@ $recordSet = $searchObject->getResultRecordSet();
          * @access  private
          * @param   $bookid         Array of Book IDs for the searched result
          */
-        function irrelevant_xml($myFile, $title, $bookid)
+        private function irrelevant_xml($myFile, $title, $bookid, $write_once)
 	{
+		if(preg_match("/\b"."biblio"."\b/", $myFile)) {
+                        $newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/tempFile.txt";
+                } else if(preg_match("/\b"."biblio2"."\b/", $myFile)) {
+                        $newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio2/conf/tempFile.txt";
+                } else {
+                        $newFile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/econtent/conf/tempFile.txt";
+                }
+
 		$arr = file($myFile);
+		$flag = false;
+                $f=fopen($newFile,'w') or die("couldn't open $newFile");
                 $i = 0;
                 $arr_count = count($arr);
                 while($i< $arr_count){
                         if(preg_match("/\b".$title."\b/", $arr[$i]) && preg_match("/query/", $arr[$i])) {
+				$flag = true;
                                 unset($arr[$i]);
                                 $i++;
                                 while(!preg_match("/query/", $arr[$i])) {
+					if(!preg_match("/".$bookid."/", $arr[$i]))
+						fwrite($f, $arr[$i]);
                                         unset($arr[$i]);
                                         $i++;
                                 }
@@ -631,10 +704,17 @@ $recordSet = $searchObject->getResultRecordSet();
                 }
                 $arr = array_values($arr);
                 file_put_contents($myFile,implode($arr));
+		fclose($f);
 
 		$fh = fopen($myFile, 'a') or die("Can't open file");
 		$stringData = "<query text=\"".$title."\">\n";
 		fwrite($fh, $stringData);
+		if($flag) {
+			$temp_val = file($newFile);
+			foreach($temp_val as $temp_val) {
+				fwrite($fh, $temp_val); 
+			}
+		}
 		if(preg_match("/.b/", $bookid))
 			$stringData = "\t<doc id=\"".$bookid."\" exclude=\"true\"/>\n";
 		else
@@ -645,5 +725,23 @@ $recordSet = $searchObject->getResultRecordSet();
 		$stringData = "</elevate>";
 		fwrite($fh, $stringData);
 		fclose($fh); 
+		
+		if($write_once) {
+                $alterfile = "/usr/local/VuFind-Plus/sites/vufindplus3.einetwork.net/solr/biblio/conf/undoRelevancy.txt";
+                $content = file($alterfile);
+                $count = count($content);
+                for($ctr=0; $ctr<$count; $ctr++) {
+//			echo("Start".trim($content[$ctr])."End".trim($title)."FF");
+                        if(preg_match("/\b".trim($title)."\b/", trim($content[$ctr]))) {
+                                unset($content[$ctr]);
+                        }
+                        $ctr++;
+                }
+                $content = array_values($content);
+                file_put_contents($alterfile,implode($content));
+                $filealter = fopen($alterfile, 'a') or die("Cant open to write".$alterfile);
+                fwrite($filealter, trim($title)."\n");
+                fclose($filealter);
+                }
 	} 
 }

@@ -299,15 +299,26 @@ $categ=$_POST['cat'];
 //select * from search_stats where type="keyword";
 $result = mysql_query("select phrase,numSearches from search_stats where type='$categ'");
 
-echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics Based on Keyword Category-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+/*echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics Based on Keyword Category-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
 <tr>
-<th width=5px >KeyWord</th>
+<th width=5px >Topic</th>
 <th width=5px >Count</th>
 <th style='width:30px;'  >Details</th>
-</tr>";
+</tr>";*/
+
+$flag = false;
 
 while($row = mysql_fetch_array($result))
 {
+if(!$flag) {
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics Based on Keyword Category-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >Search Term</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+$flag = true;
+}
 $name =  $row['phrase'];
 $name =  str_replace(" ","+",$name);
   echo "<tr>";
@@ -328,15 +339,26 @@ if(isset($_POST['ran']))
 $ran=  $_POST['ran'];
 $result = mysql_query("select phrase,numSearches from search_stats ORDER BY numSearches DESC LIMIT $ran");
 
-echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Anayltics filtered based on number of results-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+/*echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Anayltics filtered based on number of results-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
 <tr>
-<th width=5px >KeyWord</th>
+<th width=5px >Topic</th>
 <th width=5px >Count</th>
 <th style='width:30px;'  >Details</th>
-</tr>";
+</tr>";*/
+
+$flag = false;
 
 while($row = mysql_fetch_array($result))
 {
+if(!$flag) {
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Anayltics filtered based on number of results-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >Search Term</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+$flag=true;
+}
 $name =  $row['phrase'];
 $name =  str_replace(" ","+",$name);
   echo "<tr>";
@@ -355,15 +377,26 @@ if(isset($_POST['time']))
 {
 $timelimit= $_POST['time'];
 $result=mysql_query("select phrase,numSearches from search_stats ORDER BY lastSearch DESC  LIMIT $timelimit");
-echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics based on most recent occurence-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+/*echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics based on most recent occurence-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
 <tr>
-<th width=5px >KeyWord</th>
+<th width=5px >Topic</th>
 <th width=5px >Count</th>
 <th style='width:30px;'  >Details</th>
-</tr>";
+</tr>"; */
+
+$flag=false;
 
 while($row = mysql_fetch_array($result))
 {
+if(!$flag) {
+echo "</br></br>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Analytics based on most recent occurence-</br><table border='1' width=90% align='center'  BORDERCOLOR='#336699'  >
+<tr>
+<th width=5px >Search Term</th>
+<th width=5px >Count</th>
+<th style='width:30px;'  >Details</th>
+</tr>";
+$flag = true;
+}
 $name =  $row['phrase'];
 $name =  str_replace(" ","+",$name);
   echo "<tr>";

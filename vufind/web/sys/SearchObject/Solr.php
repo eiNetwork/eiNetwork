@@ -510,6 +510,117 @@ class SearchObject_Solr extends SearchObject_Base
 		return $html;
 	}
 
+	public function getResultNextPage($curPage)
+	{
+		global $interface;
+                $bookid = array();
+		$recordStart = 20*$curPage;
+                $IndexResult = $this->indexEngine->search(
+                $this->query,      // Query string
+                $this->index,      // DisMax Handler
+                $filterQuery,      // Filter query
+                $recordStart,      // Starting record
+                $this->limit,      // Records per page
+                $facetSet,         // Fields to facet on
+                $spellcheck,       // Spellcheck query
+                $this->dictionary, // Spellcheck dictionary
+                $finalSort,        // Field to sort on
+                $this->fields,     // Fields to return
+                $this->method,     // HTTP Request method
+                $returnIndexErrors // Include errors in response?
+                );
+		for ($x = 0; $x < count($IndexResult['response']['docs']); $x++) {
+                        $current = & $IndexResult['response']['docs'][$x];
+                        $record = RecordDriverFactory::initRecordDriver($current);
+			$bookid[] = $record->getUniqueID();
+                }
+		//for ($x = 0; $x < count($IndexResult['response']['docs']); $x++)
+		//echo("Bookid".$bookid[$x]);
+                return $bookid;
+	}
+
+	public function getFirstResultNextPage($curPage)
+	{
+                global $interface;
+                $bookid = array();
+                $recordStart = 20*$curPage;
+                $IndexResult = $this->indexEngine->search(
+                $this->query,      // Query string
+                $this->index,      // DisMax Handler
+                $filterQuery,      // Filter query
+                $recordStart,      // Starting record
+                $this->limit,      // Records per page
+                $facetSet,         // Fields to facet on
+                $spellcheck,       // Spellcheck query
+                $this->dictionary, // Spellcheck dictionary
+                $finalSort,        // Field to sort on
+                $this->fields,     // Fields to return
+                $this->method,     // HTTP Request method
+                $returnIndexErrors // Include errors in response?
+                );
+                for ($x = 0; $x < count($IndexResult['response']['docs']); $x++) {
+                        $current = & $IndexResult['response']['docs'][$x];
+                        $record = RecordDriverFactory::initRecordDriver($current);
+                        $bookid[] = $record->getUniqueID();
+                }
+                return $bookid[0];
+        }
+
+	public function getLastResultPrevPage($curPage)
+        {
+                global $interface;
+                $bookid = array();
+                $recordStart = 20*$curPage;
+                $IndexResult = $this->indexEngine->search(
+                $this->query,      // Query string
+                $this->index,      // DisMax Handler
+                $filterQuery,      // Filter query
+                $recordStart,      // Starting record
+                $this->limit,      // Records per page
+                $facetSet,         // Fields to facet on
+                $spellcheck,       // Spellcheck query
+                $this->dictionary, // Spellcheck dictionary
+                $finalSort,        // Field to sort on
+                $this->fields,     // Fields to return
+                $this->method,     // HTTP Request method
+                $returnIndexErrors // Include errors in response?
+                );
+		$recordCount = 0;
+                for ($x = 0; $x < count($IndexResult['response']['docs']); $x++) {
+                        $current = & $IndexResult['response']['docs'][$x];
+                        $record = RecordDriverFactory::initRecordDriver($current);
+                        $bookid[] = $record->getUniqueID();
+			$recordCount++;
+                }
+                return $bookid[$recordCount-1];
+        }
+
+        /**
+         * Use the record driver to build an array of HTML displays from the search
+         * results.
+         *
+         * @access  public
+         * @return  array   Array of HTML chunks for individual records.
+         */
+        public function getRecordIrrelevant($pos, $curpage)
+        {
+                global $interface;
+                $html = array();
+
+                for($x=0; $x < count($this->indexResult['response']['docs']); $x++) {
+                        if($x==$pos)
+                                continue;
+                        $current = & $this->indexResult['response']['docs'][$x];
+                        $interface->assign('recordIndex', $x + 1);
+                        $record = RecordDriverFactory::initRecordDriver($current);
+                        $html[] = $interface->fetch($record->getSearchResult());
+                }
+                $next_page = $this->getFirstResultNextPage($curpage);
+                $html[] = $this->getRecordIndividualHTML($next_page);
+
+		return $html;
+        }
+
 	/**
 	 * Use the record driver to build an array of HTML displays from the search
 	 * results.
@@ -563,6 +674,42 @@ class SearchObject_Solr extends SearchObject_Base
 		return $html;
 	}
 
+        /**
+         * Use the record driver to build an array of HTML displays from the search
+         * results.
+         *
+         * @access  public
+         * @return  array   Array of HTML chunks for individual records.
+         */
+        public function getRecordBoostedHTML($initial, $final)
+        {
+                global $interface;
+                $html = array();
+                $incr = 0;
+                if($final < $initial) {
+			$html[] = $this->getRecordIndividualHTML($this->getLastResultPrevPage(intval($initial/20)-1));
+                        for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+				if($x==($initial%20))
+					continue;
+				$current = & $this->indexResult['response']['docs'][$x];
+				$interface->assign('recordIndex', $x + 1);
+                                $record = RecordDriverFactory::initRecordDriver($current);
+                                $html[] = $interface->fetch($record->getSearchResult());
+                        }
+                } else {
+                        for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
+                                if($x==($initial%20))
+                                        continue;
+                                $current = & $this->indexResult['response']['docs'][$x];
+                                $interface->assign('recordIndex', $x + 1);
+                                $record = RecordDriverFactory::initRecordDriver($current);
+                                $html[] = $interface->fetch($record->getSearchResult());
+                        }
+			$html[] = $this->getRecordIndividualHTML($this->getFirstResultNextPage(intval($initial/20)+1));
+                }
+                return $html;
+        }
+
 	/**
          * Use the record driver to build an array of unique ids from the search
          * results.
@@ -610,12 +757,22 @@ class SearchObject_Solr extends SearchObject_Base
                         }
                 }
 
-/*		for ($x = 0; $x < count($this->indexResult['response']['docs']); $x++) {
-			$current = & $this->indexResult['response']['docs'][$x];
-			$record = RecordDriverFactory::initRecordDriver($current);
-                        $bookId[] = $record->getUniqueID();
-		}*/
 		return $bookId;
+	}
+
+	/**
+         * Get the unique id of the record from the search results.
+	 *
+	 * @access  public
+         * @return  id		Individual Book Id
+	 */
+	public function getIndividualID($pos)
+	{
+		$current = $this->indexResult['response']['docs'][$pos];
+		$record = RecordDriverFactory::initRecordDriver($current);
+		$id = $record->getUniqueID();
+
+		return $id;
 	}
 
 	/**
@@ -1808,6 +1965,14 @@ class SearchObject_Solr extends SearchObject_Base
 	{
 		return $this->indexEngine->getRecord($id);
 	}
+
+
+	function getRecordIndividualHTML($id)
+	{
+                global $interface;
+                        $record = RecordDriverFactory::initRecordDriver($this->indexEngine->getRecord($id));
+                        return $interface->fetch($record->getSearchResult());
+	} 
 
 	/**
 	 * Retrieves a document specified by the ID.

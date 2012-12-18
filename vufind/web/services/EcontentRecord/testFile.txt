@@ -17,12 +17,17 @@ sd
 </query>
 <query text="the girl with dragon tattoo">
 	<doc id=".b29407291"/>
-	<doc id=".b31397025"/>
-	<doc id=".b29181305"/>
+	<doc id=".b29407292"/>
+	<doc id=".b29407293"/>
+	<doc id="diff1"/>
+	<doc id="diff2"/>
 </query>
-<query text="the girl with dragon tattoo2">
+<query text="the boy5 with dragon tattoo2">
 	<doc id=".b29407291"/>
-	<doc id=".b31397025"/>
-	<doc id=".b29181306"/>
+	<doc id=".new"/>
+	<doc id=".new"/>
+	<doc id=".b29407292"/>
+	<doc id="diff2"/>
+	<doc id=".b29407293"/>
 </query>
 </elevate>

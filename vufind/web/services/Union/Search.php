@@ -80,10 +80,10 @@ class Search extends Action {
 				if ($user)
 				{
 					if($user->hasRole('epubAdmin')) {
-						require_once ('services/Search/VinBoost.php');
+						require_once ('services/Search/Prioritize.php');
 						$module = 'Search';
 						$interface->assign('module', $module);
-						$action = 'VinBoost';
+						$action = 'Prioritize';
 						$interface->assign('action', $action);
 						if ($searchSource == 'econtent'){
 							if (!isset($_REQUEST['shard'])){
@@ -94,7 +94,7 @@ class Search extends Action {
 								$_SESSION['shards'] = array('eContent', 'Main Catalog');  
 							}
 						}
-						$results = new VinBoost();
+						$results = new Prioritize();
 						return $results->launch();
 					}
 				}

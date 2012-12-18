@@ -19,12 +19,11 @@ $(document).ready(function() {literal} { {/literal}
 		</div>
 		*} 
 		
-
 		{foreach from=$recordSet item=record name="recordLoop" key=val}
 		  {*<div class="result {if ($smarty.foreach.recordLoop.iteration % 2) == 0}alt{/if} record{$smarty.foreach.recordLoop.iteration}">*}
 		    {* This is raw HTML -- do not escape it: *}
-
-<td><form action="" method="post"> <input type="text" value={$val+1} name="bookID"  style="width:14px;"/> <input type="hidden" value={$val+1}  name="Init" /> <input type="submit" value="Boost" name="Boost" /> </form></td>
+<td><form action=""></form></td>
+<td><form action="" method="post"> <input type="text" value={$recordStart+$val} name="bookID"  style="width:22px;"/> <input type="hidden" value={$recordStart+$val}  name="Init" /> <input type="submit" value="Boost" name="Boost" /> <input type="submit" value="Mark Irrelevant" name="Irrelevant" /> </form></td>
 
 
 <div <div class="result record{$smarty.foreach.recordLoop.iteration}">
