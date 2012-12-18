@@ -1,5 +1,0 @@
-	<doc id=".b29407291"/>
-	<doc id=".new"/>
-	<doc id=".new"/>
-	<doc id=".b29407292"/>
-	<doc id=".b29407293"/>
