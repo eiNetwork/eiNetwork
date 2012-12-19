@@ -155,7 +155,11 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div class="resultInformationLabel">{translate text='Contents'}</div>
 				<div class="recordDescription">
 					{foreach from=$toc item=line name=loop}
-						{assign var="con" value="`$con``$line.content`"}
+						{if $line.code =="g"}
+							{assign var="con" value="`$con``$line.content`<br>"}
+						{else}
+							{assign var="con" value="`$con``$line.content`"}
+						{/if}
 					{/foreach}
 					{if strlen($con) > 300}
 						<span id="shortTOC">
@@ -163,7 +167,7 @@ function redrawSaveStatus() {literal}{{/literal}
 							<a href='#' onclick='$("#shortTOC").slideUp();$("#fullTOC").slideDown()'>More</a>
 						</span>
 						<span id="fullTOC" style="display:none">
-							{$con|escape}
+							{$con}
 							<a href='#' onclick='$("#shortTOC").slideDown();$("#fullTOC").slideUp()'>Less</a>
 						</span>
 					{else}
