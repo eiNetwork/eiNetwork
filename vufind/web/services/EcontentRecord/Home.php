@@ -135,8 +135,9 @@ class Home extends Action{
 					$this->issn = "";
 				}
 			}
+			//echo "<pre>".print_r($this->fixSubjects($eContentRecord->getPropertyArray('subject')), 1)."</pre>";
 			$interface->assign('additionalAuthorsList', $eContentRecord->getPropertyArray('author2'));
-			$interface->assign('subjectList', $eContentRecord->getPropertyArray('subject'));
+			$interface->assign('subjectList', $this->fixSubjects($eContentRecord->getPropertyArray('subject')));
 			$interface->assign('lccnList', $eContentRecord->getPropertyArray('lccn'));
 			$interface->assign('isbnList', $eContentRecord->getPropertyArray('isbn'));
 			$interface->assign('isbn', $eContentRecord->getIsbn());
@@ -389,5 +390,23 @@ class Home extends Action{
 			}
 			$timer->logTime('Got next/previous links');
 		}
+	}
+	private function fixSubjects($subjects){
+		$return = array(array_shift($subjects));
+		foreach($subjects as $subject){
+			$found = false;
+			foreach($return as $key=>$value){
+				if(substr($subject, 0, strlen($value)) == $value){
+					$return[$key] = $subject;
+					$found = true;
+				}elseif (substr($value, 0, strlen($subject))== $subject){
+					$found = true;
+				}
+			}
+			if(!$found){
+				$return[] = $subject;
+			}
+		}
+		return $return;
 	}
 }
