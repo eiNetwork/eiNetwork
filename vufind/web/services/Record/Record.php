@@ -303,26 +303,28 @@ class Record extends Action
 					foreach ($marcFields as $marcField){
 						$searchSubject = "";
 						$subject = array();
+						$title = '';
 						foreach ($marcField->getSubFields() as $subField){
 							if ($subField->getCode() != 2){
 								$searchSubject .= " " . $subField->getData();
-								$subject[] = array(
-		                            'search' => trim($searchSubject),
-		                            'title'  => $subField->getData(),
-									'code'	 => $subField->getCode()
-								);
+								$title .=$subField->getData()." ";
 							}
 						}
-						
-						if($subject[0]['code'] == 'a' && $subject[1]['code'] == 'v'){
+						$subject[] = array(
+								'search' => trim($searchSubject),
+								'title'  => $title,
+								//'code'	 => $subField->getCode()
+						);
+						/*if($subject[0]['code'] == 'a' && $subject[1]['code'] == 'v'){
 							
 							$subject = array(array("search"=>$subject[1]["search"], "title"=>$subject[0]['title'].' '.$subject[1]['title']));
 						}else{
 							unset($subject['code']);
-						}
+						}*/
 						$subjects[] = $subject;
 					}
 				}
+				$subjects = $this->multi_unique($subjects);
 				$interface->assign('subjects', $subjects);
 			}
 		}
@@ -732,4 +734,12 @@ class Record extends Action
 		}
 		return $notes;
 	}
+	private function multi_unique($array) {
+        foreach ($array as $k=>$na)
+            $new[$k] = serialize($na);
+        $uniq = array_unique($new);
+        foreach($uniq as $k=>$ser)
+            $new1[$k] = unserialize($ser);
+        return ($new1);
+    }
 }
