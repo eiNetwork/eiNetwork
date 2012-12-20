@@ -9,14 +9,14 @@ function resetTimer(){
     clearTimeout(timer1);
     clearTimeout(timer2);
     var wait=1;
-    timer1=setTimeout("alertUser()", (30000*wait)-1);
-    timer2=setTimeout("logout()", 38000*wait);
+    timer1=setTimeout("alertUser()", (35000*wait)-1);
+    timer2=setTimeout("logout()", 40000*wait);
 }
 
 function alertUser(){
 	lightbox(null, null, null, '25%');
 	var message = "<div class='popupHeader' style='text-align:center' ><div class='highlight' >Attention:</div>Your catalog session is about to expire if you don't click \"Continue\".";
-	message += "</div><div style='margin-top:100px; text-align:center; font-size:12px;'><span class='button dark highlight highlighted' onclick='resetTimer()'>Continue</span><span class='button dark highlight' onclick='logout()'>Exit</span></div>";
+	message += "</div><div style='margin-top:100px; text-align:center; font-size:12px;'><span class='button yellow' onclick='resetTimer()' style='color:black'>Continue</span><span class='button gray' onclick='logout()' style='background-color: #777777; border-color: #888888;'>Exit</span></div>";
 	$("#popupbox").html(message);
 }
 function logout(){
