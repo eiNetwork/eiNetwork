@@ -2002,13 +2002,11 @@ class MillenniumDriver implements DriverInterface
 			$curHold= array();
 			$curHold['create'] = null;
 			$curHold['reqnum'] = null;
-
 			//Holds page occassionally has a header with number of items checked out.
 			for ($i=0; $i < sizeof($scols); $i++) {
 				$scols[$i] = str_replace("&nbsp;"," ",$scols[$i]);
 				$scols[$i] = preg_replace ("/<br+?>/"," ", $scols[$i]);
 				$scols[$i] = html_entity_decode(trim(substr($scols[$i],0,stripos($scols[$i],"</t"))));
-				//print_r($scols[$i]);
 				if ($scount <= 1) {
 					$skeys[$i] = $scols[$i];
 				} else if ($scount > 1) {
@@ -2047,10 +2045,9 @@ class MillenniumDriver implements DriverInterface
 					}
 
 					if (stripos($skeys[$i],"PICKUP LOCATION") > -1) {
-
 						//Extract the current location for the hold if possible
 						$matches = array();
-						if (preg_match('/<select\\s+name=loc(.*?)x(\\d\\d).*?<option\\s+value="([a-z]{1,5})[+ ]*"\\s+selected="selected">.*/s', $scols[$i], $matches)){
+						if (preg_match('/<select\s+name=loc(.*?)x(\d\d).*?<option\s+value="([\w]{1,5})[+ ]*"\s+selected="selected">.*/s', $scols[$i], $matches)){
 							$curHold['locationId'] = $matches[1];
 							$curHold['locationXnum'] = $matches[2];
 							$curPickupBranch = new Location();
@@ -2066,6 +2063,10 @@ class MillenniumDriver implements DriverInterface
 
 							//Return the full select box for reference.
 							$curHold['locationSelect'] = $scols[$i];
+						}elseif (preg_match('/<select\s+name=loc(.*?)x(\d\d).*?<option\s+value="([\w]{1,5})[+ ]*"\s>.*/s', $scols[$i], $matches)){
+							//no library selected, and it wants a holding from a location
+							$curHold['location'] = "<font style='color:red'>No location selected</font>";
+							$curHold['locationUpdateable'] = true;
 						}else{
 							$curHold['location'] = $scols[$i];
 							//Trim the carrier code if any
