@@ -76,7 +76,7 @@
     {/if}
     
     {* Files that should not be combined *}
-    {if $includeAutoLogoutCode == true && $action != 'Home'}
+    {if $includeAutoLogoutCode == true }
       <script type="text/javascript" src="{$path}/js/autoLogout.js"></script>
     {/if}
     
