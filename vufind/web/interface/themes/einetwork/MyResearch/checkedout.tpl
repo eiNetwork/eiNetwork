@@ -335,7 +335,7 @@
 -->			    {if $record.overdue}
 				<input id="userreviewlink{$shortId}" type="button" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
 			    {else}
-				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}&itemBarCode={$record.barcode}')" value="Renew" />
 			    {/if}
 			    {if $record.renewMessage}
 				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">
