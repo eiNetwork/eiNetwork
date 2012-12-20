@@ -270,20 +270,19 @@ class Location extends DB_DataObject
 				$selected = '';
 			}
 			$this->selected = $selected;
-			if (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
-				//Next come nearby locations for the user
+			if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
+				//If the user is in a branch, those holdings come first.
 				$locationList['1' . $this->displayName] = clone $this;
-			} else if (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
+			}elseif (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
 				//Next come nearby locations for the user
 				$locationList['2' . $this->displayName] = clone $this;
-			} else if (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
-				//Other locations that are within the same library system
+			} elseif (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
+				//Next come nearby locations for the user
 				$locationList['3' . $this->displayName] = clone $this;
-			}else if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
-				//If the user is in a branch, those holdings come first.
+			} elseif (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
+				//Other locations that are within the same library system
 				$locationList['4' . $this->displayName] = clone $this;
-			} 
-			else {
+			}else {
 				//Finally, all other locations are shown sorted alphabetically.
 				$locationList['5' . $this->displayName] = clone $this;
 			}
@@ -307,8 +306,8 @@ class Location extends DB_DataObject
 		$this->activeLocation = null;
 
 		//load information about the library we are in.
-		global $library;
-		if (is_null($library)){
+		global $librarySingleton;
+		if (is_null($librarySingleton)){
 			//If we are not in a library, then do not allow branch scoping, etc.
 			$this->activeLocation = null;
 		}else{
@@ -321,7 +320,7 @@ class Location extends DB_DataObject
 				$activeLocation->code = $locationCode;
 				if ($activeLocation->find(true)){
 					//Only use the location if we are in the subdomain for the parent library
-					if ($library->libraryId == $activeLocation->libraryId){
+					if ($librarySingleton->libraryId == $activeLocation->libraryId){
 						$this->activeLocation = clone($activeLocation);
 					}
 				}
