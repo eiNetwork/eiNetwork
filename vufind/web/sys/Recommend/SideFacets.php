@@ -50,22 +50,48 @@ class SideFacets implements RecommendationInterface
 		$iniName = isset($params[2]) ? $params[2] : 'facets';
 
 		// Load the desired facet information:
-		$config = getExtraConfigArray($iniName);
-		$this->mainFacets = isset($config[$mainSection]) ? $config[$mainSection] : array();
-		foreach ($this->mainFacets as $name => $desc){
-			if ($name == 'time_since_added'){
-				//Check to see if we have an active library
-				global $librarySingleton;
-				$searchLibrary = $librarySingleton->getSearchLibrary();
-				if ($searchLibrary != null){
-					unset ($this->mainFacets[$name]);
-					$this->mainFacets['local_time_since_added_' . $searchLibrary->subdomain] = $desc;
+		$searchLibrary = Library::getSearchLibrary();
+		if ($searchLibrary == null || count($searchLibrary->facets) == 0){
+			$config = getExtraConfigArray($iniName);
+			$this->mainFacets = isset($config[$mainSection]) ? $config[$mainSection] : array();
+			foreach ($this->mainFacets as $name => $desc){
+				if ($name == 'time_since_added'){
+					//Check to see if we have an active library
+					global $librarySingleton;
+					$searchLibrary = $librarySingleton->getSearchLibrary();
+					if ($searchLibrary != null){
+						unset ($this->mainFacets[$name]);
+						$this->mainFacets['local_time_since_added_' . $searchLibrary->subdomain] = $desc;
+					}
+				}
+			}
+		}else{
+			$this->mainFacets = array();
+			foreach ($searchLibrary->facets as $facet){
+				if ($mainSection == 'Results'){
+					if ($facet->showInResults == 1 && $facet->showAboveResults == 0){
+						if ($facet->facetName == 'time_since_added'){
+							//Check to see if we have an active library
+							$this->mainFacets['local_time_since_added_' . $searchLibrary->subdomain] =  $facet->displayName;
+						}else{
+							$this->mainFacets[$facet->facetName] = $facet->displayName;
+						}
+					}
+				}elseif ($mainSection == 'Author'){
+					if ($facet->showInAuthorResults == 1 && $facet->showAboveResults == 0){
+						if ($facet->facetName == 'time_since_added'){
+							//Check to see if we have an active library
+							$this->mainFacets['local_time_since_added_' . $searchLibrary->subdomain] =  $facet->displayName;
+						}else{
+							$this->mainFacets[$facet->facetName] = $facet->displayName;
+						}
+					}
 				}
 			}
 		}
 
-		$this->checkboxFacets = ($checkboxSection && isset($config[$checkboxSection])) ?
-		$config[$checkboxSection] : array();
+		$this->checkboxFacets = ($checkboxSection && isset($config[$checkboxSection])) ? $config[$checkboxSection] : array();
+
 	}
 
 	/* init
@@ -98,7 +124,6 @@ class SideFacets implements RecommendationInterface
 		global $interface;
 		global $configArray;
 		$interface->assign('checkboxFilters', $this->searchObject->getCheckboxFacets());
-		$interface->assign('filterList', $this->searchObject->getFilterList(true));
 		//Process the side facet set to handle the Added In Last facet which we only want to be
 		//visible if there is not a value selected for the facet (makes it single select
 		$sideFacets = $this->searchObject->getFacetList($this->mainFacets);
@@ -151,13 +176,10 @@ class SideFacets implements RecommendationInterface
 			//Mangle the availability facets
 			$oldFacetValues = $sideFacets['available_at']['list'];
 			ksort($oldFacetValues);
-
-			//print_r($sideFacets['available_at']['list']);
 			global $locationSingleton;
 			global $user;
-			global $library;
+			global $librarySingleton;
 			$filters = $this->searchObject->getFilterList();
-			//print_r($filters);
 			$appliedAvailability = array();
 			foreach ($filters as $appliedFilters){
 				foreach ($appliedFilters as $filter){
@@ -179,24 +201,67 @@ class SideFacets implements RecommendationInterface
 
 			$includeAnyLocationFacet = $this->searchObject->getFacetSetting("Availability", "includeAnyLocationFacet");
 			//print_r ("includeAnyLocationFacet = $includeAnyLocationFacet");
-			if ($includeAnyLocationFacet == '' || $includeAnyLocationFacet == 'true'){
+			if ($includeAnyLocationFacet == '' || $includeAnyLocationFacet == true){
 				$anyLocationLabel = $this->searchObject->getFacetSetting("Availability", "anyLocationLabel");
 				//print_r ("anyLocationLabel = $anyLocationLabel");
 				$availableAtFacets['*'] = array(
 					'value' => '*',
-					'display' => $anyLocationLabel == '' ? "Any Marmot Location" : $anyLocationLabel,
+					'display' => $anyLocationLabel == '' ? "Any Library Location" : $anyLocationLabel,
 					'count' => $this->searchObject->getResultTotal() - (isset($oldFacetValues['']['count']) ? $oldFacetValues['']['count'] : 0),
 					'url' => $this->searchObject->renderLinkWithFilter('available_at:*'),
 					'isApplied' => array_key_exists('*', $appliedAvailability),
 					'removalUrl' => array_key_exists('*', $appliedAvailability) ? $appliedAvailability['*'] : null
 				);
 			}
-
 			$sideFacets['available_at']['list'] = $availableAtFacets;
-
 			//print_r($sideFacets['available_at']);
 		}
+		$useLocation = isset($_SESSION['useLocation'])?$_SESSION['useLocation']:false;
+		$searchLocation = Location::getSearchLocation();
+		$filterList = $this->searchObject->getFilterList(true);
+		if(isset($searchLocation) && !is_null($searchLocation)){
+			foreach($sideFacets as $key=>$filter){
+				if($key == 'building'){
+					foreach($filter as $k=>$f){
+						if($k == 'list'){
+							foreach($f as $y=>$x){
+								if($x['value'] == $searchLocation->defaultLocationFacet && $useLocation){
+									$sideFacets[$key][$k][$y]['removalUrl'] = $sideFacets[$key][$k][$y]['removalUrl']."&useLocation=0";
+								}
+							}
+						}
+					}
+					
+				}
+			}
+			
+			foreach($filterList as $key=>$filter){
+				if($key == 'Location'){
+					foreach($filter as $k=>$f){
+						if( $f['value']== $searchLocation->defaultLocationFacet && $useLocation){
+							$filterList[$key][$k]['removalUrl'] = $filterList[$key][$k]['removalUrl']."&useLocation=0";
+						}
+					}
+				}
+			}
+		}
+		if ($searchLibrary != null && count($searchLibrary->facets) > 0){
+			foreach ($searchLibrary->facets as $facet){
+				if (array_key_exists($facet->facetName, $sideFacets)){
+					if ($facet->sortMode == 'alphabetically'){
+						asort($sideFacets[$facet->facetName]['list']);
+					}
+					$sideFacets[$facet->facetName]['valuesToShow'] = $facet->numEntriesToShowByDefault;
+					if ($facet->showAsDropDown){
+						$sideFacets[$facet->facetName]['showAsDropDown'] = $facet->showAsDropDown;
+					}
+				}
 
+			}
+		}
+		$interface->assign('filterList', $filterList);
+		$interface->assign('useLocation', $useLocation);
+		$interface->assign('searchLibrary', $searchLibrary);
 		$interface->assign('sideFacetSet', $sideFacets);
 	}
 

@@ -119,6 +119,7 @@ class Solr implements IndexEngine {
 	 */
 	private $scopingDisabled = false;
 
+	private $_exlusionFilters = array();
 	/**
 	 * Constructor
 	 *
@@ -200,7 +201,9 @@ class Solr implements IndexEngine {
 		if (isset($searchSettings['Cache']['type'])) {
 			$this->_specCache = $searchSettings['Cache']['type'];
 		}
-
+		if (isset($searchSettings['ExclusionFilters']) && is_array($searchSettings['ExclusionFilters'])) {
+			$this->_exlusionFilters = $searchSettings['ExclusionFilters'];
+		}
 		if (isset($_SESSION['shards'])){
 			$this->_loadShards($_SESSION['shards']);
 		}
@@ -1205,17 +1208,21 @@ class Solr implements IndexEngine {
 				$filter[] = $blacklist;
 			}
 			if ($this->scopingDisabled == false){
-				if (isset($searchLibrary)){
+				//moved to search results to add parameters into facet list
+				/*if (isset($searchLibrary)){
 					if (strlen($searchLibrary->defaultLibraryFacet) > 0){
 						$filter[] = "(institution:\"{$searchLibrary->defaultLibraryFacet}\" OR institution:\"Shared Digital Collection\" OR institution:\"Digital Collection\" OR institution:\"{$searchLibrary->defaultLibraryFacet} Online\")";
 					}
 				}
 
 				if ($searchLocation != null){
-					if (strlen($searchLocation->defaultLocationFacet)){
-						$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\" OR building:\"Shared Digital Collection\" OR building:\"Digital Collection\" OR building:\"{$searchLocation->defaultLocationFacet} Online\")";
-					}
-				}
+					$useLocation = isset($_SESSION['useLocation'])?$_SESSION['useLocation']:false;
+					if (strlen($searchLocation->defaultLocationFacet) && $useLocation){
+						 //Better default in building search removed.  Replaced with inferior location facet on by default
+							//$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\" OR building:\"Shared Digital Collection\" OR building:\"Digital Collection\" OR building:\"{$searchLocation->defaultLocationFacet} Online\")";
+						 
+						$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\")";					}
+				}*/
 
 				global $defaultCollection;
 				if (isset($defaultCollection) && strlen($defaultCollection) > 0){
@@ -1230,18 +1237,25 @@ class Solr implements IndexEngine {
 		// Build Facet Options
 		if ($facet && !empty($facet['field'])) {
 			$options['facet'] = 'true';
-			$options['facet.mincount'] = 1;
+			$options['facet.mincount'] = 0;
 			$options['facet.limit'] = (isset($facet['limit'])) ? $facet['limit'] : null;
 			unset($facet['limit']);
-			if (isset($facet['field']) && is_array($facet['field']) && in_array('date_added', $facet['field'])){
-				$options['facet.date'] = 'date_added';
-				$options['facet.date.end'] = 'NOW';
-				$options['facet.date.start'] = 'NOW-1YEAR';
-				$options['facet.date.gap'] = '+1WEEK';
-				foreach ($facet['field'] as $key => $value){
-					if ($value == 'date_added'){
-						unset($facet['field'][$key]);
-						break;
+			if(isset($facet['field']) && is_array($facet['field'])){
+				foreach($facet['field'] as $key=> $value){
+					if(array_key_exists($value, $this->_exlusionFilters)){
+						$facet['field'][$key] = "{!ex=dt}".$value;
+					}
+				}
+				if (in_array('date_added', $facet['field'])){
+					$options['facet.date'] = 'date_added';
+					$options['facet.date.end'] = 'NOW';
+					$options['facet.date.start'] = 'NOW-1YEAR';
+					$options['facet.date.gap'] = '+1WEEK';
+					foreach ($facet['field'] as $key => $value){
+						if ($value == 'date_added'){
+							unset($facet['field'][$key]);
+							break;
+						}
 					}
 				}
 			}
@@ -1631,7 +1645,11 @@ class Solr implements IndexEngine {
 						}
 					}
 					if(is_array($value)) {
-						foreach ($value as $additional) {
+						foreach ($value as $key=>$additional) {
+							$temp = explode(":", $additional);
+							if(array_key_exists($temp[0], $this->_exlusionFilters) || array_key_exists(substr($temp[0],1), $this->_exlusionFilters)){
+								$additional = "{!tag=dt}".$additional;
+							}
 							$additional = urlencode($additional);
 							$query[] = "$function=$additional";
 						}

@@ -1,36 +1,25 @@
 (function($){
-	startIdleTimer();
-
+	resetTimer();
 })(jQuery);
-
-var autoLogoutTimer;
-function showLogoutMessage(){
-	lightbox('33%', '33%', 100, 100);
-	var message = "<div id='autoLogoutMessage'>Are you still there?  Click Continue to keep using the catalog or Logout to end your session immediately.</div>";
-	message += "<div id='autoLogoutActions'>";
-	message += "<div id='continueSession' class='autoLogoutButton' onclick='continueSession();'>Continue</div>";
-	message += "<div id='endSession' class='autoLogoutButton' onclick='endSession();'>Logout</div>";
-	message += "</div>";
-	$("#popupbox").html(message);
-	autoLogoutTimer = setTimeout("endSession()", 10000);
-}
-
-function startIdleTimer(){
-	var timeout = 90000;
-	$.idleTimer(timeout);
-	
-	$(document).on("idle.idleTimer", function(){
-		showLogoutMessage();
-	});
-}
-
-function continueSession(){
-	clearTimeout(autoLogoutTimer);
+var timer1, timer2;
+//document.onkeypress=resetTimer;
+//document.onmousemove=resetTimer;
+function resetTimer(){
 	hideLightbox();
-	startIdleTimer();
+    clearTimeout(timer1);
+    clearTimeout(timer2);
+    var wait=1;
+    timer1=setTimeout("alertUser()", (30000*wait)-1);
+    timer2=setTimeout("logout()", 38000*wait);
 }
 
-function endSession(){
+function alertUser(){
+	lightbox(null, null, null, '25%');
+	var message = "<div class='popupHeader' style='text-align:center' ><div class='highlight' >Attention:</div>Your catalog session is about to expire if you don't click \"Continue\".";
+	message += "</div><div style='margin-top:100px; text-align:center; font-size:12px;'><span class='button dark highlight highlighted' onclick='resetTimer()'>Continue</span><span class='button dark highlight' onclick='logout()'>Exit</span></div>";
+	$("#popupbox").html(message);
+}
+function logout(){
 	//Redirect to logout page
 	window.location = path + "/MyResearch/Logout";
 }
