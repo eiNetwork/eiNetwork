@@ -2,15 +2,14 @@
 	resetTimer();
 })(jQuery);
 var timer1, timer2;
-//document.onkeypress=resetTimer;
-//document.onmousemove=resetTimer;
+//move view back to top to see popup
 function resetTimer(){
 	hideLightbox();
     clearTimeout(timer1);
     clearTimeout(timer2);
-    var wait=1;
-    timer1=setTimeout("alertUser()", (35000*wait)-1);
-    timer2=setTimeout("logout()", 40000*wait);
+    var wait=5;
+    timer1=setTimeout("alertUser()", (60000*wait)-1);
+    timer2=setTimeout("logout()", 60000*wait);
 }
 
 function alertUser(){

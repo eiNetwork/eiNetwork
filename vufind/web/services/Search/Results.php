@@ -295,7 +295,7 @@ class Results extends Action {
 
 			$facetSet = $searchObject->getFacetList();
 			$interface->assign('facetSet',       $facetSet);
-			/*if(isset($facetSet['format'])){
+			if(isset($facetSet['format'])){
 				//$facetSet['format']['list'] = $this->sortFromMap('format_category_map.properties', $facetSet['format']['list'], 'All Books');
 				$x = $facetSet['format'];
 				//build a tree array
@@ -315,7 +315,7 @@ class Results extends Action {
 				$interface->assign('tree', $temp);
 				$tree_html = $interface->fetch('Search/facet_popup.tpl');
 				$interface->assign('tree_html', $tree_html);
-			}*/
+			}
 			//Check to see if a format category is already set
 			$categorySelected = false;
 			
