@@ -331,6 +331,38 @@ function redrawSaveStatus() {literal}{{/literal}
 						</tr>
 						{/if}
 					{/if}
+					{if $internetLinks}
+						<tr>
+							<td class="details_lable">{translate text="Links"}</td>
+							<td><table>
+								{foreach from=$internetLinks item=internetLink}
+									<tr><td>
+									{if $proxy}
+										<a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a>
+									{else}
+										<a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a>
+									{/if}
+									</td></tr>
+								{/foreach}
+								</table>
+							</td>
+					{/if}
+					{if $supLinks}
+						<tr>
+							<td class="details_lable">{translate text="Supplemental Links"}</td>
+							<td><table>
+								{foreach from=$supLinks item=internetLink}
+									<tr><td>
+									{if $proxy}
+										<a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a>
+									{else}
+										<a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a>
+									{/if}
+									</td></tr>
+								{/foreach}
+								</table>
+							</td>
+					{/if}
 					</table>
 				</div>
 			</div>
