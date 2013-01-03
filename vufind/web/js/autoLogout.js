@@ -9,7 +9,7 @@ function resetTimer(){
     clearTimeout(timer2);
     var wait=5;
     timer1=setTimeout("alertUser()", (60000*wait)-1);
-    timer2=setTimeout("logout()", 65000*wait);
+    timer2=setTimeout("logout()", 70000*wait);
 }
 
 function alertUser(){
