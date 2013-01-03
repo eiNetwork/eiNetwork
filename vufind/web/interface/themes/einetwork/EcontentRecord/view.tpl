@@ -349,7 +349,7 @@ function redrawSaveStatus() {literal}{{/literal}
 		  {/if}	    
 	    {/if}
 
-	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="border-top-right-radius:0px;border-top-left-radius:0px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;border-top-width:1px">
+	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="{if $eContentRecord->sourceUrl}border-top-right-radius:0px;border-top-left-radius:0px;{else}border-top-right-radius:8px;border-top-left-radius:8px;{/if}border-top-width:1px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;">
 		  <span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
 		  <span class="action-lable-span">Add To Wish List</span>
 	    </div>
@@ -741,10 +741,20 @@ function redrawSaveStatus() {literal}{{/literal}
 						</tr>
 						{/if}
 					{/if}
+					{if !$eContentRecord->sourceUrl}
+						{foreach from=$eContentRecord->getItems() item=eRec name=links}
+							{if $eRec->link}
+								<tr>
+									<td class="details_lable">{if $smarty.foreach.links.index == 0}Links{/if}</td>
+									<td><a href="{$eRec->link}" target="_blank">{if $eRec->notes}{$eRec->notes}{else}{$eRec->link}{/if}</a></td>
+								</tr>
+							{/if}
+						{/foreach}
+					{/if}
 					{foreach from=$eContentRecord->getItems() item=eRec}
 						{if $eRec->sampleName_1}
 							<tr>
-								<td class="details_lable">Additional Links</td>
+								<td class="details_lable">Supplemental Links</td>
 								<td><a href="{$eRec->sampleUrl_1}" target="_blank">{$eRec->sampleName_1}</a></td>
 							</tr>
 						{/if}
