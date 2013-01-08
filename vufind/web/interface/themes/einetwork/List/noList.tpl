@@ -45,7 +45,7 @@
 	<div class="resulthead">
             <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
             {* <div>Create a new List</div> *} 
-            <div><a href="/List/Import">Import an existing list</a></div>
+            <div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>
 	</div>
       {* End Listing Options *}
 
