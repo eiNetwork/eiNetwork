@@ -9,7 +9,8 @@
 		});
 		$('#loginForm').submit(function(){
 			var pin=$("#pin").val();
-			var pinReg=/^[0-9]\d{3}$/;
+			{/literal}{* var pinReg=/^[0-9]\d{3}$/; *}{literal}
+			var pinReg = /^[0-9]{0,8}$/;
 			var card=$("#card").val();
 			var cardReg=/^[1-9]\d{13}$/;
 			var cardReg1=/^[1-9]\d{6}$/;
@@ -58,7 +59,8 @@
     	});
 	    $('#pin').focusout(function(){
 			var pin=$(this).val(),
-			    pinReg=/^[0-9]\d{3}$/;
+			   {/literal} {* pinReg=/^[0-9]\d{3}$/; *}{literal}
+			    pinReg = /^[0-9]{0,8}$/;
 			if(pin==""){
 				$('#pinError').html('&nbsp;');
 				$(this).val($(this).attr('title'));
@@ -106,7 +108,7 @@
 					<div id="cardError">&nbsp;</div>
 				</div>
 				<div id="password">
-					<input id="pin" class="text" type="text" name="password" title="4 digit PIN number" placeholder="4 digit PIN number" maxlength="4"/>
+					<input id="pin" class="text" type="text" name="password" title="4 digit PIN number" placeholder="4 digit PIN number" maxlength="8"/>
 					<div id="pinError">&nbsp;</div>
 					<div><a href="/MyResearch/PinReset">I forgot or don't have my pin</a></div>
 				</div>
