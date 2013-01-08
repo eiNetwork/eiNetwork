@@ -24,11 +24,11 @@
   
   <div id="main-content">
     {* Recommendations *}
-    {if $topRecommendations}
+    {*if $topRecommendations}
       {foreach from=$topRecommendations item="recommendations"}
         {include file=$recommendations}
       {/foreach}
-    {/if}
+    {/if*}
     <div class="resulthead"><h3>{translate text='nohit_heading'}</h3></div>
       
       <p class="error">{translate text='nohit_prefix'} - <b>{$lookfor|escape:"html"}</b> - {translate text='nohit_suffix'}</p>
@@ -72,8 +72,9 @@
     {/if}
 
 		{if $enableMaterialsRequest}
-    Can't find what you are looking for? Try our <a href="{$path}/MaterialsRequest/NewRequest">Materials Request Service</a>.</div>
+    Can't find what you are looking for? Try our <a href="{$path}/MaterialsRequest/NewRequest">Materials Request Service</a>.
     {/if}
+    	</div>
     </div>
     		 {*right-bar template*}
   {include file="ei_tpl/right-bar.tpl"}

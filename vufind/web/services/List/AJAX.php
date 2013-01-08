@@ -995,6 +995,7 @@ class AJAX extends Action {
 	}
 	function deleteList(){
 		global $user;
+		global $configArray;
 		$solrConnector = new User_list_solr($configArray['Index']['url']);
 		$list = User_list::staticGet($_REQUEST['listId']);
 		$list->user_id = $user->id;

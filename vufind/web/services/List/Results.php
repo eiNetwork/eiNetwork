@@ -47,7 +47,11 @@ class Results extends Action {
 		global $configArray;
 		global $timer;
 		global $user;
-		
+		global $servername;
+		if(!$user){
+			header("Location: http://".$servername);
+			return;
+		}
 		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
@@ -147,7 +151,7 @@ class Results extends Action {
 		//=======================Get wish list information======================
 		$raw_wishLists= $user->getLists();
 		$wishLists; //szheng: this is the variable for wish list id and title.
-		$myFavoritesID;
+		$myFavoritesID = null;
 		$n = 0;
 		$bookCartID;
 		foreach ($raw_wishLists as $hello){
@@ -164,7 +168,7 @@ class Results extends Action {
 				$bookCartID = $wishLists[$n]['id'];
 				$n--;	
 			}
-			if($wishLists[$n]['title'] == 'My Favorites'){
+			if($n != -1 && $wishLists[$n]['title'] == 'My Favorites'){
 				$myFavoritesID = $wishLists[$n]['id'];
 			}
 			$n++;
@@ -233,7 +237,7 @@ class Results extends Action {
 		$favorites = $list->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 		$n = 0;
 		$m = 0;
-		$favId;
+		$favId = array();
 		/*foreach($favorites as $key => $value){
 			echo $key."<br/>";
 			foreach($value as $keykey => $valuevalue){
@@ -254,7 +258,7 @@ class Results extends Action {
 			}
 		}
 		//$mail->send("zhengsiping@gmail.com", $configArray['Site']['email'], "hello", "nohello", "zhengsiping@gmail.com");
-		$requestIds;
+		$requestIds = array();
 		$n = 0;
 		if(count($favId)>0){
 			if($recordTypes[0] == "eContent"){
@@ -325,7 +329,7 @@ class Results extends Action {
 		// Set Interface Variables
 		//   Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
-		if($_REQUEST['goToListID'] == 'BookCart')
+		if($goToListID == 'BookCart')
 		{
 			$interface->assign('pageType','BookCart');
 		}else{
@@ -334,7 +338,7 @@ class Results extends Action {
 		$temptemp =  $searchObject->getSortList();
 		foreach($temptemp as $key =>$value){
 			foreach($value as $keykey => $valuevalue){
-				if($_REQUEST['goToListID']=='BookCart'){
+				if($goToListID=='BookCart'){
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$valuevalue);
 				}else{
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$valuevalue);
@@ -410,7 +414,7 @@ class Results extends Action {
 
 		$numProspectorTitlesToLoad = 0;
 		
-		if(count($raw_wishLists)==1 and $_REQUEST['goToListID'] != 'BookCart'){
+		if(count($raw_wishLists)==1 and $goToListID != 'BookCart'){
 			$interface->setTemplate('noList.tpl');
 		} elseif ($searchObject->getResultTotal() == 0) {
 			
@@ -516,7 +520,7 @@ class Results extends Action {
 			$pager = new VuFindPager($options);
 			$tempPageLinks = $pager->getLinks();
 			foreach($tempPageLinks as $key => $value){
-				if($_REQUEST['goToListID']=='BookCart'){
+				if($goToListID=='BookCart'){
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
 				}else{
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$value);

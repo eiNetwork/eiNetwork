@@ -529,4 +529,168 @@ class EINetwork extends MillenniumDriver{
 		}
 
 	}
+	function getMyFines(){
+		global $user;
+		
+		$r = $this->iiiWebServiceRequest("searchPatrons", "b".$user->cat_username);	
+		return $r->patronFines;
+	}
+	private function iiiWebServiceRequest($method, $patron){	
+		$username = 'milwsp'; //no idea why
+		$password = 'milwsp';
+		$client = new SoapClient($this->getWSDL()); //switch to user dir one
+		try{
+			return $client->__soapCall($method, array($username, $password, $patron));
+		}catch(exception $e){
+			echo $e->getMessage();
+			return null;
+		}
+	}
+	function getWishLists(){
+		global $user;
+		global $configArray;
+		//global $timer;
+		if (substr($configArray['Catalog']['url'], -1) == '/') {
+			$host = substr($configArray['Catalog']['url'], 0, -1);
+		} else {
+			$host = $configArray['Catalog']['url'];
+		}
+		$req =  $host . "/patroninfo~S{$this->getMillenniumScope()}/" . $user->username . "/mylists";
+		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
+		$success = false;
+		
+		$barcode = $this->_getBarcode();
+		$patronDump = $this->_getPatronDump($barcode);
+		
+		//Login to the site
+		$curl_url = $req;//$configArray['Catalog']['url'] . "/patroninfo";
+		
+		$curl_connection = curl_init($curl_url);
+		$header=array();
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+		$header[] = "Cache-Control: max-age=0";
+		$header[] = "Connection: keep-alive";
+		$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+		$header[] = "Accept-Language: en-us,en;q=0.5";
+		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl_connection, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
+		$post_data = $this->_getLoginFormValues($patronDump);
+		foreach ($post_data as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+		$sresult = curl_exec($curl_connection);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($sresult);
+		$finder = new DomXPath($doc);
+		$classname="patFuncEntry";
+		$items = $finder->query("//tr[contains(@class, '$classname')]");
+		
+		$return = array();
+		foreach ($items as $node){
+			$return[] = $this->tdrows($node->childNodes);
+		}
+		return $return;
+	}
+	private function tdrows($elements){
+		$str = array();
+		foreach ($elements as $element){
+			if($element->hasChildNodes()){
+				$r = $element->getElementsByTagName('a')->item(0);
+				if(is_object($r)){
+					$str['href'] = $r->getAttribute('href');
+					$str['title'] = $r->nodeValue;
+				}else{
+					$str[] = $element->nodeValue;
+				}
+			}
+		}
+		return $str;
+	}
+	private function getWSDL(){
+		global $servername;
+		$filename = "wsdl.xml";
+		if (file_exists("../../sites/$servername/conf/$filename")){
+			return "../../sites/$servername/conf/$filename";
+		}elseif (file_exists("../../sites/default/conf/$filename")){
+			return "../../sites/default/conf/$filename";
+		} else{
+			return '../../sites/' . $filename;
+		}	
+	}
+	public function getImportList($id){
+		global $user;
+		global $configArray;
+		//global $timer;
+		if (substr($configArray['Catalog']['url'], -1) == '/') {
+			$host = substr($configArray['Catalog']['url'], 0, -1);
+		} else {
+			$host = $configArray['Catalog']['url'];
+		}
+		$req =  $host . "/patroninfo~S{$this->getMillenniumScope()}/" . $user->username . "/mylists?listNum=".$id;
+		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
+		$success = false;
+		
+		$barcode = $this->_getBarcode();
+		$patronDump = $this->_getPatronDump($barcode);
+		
+		//Login to the site
+		$curl_url = $req;//$configArray['Catalog']['url'] . "/patroninfo";
+		
+		$curl_connection = curl_init($curl_url);
+		$header=array();
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+		$header[] = "Cache-Control: max-age=0";
+		$header[] = "Connection: keep-alive";
+		$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+		$header[] = "Accept-Language: en-us,en;q=0.5";
+		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl_connection, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
+		$post_data = $this->_getLoginFormValues($patronDump);
+		foreach ($post_data as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+		$sresult = curl_exec($curl_connection);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($sresult);
+		$finder = new DomXPath($doc);
+		$classname="patFuncTitle";
+		$items = $finder->query("//td[contains(@class, '$classname')]");
+		
+		$return = array();
+		foreach ($items as $node){
+			$return[] = $this->hrefRows($node->childNodes);
+		}
+		return $return;
+	}
+	private function hrefRows($elements){
+			$str = array();
+			foreach ($elements as $element){
+				if($element->hasChildNodes()){
+					$str[] = $element->getAttribute('href');
+				}
+			}
+			return $str;
+		}
 }
