@@ -44,6 +44,8 @@
     <div id="searchInfo">
 	<div class="resulthead">
             <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
+            {* <div>Create a new List</div> *} 
+            <div><a href="/List/Import">Import an existing list</a></div>
 	</div>
       {* End Listing Options *}
 
