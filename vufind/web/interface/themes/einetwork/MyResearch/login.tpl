@@ -97,7 +97,7 @@
 	<div class="loginHome-center">
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-				<div><b>Log In to the Catalog</b></div>
+				<div><b>Log In to My Account</b></div>
 				{if $message}
 					<div class="error">Sorry, the account information you entered does not match our records. Please check and try again.</div>
 				{/if}

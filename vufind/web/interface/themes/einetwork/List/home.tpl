@@ -42,7 +42,7 @@
 	<div class="loginHome-center">
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-				<div><b>Log In to EINetwork</b></div>
+				<div><b>Log In to My Account</b></div>
 				<div id="email">
 					<input id="card" class="loginFormInput" type="text" title="Library Card Number" size="15" value="{$username|escape}" placeholder="Library Card Number"/>
 				</div>
