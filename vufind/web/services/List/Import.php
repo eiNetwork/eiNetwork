@@ -102,6 +102,9 @@ class Import extends Action {
 		}
 	}
 	private function cleanUpWishLists($wishLists){
+		if(empty($wishLists)){
+			return $wishLists;
+		}
 		$href = $wishLists[0]['href'];
 		$x = explode('listNum=', $href);
 		$href = $x[0]."listNum=";
