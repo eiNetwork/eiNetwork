@@ -257,6 +257,7 @@ class Results extends Action {
 				}
 			}
 		}
+		$goToListID = $goToListID == $bookCartID?'BookCart':$goToListID;
 		//$mail->send("zhengsiping@gmail.com", $configArray['Site']['email'], "hello", "nohello", "zhengsiping@gmail.com");
 		$requestIds = array();
 		$n = 0;
