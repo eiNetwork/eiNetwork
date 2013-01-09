@@ -44,13 +44,13 @@ class Record extends Action
 
 	public $isbn;
 	public $upc;
-
+	public $oclc;
 	public $cacheId;
 
 	public $db;
 
 	public $description;
-
+	
 	function __construct($subAction = false, $record_id = null)
 	{
 		global $interface;
@@ -213,7 +213,12 @@ class Record extends Action
 				$interface->assign('upc', $this->upc);
 			}
 		}
-
+		if($oclcField = $this->marcRecord->getField('035')){
+			if($oclcField = $oclcField->getSubField('a')){
+				$this->oclc = preg_replace("/[^0-9]/","", $oclcField->getData());
+				$interface->assign('oclc', $this->oclc);
+			}
+		}
 		if ($issnField = $this->marcRecord->getField('022')) {
 			if ($issnField = $issnField->getSubfield('a')) {
 				$this->issn = trim($issnField->getData());
@@ -417,7 +422,7 @@ class Record extends Action
 		}*/
 
 		//Determine the cover to use
-		$bookCoverUrl = $configArray['Site']['coverUrl'] . "/bookcover.php?id={$this->id}&amp;isn={$this->isbn}&amp;size=large&amp;upc={$this->upc}&amp;category=" . urlencode($format_category) . "&amp;format=" . urlencode(isset($recordFormat[0]) ? $recordFormat[0] : '');
+		$bookCoverUrl = $configArray['Site']['coverUrl'] . "/bookcover.php?id={$this->id}&amp;isn={$this->isbn}&amp;size=large&amp;upc={$this->upc}&amp;oclc={$this->oclc}&amp;category=" . urlencode($format_category) . "&amp;format=" . urlencode(isset($recordFormat[0]) ? $recordFormat[0] : '');
 		$interface->assign('bookCoverUrl', $bookCoverUrl);
 		
 		//Load accelerated reader data

@@ -1446,10 +1446,10 @@ class SearchObject_Solr extends SearchObject_Base
 		}
 		$relatedLocationFacets = null;
 		$relatedHomeLocationFacets = null;
+		$homeLibrary = $librarySingleton->getPatronHomeLibrary();
 		if (!is_null($currentLibrary)){
 			$relatedLocationFacets = $locationSingleton->getLocationsFacetsForLibrary($currentLibrary->libraryId);
 		}else{
-			$homeLibrary = $librarySingleton->getPatronHomeLibrary();
 			if (!is_null($homeLibrary)){
 				$relatedHomeLocationFacets = $locationSingleton->getLocationsFacetsForLibrary($homeLibrary->libraryId);
 			}
