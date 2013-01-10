@@ -220,12 +220,15 @@ class Results extends Action {
 			$myFavoritesID = $wishLists[0]['id'];
 		}
 		$goToListID;
+		$isBookCart = false;
 		if(isset($_REQUEST['goToListID'])){
 			$goToListID = $_REQUEST['goToListID'];
 			if($goToListID == "BookCart"){
 				$goToListID = $bookCartID;
+				$isBookCart = true;
+			}else{
+				$interface->assign('currentListID',$_REQUEST['goToListID']);
 			}
-			$interface->assign('currentListID',$_REQUEST['goToListID']);
 		}else{
 			$goToListID = $myFavoritesID;
 			$interface->assign('currentListID',$myFavoritesID);
@@ -257,7 +260,6 @@ class Results extends Action {
 				}
 			}
 		}
-		$goToListID = $goToListID == $bookCartID?'BookCart':$goToListID;
 		//$mail->send("zhengsiping@gmail.com", $configArray['Site']['email'], "hello", "nohello", "zhengsiping@gmail.com");
 		$requestIds = array();
 		$n = 0;
@@ -330,7 +332,7 @@ class Results extends Action {
 		// Set Interface Variables
 		//   Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
-		if($goToListID == 'BookCart')
+		if($isBookCart)
 		{
 			$interface->assign('pageType','BookCart');
 		}else{
@@ -339,7 +341,7 @@ class Results extends Action {
 		$temptemp =  $searchObject->getSortList();
 		foreach($temptemp as $key =>$value){
 			foreach($value as $keykey => $valuevalue){
-				if($goToListID=='BookCart'){
+				if($isBookCart){
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$valuevalue);
 				}else{
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$valuevalue);
@@ -415,7 +417,7 @@ class Results extends Action {
 
 		$numProspectorTitlesToLoad = 0;
 		
-		if(count($raw_wishLists)==1 and $goToListID != 'BookCart'){
+		if(count($raw_wishLists)==1 and !$isBookCart){
 			$interface->setTemplate('noList.tpl');
 		} elseif ($searchObject->getResultTotal() == 0) {
 			
@@ -498,7 +500,7 @@ class Results extends Action {
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
-			if(count($raw_wishLists)<=1&&$_REQUEST['goToListID']!="BookCart"){
+			if(count($raw_wishLists)<=1&&!$isBookCart){
 				$interface->setTemplate('noList.tpl');
 				
 			}else{
@@ -521,7 +523,7 @@ class Results extends Action {
 			$pager = new VuFindPager($options);
 			$tempPageLinks = $pager->getLinks();
 			foreach($tempPageLinks as $key => $value){
-				if($goToListID=='BookCart'){
+				if($isBookCart){
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
 				}else{
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$value);
