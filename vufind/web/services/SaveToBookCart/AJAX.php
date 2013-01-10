@@ -63,7 +63,7 @@ class AJAX extends Action {
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
 		}
-		if($_GET['hello'] == 'OK'){
+		if(isset($_REQUEST['hello']) && $_REQUEST['hello'] == 'OK'){
 			$this->AddBookCartList();
 		}
 	}
@@ -182,7 +182,7 @@ class AJAX extends Action {
 		}
 		
 		if($isBookCart){
-			$_GET['list'] = $bookCartID;
+			$_REQUEST['list'] = $bookCartID;
 			$this->SaveRecord();
 		}else{
 			$_REQUEST['title'] = 'Book Cart';
@@ -193,7 +193,7 @@ class AJAX extends Action {
 			if (UserAccount::isLoggedIn()) {
 				$listService = new ListEdit();
 				$result = $listService->addList();
-				$_GET['list'] = $result;
+				$_REQUEST['list'] = $result;
 				$this->SaveRecord();
 				if (!PEAR::isError($result)) {
 					$return['result'] = 'Done';

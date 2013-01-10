@@ -126,7 +126,8 @@ class Save extends Action
 	{
 		if ($this->user) {
 			$list = new User_list();
-			if ($_REQUEST['list'] != '') {
+			$req_list = isset($_REQUEST['list'])?$_REQUEST['list']:"";
+			if ($req_list != '') {
 				$list->id = $_REQUEST['list'];
 				if (!$list->find(true)){
 					PEAR::raiseError(new PEAR_Error('Unable the selected list.'));

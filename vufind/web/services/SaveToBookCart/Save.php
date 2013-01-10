@@ -141,8 +141,8 @@ class Save extends Action
 				return false;
 			}
 
-			preg_match_all('/"[^"]*"|[^,]+/', $_GET['mytags'], $tagArray);
-			$this->user->addResource($resource, $list, $tagArray[0], $_GET['notes']);
+			//preg_match_all('/"[^"]*"|[^,]+/', $_GET['mytags'], $tagArray);
+			$this->user->addResource($resource, $list, null, null);
 		} else {
 			return false;
 		}
