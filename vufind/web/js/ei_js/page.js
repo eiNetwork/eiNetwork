@@ -319,21 +319,14 @@ function getBookCartItemCount(){
 		}
 	});
 }
-function newAddList(form, failMsg)
-{
-	for (var i = 0; i < form.public.length; i++) {
-		if (form.public[i].checked) {
-			var isPublic = form.public[i].value;
-		}
-	}
-
+function newAddList(form, failMsg){
 	var url = path + "/MyResearch/AJAX";
 	var recordId = form.recordId.value;
 	var source = form.source.value;
 	var params = "method=AddList&" +
 							 "title=" + encodeURIComponent(form.title.value) + "&" +
-							 "public=" + isPublic + "&" +
-							 "desc=" + encodeURIComponent(form.desc.value) + "&" +
+							 //"public=" + isPublic + "&" +
+							 //"desc=" + encodeURIComponent(form.desc.value) + "&" +
 							 "followupModule=" + form.followupModule.value + "&" +
 							 "followupAction=" + form.followupAction.value + "&" +
 							 "followupId=" + form.followupId.value;

@@ -240,6 +240,7 @@ class Results extends Action {
 		$favorites = $list->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 		$n = 0;
 		$m = 0;
+		$interface->assign('listTitle', $list->title);
 		$favId = array();
 		/*foreach($favorites as $key => $value){
 			echo $key."<br/>";

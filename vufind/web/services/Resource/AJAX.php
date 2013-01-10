@@ -32,7 +32,7 @@ class AJAX extends Action {
 
 	function launch() {
 		global $timer;
-		$method = $_GET['method'];
+		$method = $_REQUEST['method'];
 		$timer->logTime("Starting method $method");
 		if (in_array($method, array('SaveRecord', 'SaveTag', 'GetTags'))){
 			header('Content-type: text/plain');
@@ -45,7 +45,7 @@ class AJAX extends Action {
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 			echo $this->$method();
 		}
-		if($_GET['hello'] == 'OK'){
+		if(isset($_REQUEST['hello']) && $_REQUEST['hello'] == 'OK'){
 			$this->AddBookCartList();
 		}
 	}
@@ -95,7 +95,7 @@ class AJAX extends Action {
 		// Create a resource entry for the current ID if necessary (or find the
 		// existing one):
 		$resource = new Resource();
-		$resource->record_id = $_GET['id'];
+		$resource->record_id = $_REQUEST['id'];
 		$resource->source = $_REQUEST['source'];
 		if (!$resource->find(true)) {
 			$resource->insert();
@@ -115,8 +115,8 @@ class AJAX extends Action {
 		require_once 'services/MyResearch/lib/Resource.php';
 
 		$resource = new Resource();
-		$resource->record_id = $_GET['id'];
-		$resource->source = $_GET['source'];
+		$resource->record_id = $_REQUEST['id'];
+		$resource->source = $_REQUEST['source'];
 		$tags = array();
 		if ($resource->find(true)) {
 			$tagList = $resource->getTags();

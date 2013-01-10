@@ -22,6 +22,7 @@
     <div id="searchInfo">
 	{if $pageType eq 'WishList'}
 		<h2>Wish Lists</h2>
+		<h1>{$listTitle}</h1>
 		<span><input type="button" value="Move All Physical Items to Book Cart" onclick="saveAllToBookCart()" class="button"></span>
 		<span  style="margin-left:10px;"><input type="button" value="Delete This Wish List" onclick="getDeleteList('{$wishListID}')" class="button"></span>
 		{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}

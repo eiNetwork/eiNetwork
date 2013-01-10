@@ -46,15 +46,11 @@
       </select>
       {/if}
       <a href="{$path}/MyResearch/ListEdit?id={$id|escape:"url"}&amp;source={$source|escape}"
-         onclick="ajaxLightbox('{$path}/MyResearch/ListEdit?id={$id|escape}&source={$source|escape}&lightbox',false,false,'450px',false,'320px'); return false;">{translate text="or create a new list"}</a>
+         onclick="ajaxLightbox('{$path}/MyResearch/ListEdit?id={$id|escape}&source={$source|escape}&lightbox',false,false,'450px',false,'200px'); return false;">{translate text="or create a new list"}</a>
     </td>
   </tr>
   {if $showLists}
-  <tr style="height:25px;vertical-align:middle"><td>{translate text='Add Tags'}</td></tr>
-  <tr><td><input type="text" name="mytags" value="" size="50" maxlength="255"></td></tr>
-  <tr style="padding-top:10px;padding-bottom:10px;vertical-align:middle"><td colspan="2">{translate text='add_tag_note'}</td></tr>
-  <tr><td>{translate text='Add a Note'}</td></tr>
-  <tr><td><textarea name="notes" rows="3" cols="50"></textarea></td></tr>
+  
   <tr><td><input type="submit" class="button" value="{translate text='Save'}" style="margin-left:320px;width:70px;background-color:rgb(244,213,56)"></td></tr>
   {/if}
 </table>

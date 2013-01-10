@@ -765,19 +765,19 @@ $(divId).tooltip({
  */
 function addList(form, failMsg)
 {
-	for (var i = 0; i < form.public.length; i++) {
+	/*for (var i = 0; i < form.public.length; i++) {
 		if (form.public[i].checked) {
 			var isPublic = form.public[i].value;
 		}
-	}
+	}*/
 
 	var url = path + "/MyResearch/AJAX";
 	var recordId = form.recordId.value;
 	var source = form.source.value;
 	var params = "method=AddList&" +
 							 "title=" + encodeURIComponent(form.title.value) + "&" +
-							 "public=" + isPublic + "&" +
-							 "desc=" + encodeURIComponent(form.desc.value) + "&" +
+							// "public=" + isPublic + "&" +
+							// "desc=" + encodeURIComponent(form.desc.value) + "&" +
 							 "followupModule=" + form.followupModule.value + "&" +
 							 "followupAction=" + form.followupAction.value + "&" +
 							 "followupId=" + form.followupId.value;
@@ -792,7 +792,7 @@ function addList(form, failMsg)
 					var newId = data.newId;
 					//Save the record to the list
 					var url = path + "/Resource/Save?lightbox=true&selectedList=" + newId + "&id=" + recordId + "&source=" + source;
-					ajaxLightbox(url,false,false,'450px',false,'350px');
+					ajaxLightbox(url,false,false,'450px',false,'250px');
 				} else {
 					alert(value.length > 0 ? value : failMsg);
 				}
@@ -929,15 +929,15 @@ function saveRecord(id, source, formElem, strings) {
 function performSaveRecord(id, source, formElem, strings, service, successCallback)
 {
 	document.body.style.cursor = 'wait';
-	var tags = formElem.elements['mytags'].value;
-	var notes = formElem.elements['notes'].value;
+	//var tags = formElem.elements['mytags'].value;
+	//var notes = formElem.elements['notes'].value;
 	var list = formElem.elements['list'].options[formElem.elements['list'].selectedIndex].value;
 
 	var url = path + "/Resource/AJAX";
 	var params = "method=SaveRecord&" +
-							 "mytags=" + encodeURIComponent(tags) + "&" +
+							// "mytags=" + encodeURIComponent(tags) + "&" +
 							 "list=" + list + "&" +
-							 "notes=" + encodeURIComponent(notes) + "&" +
+							// "notes=" + encodeURIComponent(notes) + "&" +
 							 "id=" + id + "&" +
 							 "source=" + source;
 	$.ajax({

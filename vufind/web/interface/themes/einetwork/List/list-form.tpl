@@ -6,7 +6,7 @@
 			<tbody>
 				<tr style="height:25px;vertical-align:middle">
 					<td colspan="2">
-						<span >{translate text="List"}:</span>
+						<span >{translate text="List Name"}:</span>
 					</td>
 				</tr>
 				<tr>
@@ -16,23 +16,23 @@
 				</tr>
 				<tr style="height:25px;vertical-align:middle">
 					<td colspan="2">
-						{translate text="Description"}:
+						{*{translate text="Description"}:*}
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
-						<textarea name="desc" id="listDesc" rows="3" style="width:333px"">{$list->desc|escape:"html"}</textarea>
+						{*<textarea name="desc" id="listDesc" rows="3" style="width:333px"">{$list->desc|escape:"html"}</textarea>*}
 					</td>
 				</tr>
-				<tr style="height:25px;vertical-align:middle">
+				<tr style="height:35px;vertical-align:middle">
 					<td colspan="2">
-						{translate text="Access"}:
+						{*{translate text="Access"}:*}
 					</td>
 				</tr>
 				<tr style="vertical-align:middle">
 					<td style="width:300px">
-						{translate text="Public"} <input type="radio" name="public" value="1">
-						{translate text="Private"} <input type="radio" name="public" value="0" checked><br />
+						{*{translate text="Public"} <input type="radio" name="public" value="1">
+						{translate text="Private"} <input type="radio" name="public" value="0" checked><br />*}
 					</td>
 					<td>
 						<input type="submit" name="submit" class="button yellow" value="{translate text="Save"}" style="width:70px;">

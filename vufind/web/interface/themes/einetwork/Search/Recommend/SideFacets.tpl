@@ -23,7 +23,7 @@
 			 {/if}
 			 <dl class="narrowList navmenu narrowbegin" {if count($wishList)<=1}style="margin-top:10px"{/if}>
 				<dd>
-					<input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox',false,false,'450px',false,'320px'); return false;" class="button navmenu dd" value="Create New Wish List" style="width:180px"/>
+					<input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox',false,false,'450px',false,'200px'); return false;" class="button navmenu dd" value="Create New Wish List" style="width:180px"/>
 				</dd>
 			 </dl>
 		{/if}
