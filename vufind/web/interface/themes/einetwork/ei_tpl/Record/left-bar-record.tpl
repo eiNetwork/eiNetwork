@@ -194,7 +194,8 @@
 				{/foreach}
 		</div>
 		{/if}
-		
+		<script src="http://ltfl.librarything.com/forlibraries/widget.js?id=1875-2233438439" type="text/javascript"></script><noscript>This page contains enriched content visible when JavaScript is enabled or by clicking <a href="http://ltfl.librarything.com/forlibraries/noscript.php?id=1875-2233438439&accessibility=1">here</a>.</noscript>
+		<div id="ltfl_similars" class="ltfl"></div>
                 <div class="sidegroup">
 		{if $classicId}
 		<div id = "classicViewLink"><a href ="{$classicUrl}/record={$classicId|escape:"url"}" target="_blank">Classic View</a></div>
