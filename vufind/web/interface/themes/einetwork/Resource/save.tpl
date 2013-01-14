@@ -1,5 +1,5 @@
 <div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
-	<span class="popupHeader-title">{translate text='add_favorite_prefix'}dddd {$record->title|escape:"html"} {translate text='add_favorite_suffix'}</span>
+	<span class="popupHeader-title">{translate text='add_favorite_prefix'} {$record->title|escape:"html"} {translate text='add_favorite_suffix'}</span>
 	<span onclick="hideLightbox()"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" ></span>
 </div>
 <div id="popupboxContent" class="popupContent">
