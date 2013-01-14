@@ -117,7 +117,9 @@
 				    {elseif $format eq "Book on Tape"}
 				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png"/ alt="Book on Tape"></span>
 				    {elseif $format eq "CD-ROM"}
-				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="Video Download"></span>
+				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="CD-ROM"></span>
+				    {elseif $format eq "Electronic Resource"}
+				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>
 				    {elseif $format eq "Discussion Kit"}
 				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png"/ alt="Discussion Kit"></span>
 				    {elseif $format eq "DVD"}
@@ -222,7 +224,9 @@
 				{elseif $format eq "Book on Tape"}
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png"/ alt="Book on Tape"></span>
 				{elseif $format eq "CD-ROM"}
-				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="Video Download"></span>
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="CD-ROM"></span>
+				{elseif $format eq "Electronic Resource"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>
 				{elseif $format eq "Discussion Kit"}
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png"/ alt="Discussion Kit"></span>
 				{elseif $format eq "DVD"}

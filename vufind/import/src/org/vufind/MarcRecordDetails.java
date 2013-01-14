@@ -3008,7 +3008,7 @@ public class MarcRecordDetails {
 				while (iter2.hasNext()) {
 					String curCode = iter2.next();
 					if (curCode.matches(manualSuppressionValue)) {
-						logger.debug("Suppressing due to manual suppression field " + curCode + " matched " + manualSuppressionValue);
+						//logger.debug("Suppressing due to manual suppression field " + curCode + " matched " + manualSuppressionValue);
 						suppressRecord = true;
 						break;
 					}

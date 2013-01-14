@@ -309,33 +309,40 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 
 	private void loadProductsFromUrl(String libraryName, String mainProductUrl, boolean isAdvantage) throws JSONException {
 		JSONObject productInfo = callOverDriveURL(mainProductUrl);
-		long numProducts = productInfo.getLong("totalItems");
-		//if (numProducts > 50) numProducts = 50;
-		logger.debug(libraryName + " collection has " + numProducts + " products in it");
-		results.addNote("Loading OverDrive information for " + libraryName);
-		results.saveResults();
-		long batchSize = 300;
-		Long libraryId = getLibraryIdForOverDriveAccount(libraryName);
-		for (int i = 0; i < numProducts; i += batchSize){
-			logger.debug("Processing " + libraryName + " batch from " + i + " to " + (i + batchSize));
-			String batchUrl = mainProductUrl + "?offset=" + i + "&limit=" + batchSize;
-			JSONObject productBatchInfo = callOverDriveURL(batchUrl);
-			JSONArray products = productBatchInfo.getJSONArray("products");
-			for(int j = 0; j <products.length(); j++ ){
-				JSONObject curProduct = products.getJSONObject(j);
-				OverDriveRecordInfo curRecord = loadOverDriveRecordFromJSON(libraryName, curProduct);
-				if (libraryId == -1){
-					curRecord.setShared(true);
-				}
-				if (overDriveTitles.containsKey(curRecord.getId())){
-					OverDriveRecordInfo oldRecord = overDriveTitles.get(curRecord.getId());
-					oldRecord.getCollections().add(libraryId);
-				}else{
-					logger.debug("Loading record " + curRecord.getId());
-					overDriveTitles.put(curRecord.getId(), curRecord);
+		// Lessa : Added this try/catch block
+		try {
+			long numProducts = productInfo.getLong("totalItems");
+			//if (numProducts > 50) numProducts = 50;
+			logger.debug(libraryName + " collection has " + numProducts + " products in it");
+			results.addNote("Loading OverDrive information for " + libraryName);
+			results.saveResults();
+			long batchSize = 300;
+			Long libraryId = getLibraryIdForOverDriveAccount(libraryName);
+			for (int i = 0; i < numProducts; i += batchSize){
+				logger.debug("Processing " + libraryName + " batch from " + i + " to " + (i + batchSize));
+				String batchUrl = mainProductUrl + "?offset=" + i + "&limit=" + batchSize;
+				JSONObject productBatchInfo = callOverDriveURL(batchUrl);
+				JSONArray products = productBatchInfo.getJSONArray("products");
+				for(int j = 0; j <products.length(); j++ ){
+					JSONObject curProduct = products.getJSONObject(j);
+					OverDriveRecordInfo curRecord = loadOverDriveRecordFromJSON(libraryName, curProduct);
+					if (libraryId == -1){
+						curRecord.setShared(true);
+					}
+					if (overDriveTitles.containsKey(curRecord.getId())){
+						OverDriveRecordInfo oldRecord = overDriveTitles.get(curRecord.getId());
+						oldRecord.getCollections().add(libraryId);
+					}else{
+						logger.debug("Loading record " + curRecord.getId());
+						overDriveTitles.put(curRecord.getId(), curRecord);
+					}
 				}
 			}
-		}
+		} catch (Exception e) {
+			results.addNote("error loading information from OverDrive API " + e.toString());
+			results.incErrors();
+			logger.error("Error loading overdrive titles", e);
+		}		
 	}
 
 	private Long getLibraryIdForOverDriveAccount(String libraryName) {
@@ -542,6 +549,10 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						return new JSONObject(response.toString());
 					} else {
 						logger.error("Received error " + conn.getResponseCode() + " connecting to overdrive API" );
+						
+						// Lessa : Added the request URL to the error log
+						logger.error("Request URL: " + overdriveUrl);
+																		
 						// Get any errors
 						BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 						String line;
@@ -549,6 +560,21 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 							response.append(line);
 						}
 						//logger.debug("  Finished reading response");
+						
+						// Lessa : Added any response found in the Error Stream to the error log						
+						if (response != null){													
+							logger.error("Response (Error Stream): " + response.toString());
+						}
+
+						// Lessa : Added any response found in the Input Stream to the error log							
+						response = new StringBuffer();
+						rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+						while ((line = rd.readLine()) != null) {
+							response.append(line);
+						}
+						if (response != null){							
+							logger.error("Response (Input Stream): " + response.toString());
+						}
 	
 						rd.close();
 						return null;
@@ -625,6 +651,10 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				//logger.debug("OverDrive token is " + overDriveAPIToken);
 			} else {
 				logger.error("Received error " + conn.getResponseCode() + " connecting to overdrive API" );
+				
+				// Lessa : Added the request URL to the error log
+				logger.error("Request URL: https://oauth.overdrive.com/token");				
+				
 				// Get any errors
 				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 				String line;
@@ -632,6 +662,21 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					response.append(line);
 				}
 				//logger.debug("  Finished reading response");
+
+				// Lessa : Added any response found in the Error Stream to the error log						
+				if (response != null){													
+					logger.error("Response (Error Stream): " + response.toString());
+				}
+
+				// Lessa : Added any response found in the Input Stream to the error log							
+				response = new StringBuffer();
+				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				while ((line = rd.readLine()) != null) {
+					response.append(line);
+				}
+				if (response != null){							
+					logger.error("Response (Input Stream): " + response.toString());
+				}
 
 				rd.close();
 				return false;

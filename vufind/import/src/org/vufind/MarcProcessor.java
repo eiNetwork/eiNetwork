@@ -867,11 +867,14 @@ public class MarcProcessor {
 	public Long getLocationIdFromFacet(String locationFacet){
 		return locationFacets.get(locationFacet);
 	}
+
 	public Long getLibraryIdForLink(String link){
-		String lowerLink = link.toLowerCase();
-		for (String curRule : eContentLinkRules.keySet()){
-			if (lowerLink.matches(curRule)){
-				return eContentLinkRules.get(curRule);
+		if (link != null) {
+			String lowerLink = link.toLowerCase();
+			for (String curRule : eContentLinkRules.keySet()){
+				if (lowerLink.matches(curRule)){
+					return eContentLinkRules.get(curRule);
+				}
 			}
 		}
 		return -1L;
