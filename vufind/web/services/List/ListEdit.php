@@ -58,7 +58,10 @@ class ListEdit extends Action
 			}
 			exit();
 		}
-
+		if(isset($_REQUEST['method'])){
+			$this->$_REQUEST['method']();
+			return;
+		}
 		// Display Page
 		if (isset($_GET['lightbox'])) {
 			$interface->assign('title', translate('Create new list'));
@@ -104,6 +107,41 @@ class ListEdit extends Action
 			return $list->id;
 		}
 	}
-
+	function editList(){
+		global $interface;
+		global $configArray;
+		$id = isset($_REQUEST['id'])?$_REQUEST['id']:null;
+		if(isset($_REQUEST['title'])){
+			echo $this->editName($_REQUEST['title'], $id);
+			return;
+		}
+		$list = new User_list();
+		$list->id = $id;
+		$list->find();
+		$list->fetch();
+		
+		$interface->assign('name', $list->title);
+		$interface->assign('title', translate('Edit list'));
+		$interface->assign('popupTitle', 'Edit list');
+		$pageContent = $interface->fetch('List/editNameForm.tpl');
+		$interface->assign('popupContent', $pageContent);
+		echo $interface->fetch('popup-wrapper.tpl');
+		
+	}
+	private function editName($name, $id){
+		if (strlen(trim($name)) == 0) {
+			return json_encode(array('result'=>'Please enter a new name'));
+		}
+		$list = new User_list();
+		$list->id = $id;
+		$list->find();
+		$list->fetch();
+		if($list->title == $name){
+			return json_encode(array('result'=>'Please enter a new name'));
+		}
+		$list->title = $name;
+		$list->update();
+		return json_encode(array('result'=>'Done'));
+	}
 }
 ?>

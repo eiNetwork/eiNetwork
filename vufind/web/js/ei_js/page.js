@@ -357,6 +357,36 @@ function newAddList(form, failMsg){
 		}
 	});
 }
+function editListName(form, failMsg){ 
+	var url = path + "/List/ListEdit";
+	var recordId = form.recordId.value;
+	var source = form.source.value;
+	var params = "method=editList&" +
+							 "title=" + encodeURIComponent(form.title.value) + "&" +
+							 "id=" +  recordId;
+	$.ajax({
+		url: url+'?'+params,
+		dataType: "json",
+		success: function(data) {
+			var value = data.result;
+			if (value) {
+				if (value == "Done") {
+						$("#"+form.followupId.value).html(form.title.value);
+						hideLightbox();
+				} else {
+					alert(value.length > 0 ? value : failMsg);
+				}
+			} else {
+				$('#popupbox').html(failMsg);
+				setTimeout("hideLightbox();", 3000);
+			}
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
 function getDeleteList(listId){
         var element = "<div id='warningDelete' >"+
                             "<p id='deleteWarning' style='margin-left:80px;margin-top:30px'>Are your sure you want to delete this wish list?</p>"+
