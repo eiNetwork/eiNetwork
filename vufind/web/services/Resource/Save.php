@@ -115,7 +115,7 @@ class Save extends Action
 			$interface->assign('title', translate('Save Record To List'));
 			echo $interface->fetch('Resource/save.tpl');
 		} else {
-			$interface->setPageTitle('Add to favorites');
+			$interface->setPageTitle('Add to wishlist');
 			$interface->assign('subTemplate', 'save.tpl');
 			$interface->setTemplate('view-alt.tpl');
 			$interface->display('layout.tpl', 'RecordSave' . $_REQUEST['id']);
@@ -135,7 +135,7 @@ class Save extends Action
 				}
 			} else {
 				$list->user_id = $this->user->id;
-				$list->title = "My Favorites";
+				$list->title = "My Wish Lists";
 				$list->insert();
 			}
 

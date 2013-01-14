@@ -1,9 +1,9 @@
 <div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
-	<span class="popupHeader-title">{translate text='add_favorite_prefix'} {$record->title|escape:"html"} {translate text='add_favorite_suffix'}</span>
+	<span class="popupHeader-title">{translate text='add_favorite_prefix'}dddd {$record->title|escape:"html"} {translate text='add_favorite_suffix'}</span>
 	<span onclick="hideLightbox()"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" ></span>
 </div>
 <div id="popupboxContent" class="popupContent">
-<form onSubmit="saveRecord('{$id|escape}', '{$source|escape}', this, {literal}{{/literal}add: '{translate text='Add to favorites'}', error: '{translate text='add_favorite_fail'}'{literal}}{/literal}); return false;">
+<form onSubmit="saveRecord('{$id|escape}', '{$source|escape}', this, {literal}{{/literal}add: '{translate text='Add to wish list'}', error: '{translate text='add_favorite_fail'}'{literal}}{/literal}); return false;">
 <input type="hidden" name="submit" value="1" />
 <input type="hidden" name="record_id" value="{$id|escape}" />
 <input type="hidden" name="source" value="{$source|escape}" />
@@ -41,7 +41,7 @@
         <option value="{$list.id}">{$list.title|escape:"html"}</option>
 	{/if}
         {foreachelse}
-        <option value="">{translate text='My Favorites'}</option>
+        <option value="">{translate text='My Wish Lists'}</option>
         {/foreach}
       </select>
       {/if}
