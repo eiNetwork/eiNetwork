@@ -20,12 +20,7 @@
 	{if (isset($title)) }
 	  //alert("{$title}");
 	{/if}
-{literal}});
-function getHeight(){
-	$("#main-content").css("min-height", function(){ 
-	    return $('#left-bar').height();
-	});
-}{/literal}
+{literal}});{/literal}
 function redrawSaveStatus() {literal}{{/literal}
     getSaveStatus('{$id|escape:"javascript"}', 'saveLink');
 {literal}}{/literal}

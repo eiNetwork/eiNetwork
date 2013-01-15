@@ -271,9 +271,9 @@ class Results extends Action {
 				header("Location: " . $interface->getUrl() . "/MyResearch/MyList/{$listId}");
 			}elseif ($record['recordtype'] == 'econtentRecord'){
 				$shortId = str_replace('econtentRecord', '', $record['id']);
-				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
+				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home?clear=1");
 			}else{
-				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
+				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home?clear=1");
 			}
 			
 		} else {

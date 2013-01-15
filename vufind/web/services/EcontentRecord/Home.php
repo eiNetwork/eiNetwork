@@ -46,7 +46,9 @@ class Home extends Action{
 		if ($configArray['System']['debugSolr']) {
 			$this->db->debug = true;
 		}
-
+		if(isset($_REQUEST['clear'])){
+			$interface->assign('lookfor', "");
+		;}
 		$location = $locationSingleton->getActiveLocation();
 		if (isset($library)){
 			$interface->assign('showTextThis', $library->showTextThis);

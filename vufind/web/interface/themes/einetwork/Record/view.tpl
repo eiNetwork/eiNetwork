@@ -21,13 +21,6 @@
 		alert("{$title}");
 	{/if}
 {literal}});{/literal}
-{literal}
-function getHeight(){
-	$("#main-content").css("min-height", function(){ 
-	    return $('#left-bar').height();
-	});
-}
-{/literal}
 function redrawSaveStatus() {literal}{{/literal}
 		getSaveStatus('{$id|escape:"javascript"}', 'saveLink');
 {literal}}{/literal}

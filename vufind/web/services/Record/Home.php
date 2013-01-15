@@ -47,7 +47,9 @@ class Home extends Record{
 			$url = "http://bizsolutions.strands.com/api2/event/clickedrecommendation.sbs?apid={$configArray['Strands']['APID']}&item={$recordId}&user={$user->id}&rrq={$_REQUEST['strandsReqId']}&tpl={$_REQUEST['strandsTpl']}";
 			$response = file_get_contents($url);
 		}
-
+		if(isset($_REQUEST['clear'])){
+			$interface->assign('lookfor', "");
+		;}
 
 		//Load the Editorial Reviews
 		//Populate an array of editorialReviewIds that match up with the recordId

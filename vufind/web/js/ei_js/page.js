@@ -561,3 +561,8 @@ function getSaveToListForm(id, source){
 	}
 	return false;
 }
+function getHeight(){
+	$("#main-content").css("min-height", function(){ 
+	    return $('#left-bar').height();
+	});
+}

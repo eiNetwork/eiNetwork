@@ -26,6 +26,7 @@ function removeFilters(){
 }
 $(document).ready(function() {
  	showRemove();
+ 	setTimeout('getHeight();', 1500);
 });
 {/literal}
 </script>
