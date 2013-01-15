@@ -578,7 +578,7 @@ function similarTitles(){
 			$(this).append("<dd class='sim_more'>More</dd>");
 			$('.sim_more').click(function(){showSim();});
 		}
-		if(index == (len-1)){
+		if(index == (len-1) && len > 2){
 			$(this).append("<dd class='sim_less'>Less</dd>");
 			$('.sim_less').click(function(){hideSim();});
 		}
