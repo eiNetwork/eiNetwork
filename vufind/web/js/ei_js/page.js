@@ -569,16 +569,16 @@ function getHeight(){
 function similarTitles(){
 	var len = $('.sep').length;
 	$('.sep').each(function (index){
-		if(index < 2){
+		if(index < 3){
 			$(this).wrap('<div class="sim"/>');
 		}else{
 			$(this).wrap('<div class="sim_hid" />');
 		}
-		if(index == 1 && len > 2){
+		if(index == 2 && len > 3){
 			$(this).append("<dd class='sim_more'>More</dd>");
 			$('.sim_more').click(function(){showSim();});
 		}
-		if(index == (len-1) && len > 2){
+		if(index == (len-1) && len > 3){
 			$(this).append("<dd class='sim_less'>Less</dd>");
 			$('.sim_less').click(function(){hideSim();});
 		}
