@@ -566,3 +566,36 @@ function getHeight(){
 	    return $('#left-bar').height();
 	});
 }
+function similarTitles(){
+	var len = $('.sep').length;
+	$('.sep').each(function (index){
+		if(index < 2){
+			$(this).wrap('<div class="sim"/>');
+		}else{
+			$(this).wrap('<div class="sim_hid" />');
+		}
+		if(index == 1 && len > 2){
+			$(this).append("<dd class='sim_more'>More</dd>");
+			$('.sim_more').click(function(){showSim();});
+		}
+		if(index == (len-1)){
+			$(this).append("<dd class='sim_less'>Less</dd>");
+			$('.sim_less').click(function(){hideSim();});
+		}
+	});
+	getHeight();
+}
+function showSim(){
+	$('.sim_hid').each(function(){
+		$(this).show();
+	});
+	$('.sim_more').hide();
+	getHeight();
+}
+function hideSim(){
+	$('.sim_hid').each(function(){
+		$(this).hide();
+	});
+	$('.sim_more').show();
+	getHeight();
+}

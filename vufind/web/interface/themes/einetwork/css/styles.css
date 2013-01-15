@@ -2622,3 +2622,11 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .editEcontent input{
 	width: 565px;
 }
+.sim_hid{
+	display:none;
+}
+.sim_less, .sim_more{
+	color: #256292;
+	text-decoration: none;
+	cursor:pointer;
+}
