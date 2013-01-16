@@ -33,9 +33,8 @@
     </div>
     {/if}
     </div>
-    
+    <br/>
   {/foreach}
 {foreachelse}
 {translate text="No reviews were found for this record"}.
 {/foreach}
-<hr />
