@@ -593,6 +593,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 				</div>
 			</div>
+			<hr />
 			{/if}
 			{if $eContentRecord->contents}
 			<div class="resultInformation">

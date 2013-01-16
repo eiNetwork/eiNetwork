@@ -116,6 +116,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 				</div>
 			</div>
+			<hr />
 			{/if}
 {*  Blocked out because character count includes tags - using crappier verison below
 			
