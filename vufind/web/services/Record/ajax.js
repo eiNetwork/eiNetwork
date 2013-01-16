@@ -176,6 +176,9 @@ function getGoDeeperData(dataType, id, isbn, upc) {
 	  url : fullUrl,
 	  success : function(data) {
 		  $('#goDeeperOutput').html(data);
+		  if(dataType != 'fictionProfile'){
+			  $('#fictionSub').remove();
+		  }
 	  }
 	});
 }

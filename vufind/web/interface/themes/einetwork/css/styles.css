@@ -2630,3 +2630,29 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 	text-decoration: none;
 	cursor:pointer;
 }
+.fictionProfileTitle{
+	font-size: 14px;
+	font-weight:bold;
+}
+.fictionCharacter, .fictionTopics, .fictionSettings, .fictionGenres {
+	padding: 5px 0px 5px 8px;
+}
+.fictionProfile a:hover{
+	font-weight:bold;
+	color:#F0F0F0;
+}
+.fictionProfile a{
+	color:#F0F0F0;
+}
+.fictionCharacter div{
+	padding-left:12px;
+}
+.fictionAward{
+	padding-top:5px;
+}
+.fiction_sub_head{
+	padding-left:10px;
+}
+.fiction_sub_head a{
+	color: rgb(153,153,255);
+}

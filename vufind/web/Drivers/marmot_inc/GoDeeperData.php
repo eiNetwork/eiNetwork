@@ -65,7 +65,7 @@ class GoDeeperData{
 								if (!isset($defaultOption)) $defaultOption = 'excerpt';
 							}
 							if ($configArray['Syndetics']['showFictionProfile'] && isset($data->FICTION)){
-								$validEnrichmentTypes['fictionProfile'] = 'Character Information';
+								$validEnrichmentTypes['fictionProfile'] = 'Profile';
 								if (!isset($defaultOption)) $defaultOption = 'fictionProfile';
 							}
 							if ($configArray['Syndetics']['showAuthorNotes'] && isset($data->ANOTES)){
