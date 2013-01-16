@@ -200,7 +200,10 @@ class SearchObject_Solr extends SearchObject_Base
 			/*if($this->hasFilter("building:\"{$searchLocation->defaultLocationFacet}\"")){
 				$_SESSION['useLocation'] = false;
 			}*/
-			if (strlen($searchLocation->defaultLocationFacet) && $useLocation){
+			//get the file that called for the search
+			$trace = debug_backtrace();
+			//if from the List folder, ignore use location
+			if (strlen($searchLocation->defaultLocationFacet) && $useLocation && !strpos($trace[1]['file'],'List')){
 				$this->addFilter("building:\"{$searchLocation->defaultLocationFacet}\"");
 			}
 		}
