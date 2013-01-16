@@ -8,6 +8,7 @@
 			$('#{/literal}{$heading}_link a').click(function{literal}(){
 				var x = $(this).attr('href');
 			$('.fictionProfile a[name='+x.substring(1)+']').get(0).scrollIntoView();
+			$('html, body').animate({scrollTop:0}, 0);
 			return false;
 			});
 			{/literal}{/foreach}{literal}
