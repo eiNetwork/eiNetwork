@@ -33,6 +33,9 @@
                             <dd>
                                     <input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox',false,false,'400px',false,'200px'); return false;" class="button navmenu dd" value="Create New Wish List" style="width:180px"/>
                             </dd>
+                            <dd>
+                            	<input type="button" onclick="window.location = '/List/Import';" class="button navmenu dd" value="Import a Classic Catalog List" style="width:180px"/>
+                            </dd>
                      </dl>
             </div>
 	{/if}
@@ -45,7 +48,7 @@
 	<div class="resulthead">
             <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
             {* <div>Create a new List</div> *} 
-            <div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>
+            {*<div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>*}
 	</div>
       {* End Listing Options *}
 
