@@ -529,7 +529,13 @@ class EINetwork extends MillenniumDriver{
 		}
 
 	}
-	function getMyFines(){
+	/**
+	 * 	Renamed this function from getMyFines to _getMyFines so the mobile catalog can work
+	 * 	True fine integration wasn't finished.
+	 *  Rename this when that work is ready to begin
+	 *  also remember to check the mobile site andmake sure it works
+	 */
+	function _getMyFines(){
 		global $user;
 		
 		$r = $this->iiiWebServiceRequest("searchPatrons", "b".$user->cat_username);	
