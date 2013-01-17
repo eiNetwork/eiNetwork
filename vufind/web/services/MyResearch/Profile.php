@@ -74,6 +74,7 @@ class Profile extends MyResearch
 		foreach ($pickupBranches as $curLocation) {
 			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
+		asort($locationList);
 		$interface->assign('locationList', $locationList);
 		if ($this->catalog->checkFunction('isUserStaff')){
 			$userIsStaff = $this->catalog->isUserStaff();
