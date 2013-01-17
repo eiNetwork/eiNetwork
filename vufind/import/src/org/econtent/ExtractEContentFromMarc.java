@@ -1646,11 +1646,18 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				results.incErrors();
 				results.addNote("Error committing changes " + response.getMessage());
 			}
-			/*results.addNote("optimizing index");
-			URLPostResponse optimizeResponse = Util.postToURL("http://localhost:" + solrPort + "/solr/econtent2/update/", "<optimize />", logger);
-			if (!optimizeResponse.isSuccess()){
-				results.addNote("Error optimizing index " + optimizeResponse.getMessage());
-			}*/
+
+			results.addNote("optimizing econtent2 index");
+			try {
+				URLPostResponse optimizeResponse = Util.postToURL("http://localhost:" + solrPort + "/solr/econtent2/update/", "<optimize />", logger);
+				if (!optimizeResponse.isSuccess()){
+					results.addNote("Error optimizing econtent2 index " + optimizeResponse.getMessage());
+				}
+			} catch (Exception e) {	
+				results.addNote("Error optimizing econtent2 index");
+			}
+
+			
 			if (checkMarcImport()){
 				results.addNote("index passed checks, swapping cores so new index is active.");
 				URLPostResponse postResponse = Util.getURL("http://localhost:" + solrPort + "/solr/admin/cores?action=SWAP&core=econtent2&other=econtent", logger);

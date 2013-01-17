@@ -68,10 +68,19 @@ public class MarcIndexer implements IMarcRecordProcessor, IRecordProcessor {
 			results.addNote("Error committing changes " + response.getMessage());
 		}
 		results.addNote("optimizing index");
-		response = Util.postToURL("http://localhost:" + solrPort + "/solr/biblio2/update/", "<optimize />", logger);
-		if (!response.isSuccess()){
-			results.addNote("Error optimizing index " + response.getMessage());
+		//response = Util.postToURL("http://localhost:" + solrPort + "/solr/biblio2/update/", "<optimize />", logger);
+		//if (!response.isSuccess()){
+		//	results.addNote("Error optimizing index " + response.getMessage());
+		//}
+		try {
+			response = Util.postToURL("http://localhost:" + solrPort + "/solr/biblio2/update/", "<optimize />", logger);	
+			if (!response.isSuccess()){
+				results.addNote("Error optimizing biblio2 index " + response.getMessage());
+			}
+		} catch (Exception e) {	
+			results.addNote("Error optimizing biblio2 index");
 		}
+		
 		if (checkMarcImport()){
 			results.addNote("index passed checks, swapping cores so new index is active.");
 			response = Util.getURL("http://localhost:" + solrPort + "/solr/admin/cores?action=SWAP&core=biblio2&other=biblio", logger);
