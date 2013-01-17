@@ -13,7 +13,7 @@ function resetTimer(){
 }
 
 function alertUser(){
-	lightbox(null, null, null, '25%');
+	lightbox(null, null, null, '161px');
 	//window.scrollTo(x-coord, y-coord);
 	var message = "<div class='popupHeader' style='text-align:center' ><div class='highlight' >Attention:</div>Your catalog session is about to expire if you don't click \"Continue\".";
 	message += "</div><div style='margin-top:100px; text-align:center; font-size:12px;'><span class='button yellow' onclick='resetTimer()' style='color:black'>Continue</span><span class='button gray' onclick='logout()' style='background-color: #777777; border-color: #888888;'>Exit</span></div>";

@@ -3,12 +3,9 @@
 <div class="error">{$profileUpdateErrors}</div>
 {/if}
 {if $user->cat_username}
-<p style="font-size: 15px">Update Your Preferred Libraries</p>
+<p style="font-size: 15px; margin-bottom:5px;">Update Your Preferred Libraries</p>
 <form id="profileForm" onsubmit="updatePreferredBranches();return false;">
 <div class="profile" style="padding-bottom: 0px;padding-top: 0px;margin-top: 0px">
-		<div style="font-size: 14px;">
-			{$profile.homeLocation} (Home)
-		</div>
         <div id="name_notification" class="profile_row" style="display:none">
                 <table>
                 <tr style="font-weight: bolder">
@@ -80,15 +77,15 @@
         </div>
 
 
-        <div id="preferred_alternative" class="profile_row">
+        <div id="preferred_alternative" class="profile_row" style="padding-top:0px; margin-bottom:0px;">
 
-            <p>
+           
 		
             {if $edit == true}
 	    	<p style="font-size: 12px">Preferred Library</p>
             {html_options name="myLocation1" id="preferredBranch_myLocation1" options=$locationList selected=$profile.myLocation1Id}
             {else}{$profile.myLocation1|escape}
-            </p>
+    
 	    
 	    
             <p>
@@ -100,6 +97,9 @@
             {/if}
             </p>
         </div>
+        		<div style="font-size: 14px; padding-bottom:15px;">
+			{$profile.homeLocation} (Home)
+		</div>
         {if $canUpdate}
                 {if $edit == true}
                 <input  type='submit' value='Update Profile' name='update'  class='button'/>

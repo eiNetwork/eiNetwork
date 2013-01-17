@@ -1,8 +1,6 @@
 <div id="preferred_alternative" class="profile_row">
     <div style="font-size:16px;margin-bottom:5px">Your Preferred Libraries</div>
-    <div style="font-size:14px;margin-left:10px">
-    	{$home->displayName|escape} (Home)
-    </div>
+    
     <div style="font-size:14px;margin-left:10px">
         {if $edit == true}
         {html_options name="myLocation1" options=$locationList selected=$profile.myLocation1Id}
@@ -14,6 +12,9 @@
         {html_options name="myLocation2" options=$locationList selected=$profile.myLocation2Id}
         {else}{$profile.myLocation2|escape}
         {/if}
+    </div>
+    <div style="font-size:14px;margin-left:10px">
+    	{$home->displayName|escape} (Home)
     </div>
     <div>
         <input id="edit-button" type="button" class="button" value="Edit" onclick="getToUpdatePreferredBranches()"/>
