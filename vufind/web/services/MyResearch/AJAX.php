@@ -234,6 +234,7 @@ class AJAX extends Action {
 		foreach ($pickupBranches as $curLocation) {
 			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
+		asort($locationList);
 		$interface->assign('locationList', $locationList);
 		/*if ($this->catalog->checkFunction('isUserStaff')){
 			$userIsStaff = $this->catalog->isUserStaff();
@@ -533,6 +534,7 @@ class AJAX extends Action {
 			$locationSingleton->find();
 	
 			$locationList = array();
+			
 			while ($locationSingleton->fetch()) {
 				$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
 			}
