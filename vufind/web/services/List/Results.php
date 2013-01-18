@@ -153,7 +153,7 @@ class Results extends Action {
 		$wishLists; //szheng: this is the variable for wish list id and title.
 		$myFavoritesID = null;
 		$n = 0;
-		$bookCartID;
+		$bookCartID = null;
 		foreach ($raw_wishLists as $hello){
 			foreach($hello as $key =>$hellohello){
 				if($key == 'id'){
@@ -198,7 +198,7 @@ class Results extends Action {
 						$bookCartID = $wishLists[$n]['id'];
 						$n--;	
 					}
-					if($wishLists[$n]['title'] == 'My Favorites'){
+					if($n >= 0 && $wishLists[$n]['title'] == 'My Favorites'){
 						$myFavoritesID = $wishLists[$n]['id'];
 					}
 					$n++;

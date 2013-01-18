@@ -958,7 +958,7 @@ class AJAX extends Action {
 		global $user;
 		if($user){
 			$raw_wishLists= $user->getLists();
-			$bookCartId;
+			$bookCartId = null;
 			//echo count($raw_wishLists);
 			foreach ($raw_wishLists as $hello){
 				$tempId;
