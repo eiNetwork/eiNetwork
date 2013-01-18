@@ -351,7 +351,7 @@ class Location extends DB_DataObject
 		global $user;
 		if (isset($user) && $user != false){
 			$homeLocation = new Location();
-			$homeLocation->locationId = $user->homeLocationId;
+			$homeLocation->locationId = isset($user->homeLocationId)?$user->homeLocationId:0;
 			if ($homeLocation->find(true)){
 				$this->userHomeLocation = clone($homeLocation);
 			}

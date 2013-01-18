@@ -248,6 +248,7 @@ class Results extends Action {
 				echo "******".$keykey."=>".$valuevalue."<br/>";
 			}
 		}*/
+		
 		$recordTypes;
 		foreach($favorites as $key => $aa){
 			foreach($aa as $keykey => $bb){
@@ -360,7 +361,7 @@ class Results extends Action {
 			PEAR::raiseError($result->getMessage());
 		}
 		$timer->logTime('Process Search');
-
+		
 		// Some more variables
 		//   Those we can construct AFTER the search is executed, but we need
 		//   no matter whether there were any results
@@ -566,6 +567,7 @@ class Results extends Action {
 		// Done, display the page
 
 		$interface->display('layout.tpl');
+		
 	} // End launch()
 
 	private function getLists() {

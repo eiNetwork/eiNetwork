@@ -315,7 +315,7 @@ class Library extends DB_DataObject
 		//Finally check to see if the user has logged in and if so, use that library
 		if (isset($user) && $user != false){
 			//Load the library based on the home branch for the user
-			return self::getLibraryForLocation($user->homeLocationId);
+			return self::getLibraryForLocation(isset($user->homeLocationId)?$user->homeLocationId:0);
 		}else{
 			return null;
 		}
