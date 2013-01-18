@@ -269,7 +269,7 @@ public class Util {
 			}
 			// Timeouts set in milliseconds 300000 is 5 mins
 			conn.setConnectTimeout(6000);
-			conn.setReadTimeout(600000);
+			conn.setReadTimeout(1200000);
 			//logger.debug("  Opened connection");
 			StringBuffer response = new StringBuffer();
 			if (conn.getResponseCode() == 200) {
@@ -316,7 +316,7 @@ public class Util {
 			URL emptyIndexURL = new URL(url);
 			conn = (HttpURLConnection) emptyIndexURL.openConnection();
 			conn.setConnectTimeout(1000);
-			conn.setReadTimeout(600000);
+			conn.setReadTimeout(1200000);
 			//logger.debug("Posting To URL " + url);
 			//logger.debug("  Opened connection");
 			conn.setDoInput(true);
