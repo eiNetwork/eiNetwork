@@ -71,11 +71,13 @@ function redrawSaveStatus() {literal}{{/literal}
 						{*}
 				</div>
 				<div id="record_action_button">
+					{if !isset($noRequest)}
 					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','VuFind');return false;"{/if}>
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
 						<span class="action-lable-span">Add to Cart</span>
 					</div>
-					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="getToRequest('{$path}/Record/{$id|escape:'url'}/Hold')">
+					{/if}
+					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px;{if isset($noRequest)}background-color: rgb(192, 192, 192); color: rgb(248, 248, 248); cursor: default;{/if}" {if !isset($noRequest)}onclick="getToRequest('{$path}/Record/{$id|escape:'url'}/Hold')"{/if}>
 						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
 						<span class="action-lable-span">Request Now</span>
 					</div>

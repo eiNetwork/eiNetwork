@@ -103,6 +103,8 @@ class AJAXGetCallNumber extends Record{
 			}else{
 				$interface->assign('holdings', array());
 				$holdingData->holdings = array();
+				$holdingsResult = $interface->fetch("Record/view-holdings.tpl");
+				echo $holdingsResult;
 			}
 
 			// Get Acquisitions Data

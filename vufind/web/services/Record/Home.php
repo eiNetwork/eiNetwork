@@ -134,7 +134,21 @@ class Home extends Record{
 		//Build the actual view
 		$interface->assign('pageType','record');
 		$interface->setTemplate('view.tpl');
-
+		
+		try {
+			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
+		} catch (PDOException $e) {
+			// What should we do with this error?
+			if ($configArray['System']['debug']) {
+				echo '<pre>';
+				echo 'DEBUG: ' . $e->getMessage();
+				echo '</pre>';
+			}
+		}
+		$result = $catalog->getHolding($recordId);
+		if(empty($result)){
+			$interface->assign('noRequest', true);
+		}
 		$titleField = $this->marcRecord->getField('245');
 		if ($titleField){
 			if ($titleField->getSubfield('a')){
