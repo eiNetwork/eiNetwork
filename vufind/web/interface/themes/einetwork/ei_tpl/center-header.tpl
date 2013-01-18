@@ -66,9 +66,6 @@
       <input type="button" name="repeatSearch" value="{translate text="Go"}" onclick="window.open(document.getElementById('repeatSearchIn').options[document.getElementById('repeatSearchIn').selectedIndex].value)">
     </div>
     {/if}
-    <span id="disclaimer">&nbsp;&nbsp;&nbsp; This website is integrated with the live millennium & Overdrive systems.
-    Holds, Renewals, Econtent & Checkouts are all live.</span>
-
 </div>
 
 

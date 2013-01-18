@@ -18,10 +18,16 @@
 	width:704px;
 	height: auto;
 	display: table-cell;
-	padding-top: 100px;
+	padding-top: 50px;
 	
 }
-
+.loginMessage{
+	height:50px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:center;
+	color: #256292;
+}
 .login{
 	width: 352px;
 	height: inherit;

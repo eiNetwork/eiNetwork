@@ -97,6 +97,9 @@
 {/literal}
 	<div class="loginHome-left"></div>
 	<div class="loginHome-center">
+		<div class="loginMessage">
+			Welcome to the new and improved online catalog.
+		</div>
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
 				<div><b>Log In to My Account</b></div>
