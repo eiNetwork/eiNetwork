@@ -168,7 +168,16 @@
    </div>
  </div>
 
-  {else}
-   No Copies Found
+{else}
+<div id="holdingInfoPopup" style="height:auto;max-height:450px;width:auto;height:inherit;padding-left:12px;padding-right:12px">
+  <div style="height:125px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)" id="headhead">
+    <span style="font-size:18px;">No Copies Found</span> <span onclick="hideLightbox()" style="float:right"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png"></span><br>
+  	Our apologies, no copies of this title are available at this time.
+  	  <div id="actionButton" style="height:60px;padding-top:10px;">
+
+    	<input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="OK" onclick="hideLightbox()"/>
+  		</div>
+  </div>
+ </div>
 {/if}
 
