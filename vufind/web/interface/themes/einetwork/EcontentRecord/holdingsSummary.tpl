@@ -4,13 +4,17 @@
 	{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
 		class="holdingsSummary overdriveCheckedOut"
 	{/if}>
+
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-		{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="ajaxLightbox('/EcontentRecord/{$holdingsSummary.recordId}/AJAX?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')">{$holdingsSummary.status}</a>
+		{elseif $holdingsSummary.status == 'Checked Out'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
+			<a style="cursor:pointer" class="overdriveCheckedOut" onclick="ajaxLightbox('/EcontentRecord/{$holdingsSummary.recordId}/AJAX?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')">{$holdingsSummary.status}</a>
+			
 		{/if}
-		{$holdingsSummary.status}
+		
 	</div>
 
 	<div class="holdableCopiesSummary">
@@ -21,9 +25,13 @@
 			{if strcasecmp($holdingsSummary.source, 'OverDrive') == 0}
 				{*Available for use from OverDrive.*}
 			{elseif $holdingsSummary.source == 'Freegal'}
+			        {$holdingsSummary.status}
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
-				Available for multiple simultaneous usage. 
+				
+				<a style="cursor:pointer">{$holdingsSummary.status}</a><br/>
+				Available for multiple simultaneous usage.
+			
 			{elseif $holdingsSummary.onHold}
 				You are number {$holdingsSummary.holdPosition} on the wait list.
 			{elseif $holdingsSummary.checkedOut}
