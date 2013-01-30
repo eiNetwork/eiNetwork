@@ -102,7 +102,7 @@
 		</div>
 		<div class="login">
 			<form id="loginForm" action="{$path}/MyResearch/Home" method="post">
-				<div><b>Log In to My Account</b></div>
+				<div><b>I have a Library Card</b></div>
 				{if $message}
 					<div class="error">Sorry, the account information you entered does not match our records. Please check and try again.</div>
 				{/if}
@@ -121,7 +121,7 @@
 			</form>
 		</div>
 		<div class="register">
-			<div><b>Don't have an account?</b></div>
+			<div><a href="{$path}/MyResearch/GetCard"><b>I need a Library Card</b></a></div>
 			<div id="description">
 				With a free catalog account, you can request items directly from the catalog, view your past searches and get personalized recommendations for items you might like.
 			</div>
