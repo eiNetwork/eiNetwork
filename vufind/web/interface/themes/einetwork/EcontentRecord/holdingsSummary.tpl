@@ -29,7 +29,6 @@
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
 
-				
 				<a style="cursor:pointer" >{$holdingsSummary.status}</a><br/>
 				Available for multiple simultaneous usage.
 			
