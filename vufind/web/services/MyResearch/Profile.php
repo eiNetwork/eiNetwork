@@ -69,12 +69,15 @@ class Profile extends MyResearch
 			$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
 		}*/
 		$location = new Location();
-		$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
+		//$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
+		$pickupBranches = $location->getPickupBranchesPreferLocationFirst($profile, null);
 		$locationList = array();
 		foreach ($pickupBranches as $curLocation) {
 			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
+		// sort alphabetically
 		asort($locationList);
+		
 		$interface->assign('locationList', $locationList);
 		if ($this->catalog->checkFunction('isUserStaff')){
 			$userIsStaff = $this->catalog->isUserStaff();
