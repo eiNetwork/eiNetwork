@@ -1,10 +1,10 @@
 <div id = "holdingsSummary"
 	{if $holdingsSummary.status == 'Available from OverDrive'}
 		class="holdingsSummary overdriveAvailable"
-	{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
+	{elseif $holdingsSummary.status == 'Checked Out'}
 		class="holdingsSummary overdriveCheckedOut"
 	{/if}>
-
+	
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
@@ -28,8 +28,9 @@
 			        {$holdingsSummary.status}
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
+
 				
-				<a style="cursor:pointer">{$holdingsSummary.status}</a><br/>
+				<a style="cursor:pointer" >{$holdingsSummary.status}</a><br/>
 				Available for multiple simultaneous usage.
 			
 			{elseif $holdingsSummary.onHold}
