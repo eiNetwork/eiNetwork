@@ -243,7 +243,7 @@ class Location extends DB_DataObject
 				}
 				$this->whereAdd("libraryId IN (" . implode(',', $pickupIds) . ")", 'AND');
 				//Deal with Steamboat Springs Juvenile which is a special case.
-				$this->whereAdd("code <> 'ssjuv'", 'AND');
+				//$this->whereAdd("code <> 'ssjuv'", 'AND');
 			}else{
 				$this->whereAdd("libraryId = {$homeLibrary->libraryId}", 'AND');
 				$this->whereAdd("validHoldPickupBranch = 1", 'AND');
@@ -269,22 +269,27 @@ class Location extends DB_DataObject
 			}else{
 				$selected = '';
 			}
-			$this->selected = $selected;				
-			if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
-				//If the user is in a branch, those holdings come first.
-			$locationList['1' . $this->displayName] = clone $this;
-			}elseif (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
-				//Next come nearby locations for the user	
-			$locationList['2' . $this->displayName] = clone $this; 	
-			} elseif (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
+			$this->selected = $selected;
+			if ($this->locationId == 0){
+				//skip the not assigned locationid 0 even if the user hasn't picked one
+				//echo ("Location " . $this->locationId);
+			}else{
+				//if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
+					//If the user is in a branch, those holdings come first.
+				//$locationList['1' . $this->displayName] = clone $this;
+				if (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
+					//Next come nearby locations for the user	
+				$locationList['1' . $this->displayName] = clone $this; 	
+				} elseif (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
 				//Next come nearby locations for the user
-			$locationList['3' . $this->displayName] = clone $this;
-			} elseif (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
-				//Other locations that are within the same library system
-				$locationList['4' . $this->displayName] = clone $this;
-			} else {
-				//Finally, all other locations are shown sorted alphabetically.
-				$locationList['5' . $this->displayName] = clone $this;
+				$locationList['2' . $this->displayName] = clone $this;
+				} elseif (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
+					//Other locations that are within the same library system
+					$locationList['3' . $this->displayName] = clone $this;
+				} else {
+					//Finally, all other locations are shown sorted alphabetically.
+					$locationList['4' . $this->displayName] = clone $this;
+				}
 			}
 		}
 		ksort($locationList);

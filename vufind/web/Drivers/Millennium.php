@@ -1205,7 +1205,19 @@ class MillenniumDriver implements DriverInterface
 		}
 
 		//Get additional information about the patron's home branch for display.
-		$homeBranchCode = $patronDump['HOME_LIBR'];
+		$homeBranchCode = trim($patronDump['HOME_LIBR']);
+		//echo $homeBranchCode;
+		//Sanitize the home libr code
+		if ($homeBranchCode == 'none') {
+			$homeBranchCode = 'none';
+			//echo("No home branch code");
+		}elseif (strlen($homeBranchCode) > 2) {
+			if (substr($homeBranchCode,1,1) == 'x') {
+				$homeBranchCode = 'xa';
+			}else {
+				$homeBranchCode = substr($homeBranchCode,1,2);
+			}
+		}
 		//Translate home branch to plain text
 		global $user;
 		$homeBranch = $homeBranchCode;
@@ -1216,7 +1228,9 @@ class MillenniumDriver implements DriverInterface
 		if ($user) {
 			if ($user->homeLocationId == 0) {
 				$user->homeLocationId = $location->locationId;
-				if ($location->nearbyLocation1 > 0){
+				//commented this out because it was preventing users with no home library set to set their
+				//preferred libraries
+				/*if ($location->nearbyLocation1 > 0){
 					$user->myLocation1Id = $location->nearbyLocation1;
 				}else{
 					$user->myLocation1Id = $location->locationId;
@@ -1225,7 +1239,7 @@ class MillenniumDriver implements DriverInterface
 					$user->myLocation2Id = $location->nearbyLocation2;
 				}else{
 					$user->myLocation2Id = $location->locationId;
-				}
+				}*/
 				if ($user instanceof User) {
 					//Update the database
 					$user->update();
