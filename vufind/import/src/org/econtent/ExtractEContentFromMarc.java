@@ -193,6 +193,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 		overDriveFormatMap.put("Disney Online Book", 302L);
 		overDriveFormatMap.put("Open PDF eBook", 450L);
 		overDriveFormatMap.put("Open EPUB eBook", 810L);
+		//FormatID 610 -- WMA Excerpt? 
 		
 		try {
 			//Connect to the vufind database
@@ -281,7 +282,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				loadProductsFromUrl(libraryName, mainProductUrl, false);
 				logger.debug("loaded " + overDriveTitles.size() + " overdrive titles in shared collection");
 				//Get a list of advantage collections
-				if (libraryInfo.getJSONObject("links").has("advantageAccounts")){
+				/*if (libraryInfo.getJSONObject("links").has("advantageAccounts")){
 					JSONObject advantageInfo = callOverDriveURL(libraryInfo.getJSONObject("links").getJSONObject("advantageAccounts").getString("href"));
 					JSONArray advantageAccounts = advantageInfo.getJSONArray("advantageAccounts");
 					for (int i = 0; i < advantageAccounts.length(); i++){
@@ -293,7 +294,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						loadProductsFromUrl(advantageName, productUrl, true);
 					}
 					//logger.debug("loaded " + overDriveTitles.size() + " overdrive titles in shared collection and advantage collections");
-				}
+				}*/
 			} catch (Exception e) {
 				results.addNote("error loading information from OverDrive API " + e.toString());
 				results.incErrors();
@@ -339,7 +340,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				}
 			}
 		} catch (Exception e) {
-			results.addNote("error loading information from OverDrive API " + e.toString());
+			results.addNote("error loading information from OverDrive Product API " + e.toString());
 			results.incErrors();
 			logger.error("Error loading overdrive titles", e);
 		}		
@@ -355,7 +356,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 	private OverDriveRecordInfo loadOverDriveRecordFromJSON(String libraryName, JSONObject curProduct) throws JSONException {
 		OverDriveRecordInfo curRecord = new OverDriveRecordInfo();
 		curRecord.setId(curProduct.getString("id"));
-		//logger.debug("Processing overdrive title " + curRecord.getId());
+		logger.debug("Processing overdrive title " + curRecord.getId());
 		curRecord.setTitle(curProduct.getString("title"));
 		curRecord.setMediaType(curProduct.getString("mediaType"));
 		if (curProduct.has("series")){
@@ -395,7 +396,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				availabilityInfo.setLibraryId(curCollection);
 				if (availability.has("available")){
 					String availableField = availability.getString("available");
-					//logger.debug("Available = " + availableField);
+					logger.debug("Available = " + availableField);
 					availabilityInfo.setAvailable(availableField.equals("true"));
 				}else{
 					availabilityInfo.setAvailable(false);
@@ -416,7 +417,9 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 	private void loadOverDriveMetaData(OverDriveRecordInfo overDriveInfo) {
 		logger.debug("Loading metadata, " + overDriveInfo.getId() + " is in " + overDriveInfo.getCollections().size() + " collections");
 		//Get a list of the collections that own the record 
-		long firstCollection = overDriveInfo.getCollections().iterator().next();
+		//long firstCollection = overDriveInfo.getCollections().iterator().next();
+		//We only have 1 collection
+		long firstCollection = -1L;
 		String apiKey = null;
 		if (firstCollection == -1L){
 			apiKey = overDriveProductsKey;
@@ -428,13 +431,22 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 		}
 		String url = "http://api.overdrive.com/v1/collections/" + apiKey + "/products/" + overDriveInfo.getId() + "/metadata";
 		JSONObject metaData = callOverDriveURL(url);
+		// skip around the suspect overdrive record
+		//String badoverdrive = "";
+		//String badoverdrive2 = "13212cf9-9dcf-413f-b176-2a38c177332b";
+		//String badoverdrive3 = "93f259d1-e681-41b4-8cdc-942273502d28";
+		//JSONObject metaData = null;
+		//if (url.contains(badoverdrive)) {metaData = null; } else {metaData = callOverDriveURL(url);}
+
 		if (metaData == null){
 			logger.error("Could not load metadata from " + url);
 		}else{
 			try {
+				//logger.debug("Setting up overDriveInfo object");
 				overDriveInfo.setEdition(metaData.has("edition") ? metaData.getString("edition") : "");
 				overDriveInfo.setPublisher(metaData.has("publisher") ? metaData.getString("publisher") : "");
 				overDriveInfo.setPublishDate(metaData.has("publishDate") ? metaData.getString("publishDate") : "");
+				//logger.debug("Set publishdate");
 				if (metaData.has("contributors")){
 					JSONArray contributors = metaData.getJSONArray("contributors");
 					for (int i = 0; i < contributors.length(); i++){
@@ -442,6 +454,8 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						overDriveInfo.getContributors().add(contributor.getString("name"));
 					}
 				}
+				//logger.debug("Set contributors");
+				
 				if (metaData.has("languages")){
 					JSONArray languages = metaData.getJSONArray("languages");
 					for (int i = 0; i < languages.length(); i++){
@@ -449,17 +463,25 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						overDriveInfo.getLanguages().add(language.getString("name"));
 					}
 				}
+				//logger.debug("Set languages");
+				
 				if (metaData.has("isPublicDomain")){
 					overDriveInfo.setPublicDomain(metaData.getBoolean("isPublicDomain"));
 				}
+				//logger.debug("Set is public domain");
+				
 				if (metaData.has("isPublicPerformanceAllowed")){
 					overDriveInfo.setPublicPerformanceAllowed(metaData.getBoolean("isPublicPerformanceAllowed"));
 				}
+				//logger.debug("Set is public performance allowed");
+				
 				if (metaData.has("fullDescription")){
 					overDriveInfo.setDescription(metaData.getString("fullDescription"));
 				}else if (metaData.has("shortDescription")){
 					overDriveInfo.setDescription(metaData.getString("shortDescription"));
 				}
+				//logger.debug("Set full description");
+				
 				if (metaData.has("subjects")){
 					JSONArray subjects = metaData.getJSONArray("subjects");
 					for (int i = 0; i < subjects.length(); i++){
@@ -467,16 +489,34 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						overDriveInfo.getSubjects().add(subject.getString("value"));
 					}
 				}
+				//logger.debug("Set subjects");
+				
 				JSONArray formats = metaData.getJSONArray("formats");
 				for (int i = 0; i < formats.length(); i++){
 					JSONObject format = formats.getJSONObject(i);
 					OverDriveItem curItem = new OverDriveItem();
+					//logger.debug("Create new overdrive item");
 					curItem.setFormatId(format.getString("id"));
+					//logger.debug("format id " + format.getString("id"));
 					curItem.setFormat(format.getString("name"));
+					//logger.debug("format name " + format.getString("name"));
+					//Check for new formats for OverDrive and make sure the index doesn't halt when we do get a new one
+					Long numericFormat = overDriveFormatMap.get(curItem.getFormat());
+					if (numericFormat == null){
+						logger.error("Could not find numeric format for format " + curItem.getFormat());
+						results.addNote("Could not find numeric format for format " + curItem.getFormat());
+						results.incErrors();
+						System.out.println("Warning: new format for OverDrive found " + curItem.getFormat());
+						continue;
+					}
 					curItem.setFormatNumeric(overDriveFormatMap.get(curItem.getFormat()));
+					//logger.debug("Numeric format");
 					curItem.setFilename(format.getString("fileName"));
+					//logger.debug("Format filename " + format.getString("fileName"));
 					curItem.setPartCount(format.has("partCount") ? format.getLong("partCount") : 0L);
+					//logger.debug("part count" );
 					curItem.setSize(format.has("fileSize") ? format.getLong("fileSize") : 0L);
+					//logger.debug("file size" );
 					if (format.has("identifiers")){
 						StringBuffer identifierValue = new StringBuffer();
 						JSONArray identifiers = format.getJSONArray("identifiers");
@@ -488,6 +528,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 							identifierValue.append(identifier.getString("value"));
 						}
 						curItem.setIdentifier(format.getJSONArray("identifiers").getJSONObject(0).getString("value"));
+						//logger.debug("Loaded format identifiers");
 					}
 					if (format.has("samples")){
 						JSONArray samples = format.getJSONArray("samples");
@@ -503,9 +544,12 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 								logger.warn("Record " + overDriveInfo.getId() + " had more than 2 samples for format " + curItem.getFormat());
 							}
 						}
+						//logger.debug("Loaded format sample link");
 					}
 					overDriveInfo.getItems().put(curItem.getFormatId(), curItem);
+					//logger.debug("Set formats");
 				}
+				//logger.debug("Done setting up overDriveInfo object");	
 			} catch (JSONException e) {
 				logger.error("Error loading meta data for title ", e);
 				results.addNote("Error loading meta data for title " + overDriveInfo.getId() + " " + e.toString());
@@ -538,13 +582,14 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					
 					StringBuffer response = new StringBuffer();
 					if (conn.getResponseCode() == 200) {
+						//logger.debug("Call Overdrive URL -- Response OK");
 						// Get the response
 						BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 						String line;
 						while ((line = rd.readLine()) != null) {
 							response.append(line);
 						}
-						//logger.debug("  Finished reading response");
+						//logger.debug("Call Overdrive URL -- Finished reading OK response");
 						rd.close();
 						return new JSONObject(response.toString());
 					} else {
@@ -559,7 +604,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 						while ((line = rd.readLine()) != null) {
 							response.append(line);
 						}
-						//logger.debug("  Finished reading response");
+						//logger.debug("Call Overdrive URL -- Finished reading error response");
 						
 						// Lessa : Added any response found in the Error Stream to the error log						
 						if (response != null){													
@@ -726,7 +771,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 			}
 			
 			for (String source : detectionSettingsBySource.keySet()){
-				//logger.debug("Record " + recordInfo.getId() + " is eContent, source is " + source);
+				logger.debug("Record " + recordInfo.getId() + " is eContent, source is " + source);
 				DetectionSettings detectionSettings = detectionSettingsBySource.get(source);
 				//Generally should only have one source, but in theory there could be multiple sources for a single record
 				String accessType = detectionSettings.getAccessType();
@@ -740,13 +785,13 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					}else{
 						//Check to see if we have items for the record
 						if (!existingEcontentIlsIds.containsKey(recordInfo.getId())){
-							//logger.debug("Record is unchanged, but the record does not exist in the eContent database.");
+							logger.debug("Record is unchanged, but the record does not exist in the eContent database.");
 						}else{
 							EcontentRecordInfo existingRecordInfo = existingEcontentIlsIds.get(recordInfo.getId());
 							if (existingRecordInfo.getNumItems() == 0){
-								//logger.debug("Record is unchanged, but there are no items so indexing to try to get items.");
+								logger.debug("Record is unchanged, but there are no items so indexing to try to get items.");
 							}else if (!existingRecordInfo.getStatus().equalsIgnoreCase("active")){
-								//logger.debug("Record is unchanged, is not active indexing to correct the status.");
+								logger.debug("Record is unchanged, is not active indexing to correct the status.");
 							}else{
 								existingEcontentIlsIds.remove(recordInfo.getId());
 								//logger.debug("Skipping because the record is not changed");
@@ -787,7 +832,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				String overDriveId = recordInfo.getExternalId();
 				String cover = "";
 				if (overDriveId != null){
-					//logger.debug("OverDrive ID is " + overDriveId);
+					logger.debug("OverDrive ID is " + overDriveId);
 					OverDriveRecordInfo overDriveInfo = overDriveTitles.get(overDriveId);
 					if (overDriveInfo != null){
 						cover = overDriveInfo.getCoverImage();
@@ -800,7 +845,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 							eContentRecordId = eContentRecordInfo.getRecordId();
 						}
 					}else{
-						//logger.debug("Did not find overdrive information for id " + overDriveId);
+						logger.debug("Did not find overdrive information for id " + overDriveId);
 					}
 				}
 				if (importRecordIntoDatabase){
@@ -812,7 +857,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					recordAdded = updateEContentRecordInDb(recordInfo, cover, logger, source, accessType, ilsId, eContentRecordId, recordAdded);
 				}
 				
-				//logger.info("Finished initial insertion/update recordAdded = " + recordAdded);
+				logger.info("Finished initial insertion/update recordAdded = " + recordAdded);
 				
 				if (recordAdded){
 					addItemsToEContentRecord(recordInfo, logger, source, detectionSettings, eContentRecordId);
@@ -1037,7 +1082,9 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				//logger.debug("Updating link " + linkInfo.getUrl() + " libraryId = " + linkInfo.getLibrarySystemId());
 				String existingUrlValue = existingLinkInfo.getLink();
 				Long existingItemId = existingLinkInfo.getItemId();
-				String newItemType = getItemTypeByItype(linkInfo.getiType());
+				//String newItemType = getItemTypeByItype(linkInfo.getiType());
+				//if (detectionSettings.getSource() == "OneClick") {newItemType = "external_eAudio";}
+				String newItemType = detectionSettings.getItem_type();
 				if (existingUrlValue == null || !existingUrlValue.equals(linkInfo.getUrl()) || !newItemType.equals(existingLinkInfo.getItemType())){
 					//Url does not match, add it to the record. 
 					updateSourceUrl.setString(1, linkInfo.getUrl());
@@ -1109,6 +1156,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 			if (overDriveInfo == null){
 				//results.incErrors();
 				//results.addNote("Did not find overdrive information for id " + overDriveId + " in information loaded from the API.");
+				logger.info("Did not find overdrive information for id " + overDriveId + " in information loaded from the API.");
 				millenniumRecordsNotInOverDrive.put(overDriveId, recordInfo);
 				return false;
 			}else{
@@ -1141,9 +1189,9 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 	
 	private void addOverdriveItemsAndAvailability(OverDriveRecordInfo overDriveInfo, long eContentRecordId) {
 		//Add items
-		//logger.debug("Adding overdrive items and availability");
+		logger.debug("Adding overdrive items and availability");
 		loadOverDriveMetaData(overDriveInfo);
-		//logger.debug("loaded meta data, found " + overDriveInfo.getItems().size() + " items.");
+		logger.debug("loaded meta data, found " + overDriveInfo.getItems().size() + " items.");
 		for (OverDriveItem curItem : overDriveInfo.getItems().values()){
 			try {
 				doesOverDriveItemExist.setLong(1, eContentRecordId);
@@ -1164,7 +1212,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					updateOverDriveItem.setLong(9, new Date().getTime());
 					updateOverDriveItem.setLong(10, existingItemId);
 					updateOverDriveItem.executeUpdate();
-					//logger.debug("Updated the existing item " + existingItemId);
+					logger.debug("Updated the existing item " + existingItemId);
 				}else{
 					//the url does not exist, insert it
 					addOverDriveItem.setLong(1, eContentRecordId);
@@ -1181,7 +1229,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 					addOverDriveItem.setLong(12, -1);
 					addOverDriveItem.setLong(13, new Date().getTime());
 					addOverDriveItem.executeUpdate();
-					//logger.debug("Added new item to record " + eContentRecordId);
+					logger.debug("Added new item to record " + eContentRecordId);
 				}
 			} catch (SQLException e) {
 				logger.error("Error adding item to overdrive record " + eContentRecordId + " " + overDriveInfo.getId(), e);
@@ -1192,7 +1240,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 		
 		//Add availability
 		loadOverDriveAvailability(overDriveInfo);
-		//logger.debug("loaded availability, found " + overDriveInfo.getAvailabilityInfo().size() + " items.");
+		logger.debug("loaded availability, found " + overDriveInfo.getAvailabilityInfo().size() + " items.");
 		for (Long curLibraryId : overDriveInfo.getAvailabilityInfo().keySet()){
 			OverDriveAvailabilityInfo availabiltyInfo = overDriveInfo.getAvailabilityInfo().get(curLibraryId);
 			try {
@@ -1333,6 +1381,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 		}
 		
 		//Get a list of information about Gutenberg items
+		/*
 		String gutenbergItemFile = configIni.get("Reindex", "gutenbergItemFile");
 		if (gutenbergItemFile == null || gutenbergItemFile.length() == 0){
 			logger.warn("Unable to get Gutenberg Item File in Process settings.  Please add a gutenbergItemFile key.");
@@ -1367,7 +1416,7 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				logger.error("Could not read Gutenberg Item file");
 			}
 			
-		}
+		}*/
 		
 		return true;
 		
