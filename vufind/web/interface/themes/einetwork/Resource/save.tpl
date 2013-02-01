@@ -45,7 +45,7 @@
         {/foreach}
       </select>
       {/if}
-      <a href="{$path}/MyResearch/ListEdit?id={$id|escape:"url"}&amp;source={$source|escape}"
+      <a style="color:#9999FF" href="{$path}/MyResearch/ListEdit?id={$id|escape:"url"}&amp;source={$source|escape}"
          onclick="ajaxLightbox('{$path}/MyResearch/ListEdit?id={$id|escape}&source={$source|escape}&lightbox',false,false,'450px',false,'200px'); return false;">{translate text="or create a new list"}</a>
     </td>
   </tr>
