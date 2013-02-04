@@ -72,7 +72,7 @@
     {/if}
 
 		{if $enableMaterialsRequest}
-    Can't find what you are looking for? Try our <a href="http://www.einetwork.net/ils/acquire_web.html">Materials Request Service</a>.
+    Can't find what you are looking for? Try our <a href="http://www.einetwork.net/ils/acquire_web_ngc.html">Materials Request Service</a>.
     {/if}
     	</div>
     </div>
