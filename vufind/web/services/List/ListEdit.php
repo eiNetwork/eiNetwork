@@ -69,6 +69,12 @@ class ListEdit extends Action
 			$pageContent = $interface->fetch('List/list-form.tpl');
 			$interface->assign('popupContent', $pageContent);
 			echo $interface->fetch('popup-wrapper.tpl');
+		}elseif(isset($_GET['lightbox2'])){ 
+			$interface->assign('title', translate('Create new list'));
+			$interface->assign('popupTitle', 'Create new wish list');
+			$pageContent = $interface->fetch('List/nolist-form.tpl');
+			$interface->assign('popupContent', $pageContent);
+			echo $interface->fetch('popup-wrapper.tpl');
 		} else {
 			if (isset($_REQUEST['submit'])) {
 				$result = $this->addList();
