@@ -1,5 +1,4 @@
 
-	{if $listError}<p class="error">{$listError|translate}</p>{/if}
 	<form method="post" action="{$url}/MyResearch/ListEdit" name="listForm" style="margin-top:10px"
 	      onSubmit='newAddList(this, &quot;{translate text='add_list_fail'}&quot;); return false;'>
 		<table   style="margin-left:5px; margin-top:-20px;">

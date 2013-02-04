@@ -3,7 +3,7 @@
 	<span class="popupHeader-title">{$popupTitle|translate}</span>
 	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" class="close-button" style="float:right" onclick="hideLightbox()"></span>
 </div>
-<div id="popupboxContent" class="popupContent">
+<div id="popupboxContent" style="position: absolute" class="popupContent">
 	<div id='purchaseOptions'>
 		{if $popupContent}
 			{$popupContent}
