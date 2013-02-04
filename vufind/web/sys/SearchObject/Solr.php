@@ -1460,14 +1460,25 @@ class SearchObject_Solr extends SearchObject_Base
                 global $user;
 		//global $configArray;
 		$locationList = array();
+                $locationList2 = array();
 		if($user){
+                        //$this->setFacetSortOrder('count');
 			$locationS = new Location;
-			$locationS->whereAdd("locationId = ".$user->myLocation1Id." or locationId = ".$user->myLocation2Id);
+			//$locationS->whereAdd("locationId = ".$user->myLocation1Id." or locationId = ".$user->myLocation2Id);
+                        $locationS->whereAdd("locationId = ".$user->myLocation1Id);
 			$locationS->find();
 			
 			while ($locationS->fetch()) {
 				$locationList[$locationS->locationId] = $locationS->displayName;
 			}
+                        
+			$locationS2 = new Location;
+			$locationS2->whereAdd("locationId = ".$user->myLocation2Id);
+			$locationS2->find();
+			
+			while ($locationS2->fetch()) {
+				$locationList2[$locationS2->locationId] = $locationS2->displayName;
+			}                        
 		}
 
 		$allFacets = array_merge($this->indexResult['facet_counts']['facet_fields'], $this->indexResult['facet_counts']['facet_dates']);
@@ -1562,6 +1573,9 @@ class SearchObject_Solr extends SearchObject_Base
 							$numValidRelatedLocations++;
 						}elseif (!empty($locationList) &&  in_array($facet[0], $locationList)){
 							$valueKey = '3' . $valueKey;
+							$numValidRelatedLocations++;
+						}elseif (!empty($locationList2) &&  in_array($facet[0], $locationList2)){
+							$valueKey = '4' . $valueKey;
 							$numValidRelatedLocations++;
 						}elseif ($facet[0] == 'Marmot Digital Library' || $facet[0] == 'Digital Collection' || $facet[0] == 'OverDrive' || $facet[0] == 'Online'){
 							$valueKey = isset($currentLibrary)?'2' . $valueKey:'4'.$valueKey;
