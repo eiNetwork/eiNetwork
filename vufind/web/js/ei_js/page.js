@@ -458,7 +458,7 @@ function printFindLibrary(){
   var left = $(document).width()/2-285;
     var top = 300;
     var width = 570;
-    var itemName = $('#itemTitle').text();
+    var itemName = $('#itemTitle').html();
     //var innerHTML = $("#headhead").html()+"<table>";
     var innerHTML = '<div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)"> <span style="font-size:18px;">' + itemName + '</span></div><table>';
     if($("#showAndHideUnavailable").text()=="show unavailable items"){
