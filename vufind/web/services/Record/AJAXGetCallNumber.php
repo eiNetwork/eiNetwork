@@ -51,6 +51,8 @@ class AJAXGetCallNumber extends Record{
 		$id = $this->id;
 		$marcField = $this->marcRecord->getField('245');
 		$booTitle = $this->getSubfieldData($marcField,'a');
+		$booTitle = rtrim($booTitle, "/");
+		//$booTitle = rtrim($booTitle, ";");
 		$interface->assign('BookTitle',$booTitle);
 		try {
 			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
