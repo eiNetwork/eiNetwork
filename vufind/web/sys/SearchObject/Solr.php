@@ -1568,8 +1568,10 @@ class SearchObject_Solr extends SearchObject_Base
 						}else if (!is_null($relatedHomeLocationFacets) && in_array($facet[0], $relatedHomeLocationFacets)){
 							$valueKey = '5' . $valueKey;
 							$numValidRelatedLocations++;
-						}*/
-					        }elseif (!empty($locationList) &&  in_array($facet[0], $locationList)){
+						}*/elseif (!is_null($homeLibrary) &&  $facet[0] == $homeLibrary->displayName){
+							$valueKey = '3' . $valueKey;
+							$numValidRelatedLocations++;
+						}elseif (!empty($locationList) &&  in_array($facet[0], $locationList)){
 							$valueKey = '3' . $valueKey;
 							$numValidRelatedLocations++;
 						}elseif (!empty($locationList2) &&  in_array($facet[0], $locationList2)){
