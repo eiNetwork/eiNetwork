@@ -207,11 +207,14 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	hideSelects('hidden');
 
 	// Find out how far down the screen the user has scrolled.
-	var new_top =  document.body.scrollTop;
+	//var new_top = document.body.scrollTop;
+	var new_top = $(document).scrollTop();
+	//add top of screen buffer
+	new_top = new_top + 125;
 
 	// Get the height of the document
 	var documentHeight = $(document).height();
-
+ 
 	$('#lightbox').show();
 	$('#lightbox').css('height', documentHeight + 'px');
 	
@@ -243,12 +246,12 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 				var left = ($(document).width()-parseInt(newWidth))/2;
 			}
 			if (!width) width = '400px';
-			$('#popupbox').css('top', top);
+			$('#popupbox').css('top', new_top);
 			$('#popupbox').css('left', left);
 			$('#popupbox').css('width', width);
 			$('#popupbox').css('height', height);
 			
-			$(document).scrollTop(0);
+			//$(document).scrollTop(0);
 		}
 		if ($("#popupboxHeader").length > 0){
 			$("#popupbox").draggable({ handle: "#popupboxHeader" });
@@ -831,7 +834,7 @@ function sendAJAXEmail(url, params, strings){
 			} else {
 					document.getElementById('popupbox').innerHTML = '<h3>' + strings.failure + '</h3>';
 			}
-		},
+	F	},
 		error: function(transaction) {
 				document.getElementById('popupbox').innerHTML = strings.failure;
 		}
