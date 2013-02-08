@@ -222,10 +222,11 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	$('#popupbox').show();
 	$('#popupbox').css('top', '50%');
 	$('#popupbox').css('left', '50%');
-	
+
 	$.get(urlToLoad, function(data) {
-		$('#popupbox').html(data);
-		$('#popupbox').show();
+
+		//$('#popupbox').html(data);
+		//$('#popupbox').show();
 		if (parentId){
 			//Automatically position the lightbox over the cursor
 			$("#popupbox").position({
@@ -234,12 +235,15 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 				of: parentId,
 				collision: "flip"
 			});
+			
 		}else{
+			
 			if (!left) left = '30%';
 			if (!top) top = '30%';
 			if (!height) height = '300px';
 			
 			if(width!=null||width.indexOf("%")<=0){
+				
 				var reg = /\d*/;
 				var newWidth = reg.exec(width);
 				var newHeight = reg.exec(height);
@@ -252,6 +256,8 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 			$('#popupbox').css('height', height);
 			
 			//$(document).scrollTop(0);
+		$('#popupbox').html(data);
+		$('#popupbox').show();
 		}
 		if ($("#popupboxHeader").length > 0){
 			$("#popupbox").draggable({ handle: "#popupboxHeader" });
@@ -552,6 +558,7 @@ function getOverDriveSummary(){
 
 var ajaxCallback = null;
 function ajaxLogin(callback){
+		  
 	ajaxCallback = callback;
 	ajaxLightbox(path + '/MyResearch/AJAX?method=LoginForm',false,false,'450px',false,'320px');
 }
