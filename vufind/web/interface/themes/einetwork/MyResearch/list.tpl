@@ -1,8 +1,9 @@
 <script type="text/javascript" src="{$path}/js/lists.js"></script>
 
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	
+	<div id="left-bar">	
+		
 	</div>
 	
 	<div id="main-content">
@@ -78,28 +79,7 @@
 		{/if}
 	</div>
 
-	<div class="yui-u">
-		{if $tagList}
-		<h3 class="tag">{translate text='Your Tags'}</h3>
-
-		<ul>
-		{foreach from=$tags item=tag}
-			<li>{translate text='Tag'}: {$tag|escape:"html"}
-			<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;{foreach from=$tags item=mytag}{if $tag != $mytag}tag[]={$mytag|escape:"url"}&amp;{/if}{/foreach}">X</a>
-			</li>
-		{/foreach}
-		</ul>
-
-		<ul>
-		{foreach from=$tagList item=tag}
-			<li>
-				<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;tag[]={$tag->tag|escape:"url"}{foreach from=$tags item=mytag}&amp;tag[]={$mytag|escape:"url"}{/foreach}">{$tag->tag|escape:"html"}</a> ({$tag->cnt})
-			</li>
-		{/foreach}
-		</ul>
-		{/if}
-	
-	</div>
+        {include file="ei_tpl/right-bar.tpl"}
 
 </div>
 
