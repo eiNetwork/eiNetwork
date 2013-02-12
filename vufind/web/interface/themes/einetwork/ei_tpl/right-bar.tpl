@@ -122,22 +122,7 @@
 	    $title2 = $tmpList2->title;
     	}
 	$interface->assign("Title2", $title2 );
-	
-	$tmpList3 = new User_list();
-	$tmpList3->id = 3;    
-	$tmpList3->find();
-	while ($tmpList3->fetch()){
-	    $title3 = $tmpList3->title;
-    	}
-	$interface->assign("Title3", $title3 );
-	
-	$tmpList4 = new User_list();
-	$tmpList4->id = 4;    
-	$tmpList4->find();
-	while ($tmpList4->fetch()){
-	    $title4 = $tmpList4->title;
-    	}
-	$interface->assign("Title4", $title4 );	
+		
     {/php}    
     <div class="recommendations">
         <div id="title1">
@@ -145,12 +130,6 @@
         </div>
         <div id="title2">
             <a href="{$url}/MyResearch/MyList/2">{$Title2}</a>
-        </div>
-        <div id="title3">
-            <a href="{$url}/MyResearch/MyList/3">{$Title3}</a>
-        </div>
-        <div id="title4">
-            <a href="{$url}/MyResearch/MyList/4">{$Title4}</a>
         </div>
         <div id="articles">
             <a href="http://articles.einetwork.net">Databases and Articles</a>
