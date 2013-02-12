@@ -57,7 +57,6 @@
 			</li>
 		{/foreach}
 		</ul>
-		<button value="placeHolds" id="FavPlaceHolds" class="listButton" onclick='return requestMarkedAction()'>Request Marked</button>
 		{if $allowEdit}
 		{*
 		<button value="moveMarked" id="FavMoveMarked" class="listButton" onclick='return moveMarkedAction()'>Move Marked</button>
