@@ -83,7 +83,16 @@
 	{else}
 		<span class="iconlabel {$summFormats|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$summFormats}</span>
 	{/if}
--->	
+-->
+
+	{if $source != "OverDrive"}
+		<div id="availableOnline">
+			<span>
+			<img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" alt="Available"/>
+			</span>			
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='{$sourceUrl}'">Available Online</a>
+		</div>
+	{/if}
 	
 	<div id = "holdingsEContentSummary{$summId|escape:"url"}" class="holdingsSummary">
 		<div class="statusSummary" id="statusSummary{$summId|escape:"url"}">
@@ -181,6 +190,7 @@
 		
 </div>
 -->
+
 
 <script type="text/javascript">
 	addRatingId('{$summId|escape:"javascript"}', 'eContent');

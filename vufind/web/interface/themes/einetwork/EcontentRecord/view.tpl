@@ -397,9 +397,17 @@ function redrawSaveStatus() {literal}{{/literal}
        {* End image column *}
 			</div>
 	    </div>
-
+     
     <div id="record-details-column">
 	    <div id="record-details-header">
+	{if $eContentRecord->source != "OverDrive"}
+		<div id="availableOnline">
+			<span>
+			<img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" alt="Available"/>
+			</span>
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='{$eContentRecord->sourceUrl}'">Available Online</a>
+		</div>
+	{/if}		  
 	    <div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord">Loading...</div>
 	      {if $enableProspectorIntegration == 1}
 	      <div id="prospectorHoldingsPlaceholder"></div>

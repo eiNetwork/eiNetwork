@@ -28,8 +28,7 @@
 			        {$holdingsSummary.status}
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
-
-				<a style="cursor:pointer" >{$holdingsSummary.status}</a><br/>
+		
 				Available for multiple simultaneous usage.
 			
 			{elseif $holdingsSummary.onHold}
@@ -54,7 +53,7 @@
 		{/if} 
 		{if $showOtherEditionsPopup}
 		<div class="otherEditions">
-			<a href="#" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', true)">Other Formats and Languages</a>
+			<a style="cursor:pointer" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', true)">Other Formats and Languages</a>
 		</div>
 		{/if}
 	</div>
