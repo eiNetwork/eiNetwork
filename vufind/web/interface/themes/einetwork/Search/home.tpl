@@ -120,6 +120,9 @@
 				<img src="/interface/themes/einetwork/images/Art/Slider/slider2.jpg"  data-transition="slideInLeft">
 				<img src="/interface/themes/einetwork/images/Art/Slider/slider3.jpg"  data-transition="slideInLeft">
 				<img src="/interface/themes/einetwork/images/Art/Slider/slider4.jpg"  data-transition="slideInLeft">
+				<img src="/interface/themes/einetwork/images/Art/Slider/slider5.jpg"  data-transition="slideInLeft">
+				<img src="/interface/themes/einetwork/images/Art/Slider/slider6.jpg"  data-transition="slideInLeft">
+			        <img src="/interface/themes/einetwork/images/Art/Slider/slider7.jpg"  data-transition="slideInLeft">		
 				</div>
 			</div>
 		</div>
