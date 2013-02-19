@@ -101,6 +101,8 @@
     });
     </script>
 {/literal}
+
+
 	<div class="loginHome-left"></div>
 
 	<div class="loginHome-center">
