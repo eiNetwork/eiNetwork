@@ -134,6 +134,9 @@
         <div id="articles">
             <a href="http://articles.einetwork.net">Databases and Articles</a>
         </div>
+        <div id="interlibraryloan">
+            <a href="http://illiad.carnegielibrary.org/illiad/logon.html">Interlibrary Loan</a>
+        </div>	
         
     </div>
 </div>
