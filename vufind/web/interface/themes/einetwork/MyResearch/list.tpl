@@ -1,4 +1,7 @@
 <script type="text/javascript" src="{$path}/js/lists.js"></script>
+<script type="text/javascript" src="{$path}/services/EcontentRecord/ajax.js"></script>
+<script type="text/javascript" src="/js/ei_js/search.js"></script>
+<script type="text/javascript" src="/services/List/ajax.js"></script>
 
 <div id="page-content" class="content">
 	
@@ -47,7 +50,8 @@
 
 		</div>
 		<form action="{$url}/MyResearch/MyList/{$favList->id}" id="myListFormItem">
-		<div>
+		<div>	
+		
 		<input type="hidden" name="myListActionItem" id="myListActionItem"/>
 		<ul>
 		{foreach from=$resourceList item=resource name="recordLoop"}
@@ -72,7 +76,7 @@
 		</div>
 		</form>
 		
-		{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
+		{if $pageLinks.all}<div class="pagination"></div>{/if}
 		{else}
 		{translate text='You do not have any saved resources'}
 		{/if}
