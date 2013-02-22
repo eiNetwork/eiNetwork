@@ -503,6 +503,8 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
 		  {elseif $displayFormat eq "OverDrive Video"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $format eq "OverDrive Read"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
 		  {/if}		  
 			<span class="iconlabel {$displayFormat|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$displayFormat}</span></div>
 		  {/foreach}
@@ -560,6 +562,8 @@ function redrawSaveStatus() {literal}{{/literal}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
 		  {elseif $eContentRecord->format eq "OverDrive Video"}
 		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+		  {elseif $format eq "OverDrive Read"}
+		  <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
 		  {/if}	
 			<span class="iconlabel {$eContentRecord->format()|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$eContentRecord->format}</span></div>
 	    {/if}
