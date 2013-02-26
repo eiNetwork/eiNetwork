@@ -418,3 +418,27 @@ function showPurchaseOptions(id){
 	var url = path + "/Record/" + id + "/AJAX?method=getPurchaseOptions";
 	ajaxLightbox(url)
 }
+
+function emailFindLibrary(email,id, unavailableShown){
+	
+    //var itemName = $('#itemTitle').html();
+    //var body = $("#callNumberBody").text();
+    
+    var data = "email=" + email + "&id=" + id + "&unavailableShown=" + unavailableShown;
+
+  $.ajax({
+	type: "GET",
+	url: "/Record/EmailAjax?method=emailCallNumber",
+	data: data,
+	dataType: "text",
+	success: function(phpReturnResult) {
+		console.log('Success: ' + phpReturnResult);
+	},
+	error: function(errormessage) {
+		console.log('Sendmail failed possibly php script: ' + errormessage);
+	}
+   });
+  
+   $("#emailButton").hide();
+}
+

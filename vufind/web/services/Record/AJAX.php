@@ -32,7 +32,7 @@ class AJAX extends Action {
 		global $timer;
 		$method = $_GET['method'];
 		$timer->logTime("Starting method $method");
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'SaveComment', 'SaveTag', 'SaveRecord'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'SaveComment', 'SaveTag', 'SaveRecord','EmailPrompt'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -223,6 +223,17 @@ class AJAX extends Action {
 		} else {
 			return '<result>Not Saved</result>';
 		}
+	}
+	
+	function EmailPrompt(){
+		
+		global $interface;
+		$id = $_GET['id'];
+		$interface->assign('CallNumber', $id);
+		$interface->assign("unavailableShown", $_GET["unavailableShown"]);
+		$prompt = $interface->fetch('Record/EmailPrompt.tpl');
+		
+	     	echo $prompt;	
 	}
 
 	// Email Record
