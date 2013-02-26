@@ -247,15 +247,6 @@ class Record extends Action
 			}
 		}
 		$useMarcSeries = true;
-		if ($this->isbn){
-			require_once 'Drivers/marmot_inc/GoDeeperData.php';
-			$series = GoDeeperData::getSeries($this->isbn);
-			if (isset($series)){
-				$interface->assign('series', $series);
-				$useMarcSeries = false;
-			}
-		}
-		if($useMarcSeries){
 			$marcField440 = $marcRecord->getFields('440');
 			$marcField490 = $marcRecord->getFields('490');
 			$marcField830 = $marcRecord->getFields('830');
@@ -273,8 +264,20 @@ class Record extends Action
 					$series[] = $this->getSubfieldData($field, 'a');
 				}
 				$interface->assign('series', $series);
+				$useMarcSeries = false;
 			}
-		}
+				
+		if($useMarcSeries){
+			if ($this->isbn){
+				require_once 'Drivers/marmot_inc/GoDeeperData.php';
+				$series = GoDeeperData::getSeries($this->isbn);
+				if (isset($series)){
+				$interface->assign('series', $series);
+				
+				}
+			}
+		}	
+
 		//Load description from Syndetics
 		$useMarcSummary = true;
 		if ($this->isbn || $this->upc){
