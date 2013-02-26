@@ -28,8 +28,9 @@ function getSaveToBookCart(id, source,obj){
                 };
                 saveToBookCart(id, source,successCallback);
 	}else{
+
                 successCallback = function() {
-                    window.location.reload();
+                    //window.location.reload();
                 };
 		ajaxLogin(function (){
 			
@@ -455,6 +456,7 @@ function printPage(inLeft,inTop,inWidth,innerHTML){
     printWin.close();
 }
 function printFindLibrary(){
+   
   var left = $(document).width()/2-285;
     var top = 300;
     var width = 570;
@@ -472,6 +474,16 @@ function printFindLibrary(){
         printPage(left,top,width,innerHTML);
     }
 }
+function emailCallNumberPrompt(callNumber,left,top,width,height){
+
+    var unavailableShown = $(".itemUnavailable").is(":visible");
+
+    var url = "/Record/AJAX?method=EmailPrompt&id="+callNumber+"&unavailableShown="+unavailableShown;  
+    //hideLightbox();
+    ajaxLightbox(url,false,left,width,top,height);
+    
+}
+
 function renewItem(url){
     document.body.style.cursor = 'wait';
      $.ajax({
