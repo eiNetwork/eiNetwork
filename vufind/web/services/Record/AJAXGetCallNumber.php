@@ -54,6 +54,7 @@ class AJAXGetCallNumber extends Record{
 		$booTitle = rtrim($booTitle, "/");
 		//$booTitle = rtrim($booTitle, ";");
 		$interface->assign('BookTitle',$booTitle);
+		$interface->assign("CallNumber", $id);
 		try {
 			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
 		} catch (PDOException $e) {
