@@ -53,8 +53,15 @@ function redrawSaveStatus() {literal}{{/literal}
 							
 						{if $corporateAuthor}
 							<div class="recordAuthor">
-								<span class="resultLabel">{translate text='Corporate Author'}:</span>
+								<span class="resultLabel"></span>
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
+							</div>
+						{/if}
+						
+						{if $meetingName}
+							<div class="recordAuthor">
+								<span class="resultLabel"></span>
+								<span class="resultValue"><a href="{$path}/Author/Home?author={$meetingName|escape:"url"}">{$meetingName|escape}</a></span>
 							</div>
 						{/if}
 						{if $pubdate}

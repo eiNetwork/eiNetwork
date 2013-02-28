@@ -251,14 +251,20 @@ function redrawSaveStatus() {literal}{{/literal}
 						{* Display more information about the title*}
 						{if $eContentRecord->author}
 						      <div class="recordAuthor">
-							    <span class="resultLabel">by</span>
+							    <span class="resultLabel"></span>
 							    <span class="resultValue"><a href="{$path}/Author/Home?author={$eContentRecord->author|escape:"url"}">{$eContentRecord->author|escape}</a></span>
 						      </div>
 						{/if}
 						{if $corporateAuthor}
 							<div class="recordAuthor">
-								<span class="resultLabel">{translate text='Corporate Author'}:</span>
+								<span class="resultLabel"></span>
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
+							</div>
+						{/if}
+						{if $meetingName}
+							<div class="recordAuthor">
+								<span class="resultLabel"></span>
+								<span class="resultValue"><a href="{$path}/Author/Home?author={$meetingName|escape:"url"}">{$meetingName|escape}</a></span>
 							</div>
 						{/if}
 						{if $eContentRecord->publishDate && $eContentRecord->publishDate != '01/01/0001'}

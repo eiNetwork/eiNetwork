@@ -148,6 +148,12 @@ class Record extends Action
 			$corporateAuthor = $this->getSubfieldData($marcField, 'a');
 			$interface->assign('corporateAuthor', $corporateAuthor);
 		}
+		
+		$marcField = $marcRecord->getField('111');
+		if ($marcField){
+			$meetingName = $this->getSubfieldData($marcField, 'a');
+			$interface->assign('meetingName', $meetingName);
+		}
 
 		$marcFields = $marcRecord->getFields('700');
 		if ($marcFields){
