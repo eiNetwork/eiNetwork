@@ -268,7 +268,7 @@ function redrawSaveStatus() {literal}{{/literal}
 							</table>
 						</td>
 					</tr>
-					{/if}
+					<!--{/if}
 					
 					{if $corporateAuthor}
 					<tr>
@@ -281,7 +281,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						</table>
 					</td>
 					</tr>
-					{/if}
+					{/if}-->
 					{if $contributors}
 					<tr>
 						<td class="details_lable">{translate text='Contributors'}</td>
