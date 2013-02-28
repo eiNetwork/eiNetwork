@@ -188,7 +188,7 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			 <div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
+				<div class="resultInformationLabel">{translate text='Community Reviews test'}</div>
 				<div class="recordSubjects">
 					
 						{*include file="$module/view-comments.tpl"*}
@@ -222,6 +222,22 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
+
+					{if $altTitle}
+					{foreach from=$altTitle item=title key=k name=loop}
+					<tr>
+						<td class="details_lable">Other Title</td>
+						<td>
+							<table>
+								<tr><td>							
+								{$title}
+								</td></tr>
+							</table>
+						</td>
+					</tr>
+					{/foreach}
+					{/if}
+					
 					{if $edition}
 					<tr>
 						<td class="details_lable">Edition</td>
