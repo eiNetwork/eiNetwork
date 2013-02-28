@@ -103,6 +103,7 @@ class Record extends Action
 		$timer->logTime('Processed the marc record');
 
 		//Load information for display in the template rather than processing specific fields in the template
+		//Title fields
 		$marcField = $marcRecord->getField('245');
 		$recordTitle = $this->getSubfieldData($marcField, 'a');
 		$interface->assign('recordTitle', $recordTitle);
@@ -112,6 +113,30 @@ class Record extends Action
 		$recordTitleWithAuth = trim($this->concatenateSubfieldData($marcField, array('a', 'b', 'h', 'n', 'p', 'c')));
 		$interface->assign('recordTitleWithAuth', $recordTitleWithAuth);
 
+		//Alternate title array
+		$marcField130 = $marcRecord->getFields('130');
+		$marcField240 = $marcRecord->getFields('240');
+		$marcField246 = $marcRecord->getFields('246');
+		$marcField730 = $marcRecord->getFields('730');
+		$marcField740 = $marcRecord->getFields('740');
+		
+		if ($marcField130 || $marcField240 || $marcField246 || $marcfield730 || $marcField740){
+			$altTitle = array();
+			foreach ($marcField130 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField240 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField246 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField730 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			$interface->assign('altTitle', $altTitle);
+		}
+		
 		$marcField = $marcRecord->getField('100');
 		if ($marcField){
 			$mainAuthor = $this->concatenateSubfieldData($marcField, array('a', 'b', 'c', 'd'));
