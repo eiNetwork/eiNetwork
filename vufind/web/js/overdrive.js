@@ -1,4 +1,4 @@
-function checkoutOverDriveItem(overdriveId, formatId){
+function checkoutOverDriveItem1(overdriveId, formatId){
 	if (loggedIn){
 		var url = path + "/EcontentRecord/AJAX?method=GetOverDriveLoanPeriod&overDriveId=" + overdriveId + "&formatId=" + formatId;
 		ajaxLightbox(url,false,false,'320px',false,'150px');
@@ -9,10 +9,11 @@ function checkoutOverDriveItem(overdriveId, formatId){
 	}
 }
 
-function checkoutOverDriveItemStep2(overdriveId, formatId){
+function checkoutOverDriveItem(elemId){
+	
 	var lendingPeriod = $("#loanPeriod option:selected").val();
 	showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
-	var url = path + "/EcontentRecord/AJAX?method=CheckoutOverDriveItem&overDriveId=" + overdriveId + "&formatId=" + formatId + "&lendingPeriod=" + lendingPeriod;
+	var url = path + "/EcontentRecord/"+elemId+"/AJAX?method=CheckoutOverDriveItem";
 	$.ajax({
 		url: url,
 		success: function(data){

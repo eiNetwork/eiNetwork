@@ -277,13 +277,13 @@ function doGetStatusSummaries()
 					var elemId = $(item).attr("id");
 					if(sta =="Available from OverDrive"){
 						$("#RequestWord"+elemId).text("Checkout Now");
-						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=CheckoutOverDriveItem';
 						if(document.getElementById("selected"+elemId)){
-							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");	
+							document.getElementById("selected"+elemId).setAttribute("onclick","checkoutOverDriveItem('elemId')");	
 						}
 					}else if(sta == "Checked out in OverDrive"){
 						$("#RequestWord"+elemId).text("Request Now");
-						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=CheckoutOverDriveItem';
 						if(document.getElementById("selected"+elemId)){
 							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
 						}
