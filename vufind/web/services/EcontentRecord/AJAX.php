@@ -395,15 +395,23 @@ class AJAX extends Action {
 	
 	function CheckoutOverDriveItem(){
 		global $user;
-		$overDriveId = $_REQUEST['overDriveId'];
-		$format = $_REQUEST['formatId'];
-		$lendingPeriod = $_REQUEST['lendingPeriod'];
-		$logger = new Logger();
-		$logger->log("Lending period = $lendingPeriod", PEAR_LOG_INFO);
+		$id = strip_tags($_REQUEST['id']);
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $id;
+		$eContentRecord->find(true);
+		
+		$holdings = $driver->getHolding($id);
+		$overDriveId = $holdings[0]->links[0][overDriveId];
+	
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
-			$result = $driver->checkoutOverDriveItem($overDriveId, $format, $lendingPeriod, $user);
+			$result = $driver->checkoutOverDriveItem($overDriveId, $user);
+
 			return json_encode($result);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to checkout an item.'));
