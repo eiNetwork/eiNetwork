@@ -231,18 +231,16 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 
 					{if $altTitle}
-					{foreach from=$altTitle item=title key=k name=loop}
 					<tr>
 						<td class="details_lable">Other Title</td>
 						<td>
 							<table>
-								<tr><td>							
-								{$title}
-								</td></tr>
+								{foreach from=$altTitle item=title key=k name=loop}		
+								<tr><td>{$title|escape|trim}</td></tr>
+								{/foreach}
 							</table>
 						</td>
 					</tr>
-					{/foreach}
 					{/if}
 					
 					{if $edition}
