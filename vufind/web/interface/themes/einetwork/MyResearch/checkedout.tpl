@@ -1,9 +1,11 @@
 <script type="text/javascript" src="{$url}/services/MyResearch/ajax.js"></script>
+<script type="text/javascript" src="{$url}/services/EcontentRecord/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/holds.js"></script>
 {if (isset($title)) }
 <script type="text/javascript">
     alert("{$title}");
 </script>
+
 {/if}
 <div id="page-content" class="content">
     <div id="left-bar">
@@ -404,7 +406,7 @@
 					{if $record.expiresOn}
 					    Expires on&nbsp;{$record.expiresOn|date_format}
 					{/if}
-					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId})'/>
 				</div>
 			</div>
 			{/foreach}
@@ -463,7 +465,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId})'/>
 				</div>
 			</div>
 			{/foreach}
