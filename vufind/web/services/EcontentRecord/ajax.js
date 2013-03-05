@@ -178,6 +178,22 @@ function deleteItem(id, itemId){
 	}
 	return false;
 }
+function DownloadCheckedoutOverdrive(id){
+	
+	if (loggedIn){
+	
+		var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
+		var params = "method=GetHoldingsInfoPopup";
+		var fullUrl = url + "?" + params;
+		ajaxLightbox(fullUrl,false,false,'600px',false,'auto');
+	}else{
+		ajaxLogin(function(){
+			DownloadCheckedoutOverdrive(id);
+		});
+	}	
+	
+}
+
 function addItem(id){
 	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=AddItem";

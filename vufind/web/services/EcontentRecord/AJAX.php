@@ -12,7 +12,7 @@ class AJAX extends Action {
 
 	function launch() {
 		$method = $_GET['method'];
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -392,6 +392,21 @@ class AJAX extends Action {
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
 		}
 	}
+	
+	function DownloadOverDriveItem(){
+		global $user;
+		$overDriveId = $_REQUEST['overDriveId'];
+		$format = $_REQUEST['formatId'];
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$driver = new OverDriveDriver();
+			$downloadMessage = $driver->downloadOverDriveItem($overDriveId, $format, $user);
+			return json_encode($downloadMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
+		}		
+		
+	}	
 	
 	function CheckoutOverDriveItem(){
 		global $user;

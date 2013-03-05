@@ -283,7 +283,7 @@ function doGetStatusSummaries()
 						}
 					}else if(sta == "Checked out in OverDrive"){
 						$("#RequestWord"+elemId).text("Request Now");
-						url = '/EcontentRecord/'+elemId+'/AJAX?method=CheckoutOverDriveItem';
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=PlaceOverDriveHold';
 						if(document.getElementById("selected"+elemId)){
 							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
 						}
