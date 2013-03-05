@@ -1,3 +1,4 @@
+<script type="text/javascript" src="{$url}/js/overdrive.js"></script>
 <div onmouseup="this.style.cursor='default';" id="popupboxHeader" class="popupHeader">
 	{translate text='Holding'}
 	<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"/></span>
@@ -20,7 +21,7 @@
 				<td>
 					{* Options for the user to view online or download *}
 					{foreach from=$eContentItem->links item=link}
-						<input href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="{$link.onclick}"{/if} class="button" value="{if $link.text eq 'Place Hold'}Request Now{elseif $link.text eq 'Check Out'}Checkout Now{else}{$link.text}{/if}" style="background-color:rgb(244,213,56);width:85px;height:20px;padding-top:0px;padding-bottom:0px"></a>
+						<input href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="downloadOverDriveItem('{$link.overDriveId}', '{$link.formatId}')"{/if} class="button" value="{if $link.text eq 'Place Hold'}Download Now{elseif $link.text eq 'Check Out'}Checkout Now{else}{$link.text}{/if}" style="background-color:rgb(244,213,56);width:85px;height:20px;padding-top:0px;padding-bottom:0px"></a>
 					{/foreach}
 					{if $user && $user->hasRole('epubAdmin')}
 						<input value="Edit" href="#" onclick="return editItem('{$id}', '{$eContentItem->id}')" class="button" style="background-color:rgb(244,213,56);width:85px;height:20px;padding-top:0px;padding-bottom:0px">
