@@ -70,7 +70,9 @@ class OverDriveDriver {
 			$return = curl_exec($ch);
 			curl_close($ch);
 			$tokenData = json_decode($return);
-			$memcache->set('overdrive_token', $tokenData, 0, $tokenData->expires_in - 10);
+			if ($tokenData){
+				$memcache->set('overdrive_token', $tokenData, 0, $tokenData->expires_in - 10);
+			}
 		}
 		return $tokenData;
 	}
@@ -78,23 +80,25 @@ class OverDriveDriver {
 	public function _callUrl($url){
 		for ($i = 1; $i < 5; $i++){
 			$tokenData = $this->_connectToAPI($i != 1);
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: {$tokenData->token_type} {$tokenData->access_token}"));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			$return = curl_exec($ch);
-			curl_close($ch);
-			$returnVal = json_decode($return);
-			//print_r($returnVal);
-			if ($returnVal != null){
-				if (!isset($returnVal->message) || $returnVal->message != 'An unexpected error has occurred.'){
-					return $returnVal;
+			if ($tokenData){
+				$ch = curl_init($url);
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+				curl_setopt($ch, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: {$tokenData->token_type} {$tokenData->access_token}"));
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				$return = curl_exec($ch);
+				curl_close($ch);
+				$returnVal = json_decode($return);
+				//print_r($returnVal);
+				if ($returnVal != null){
+					if (!isset($returnVal->message) || $returnVal->message != 'An unexpected error has occurred.'){
+						return $returnVal;
+					}
 				}
-			}
+			}	
 			usleep(500);
 		}
 		return null;
@@ -142,70 +146,6 @@ class OverDriveDriver {
 		return $this->_callUrl($availabilityUrl);
 	}
 
-	/**
-	 * Loads information about items within the user's cart in OverDrive.
-	 * No caching is done becase the cart page always changes during the checkout process.
-	 *
-	 * @param User $user
-	 * @param array $overDriveInfo optional array of information loaded from _loginToOverDrive to improve performance.
-	 *
-	 * @return array
-	 */
-	public function getOverDriveCart($user, $overDriveInfo = null){
-		$cart = array();
-		$cart['items'] = array();
-
-		$closeSession = false;
-		if ($overDriveInfo == null){
-			$ch = curl_init();
-			if (!$ch){
-				global $logger;
-				$logger->log("Could not create curl handle ". $ch, PEAR_LOG_INFO);
-				$cart['message'] = 'Sorry, we could not connect to OverDrive, please try again in a few minutes.';
-				return $cart;
-			}
-			$overDriveInfo = $this->_loginToOverDrive($ch, $user);
-			$closeSession = true;
-		}
-
-		if ($overDriveInfo == null){
-			$cart['error'] = "We were unable to contact the OverDrive server.  Please try again in a few minutes.";
-			return $cart;
-		}else{
-			//Load the My Cart Page
-			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['cartUrl']);
-			$cartPage = curl_exec($overDriveInfo['ch']);
-		}
-
-		if ($closeSession){
-			curl_close($ch);
-		}
-
-		//Extract information from the holds page
-		preg_match_all('/<a href="ContentDetails\\.htm\\?ID=(.*?)">(.*?)<\/a>.*?<small><b>(.*?)<\/b><\/small>.*?Lending period:\\s+(\\d+) days.*?<td.*?>(.*?)<\/td>/si', $cartPage, $cartInfo, PREG_SET_ORDER);
-
-		for ($matchi = 0; $matchi < count($cartInfo); $matchi++) {
-			$cartItem = array();
-			$cartItem['overDriveId'] = $cartInfo[$matchi][1];
-			$cartItem['title'] = $cartInfo[$matchi][2];
-			$cartItem['subTitle'] = $cartInfo[$matchi][3];
-			$cartItem['lendingPeriod'] = $cartInfo[$matchi][4];
-			$cartItem['format'] = $cartInfo[$matchi][5];
-
-			//For each item (load the record from VuFind) based on the id of the item.
-			$eContentRecord = new EContentRecord();
-			$eContentRecord->whereAdd("sourceUrl LIKE '%{$cartItem['overDriveId']}%'");
-			if ($eContentRecord->find(true)){
-				$cartItem['recordId'] = $eContentRecord->id;
-			}else{
-				$cartItem['recordId'] = -1;
-			}
-
-			$cart['items'][] = $cartItem;
-		}
-
-		return $cart;
-	}
 
 	/**
 	 * Loads information about items within the user's wishlist in OverDrive
@@ -348,7 +288,8 @@ class OverDriveDriver {
 			}
 
 			//Extract information from the holds page
-			preg_match_all('/<div class="is-enhanced" data-transaction=".*?" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*?>.*?data-reserveid="(.*?)".*?var myExpireDate = "(.*?)".*?<\/noscript>/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
+			 preg_match_all('/<div class="is\-enhanced" data-transaction=".*?" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*?>.*?data-reserveid="(.*?)".*?<div><a href="(.*?FormatID=).*?var myExpireDate = "(.*?)".*?<\/noscript>/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
+			//preg_match_all('//<div class="is\-enhanced" data-transaction=".*?" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*? >.*?data-reserveid="(.*?)".*?<div><a href="(.*?FormatID=).*?var myExpireDate = "(.*?)".*?<\/noscript>/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
 
 			for ($matchi = 0; $matchi < count($bookshelfInfo); $matchi++) {
 				$bookshelfItem = array();
@@ -359,22 +300,23 @@ class OverDriveDriver {
 				}
 				$bookshelfItem['title'] = $bookshelfInfo[$matchi][1];
 				$bookshelfItem['overDriveId'] = $bookshelfInfo[$matchi][3];
-				$bookshelfItem['subTitle'] = $bookshelfInfo[$matchi][4];
+				//$bookshelfItem['subTitle'] = $bookshelfInfo[$matchi][5];
 				$bookshelfItem['format'] = $bookshelfInfo[$matchi][5];
-				$bookshelfItem['downloadSize'] = $bookshelfInfo[$matchi][6];
-				$bookshelfItem['downloadLink'] = $bookshelfInfo[$matchi][7];
+				//$bookshelfItem['downloadSize'] = $bookshelfInfo[$matchi][5];
+				$bookshelfItem['downloadLink'] = $bookshelfInfo[$matchi][4];
 				$bookshelfItem['checkedOutOn'] = $bookshelfInfo[$matchi][8];
 				$bookshelfItem['checkoutdate'] = strtotime($bookshelfItem['checkedOutOn']);
-				$bookshelfItem['expiresOn'] = $bookshelfInfo[$matchi][4];
-
-				//For each item (load the record from VuFind) based on the id of the item.
+				$bookshelfItem['expiresOn'] = $bookshelfInfo[$matchi][5];
+				
 				$eContentRecord = new EContentRecord();
-				$eContentRecord->whereAdd("sourceUrl LIKE '%{$bookshelfItem['overDriveId']}%'");
+				$eContentRecord->externalId = $bookshelfItem['overDriveId'];
+				$eContentRecord->source = 'OverDrive';
 				if ($eContentRecord->find(true)){
 					$bookshelfItem['recordId'] = $eContentRecord->id;
 				}else{
 					$bookshelfItem['recordId'] = -1;
 				}
+
 
 				$bookshelf['items'][] = $bookshelfItem;
 			}
@@ -667,6 +609,27 @@ class OverDriveDriver {
 
 		return $holdResult;
 	}
+	
+	public function downloadOverDriveItem($overDriveId, $formatId, $user){
+		global $logger;
+		global $memcache;
+		$ch = curl_init();
+		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+		$closeSession = true;
+
+		//Switch back to get method
+		curl_setopt($overDriveInfo['ch'], CURLOPT_HTTPGET, true);
+
+		$result = array(
+			'result' => true,
+			'downloadUrl' => $overDriveInfo['downloadUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $overDriveId . '&FormatID=' . $formatId . '&url=MyAccount.htm'
+		);
+		$logger->log("DOWNLOADXXX---> ". $result["downloadUrl"], PEAR_LOG_INFO);
+		$memcache->delete('overdrive_summary_' . $user->id);
+		
+		return $result;
+		
+	}	
 
 	public function cancelOverDriveHold($overDriveId, $format, $user){
 		global $memcache;
@@ -993,7 +956,7 @@ class OverDriveDriver {
 	 * @param int $lendingPeriod  the number of days that the user would like to have the title chacked out. or -1 to use the default
 	 * @param User $user
 	 */
-	public function checkoutOverDriveItem($overDriveId, $format, $lendingPeriod, $user){
+	public function checkoutOverDriveItem($overDriveId, $user){
 		global $logger;
 		$checkoutResult = array();
 		$checkoutResult['result'] = false;
@@ -1136,30 +1099,14 @@ class OverDriveDriver {
 		if (($matchAccount > 0) && ($matchSignOut > 0)){
 			$logger->log("Logging in to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
 			$overDriveInfo = array(
-				//'holdsUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=MyWaitingList.htm&ForceLoginFlag=0',  $urlWithSession),
 				'holdsUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=MyAccount.htm?PerPage=80#myAccount2&ForceLoginFlag=0',  $urlWithSession),
-				//'cartUrl' => str_replace('Default.htm', 'BANGCart.dll',  $urlWithSession),
-				//'cartUrl' => $urlWithSession,
-				//'removeDupUrl' => str_replace('Default.htm', 'BANGCart.dll?Action=RemoveDup',  $urlWithSession),
-				//'removeDupUrl' => $urlWithSession,
-				//'lendingPeriodsUrl' => str_replace('Default.htm', 'EditLendingPeriod.htm',  $urlWithSession),
-				//'lendingPeriodsUrl' => $urlWithSession,
-				//'bookshelfUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=MyBookshelf.htm&ForceLoginFlag=0',  $urlWithSession),
 				'bookshelfUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80&ForceLoginFlag=0',  $urlWithSessionSSL),
-				//'wishlistUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=WishList.htm&ForceLoginFlag=0',  $urlWithSession),
-				//'wishlistUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=MyAccount.htm?PerPage=80#myAccount3&ForceLoginFlag=0',  $urlWithSession),
-				//'waitingListUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListForm.htm',  $urlWithSession),
-				//'waitingListUrl' => $urlWithSession,
-				//'placeHoldUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=LibraryWatingList',  $urlWithSession),
 				'placeHoldUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&amp;ForceLoginFlag=0&amp;URL=WaitingListForm.htm',  $urlWithSessionSSL),
 				'baseLoginUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll',  $urlWithSessionSSL),
+				'downloadUrl' => str_replace('Default.htm', '',  $urlWithSessionSSL),
 				'contentInfoPage' => str_replace('Default.htm', 'ContentDetails.htm',  $urlWithSession),
-				//'checkoutUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=Checkout.htm&ForceLoginFlag=0', $urlWithSession),
 				'checkoutUrl' => str_replace('Default.htm', 'BANGPurchase.dll?Action=OneClickCheckout&ForceLoginFlag=0', $urlWithSessionSSL),
-				//'addToWishlistUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&ForceLoginFlag=0&URL=BANGCart.dll%3FAction%3DWishListAdd%26ID%3D', $urlWithSession),
-				//'addToWishlistUrl' => str_replace('Default.htm', 'ForceLoginFlag=0&URL=javascript:void(0)" class="wishlist-link" value=', $urlWithSession),
-				//'purchaseUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&ForceLoginFlag=0&URL=BANGCart.dll%3FAction%3DWishListAdd%26ID%3D', $urlWithSession),
-				'ch' => $ch,
+				'ch' => $ch
 			);
 		}else{
 			//global $logger;

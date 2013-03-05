@@ -62,6 +62,40 @@ function placeOverDriveHold(overDriveId, formatId){
 	}
 }
 
+function downloadOverDriveItem(overDriveId, formatId){
+	if (loggedIn){
+		showProcessingIndicator("Downloading the title for you in OverDrive.  This may take a minute.");
+		var url = path + "/EcontentRecord/AJAX?method=DownloadOverDriveItem&overDriveId=" + overDriveId + "&formatId=" + formatId;
+		$.ajax({
+			url: url,
+			cache: false,
+			success: function(data){
+				
+				if (data.result){
+
+					window.location.href = data.downloadUrl;
+				}else{
+					alert(data.message);
+					hideLightbox();
+				}
+			},
+			dataType: 'json',
+			async: false,
+			 error   : function (jqXHR, textStatus, errorThrown) {
+			  if (typeof console == 'object' && typeof console.log == 'function') {
+			      console.log(jqXHR);
+			      console.log(textStatus);
+			      console.log(errorThrown);
+			   }
+			 }
+		});
+	}else{
+		ajaxLogin(function(){
+			placeOverDriveHold(overDriveId, formatId);
+		});
+	}
+}
+
 function addOverDriveRecordToWishList(recordId){
 	if (loggedIn){
 		showProcessingIndicator("Adding the title to your Wish List in OverDrive.  This may take a minute.");
