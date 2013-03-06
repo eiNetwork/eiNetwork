@@ -178,12 +178,12 @@ function deleteItem(id, itemId){
 	}
 	return false;
 }
-function DownloadCheckedoutOverdrive(id){
+function DownloadCheckedoutOverdrive(id, lockedFormat){
 	
 	if (loggedIn){
 	
 		var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
-		var params = "method=GetHoldingsInfoPopup";
+		var params = "method=GetHoldingsInfoPopup&lockedFormat=" + lockedFormat;
 		var fullUrl = url + "?" + params;
 		ajaxLightbox(fullUrl,false,false,'600px',false,'auto');
 	}else{

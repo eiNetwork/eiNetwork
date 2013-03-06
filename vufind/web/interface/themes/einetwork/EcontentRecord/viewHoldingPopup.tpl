@@ -6,22 +6,29 @@
 <div id="popupboxContent" class="popupContent" style="margin-top:10px">
 {if count($holdings) > 0}
     <div style="overflow-y:auto;height:auto;max-height:4000px;margin-left:8px">
+	{if $lockedFormat != 0 }
+	<div><span>Your format is locked.</span></div>
+	{else}
+	<div><span>You may select one format.</span></div>
+	{/if}
 	<table>
 	<thead>
-		<tr><th style="width:110px">Type</th><th style="width:80px">Source</th><th style="width:180px">Usage</th>{if $showEContentNotes}<th>Notes</th>{/if}<th>Size</th><th style="padding-left:10px">&nbsp;</th>
+		<tr><th style="width:110px">Type</th><th style="width:80px">Source</th><th style="width:180px">Usage</th>{if $showEContentNotes}<th>Notes</th>{/if}<th style="padding-left:10px">&nbsp;</th>
 	</thead>
 	<tbody>
 	{foreach from=$holdings item=eContentItem key=index}
 		{if $eContentItem->item_type == 'overdrive'}
+			
 			<tr id="itemRow{$index}" style="height:30px">
 				<td>{$eContentItem->externalFormat}</td>
 				<td>OverDrive</td>
 				<td>Must be checked out to read</td>
-				<td>{$eContentItem->size}</td>
 				<td>
 					{* Options for the user to view online or download *}
 					{foreach from=$eContentItem->links item=link}
+						{if $lockedFormat == 0 || $link.formatId == $lockedFormat}
 						<input href="{if $link.url}{$link.url}{else}#{/if}" {if $link.onclick}onclick="downloadOverDriveItem('{$link.overDriveId}', '{$link.formatId}')"{/if} class="button" value="{if $link.text eq 'Place Hold'}Download Now{elseif $link.text eq 'Check Out'}Checkout Now{else}{$link.text}{/if}" style="background-color:rgb(244,213,56);width:85px;height:20px;padding-top:0px;padding-bottom:0px"></a>
+						{/if}	
 					{/foreach}
 					{if $user && $user->hasRole('epubAdmin')}
 						<input value="Edit" href="#" onclick="return editItem('{$id}', '{$eContentItem->id}')" class="button" style="background-color:rgb(244,213,56);width:85px;height:20px;padding-top:0px;padding-bottom:0px">
@@ -29,13 +36,13 @@
 					{/if}
 				</td>
 			</tr>
+			
 		{else}
 			<tr id="itemRow{$eContentItem->id} style="height:30px"">
 				<td>{$eContentItem->item_type}</td>
 				<td>{$eContentItem->source}</td>
 				<td>{if $eContentItem->getAccessType() == 'free'}No Usage Restrictions{elseif $eContentItem->getAccessType() == 'acs' || $eContentItem->getAccessType() == 'singleUse'}Must be checked out to read{/if}</td>
 				{if $showEContentNotes}<td>{$eContentItem->notes}</td>{/if}
-				<td>{$eContentItem->getSize()|file_size}</td>
 				<td>
 					{* Options for the user to view online or download *}
 					{foreach from=$eContentItem->links item=link}

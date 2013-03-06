@@ -9,30 +9,35 @@ function checkoutOverDriveItem1(overdriveId, formatId){
 	}
 }
 
+
 function checkoutOverDriveItem(elemId){
-	
-	var lendingPeriod = $("#loanPeriod option:selected").val();
-	showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
-	var url = path + "/EcontentRecord/"+elemId+"/AJAX?method=CheckoutOverDriveItem";
-	$.ajax({
-		url: url,
-		success: function(data){
-			alert(data.message);
-			if (data.result){
-				
-				//window.location.href = path + "/MyResearch/CheckedOut";
-			}else{
+	if (loggedIn){
+		showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
+		var url = path + "/EcontentRecord/"+elemId+"/AJAX?method=CheckoutOverDriveItem";
+		$.ajax({
+			url: url,
+			success: function(data){
+				alert(data.message);
+				if (data.result){
+					
+					//window.location.href = path + "/MyResearch/CheckedOut";
+				}else{
+					hideLightbox();
+				}
+				hideLightbox();
+				getRequestAndCheckout();
+			},
+			dataType: 'json', 
+			error: function(){	
+				setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
 				hideLightbox();
 			}
-			hideLightbox();
-			getRequestAndCheckout();
-		},
-		dataType: 'json',
-		error: function(){	
-			setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
-			hideLightbox();
-		}
-	});
+		});
+	}else{
+		ajaxLogin(function(){
+			checkoutOverDriveItem(elemId);
+		});
+	}	
 }
 
 function placeOverDriveHold(overDriveId, formatId){
@@ -94,6 +99,36 @@ function downloadOverDriveItem(overDriveId, formatId){
 			placeOverDriveHold(overDriveId, formatId);
 		});
 	}
+}
+
+function returnOverDriveItem(overdriveId, transactionId){
+	if (loggedIn){
+		showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
+		var url = path + "/EcontentRecord/AJAX?method=ReturnOverDriveItem&overDriveId=" + overdriveId + "&transactionId=" + transactionId;
+		$.ajax({
+			url: url,
+			success: function(data){
+				alert(data.message);
+				if (data.result){
+					
+					$('#record' + overdriveId).hide();
+					
+				}else{
+					hideLightbox();
+				}
+				hideLightbox();
+			},
+			dataType: 'json', 
+			error: function(){	
+				setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
+				hideLightbox();
+			}
+		});
+	}else{
+		ajaxLogin(function(){
+			returnOverDriveItem(overdriveId, transactionId);
+		});
+	}	
 }
 
 function addOverDriveRecordToWishList(recordId){
