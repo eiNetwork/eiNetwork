@@ -288,26 +288,23 @@ class OverDriveDriver {
 			}
 
 			//Extract information from the holds page
-			 preg_match_all('/<div class="is\-enhanced" data-transaction=".*?" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*?>.*?data-reserveid="(.*?)".*?<div><a href="(.*?FormatID=).*?var myExpireDate = "(.*?)".*?<\/noscript>/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
-			//preg_match_all('//<div class="is\-enhanced" data-transaction=".*?" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*? >.*?data-reserveid="(.*?)".*?<div><a href="(.*?FormatID=).*?var myExpireDate = "(.*?)".*?<\/noscript>/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
+			 preg_match_all('/<div class="is\-enhanced" data-transaction="(.*?)" title="(.*?)" style="width:48%; float:left;">.*?<img class="lrgImg" src="(?:http:\/\/(.*?)|MissingThumbImage\.jpg)".*?data-crid="(.*?)".*?<div.*?class="dwnld-container".*?>(.*?)var myExpireDate = "(.*?)".*?<\/noscript>.*?data-earlyreturn="(.*?)"/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
+			//preg_match_all('/<li class="mobile-four bookshelf-title-li".*?data-transaction="(.*?)".*? >.*?<div class="is-enhanced" data-transaction=".*?" title="(.*?)".*?<img.*?class="lrgImg" src="(.*?)".*?data-crid="(.*?)".*?<div.*?class="dwnld-container".*? >(.*?)<div class="expiration-date".*?<noscript>(.*?)<\/noscript>.*?data-earlyreturn="(.*?)"/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER);
 
 			for ($matchi = 0; $matchi < count($bookshelfInfo); $matchi++) {
 				$bookshelfItem = array();
-				if ($bookshelfInfo[$matchi][2]){
-					$bookshelfItem['imageUrl'] = "http://" . $bookshelfInfo[$matchi][2];
+				if ($bookshelfInfo[$matchi][3]){
+					$bookshelfItem['imageUrl'] = "http://" . $bookshelfInfo[$matchi][3];
 				}else{
 					$bookshelfItem['imageUrl'] = "";
 				}
-				$bookshelfItem['title'] = $bookshelfInfo[$matchi][1];
-				$bookshelfItem['overDriveId'] = $bookshelfInfo[$matchi][3];
-				//$bookshelfItem['subTitle'] = $bookshelfInfo[$matchi][5];
-				$bookshelfItem['format'] = $bookshelfInfo[$matchi][5];
-				//$bookshelfItem['downloadSize'] = $bookshelfInfo[$matchi][5];
-				$bookshelfItem['downloadLink'] = $bookshelfInfo[$matchi][4];
-				$bookshelfItem['checkedOutOn'] = $bookshelfInfo[$matchi][8];
-				$bookshelfItem['checkoutdate'] = strtotime($bookshelfItem['checkedOutOn']);
-				$bookshelfItem['expiresOn'] = $bookshelfInfo[$matchi][5];
+				$bookshelfItem['transactionId'] = $bookshelfInfo[$matchi][1];
+				$bookshelfItem['title'] = $bookshelfInfo[$matchi][2];
+				$bookshelfItem['overDriveId'] = $bookshelfInfo[$matchi][4];
+				$bookshelfItem['expiresOn'] = $bookshelfInfo[$matchi][6];
+				$bookshelfItem['earlyReturn'] = $bookshelfInfo[$matchi][7];
 				
+				$formatSection = $bookshelfInfo[$matchi][5];
 				$eContentRecord = new EContentRecord();
 				$eContentRecord->externalId = $bookshelfItem['overDriveId'];
 				$eContentRecord->source = 'OverDrive';
@@ -316,7 +313,30 @@ class OverDriveDriver {
 				}else{
 					$bookshelfItem['recordId'] = -1;
 				}
-
+				//set locked format to zero which means none
+				$bookshelfItem['lockedFormat'] = 0;
+				
+				//Check to see if a format has been selected
+				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
+					$bookshelfItem['formatSelected'] = false;
+					$bookshelfItem['formats'] = array();
+					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
+						$format = array();
+						$format['id'] = $formatOptions[$fmt][1];
+						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
+						if($format['locked'] == 1){
+							$bookshelfItem['lockedFormat'] = $format['id'];	
+						}
+						$format['enhanced'] = $formatOptions[$fmt][3];
+						$format['name'] = $formatOptions[$fmt][4];
+						if ($format['locked'] == 1){
+							$bookshelfItem['formatSelected'] = true;
+							$bookshelfItem['selectedFormat'] = $format;
+							$bookshelfItem['downloadUrl'] = $overDriveInfo['downloadUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $bookshelfItem['overDriveId'] . '&FormatID=' . $format['id'] . '&url=MyAccount.htm';
+						}
+						$bookshelfItem['formats'][] = $format;
+					}
+				}
 
 				$bookshelf['items'][] = $bookshelfItem;
 			}
@@ -325,6 +345,100 @@ class OverDriveDriver {
 		}
 		return $bookshelf;
 	}
+	
+	public function _parseOverDriveCheckedOutItems($overDriveInfo){
+		$bookshelf = array();
+		$bookshelf['items'] = array();
+		
+			$closeSession = false;
+			if ($overDriveInfo == null){
+				$ch = curl_init();
+				if (!$ch){
+					//global $logger;
+					$logger->log("Could not create curl handle ". $ch, PEAR_LOG_INFO);
+					$bookshelf['error'] = 'Sorry, we could not connect to OverDrive, please try again in a few minutes.';
+					return $bookshelf;
+				}
+				$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+				if ($overDriveInfo == null){
+					global $logger;
+					$logger->log("Could not login to overdrive ". $ch, PEAR_LOG_INFO);
+					$bookshelf['error'] = 'Sorry, we could not login to OverDrive, please try again in a few minutes.';
+					return $bookshelf;
+				}
+				$closeSession = true;
+			}
+			$logger->log("Bookshelf URL june ".$overDriveInfo['bookshelfUrl'], PEAR_LOG_INFO);
+			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['bookshelfUrl']);
+			$bookshelfPage = curl_exec($overDriveInfo['ch']);
+			$logger->log("Bookshelf page june ". $bookshelfPage." ***end bookshelf page", PEAR_LOG_INFO);
+			
+			if ($closeSession){
+				curl_close($overDriveInfo['ch']);
+			}
+			
+		if (preg_match_all('/<li class="mobile-four bookshelf-title-li".*?data-transaction="(.*?)".*?>.*?<div class="is-enhanced" data-transaction=".*?" title="(.*?)".*?<img.*?class="lrgImg" src="(.*?)".*?data-crid="(.*?)".*?<div.*?class="dwnld-container".*?>(.*?)<div class="expiration-date".*?<noscript>(.*?)<\/noscript>.*?data-earlyreturn="(.*?)"/si', $bookshelfPage, $bookshelfInfo, PREG_SET_ORDER)) {
+			//echo("\r\n");
+			//print_r($bookshelfInfo);
+			for ($i = 0; $i < count($bookshelfInfo); $i++){
+				$bookshelfItem = array();
+				$group = 1;
+				$bookshelfItem['transactionId'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['title'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['imageUrl'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['overDriveId'] = $bookshelfInfo[$i][$group++];
+				//Figure out which eContent record this is for.
+				$eContentRecord = new EContentRecord();
+				$eContentRecord->externalId = $bookshelfItem['overDriveId'];
+				$eContentRecord->source = 'OverDrive';
+				if ($eContentRecord->find(true)){
+					$bookshelfItem['recordId'] = $eContentRecord->id;
+				}else{
+					$bookshelfItem['recordId'] = -1;
+				}
+				$formatSection = $bookshelfInfo[$i][$group++];
+				//print_r("\r\nFormat Section $i\r\n$formatSection\r\n");
+				$bookshelfItem['expiresOn'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['earlyreturn'] = $bookshelfInfo[$i][$group++];
+				//Check to see if a format has been selected
+				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
+					$bookshelfItem['formatSelected'] = false;
+					$bookshelfItem['formats'] = array();
+					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
+						$format = array();
+						$format['id'] = $formatOptions[$fmt][1];
+						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
+						$format['enhanced'] = $formatOptions[$fmt][3];
+						$format['name'] = $formatOptions[$fmt][4];
+						if ($format['locked'] == 1){
+							$bookshelfItem['formatSelected'] = true;
+							$bookshelfItem['selectedFormat'] = $format;
+							$bookshelfItem['downloadUrl'] = $overDriveInfo['baseLoginUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $bookshelfItem['overDriveId'] . '&FormatID=' . $format['id'] . '&url=MyAccount.htm';
+						}
+						$bookshelfItem['formats'][] = $format;
+					}
+				}
+				//Parse special formats
+				if (preg_match('/<div class="dwnld-kindle" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-odread" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-locked-in" data-transaction=".*?">(.*?)<\/div>/si', $formatSection, $specialDownloads)) {
+					$bookshelfItem['kindle'] = $specialDownloads[1];
+					$overDriveRead = $specialDownloads[2];
+					if (strlen($overDriveRead) > 0){
+						$bookshelfItem['overdriveRead'] = true;
+						if (preg_match('/href="(.*?)"/si', $overDriveRead, $matches)){
+							$bookshelfItem['overdriveReadUrl'] = $overDriveInfo['baseUrlWithSession'] . $matches[1];
+						}
+					}else{
+						$bookshelfItem['overdriveRead'] = false;
+					}
+					//$bookshelfItem['overdriveRead'] = $specialDownloads[2];
+					$bookshelfItem['lockedIn'] = $specialDownloads[3];
+				}
+
+				$bookshelf['items'][] = $bookshelfItem;
+			}
+		}
+		return $bookshelf;
+	}	
 
 	public function getOverDriveHolds($user, $overDriveInfo = null){
 		global $memcache;
@@ -1105,6 +1219,7 @@ class OverDriveDriver {
 				'baseLoginUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll',  $urlWithSessionSSL),
 				'downloadUrl' => str_replace('Default.htm', '',  $urlWithSessionSSL),
 				'contentInfoPage' => str_replace('Default.htm', 'ContentDetails.htm',  $urlWithSession),
+				'returnUrl' => str_replace('Default.htm', 'BANGPurchase.dll?Action=EarlyReturn&URL=MyAccount.htm%3FPerPage=80',  $urlWithSession),
 				'checkoutUrl' => str_replace('Default.htm', 'BANGPurchase.dll?Action=OneClickCheckout&ForceLoginFlag=0', $urlWithSessionSSL),
 				'ch' => $ch
 			);
@@ -1201,4 +1316,43 @@ class OverDriveDriver {
 			return array(7, 14, 21);
 		}
 	}
+	
+	public function returnOverDriveItem($overDriveId, $transactionId, $user){
+		global $logger;
+		global $memcache;
+		$ch = curl_init();
+		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+		$closeSession = true;
+
+		//Switch back to get method
+		curl_setopt($overDriveInfo['ch'], CURLOPT_HTTPGET, true);
+
+		//Open the record page
+		$contentInfoPage = $overDriveInfo['contentInfoPage'] . "?ID=" . $overDriveId;
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $contentInfoPage);
+		$recordPage = curl_exec($overDriveInfo['ch']);
+		$recordPageInfo = curl_getinfo($overDriveInfo['ch']);
+
+		//Do one click checkout
+		$returnUrl = $overDriveInfo['returnUrl'] . '&ReserveID=' . $overDriveId . '&TransactionID=' . $transactionId;
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $returnUrl);
+		$returnPage = curl_exec($overDriveInfo['ch']);
+
+		$result = array();
+		//We just go back to the main account page, to see if the return succeeded, we need to make sure the
+		//transaction is no longer listed
+		if (!preg_match("/$transactionId/si", $returnPage)){
+			$result['result'] = true;
+			$result['message'] = "Your title was returned successfully.";
+			$memcache->delete('overdrive_summary_' . $user->id);
+			//Delete the cache for the record
+			$memcache->delete('overdrive_record_' . $overDriveId);
+		}else{
+			$logger->log("OverDrive return failed", PEAR_LOG_ERR);
+			$logger->log($checkoutPage, PEAR_LOG_INFO);
+			$result['result'] = false;
+			$result['message'] = 'Sorry, we could not return this title for you.  Please try again later';
+		}
+		return $result;
+	}	
 }

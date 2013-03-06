@@ -255,7 +255,7 @@ function doGetStatusSummaries()
 						$("#RequestWord"+elemId).text("Checkout Now");
 						url = '/EcontentRecord/'+elemId+'/AJAX?method=CheckoutOverDriveItem';
 						if(document.getElementById("selected"+elemId)){
-							document.getElementById("selected"+elemId).setAttribute("onclick","checkoutOverDriveItem("+elemId+")");
+							document.getElementById("selected"+elemId).setAttribute("onclick","checkoutOverDriveItem('" + elemId + "')");
 						}
 					}else if(sta == "Checked Out"){
 						$("#RequestWord"+elemId).text("Request Now");

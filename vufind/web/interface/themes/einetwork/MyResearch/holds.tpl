@@ -8,6 +8,7 @@
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
 	<div id="left-bar">
+		<div>Vampires are awesome</div>
 		<div class="sort">
 			<div id="sortLabel">
 			{translate text='Sort by'}

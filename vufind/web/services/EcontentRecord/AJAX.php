@@ -12,7 +12,7 @@ class AJAX extends Action {
 
 	function launch() {
 		$method = $_GET['method'];
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'ReturnOverDriveItem', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -92,7 +92,10 @@ class AJAX extends Action {
 		global $configArray;
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
 		$id = strip_tags($_REQUEST['id']);
+		$lockedFormat = ($_REQUEST['lockedFormat']);
+		
 		$interface->assign('id', $id);
+		$interface->assign('lockedFormat', $lockedFormat);
 		//Load holdings information from the driver
 		require_once ('Drivers/EContentDriver.php');
 		require_once ('sys/eContent/EContentRecord.php');
@@ -402,6 +405,21 @@ class AJAX extends Action {
 			$driver = new OverDriveDriver();
 			$downloadMessage = $driver->downloadOverDriveItem($overDriveId, $format, $user);
 			return json_encode($downloadMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
+		}		
+		
+	}
+	
+	function ReturnOverDriveItem(){
+		global $user;
+		$overDriveId = $_REQUEST['overDriveId'];
+		$transactionId = $_REQUEST['transactionId'];
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$driver = new OverDriveDriver();
+			$returnMessage = $driver->returnOverDriveItem($overDriveId, $transactionId, $user);
+			return json_encode($returnMessage);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
 		}		
