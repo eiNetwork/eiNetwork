@@ -102,7 +102,8 @@ class Holds extends MyResearch
 		//BEGIN for OverdriveHolds
 		$overDriveDriver = new OverDriveDriver();
 		$overDriveHolds = $overDriveDriver->getOverDriveHolds($user);
-		foreach ($overDriveHolds['holds'] as $sectionKey => $sectionData){
+
+		foreach ($overDriveHolds as $sectionKey => $sectionData){
 			foreach ($sectionData as $key => $item){
 				if ($item['recordId'] != -1){
 					$econtentRecord = new EContentRecord();
@@ -115,10 +116,11 @@ class Holds extends MyResearch
 				if ($sectionKey == 'available'){
 					$item['numRows'] = count($item['formats']) + 1;
 				}
-				$overDriveHolds['holds'][$sectionKey][$key] = $item;
+				$overDriveHolds[$sectionKey][$key] = $item;
 			}
 		}
-		$interface->assign('overDriveHolds', $overDriveHolds['holds']);
+
+		$interface->assign('overDriveHolds', $overDriveHolds);
 	
 		$interface->assign('ButtonBack',true);
 		$interface->assign('ButtonHome',true);
