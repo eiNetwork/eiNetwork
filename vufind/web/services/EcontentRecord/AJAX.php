@@ -384,12 +384,22 @@ class AJAX extends Action {
 	
 	function PlaceOverDriveHold(){
 		global $user;
-		$overDriveId = $_REQUEST['overDriveId'];
-		$format = $_REQUEST['formatId'];
+		$elemId = $_REQUEST['elemId'];
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $elemId;
+		$eContentRecord->find(true);
+		$holdings = $driver->getHolding($elemId);
+		$overDriveId = $holdings[0]->links[0][overDriveId];
+		
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
-			$driver = new OverDriveDriver();
-			$holdMessage = $driver->placeOverDriveHold($overDriveId, $format, $user);
+			$odriver = new OverDriveDriver();
+			$holdMessage = $odriver->placeOverDriveHold($overDriveId, $user);
 			return json_encode($holdMessage);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));

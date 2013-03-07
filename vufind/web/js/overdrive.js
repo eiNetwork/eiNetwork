@@ -40,19 +40,20 @@ function checkoutOverDriveItem(elemId){
 	}	
 }
 
-function placeOverDriveHold(overDriveId, formatId){
+function placeOverDriveHold(elemId){
 	if (loggedIn){
 		showProcessingIndicator("Placing a hold on the title for you in OverDrive.  This may take a minute.");
-		var url = path + "/EcontentRecord/AJAX?method=PlaceOverDriveHold&overDriveId=" + overDriveId + "&formatId=" + formatId;
+		var url = path + "/EcontentRecord/AJAX?method=PlaceOverDriveHold&elemId=" + elemId;
 		$.ajax({
 			url: url,
 			success: function(data){
 				alert(data.message);
-				if (data.result){
-					window.location.href = path + "/MyResearch/Holds";
-				}else{
-					hideLightbox();
-				}
+				hideLightbox();
+				//if (data.result){
+				//	window.location.href = path + "/MyResearch/Holds";
+				//}else{
+				//	hideLightbox();
+				//}
 			},
 			dataType: 'json',
 			error: function(){
@@ -103,7 +104,7 @@ function downloadOverDriveItem(overDriveId, formatId){
 
 function returnOverDriveItem(overdriveId, transactionId){
 	if (loggedIn){
-		showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
+		showProcessingIndicator("Returning the title for you in OverDrive.  This may take a minute.");
 		var url = path + "/EcontentRecord/AJAX?method=ReturnOverDriveItem&overDriveId=" + overdriveId + "&transactionId=" + transactionId;
 		$.ajax({
 			url: url,
