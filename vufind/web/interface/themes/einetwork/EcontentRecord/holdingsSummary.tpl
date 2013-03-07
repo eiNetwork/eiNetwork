@@ -8,10 +8,10 @@
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-			<a style="cursor:pointer" class="overdriveAvailable" onclick="ajaxLightbox('/EcontentRecord/{$holdingsSummary.recordId}/AJAX?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')">{$holdingsSummary.status}</a>
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="checkoutOverDriveItem('{$holdingsSummary.recordId}')">{$holdingsSummary.status}</a>
 		{elseif $holdingsSummary.status == 'Checked Out'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
-			<a style="cursor:pointer" class="overdriveCheckedOut" onclick="ajaxLightbox('/EcontentRecord/{$holdingsSummary.recordId}/AJAX?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')">{$holdingsSummary.status}</a>
+			<a style="cursor:pointer" class="overdriveCheckedOut" onclick="placeOverDriveHold('{$holdingsSummary.recordId}')">{$holdingsSummary.status}</a>
 			
 		{/if}
 		
