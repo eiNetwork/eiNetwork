@@ -145,7 +145,59 @@ class OverDriveDriver {
 		$availabilityUrl = "http://api.overdrive.com/v1/collections/$productsKey/products/$overDriveId/availability";
 		return $this->_callUrl($availabilityUrl);
 	}
+	
+	private function _parseOverDriveHolds($holdsSection){
+		$holds = array();
+		$holds['available'] = array();
+		$holds['unavailable'] = array();
+		//Match holds
+		//Get the individual holds by splitting the section based on each <li class="mobile-four">
+		//Trim to the first li
+		$firstTitlePos = strpos($holdsSection, '<li class="mobile-four">');
+		$holdsSection = substr($holdsSection, $firstTitlePos);
+		$heldTitles = explode('<li class="mobile-four">', $holdsSection);
+		$i = 0;
+		foreach ($heldTitles as $titleHtml){
+			//echo("\r\nSection " . $i++ . "\r\n$titleHtml");
+			if (preg_match('/<div class="coverID">.*?<a href="ContentDetails\\.htm\\?id=(.*?)">.*?<img class="lrgImg" src="(.*?)".*?<div class="trunc-title-line".*?title="(.*?)".*?<div class="trunc-author-line".*?title="(.*?)".*?<div class="(?:holds-info)?".*?>(.*)/si', $titleHtml, $holdInfo)){
+				$hold = array();
+				$grpCtr = 1;
+				$hold['overDriveId'] = $holdInfo[$grpCtr++];
+				$hold['imageUrl'] = $holdInfo[$grpCtr++];
+				$eContentRecord = new EContentRecord();
+				$eContentRecord->externalId = $hold['overDriveId'];
+				$eContentRecord->source = 'OverDrive';
+				if ($eContentRecord->find(true)){
+					$hold['recordId'] = $eContentRecord->id;
+				}else{
+					$hold['recordId'] = -1;
+				}
+				$hold['title'] = $holdInfo[$grpCtr++];
+				$hold['author'] = $holdInfo[$grpCtr++];
 
+				$holdDetails = $holdInfo[$grpCtr++];
+
+				if (preg_match('/<h6 class="holds-wait-position">(.*?)<\/h6>.*?<h6 class="holds-wait-email">(.*?)<\/h6>/si', $holdDetails, $holdDetailInfo)) {
+					$notificationInformation = $holdDetailInfo[1];
+					if (preg_match('/You are (?:patron|user) <b>(\\d+)<\/b> out of <b>(\\d+)<\/b> on the waiting list/si', $notificationInformation, $notifyInfo)) {
+						$hold['holdQueuePosition'] = $notifyInfo[1];
+						$hold['holdQueueLength'] = $notifyInfo[2];
+					}else{
+						echo($notificationInformation);
+					}
+					$hold['notifyEmail'] = $holdDetailInfo[2];
+					$holds['unavailable'][] = $hold;
+				}elseif (preg_match('/<div id="borrowingPeriodHold"><div>(.*?)<\/div>.*?new Date \("(.*?)"\)/si', $holdDetails, $holdDetailInfo)){
+					///print_r($holdDetails);
+					$hold['emailSent'] = $holdDetailInfo[2];
+					$hold['notificationDate'] = strtotime($hold['emailSent']);
+					$hold['expirationDate'] = $hold['notificationDate'] + 3 * 24 * 60 * 60;
+					$holds['available'][] = $hold;
+				}
+			}
+		}
+		return $holds;
+	}
 
 	/**
 	 * Loads information about items within the user's wishlist in OverDrive
@@ -444,20 +496,22 @@ class OverDriveDriver {
 		global $memcache;
 		global $configArray;
 		global $timer;
+		global $logger;
 
-		$holds = $memcache->get('overdrive_holds_' . $user->id);
+		//$holds = $memcache->get('overdrive_holds_' . $user->id);
+		$holds = false;
 		if ($holds == false){
 			$holds = array();
 			$holds['holds'] = array();
 			$holds['holds']['available'] = array();
 			$holds['holds']['unavailable'] = array();
-
+			
 			$closeSession = false;
 			if ($overDriveInfo == null){
 				//Start a curl session
 				$ch = curl_init();
 				if (!$ch){
-					global $logger;
+					//global $logger;
 					$logger->log("Could not create curl handle ". $ch, PEAR_LOG_INFO);
 					$holds['error'] = 'Sorry, we could not connect to OverDrive, please try again in a few minutes.';
 					return $holds;
@@ -465,7 +519,7 @@ class OverDriveDriver {
 				//Login to overdrive
 				$overDriveInfo = $this->_loginToOverDrive($ch, $user);
 				if ($overDriveInfo == null){
-					global $logger;
+					//global $logger;
 					$logger->log("Could not login to overdrive ". $ch, PEAR_LOG_INFO);
 					$holds['error'] = 'Sorry, we could not connect to OverDrive, please try again in a few minutes.';
 					return $holds;
@@ -475,66 +529,24 @@ class OverDriveDriver {
 
 			//Load the My Holds page
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['holdsUrl']);
+			$logger->log("holds URL june ". $overDriveInfo['holdsUrl'], PEAR_LOG_INFO);
 			$holdsPage = curl_exec($overDriveInfo['ch']);
-
+			//$logger->log("holds page start june ". $holdsPage." holds page end", PEAR_LOG_INFO);
+			
 			if ($closeSession){
 				curl_close($overDriveInfo['ch']);
 			}
-
-			//Extract unavailable hold information from the holds page
-			preg_match_all('/<a href="ContentDetails\\.htm\\?ID=(.*?)"><img.*?src="(.*?)".*?<\/a>.*?<strong><a href="ContentDetails\\.htm\\?ID=(.*?)">(.*?)<\/a><\/strong>.*?<small><strong>(.*?)<\/strong><\/small>.*?<small>.*?<\/noscript>\\s*(.*?)<\/small>.*?<small>(.*?)<table.*?>(.*?)<\/table>/si', $holdsPage, $holdInfo, PREG_SET_ORDER);
-
-			for ($matchi = 0; $matchi < count($holdInfo); $matchi++) {
-				$hold = array();
-				$hold['overDriveId'] = $holdInfo[$matchi][1];
-				$hold['imageUrl'] = $holdInfo[$matchi][2];
-				$hold['title'] = $holdInfo[$matchi][4];
-				$hold['subTitle'] = $holdInfo[$matchi][5];
-				$hold['author'] = $holdInfo[$matchi][6];
-				$notificationInformation = $holdInfo[$matchi][7];
-				$linkInformation = $holdInfo[$matchi][8];
-
-				//For each item (load the record from VuFind) based on the id of the item.
-				$eContentRecord = new EContentRecord();
-				$eContentRecord->whereAdd("sourceUrl LIKE '%{$hold['overDriveId']}%'");
-				if ($eContentRecord->find(true)){
-					$hold['recordId'] = $eContentRecord->id;
-				}else{
-					$hold['recordId'] = -1;
-				}
-
-				//Check to see if the hold is available or unavailable
-				if (preg_match('/RemoveFromWaitingList&id={?(.*?)}?&fo.*?rmat=(.*?)&/si', $linkInformation, $formatInfo)) {
-					//Set the format
-					$hold['formatId'] = $formatInfo[2];
-
-					//Extract the hold position
-					if (preg_match('/You are patron (\\d+) out of (\\d+) on the waiting list/si', $notificationInformation, $notifyInfo)) {
-						$hold['holdQueuePosition'] = $notifyInfo[1];
-						$hold['holdQueueLength'] = $notifyInfo[2];
-					}
-
-					$holds['holds']['unavailable'][] = $hold;
-				} else {
-					//Extract the notification date
-					if (preg_match('/Email notification sent: (.*?)<\/small>/si', $notificationInformation, $notifyInfo)) {
-						$hold['notificationDate'] = strtotime($notifyInfo[1]);
-						$hold['expirationDate'] = $hold['notificationDate'] + 3 * 24 * 60 * 60;
-					}
-					//Extract the formats that can be checked out.
-					preg_match_all('/<td width="100%">(.*?)<\/td>.*?<a href="BANGCart\\.dll\\?Action=Add&ID={?(.*?)}?&Format=(.*?)"/si', $linkInformation, $formatInfo, PREG_SET_ORDER);
-					$hold['formats'] = array();
-					for ($i = 0; $i < count($formatInfo); $i++) {
-						$format = array();
-						$format['name'] = $formatInfo[$i][1];
-						$format['overDriveId'] = $formatInfo[$i][2];
-						$format['formatId'] = $formatInfo[$i][3];
-						// $result[0][$i];
-						$hold['formats'][] = $format;
-					}
-					$holds['holds']['available'][] = $hold;
-				}
+			//get the holds
+			if (preg_match('/<li .*?id="myAccount2Tab".*?>(.*?)<li [^>\/]*?id="myAccount3Tab".*?>/s', $holdsPage, $matches)) {
+			$holdsSection = $matches[1];
+			//print_r($holdsSection);
+			//Get a list of titles that are on hold
+			$holds = $this->_parseOverDriveHolds($holdsSection);
+				//echo("<br>\r\n");
+				//print_r($holds);
+				//echo("<br>\r\n");
 			}
+			
 			$timer->logTime("Finished loading titles from overdrive holds");
 			$memcache->set('overdrive_holds_' . $user->id, $holds, 0, $configArray['Caching']['overdrive_holds']);
 		}
@@ -601,16 +613,19 @@ class OverDriveDriver {
 	 * @param int $format
 	 * @param User $user
 	 */
-	public function placeOverDriveHold($overDriveId, $format, $user){
+	public function placeOverDriveHold($overDriveId, $user){
 		global $memcache;
 		global $configArray;
+		global $logger;
 
+		$format = "";
 		$holdResult = array();
 		$holdResult['result'] = false;
 		$holdResult['message'] = '';
 
 		$ch = curl_init();
 		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+
 		if ($overDriveInfo == null){
 			$holdResult['result'] = false;
 			$holdResult['message'] = 'Sorry, we could not connect to OverDrive.  Please try again later.';
@@ -624,14 +639,29 @@ class OverDriveDriver {
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $contentInfoPage);
 			$recordPage = curl_exec($overDriveInfo['ch']);
 			$recordPageInfo = curl_getinfo($overDriveInfo['ch']);
-
-			//Navigate to waiting list page
+			
+			//Navigate to place a hold page
 			$waitingListUrl = $overDriveInfo['waitingListUrl'];
+
+			if ($format == "" || $format == 'undefined'){
+				$format = "";
+				if (preg_match('/<a href="BANGAuthenticate\.dll\?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListForm.htm%3FID=(.*?)%26Format=(.*?)" class="radius large button details-title-button" data-checkedout="(.*?)" data-contentstatus="(.*?)">Place a Hold<\/a>/si', $recordPage, $formatInfo)){
+					$format = $formatInfo[2];
+				}else{
+					$logger->log("Did not find hold button for this title to retrieve format", PEAR_LOG_INFO);
+					$holdResult['result'] = false;
+					$holdResult['message'] = "This title is available for checkout.";
+					$holdResult['availableForCheckout'] = true;
+					return $holdResult;
+				}
+			}
 			$waitingListUrl .= '%3FID=' . $overDriveId . '%26Format=' . $format;
+			$logger->log("Wait list URL june ". $waitingListUrl, PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $waitingListUrl);
+			$logger->log("Click place a hold button " . $waitingListUrl, PEAR_LOG_DEBUG);			
 			$setEmailPage = curl_exec($overDriveInfo['ch']);
 			$setEmailPageInfo = curl_getinfo($ch);
-			if (preg_match('/already on/', $setEmailPage)){
+			if (preg_match('/already placed a hold or borrowed this title/', $setEmailPage)){
 				$holdResult['result'] = false;
 				$holdResult['message'] = "We're sorry, but you are already on the waiting list for the selected title or have it checked out.";
 			}else{
@@ -667,8 +697,8 @@ class OverDriveDriver {
 						'ID' => $overDriveId,
 						'Format' => $format,
 						'URL' => 'WaitingListConfirm.htm',
-						'Email' => $user->overdriveEmail,
-						'Email2' => $user->overdriveEmail,
+						'Email' => $user->email,
+						'Email2' => $user->email,
 					);
 					foreach ($postParams as $key => $value) {
 						$post_items[] = $key . '=' . urlencode($value);
@@ -677,35 +707,41 @@ class OverDriveDriver {
 					curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
 					curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $secureBaseUrl . 'BANGAuthenticate.dll?Action=LibraryWaitingList');
 					$waitingListConfirm = curl_exec($overDriveInfo['ch']);
+					$logger->log("Submitting email for notification {$secureBaseUrl}BANGAuthenticate.dll?Action=LibraryWaitingList  $post_string"  , PEAR_LOG_INFO);
+					//$logger->log($waitingListConfirm, PEAR_LOG_INFO);
+					$waitingListConfirm = strip_tags($waitingListConfirm, "'<p><a><li><ul><div><em><b>'");
+					if (preg_match('/<section id="mainContent" class=".*?">(.*?)<\/section>/is', $waitingListConfirm, $matches)){
+						$logger->log("Found main content section", PEAR_LOG_INFO);
+						$mainSection = $matches[1];
 
-					if (preg_match('/did not complete all of the required fields/', $waitingListConfirm)){
-						$logger->log($waitingListConfirm, PEAR_LOG_INFO);
-						$holdResult['result'] = false;
-						$holdResult['message'] = 'You must provide an e-mail address to request titles from OverDrive.  Please add an e-mail address to your account.';
-					}elseif (preg_match('/reached the request \(hold\) limit of \d+ titles./', $waitingListConfirm) || preg_match('/reached the requests limit of \d+ titles./', $waitingListConfirm)){
-						$holdResult['result'] = false;
-						$holdResult['message'] = 'You have reached the maximum number of holds for your account.';
-					}elseif (preg_match('/You have successfully placed a hold on the selected title./', $waitingListConfirm)){
+						if (preg_match('/already on/si', $mainSection)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'This title is already on hold or checked out to you.';
+						}elseif (preg_match('/You have already placed a hold or borrowed this title/si', $mainSection)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'This title is already on hold or checked out to you.';
+						}elseif (preg_match('/did not complete all of the required fields/', $mainSection)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'You must provide an e-mail address to request titles from OverDrive.  Please add an e-mail address to your profile.';
+						}elseif (preg_match('/reached the request \(hold\) limit of \d+ titles./', $mainSection)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'You have reached the maximum number of holds for your account.';
+						}elseif (preg_match('/Some of our digital titles are only available for a limited time\. This title may be available in the future\. Be sure to check back/', $waitingListConfirm)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'This title is no longer available.  Some of our digital titles are only available for a limited time. This title may be available in the future. Be sure to check back.';
+						}else{
+							$holdResult['result'] = false;
+							$holdResult['message'] = 'There was an error placing your hold.';
+							global $logger;
+							$logger->log("Placing hold on OverDrive item. OverDriveId ". $overDriveId, PEAR_LOG_INFO);
+							$logger->log('URL: '.$secureBaseUrl . "BANGAuthenticate.dll?Action=LibraryWaitingList $post_string\r\n" . $mainSection ,PEAR_LOG_INFO);
+						}
+					}elseif (preg_match('/You will receive an email when the title becomes available./', $waitingListConfirm)){
 						$holdResult['result'] = true;
 						$holdResult['message'] = 'Your hold was placed successfully.';
 
 						$memcache->delete('overdrive_holds_' . $user->id);
 						$memcache->delete('overdrive_summary_' . $user->id);
-
-						//Record that the entry was checked out in strands
-						global $configArray;
-						if (isset($configArray['Strands']['APID']) && $user->disableRecommendations == 0){
-							//Get the record for the item
-							$eContentRecord = new EContentRecord();
-							$eContentRecord->whereAdd("sourceUrl like '%$overDriveId'");
-							if ($eContentRecord->find(true)){
-								$orderId = $user->id . '_' . time() ;
-								$strandsUrl = "http://bizsolutions.strands.com/api2/event/addshoppingcart.sbs?needresult=true&apid={$configArray['Strands']['APID']}&item=econtentRecord{$eContentRecord->id}::0.00::1&user={$user->id}&orderid={$orderId}";
-								$ret = file_get_contents($strandsUrl);
-								/*global $logger;
-								$logger->log("Strands Hold\r\n$ret", PEAR_LOG_INFO);*/
-							}
-						}
 
 						//Delete the cache for the record
 						$memcache->delete('overdrive_record_' . $overDriveId);
@@ -1206,26 +1242,25 @@ class OverDriveDriver {
 		$logger->log("My Account Info URL ".$accountPageInfo['url'], PEAR_LOG_INFO);
 		$logger->log("My Account Menu *** ".$myAccountMenuContent. "*** end of my account menu", PEAR_LOG_INFO);
 		
-		//$matchAccount = preg_match('/(?:<td class="(?:pghead|collhead)">|<h1>)(?:\sto\s)?My (?:OverDrive\s|Digital\sMedia\s|Digital\s)?Account(?:<\/td>|<\/h1>)/is', $myAccountMenuContent);
 		$matchAccount = strpos($myAccountMenuContent, 'Checkouts remaining:');
-		//$matchCart = preg_match('/One or more titles from a previous session have been added to your (cart|Book Cart|Book Bag|Digital Cart)/i', $myAccountMenuContent);
 		$matchSignOut = strpos($myAccountMenuContent, 'URL=SignOutConfirm.htm');
 		if (($matchAccount > 0) && ($matchSignOut > 0)){
 			$logger->log("Logging in to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
 			$overDriveInfo = array(
-				'holdsUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&URL=MyAccount.htm?PerPage=80#myAccount2&ForceLoginFlag=0',  $urlWithSession),
+				'holdsUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80#myAccount2',  $urlWithSessionSSL),
 				'bookshelfUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80&ForceLoginFlag=0',  $urlWithSessionSSL),
 				'placeHoldUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&amp;ForceLoginFlag=0&amp;URL=WaitingListForm.htm',  $urlWithSessionSSL),
 				'baseLoginUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll',  $urlWithSessionSSL),
 				'downloadUrl' => str_replace('Default.htm', '',  $urlWithSessionSSL),
-				'contentInfoPage' => str_replace('Default.htm', 'ContentDetails.htm',  $urlWithSession),
+				'waitingListUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListForm.htm',  $urlWithSession),
+				'contentInfoPage' => str_replace('Default.htm', 'ContentDetails.htm',  $urlWithSessionSSL),
 				'returnUrl' => str_replace('Default.htm', 'BANGPurchase.dll?Action=EarlyReturn&URL=MyAccount.htm%3FPerPage=80',  $urlWithSession),
 				'checkoutUrl' => str_replace('Default.htm', 'BANGPurchase.dll?Action=OneClickCheckout&ForceLoginFlag=0', $urlWithSessionSSL),
 				'ch' => $ch
 			);
 		}else{
 			//global $logger;
-			$logger->log("Could not login to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
+			$logger->log("Could not login to OverDrive($matchAccount), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
 			$overDriveInfo = null;
 		}
 

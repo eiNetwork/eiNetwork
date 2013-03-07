@@ -406,7 +406,7 @@
 					{if $record.expiresOn}
 					    Expires on&nbsp;{$record.expiresOn|date_format}
 					{/if}
-					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId})'/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
 					{if $record.earlyReturn == 1}
 					<input class="button" type="button" value="Return" style="background-color:rgb(244,213,56);" onclick='DownloadCheckedoutOverdrive({$record.recordId})'/>
 					{/if}
@@ -468,7 +468,7 @@
 					</div>
 				</div>
 				<div class="item_status">
-					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId})'/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
 					{if $record.earlyReturn == 1}
 					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
 					{/if}
