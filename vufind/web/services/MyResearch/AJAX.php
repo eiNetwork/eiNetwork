@@ -462,7 +462,7 @@ class AJAX extends Action {
 			$summary = $overDriveDriver->getOverDriveSummary($user);
 			$sumOfCheckoutItems += $summary["numCheckedOut"];
 			//$sumOfRequestItems = $sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"];
-			$sumOfRequestItems = isset($summary["numEContentWishList"])?$sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"]:$sumOfRequestItems +  $summary["numUnavailableHolds"];
+			$sumOfRequestItems += $summary["numAvailableHolds"] + $summary["numUnavailableHolds"];
 			$sum["SumOfCheckoutItems"] = $sumOfCheckoutItems;
 			$sum["SumOfRequestItems"] = $sumOfRequestItems;
 			return json_encode($sum);
