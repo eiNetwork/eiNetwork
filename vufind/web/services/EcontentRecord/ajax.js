@@ -72,7 +72,7 @@ function GetEContentHoldingsInfo(id, type, callback) {
 				}
 				//document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else if(SummaryDetails =="Available from OverDrive"){
-				$("#access-online .action-lable-span").text("Checkout Later");
+				$("#access-online .action-lable-span").text("Checkout Now");
 				if(document.getElementById("access-online")){
 					document.getElementById("access-online").setAttribute("onclick","checkoutOverDriveItem('" + id + "')");
 				}
