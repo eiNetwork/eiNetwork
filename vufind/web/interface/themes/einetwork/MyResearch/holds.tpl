@@ -8,7 +8,6 @@
 <script type="text/javascript" src="{$path}/js/tablesorter/jquery.tablesorter.min.js"></script>
 <div id="page-content" class="content">
 	<div id="left-bar">
-		<div>Vampires are awesome</div>
 		<div class="sort">
 			<div id="sortLabel">
 			{translate text='Sort by'}
@@ -293,7 +292,6 @@
 			
 			{*****BEGIN Overdrive Holds******}
 			<div style="margin-top: 20px;margin-bottom: 20px"><h3>{translate text='eContent Requests'}</h3></div>
-			
 			{if count($overDriveHolds.available) > 0}
 				
 				<div >&nbsp&nbsp&nbsp&nbspTitles available for checkout</div>

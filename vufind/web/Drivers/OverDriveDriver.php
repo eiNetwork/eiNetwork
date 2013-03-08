@@ -567,34 +567,27 @@ class OverDriveDriver {
 		global $configArray;
 		global $timer;
 
-		$summary = $memcache->get('overdrive_summary_' . $user->id);
+		$summary = false;//= $memcache->get('overdrive_summary_' . $user->id);
 		if ($summary == false){
 			$summary = array();
 			$ch = curl_init();
 
 			$overDriveInfo = $this->_loginToOverDrive($ch, $user);
 			$holds = $this->getOverDriveHolds($user, $overDriveInfo);
+			
 			if (isset($holds['error'])){
 				$summary['numAvailableHolds'] = "Err";
 				$summary['numUnavailableHolds'] = "Err";
 			}else{
-				$summary['numAvailableHolds'] = count($holds['holds']['available']);
-				$summary['numUnavailableHolds'] = count($holds['holds']['unavailable']);
+				$summary['numAvailableHolds'] = count($holds['available']);
+				$summary['numUnavailableHolds'] = count($holds['unavailable']);
 			}
-
 
 			$checkedOut = $this->getOverDriveCheckedOutItems($user, $overDriveInfo);
 			if (isset($checkedOut['error'])){
 				$summary['numCheckedOut'] = "Err";
 			}else{
 				$summary['numCheckedOut'] = count($checkedOut['items']);
-			}
-
-			$wishlist = $this->getOverDriveWishList($user, $overDriveInfo);
-			if (isset($wishlist['error'])){
-				$summary['numWishlistItems'] = "Err";
-			}else{
-				$summary['numWishlistItems'] = count($wishlist['items']);
 			}
 
 			curl_close($ch);
