@@ -79,7 +79,9 @@ function downloadOverDriveItem(overDriveId, formatId){
 				
 				if (data.result){
 
-					window.location.href = data.downloadUrl;
+				     window.location.href = data.downloadUrl;
+				     hideLightbox();
+				    
 				}else{
 					alert(data.message);
 					hideLightbox();
@@ -93,6 +95,7 @@ function downloadOverDriveItem(overDriveId, formatId){
 			      console.log(textStatus);
 			      console.log(errorThrown);
 			   }
+			   hideLightbox();
 			 }
 		});
 	}else{
