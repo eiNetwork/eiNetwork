@@ -63,7 +63,7 @@ function placeOverDriveHold(elemId){
 		});
 	}else{
 		ajaxLogin(function(){
-			placeOverDriveHold(overDriveId, formatId);
+			placeOverDriveHold(elemId);
 		});
 	}
 }
@@ -199,6 +199,7 @@ function cancelOverDriveHold(overDriveId, formatId){
 				alert(data.message);
 				if (data.result){
 					window.location.href = path + "/MyResearch/Holds";
+					hideLightbox();
 				}else{
 					hideLightbox();
 				}
