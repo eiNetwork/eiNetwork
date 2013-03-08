@@ -367,6 +367,7 @@ class OverDriveDriver {
 				}
 				//set locked format to zero which means none
 				$bookshelfItem['lockedFormat'] = 0;
+				$bookshelfItem['hasRead'] = false;
 				
 				//Check to see if a format has been selected
 				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
@@ -375,6 +376,9 @@ class OverDriveDriver {
 					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
 						$format = array();
 						$format['id'] = $formatOptions[$fmt][1];
+						if( $format['id'] == 610){
+							$bookshelfItem['hasRead'] = true;	
+						}
 						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
 						if($format['locked'] == 1){
 							$bookshelfItem['lockedFormat'] = $format['id'];	
