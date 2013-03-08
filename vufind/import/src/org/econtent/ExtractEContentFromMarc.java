@@ -1082,7 +1082,6 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 				//logger.debug("Updating link " + linkInfo.getUrl() + " libraryId = " + linkInfo.getLibrarySystemId());
 				String existingUrlValue = existingLinkInfo.getLink();
 				Long existingItemId = existingLinkInfo.getItemId();
-				//String newItemType = getItemTypeByItype(linkInfo.getiType());
 				//if (detectionSettings.getSource() == "OneClick") {newItemType = "external_eAudio";}
 				String newItemType = detectionSettings.getItem_type();
 				if (existingUrlValue == null || !existingUrlValue.equals(linkInfo.getUrl()) || !newItemType.equals(existingLinkInfo.getItemType())){
@@ -1097,8 +1096,9 @@ public class ExtractEContentFromMarc implements IMarcRecordProcessor, IRecordPro
 			}else{
 				//logger.debug("Adding link " + linkInfo.getUrl() + " libraryId = " + linkInfo.getLibrarySystemId());
 				//the url does not exist, insert it
+				String newItemType = detectionSettings.getItem_type();
 				addSourceUrl.setLong(1, eContentRecordId);
-				addSourceUrl.setString(2, getItemTypeByItype(linkInfo.getiType()));
+				addSourceUrl.setString(2, newItemType);
 				addSourceUrl.setString(3, linkInfo.getNotes());
 				addSourceUrl.setString(4, linkInfo.getUrl());
 				addSourceUrl.setLong(5, new Date().getTime());
