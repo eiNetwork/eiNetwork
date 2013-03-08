@@ -386,6 +386,11 @@
 					<div class="item_author">
 						{if strlen($record.record->author) > 0}<br/>{$record.record->author}{/if}
 					</div>
+					{if $record.earlyReturn == 1}
+					<div>
+					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					</div>
+					{/if}
 					<div class="item_type">
 					    
 					    {if is_array($record.format)}
@@ -407,8 +412,8 @@
 					    Expires on&nbsp;{$record.expiresOn|date_format}
 					{/if}
 					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
-					{if $record.earlyReturn == 1}
-					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					{if $record.hasRead == true}
+					<input class="button" type="button" value="Read" onclick='downloadOverDriveItem({$record.overDriveId},610)'/>
 					{/if}
 				</div>
 			</div>
@@ -451,6 +456,11 @@
 					<div class="item_author">
 						{if strlen($record.record->author) > 0}<br/>{$record.record->author}{/if}
 					</div>
+					{if $record.earlyReturn == 1}
+					<div>
+					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					</div>
+					{/if}					
 					<div class="item_type">
 					    
 					    {if is_array($record.format)}
@@ -469,8 +479,8 @@
 				</div>
 				<div class="item_status">
 					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
-					{if $record.earlyReturn == 1}
-					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					{if $record.hasRead == true}
+					<input class="button" type="button" value="Read" onclick="downloadOverDriveItem('{$record.overDriveId}','610')"/>
 					{/if}
 				</div>
 			</div>
