@@ -457,9 +457,9 @@
 						{if strlen($record.record->author) > 0}<br/>{$record.record->author}{/if}
 					</div>
 					{if $record.earlyReturn == 1}
-					<div>
-					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
-					</div>
+					
+					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;margin-left: -8px;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					
 					{/if}					
 					<div class="item_type">
 					    
