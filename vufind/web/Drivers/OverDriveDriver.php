@@ -367,6 +367,7 @@ class OverDriveDriver {
 				}
 				//set locked format to zero which means none
 				$bookshelfItem['lockedFormat'] = 0;
+				$bookshelfItem['hasRead'] = false;
 				
 				//Check to see if a format has been selected
 				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
@@ -375,6 +376,9 @@ class OverDriveDriver {
 					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
 						$format = array();
 						$format['id'] = $formatOptions[$fmt][1];
+						if( $format['id'] == 610){
+							$bookshelfItem['hasRead'] = true;	
+						}
 						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
 						if($format['locked'] == 1){
 							$bookshelfItem['lockedFormat'] = $format['id'];	
@@ -567,34 +571,27 @@ class OverDriveDriver {
 		global $configArray;
 		global $timer;
 
-		$summary = $memcache->get('overdrive_summary_' . $user->id);
+		$summary = false;//= $memcache->get('overdrive_summary_' . $user->id);
 		if ($summary == false){
 			$summary = array();
 			$ch = curl_init();
 
 			$overDriveInfo = $this->_loginToOverDrive($ch, $user);
 			$holds = $this->getOverDriveHolds($user, $overDriveInfo);
+			
 			if (isset($holds['error'])){
 				$summary['numAvailableHolds'] = "Err";
 				$summary['numUnavailableHolds'] = "Err";
 			}else{
-				$summary['numAvailableHolds'] = count($holds['holds']['available']);
-				$summary['numUnavailableHolds'] = count($holds['holds']['unavailable']);
+				$summary['numAvailableHolds'] = count($holds['available']);
+				$summary['numUnavailableHolds'] = count($holds['unavailable']);
 			}
-
 
 			$checkedOut = $this->getOverDriveCheckedOutItems($user, $overDriveInfo);
 			if (isset($checkedOut['error'])){
 				$summary['numCheckedOut'] = "Err";
 			}else{
 				$summary['numCheckedOut'] = count($checkedOut['items']);
-			}
-
-			$wishlist = $this->getOverDriveWishList($user, $overDriveInfo);
-			if (isset($wishlist['error'])){
-				$summary['numWishlistItems'] = "Err";
-			}else{
-				$summary['numWishlistItems'] = count($wishlist['items']);
 			}
 
 			curl_close($ch);
