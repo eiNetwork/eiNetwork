@@ -302,10 +302,10 @@ class OverDriveDriver {
 		global $timer;
 		global $logger;
 
-		$logger->log("Getting overdrive checked out items june ", PEAR_LOG_INFO);
+		$logger->log("Getting overdrive checked out items ", PEAR_LOG_INFO);
 		
 		$bookshelf = $memcache->get('overdrive_checked_out_' . $user->id);
-		$logger->log("bookshelf june ".$bookshelf, PEAR_LOG_INFO);
+		
 		$bookshelf = false;
 		if ($bookshelf == false){
 			$bookshelf = array();
@@ -333,7 +333,6 @@ class OverDriveDriver {
 			$logger->log("Bookshelf URL june ".$overDriveInfo['bookshelfUrl'], PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['bookshelfUrl']);
 			$bookshelfPage = curl_exec($overDriveInfo['ch']);
-			$logger->log("Bookshelf page june ". $bookshelfPage." ***end bookshelf page", PEAR_LOG_INFO);
 			
 			if ($closeSession){
 				curl_close($overDriveInfo['ch']);
@@ -427,7 +426,6 @@ class OverDriveDriver {
 			$logger->log("Bookshelf URL june ".$overDriveInfo['bookshelfUrl'], PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['bookshelfUrl']);
 			$bookshelfPage = curl_exec($overDriveInfo['ch']);
-			$logger->log("Bookshelf page june ". $bookshelfPage." ***end bookshelf page", PEAR_LOG_INFO);
 			
 			if ($closeSession){
 				curl_close($overDriveInfo['ch']);
@@ -661,6 +659,7 @@ class OverDriveDriver {
 			if (preg_match('/already placed a hold or borrowed this title/', $setEmailPage)){
 				$holdResult['result'] = false;
 				$holdResult['message'] = "We're sorry, but you are already on the waiting list for the selected title or have it checked out.";
+
 			}else{
 
 				$secureBaseUrl = preg_replace('~[^/.]+?.htm.*~', '', $setEmailPageInfo['url']);
@@ -705,12 +704,14 @@ class OverDriveDriver {
 					curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $secureBaseUrl . 'BANGAuthenticate.dll?Action=LibraryWaitingList');
 					$waitingListConfirm = curl_exec($overDriveInfo['ch']);
 					$logger->log("Submitting email for notification {$secureBaseUrl}BANGAuthenticate.dll?Action=LibraryWaitingList  $post_string"  , PEAR_LOG_INFO);
-					//$logger->log($waitingListConfirm, PEAR_LOG_INFO);
+					$logger->log("Pre ZZZ", PEAR_LOG_INFO);
+					$logger->log($waitingListConfirm, PEAR_LOG_INFO);
+					
 					$waitingListConfirm = strip_tags($waitingListConfirm, "'<p><a><li><ul><div><em><b>'");
 					if (preg_match('/<section id="mainContent" class=".*?">(.*?)<\/section>/is', $waitingListConfirm, $matches)){
 						$logger->log("Found main content section", PEAR_LOG_INFO);
 						$mainSection = $matches[1];
-
+						$logger->log("YOLK " . $mainSection, PEAR_LOG_INFO);
 						if (preg_match('/already on/si', $mainSection)){
 							$holdResult['result'] = false;
 							$holdResult['message'] = 'This title is already on hold or checked out to you.';
@@ -726,6 +727,9 @@ class OverDriveDriver {
 						}elseif (preg_match('/Some of our digital titles are only available for a limited time\. This title may be available in the future\. Be sure to check back/', $waitingListConfirm)){
 							$holdResult['result'] = false;
 							$holdResult['message'] = 'This title is no longer available.  Some of our digital titles are only available for a limited time. This title may be available in the future. Be sure to check back.';
+						}elseif(preg_match('/The email address entered was not valid\./', $mainSection)){
+							$holdResult['result'] = false;
+							$holdResult['message'] = "Please enter a valid email address on your profile.";
 						}else{
 							$holdResult['result'] = false;
 							$holdResult['message'] = 'There was an error placing your hold.';
@@ -771,12 +775,56 @@ class OverDriveDriver {
 			'result' => true,
 			'downloadUrl' => $overDriveInfo['downloadUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $overDriveId . '&FormatID=' . $formatId . '&url=MyAccount.htm'
 		);
-		$logger->log("DOWNLOADXXX---> ". $result["downloadUrl"], PEAR_LOG_INFO);
+		$logger->log("DOWNLOAD---> ". $result["downloadUrl"], PEAR_LOG_INFO);
 		$memcache->delete('overdrive_summary_' . $user->id);
 		
 		return $result;
 		
-	}	
+	}
+	
+	public function editOverDriveEmail($email, $overDriveId, $user){
+		global $memcache;
+		global $logger;
+
+		$cancelHoldResult = array();
+		$cancelHoldResult['result'] = false;
+		$cancelHoldResult['message'] = '';
+
+		$ch = curl_init();
+		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+		curl_setopt($overDriveInfo['ch'], CURLOPT_HTTPGET, true);
+
+		//Navigate to the holds page
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['holdsUrl']);
+		$holdsPage = curl_exec($overDriveInfo['ch']);
+
+		//Navigate to hold cancellation page
+		$editEmailUrl = $overDriveInfo['baseLoginUrl'] . "?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListEdit.htm%3FID=" . $overDriveId . "%26Format=''";
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $editEmailUrl);
+		$editPage = curl_exec($overDriveInfo['ch']);
+
+		$logger->log("editPage---> ". $editPage, PEAR_LOG_INFO);
+		
+		/*if (preg_match('/You have successfully cancelled your hold/', $cancellationResult)){
+			$cancelHoldResult['result'] = true;
+			$cancelHoldResult['message'] = 'Your hold was cancelled successfully.';
+
+			//Check to see if the user has cached hold information and if so, clear it
+			$memcache->delete('overdrive_holds_' . $user->id);
+			$memcache->delete('overdrive_summary_' . $user->id);
+
+			//Delete the cache for the record
+			$memcache->delete('overdrive_record_' . $overDriveId);
+		}else{
+			$cancelHoldResult['result'] = false;
+			$cancelHoldResult['message'] = 'There was an error cancelling your hold.';
+		} */
+
+		curl_close($overDriveInfo['ch']);
+
+		return $cancelHoldResult;		
+		
+	}
 
 	public function cancelOverDriveHold($overDriveId, $format, $user){
 		global $memcache;
@@ -838,7 +886,7 @@ class OverDriveDriver {
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $wishlistCancelUrl);
 		$cancellationResult = curl_exec($overDriveInfo['ch']);
 		$logger->log("wishlistCancelUrlID--->". $overDriveId, PEAR_LOG_INFO);
-		$logger->log("wishlistCancelUrl--->". $cancellationResult, PEAR_LOG_INFO);
+		//$logger->log("wishlistCancelUrl--->". $cancellationResult, PEAR_LOG_INFO);
 		if (!preg_match("/$overDriveId/", $cancellationResult)){
 			$cancelHoldResult['result'] = true;
 			$cancelHoldResult['message'] = 'The title was successfully removed from your wishlist.';
@@ -1082,7 +1130,7 @@ class OverDriveDriver {
 
 				$logger->log("Error processing your cart {$secureBaseUrl}BANGPurchase.dll?Action=LibraryCheckout $post_string", PEAR_LOG_INFO);
 
-				$logger->log("$processCartConfirmation", PEAR_LOG_INFO);
+				//$logger->log("$processCartConfirmation", PEAR_LOG_INFO);
 			}
 		}else{
 			$processCartResult['result'] = false;
@@ -1125,7 +1173,7 @@ class OverDriveDriver {
 			
 			//Send the command and process the result
 			$checkoutResultPage = curl_exec($ch);
-			$logger->log("Checkout Result june".$checkoutResult, PEAR_LOG_INFO);
+			//$logger->log("Checkout Result june".$checkoutResult, PEAR_LOG_INFO);
 			if (strpos($checkoutResultPage,'Your title has been checked out') > 0) {
 				$checkoutResult['result'] = true;
 				$checkoutResult['message'] = "Your title was checked out successfully. Please go to Checked Out Items to download the title from your Account.";
@@ -1229,7 +1277,7 @@ class OverDriveDriver {
 			$post_items[] = $key . '=' . urlencode($value);
 		}
 		$post_string = implode ('&', $post_items);
-		$logger->log("Post Items ".$post_string, PEAR_LOG_INFO);
+		//$logger->log("Post Items ".$post_string, PEAR_LOG_INFO);
 		
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
 		$loginUrl = str_replace('SignIn.htm?URL=MyAccount.htm%3fPerPage%3d80', 'BANGAuthenticate.dll',  $loginFormUrl);
@@ -1237,12 +1285,11 @@ class OverDriveDriver {
 		$myAccountMenuContent = curl_exec($ch);
 		$accountPageInfo = curl_getinfo($ch);
 		$logger->log("My Account Info URL ".$accountPageInfo['url'], PEAR_LOG_INFO);
-		$logger->log("My Account Menu *** ".$myAccountMenuContent. "*** end of my account menu", PEAR_LOG_INFO);
 		
 		$matchAccount = strpos($myAccountMenuContent, 'Checkouts remaining:');
 		$matchSignOut = strpos($myAccountMenuContent, 'URL=SignOutConfirm.htm');
 		if (($matchAccount > 0) && ($matchSignOut > 0)){
-			$logger->log("Logging in to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
+			//$logger->log("Logging in to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
 			$overDriveInfo = array(
 				'holdsUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80#myAccount2',  $urlWithSessionSSL),
 				'bookshelfUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80&ForceLoginFlag=0',  $urlWithSessionSSL),
@@ -1381,7 +1428,7 @@ class OverDriveDriver {
 			$memcache->delete('overdrive_record_' . $overDriveId);
 		}else{
 			$logger->log("OverDrive return failed", PEAR_LOG_ERR);
-			$logger->log($checkoutPage, PEAR_LOG_INFO);
+			//$logger->log($checkoutPage, PEAR_LOG_INFO);
 			$result['result'] = false;
 			$result['message'] = 'Sorry, we could not return this title for you.  Please try again later';
 		}
