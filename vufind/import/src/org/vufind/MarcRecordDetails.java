@@ -3030,7 +3030,7 @@ public class MarcRecordDetails {
 			return "suppressed";
 		} else {
 			// return that the record is not suppressed
-			return "notSuppressed";
+			return "notsuppressed";
 		}
 	}
 
