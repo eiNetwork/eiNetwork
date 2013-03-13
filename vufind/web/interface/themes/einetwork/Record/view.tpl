@@ -275,14 +275,26 @@ function redrawSaveStatus() {literal}{{/literal}
 					</td>
 					</tr>
 					{/if}
-					{if $contributors}
+					{if $contributors || $corporates || $meetings }
 					<tr>
 						<td class="details_lable">{translate text='Contributors'}</td>
 						<td>
 							<table>
+							{if $contributors}
 							{foreach from=$contributors item=contributor name=loop}
 							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape|trim}</a></td></tr>
 							{/foreach}
+							{/if}
+							{if $corporates}
+							{foreach from=$corporates item=corporate name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$corporate|trim|escape:"url"}">{$corporate|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
+							{if $meetings}
+							{foreach from=$meetings item=meeting name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$meeting|trim|escape:"url"}">{$meeting|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
 							</table>
 						</td>
 					</tr>
