@@ -148,21 +148,33 @@ class Record extends Action
 			$corporateAuthor = $this->getSubfieldData($marcField, 'a');
 			$interface->assign('corporateAuthor', $corporateAuthor);
 		}
-		
-		$marcField = $marcRecord->getField('111');
-		if ($marcField){
-			$meetingName = $this->getSubfieldData($marcField, 'a');
-			$interface->assign('meetingName', $meetingName);
-		}
 
 		$marcFields = $marcRecord->getFields('700');
 		if ($marcFields){
 			$contributors = array();
 			foreach ($marcFields as $marcField){
-				$contributors[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'c', 'd'));
+				$contributors[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'd', 'q', 'c', 'e', '4'));
 			}
 			$interface->assign('contributors', $contributors);
 		}
+		
+		$marcFields = $marcRecord->getFields('710');
+		if ($marcFields){
+			$corporates = array();
+			foreach ($marcFields as $marcField){
+				$corporates[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'd', 'c'));
+			}
+			$interface->assign('corporates', $corporates);
+		}
+		
+		$marcFields = $marcRecord->getFields('711');
+		if ($marcFields){
+			$meetings = array();
+			foreach ($marcFields as $marcField){
+				$meetings[] = $this->concatenateSubfieldData($marcField, array('a', 'd', 'c'));
+			}
+			$interface->assign('meetings', $meetings);
+		}		
 
 		$marcFields = $marcRecord->getFields('260');
 		if ($marcFields){

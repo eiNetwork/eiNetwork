@@ -53,15 +53,8 @@ function redrawSaveStatus() {literal}{{/literal}
 							
 						{if $corporateAuthor}
 							<div class="recordAuthor">
-								<span class="resultLabel"></span>
+								<span class="resultLabel">{translate text='Corporate Author'}:</span>
 								<span class="resultValue"><a href="{$path}/Author/Home?author={$corporateAuthor|escape:"url"}">{$corporateAuthor|escape}</a></span>
-							</div>
-						{/if}
-						
-						{if $meetingName}
-							<div class="recordAuthor">
-								<span class="resultLabel"></span>
-								<span class="resultValue"><a href="{$path}/Author/Home?author={$meetingName|escape:"url"}">{$meetingName|escape}</a></span>
 							</div>
 						{/if}
 						{if $pubdate}
@@ -231,16 +224,18 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 
 					{if $altTitle}
+					{foreach from=$altTitle item=title key=k name=loop}
 					<tr>
-						<td class="details_lable">Other Title</td>
+						<td class="details_lable">Other Titles</td>
 						<td>
 							<table>
-								{foreach from=$altTitle item=title key=k name=loop}		
-								<tr><td>{$title|escape|trim}</td></tr>
-								{/foreach}
+								<tr><td>							
+								{$title}
+								</td></tr>
 							</table>
 						</td>
 					</tr>
+					{/foreach}
 					{/if}
 					
 					{if $edition}
@@ -266,7 +261,7 @@ function redrawSaveStatus() {literal}{{/literal}
 							</table>
 						</td>
 					</tr>
-					<!--{/if}
+					{/if}
 					
 					{if $corporateAuthor}
 					<tr>
@@ -279,15 +274,27 @@ function redrawSaveStatus() {literal}{{/literal}
 						</table>
 					</td>
 					</tr>
-					{/if}-->
-					{if $contributors}
+					{/if}
+					{if $contributors || $corporates || $meetings }
 					<tr>
 						<td class="details_lable">{translate text='Contributors'}</td>
 						<td>
 							<table>
+							{if $contributors}
 							{foreach from=$contributors item=contributor name=loop}
 							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape|trim}</a></td></tr>
 							{/foreach}
+							{/if}
+							{if $corporates}
+							{foreach from=$corporates item=corporate name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$corporate|trim|escape:"url"}">{$corporate|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
+							{if $meetings}
+							{foreach from=$meetings item=meeting name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$meeting|trim|escape:"url"}">{$meeting|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
 							</table>
 						</td>
 					</tr>
