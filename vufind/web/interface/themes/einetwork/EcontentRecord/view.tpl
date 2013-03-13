@@ -327,12 +327,14 @@ function redrawSaveStatus() {literal}{{/literal}
 			<span class="action-lable-span">Checkout Now</span>
 			</div>
 		  {else}
-		  	{if $eContentRecord->sourceUrl}
+		  	{if $eContentRecord->sourceUrl  }
+			
 			      <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			      <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
 			      <span class="action-lable-span">Access Online</span>
 			</div>
-				{else}
+			
+			{else}
 				 <div class="round-rectangle-button" id="access-online"  style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			      <span class="action-img-span"><img id="find-in-library-img" alt="Loading..." class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Loading..."/></span>
 			      <span class="action-lable-span">Loading...</span>
@@ -340,15 +342,20 @@ function redrawSaveStatus() {literal}{{/literal}
 			{/if}	  
 		  {/if}	
 	    {else}
-		  {if $eContentRecord->sourceUrl}
+		  {if $eContentRecord->sourceUrl && $eContentRecord->sourceUrl != "" }
 		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='{$eContentRecord->sourceUrl}'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
 			<span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
 			<span class="action-lable-span">Access Online</span>
 		  </div>
+		  {else}
+		  <div class="round-rectangle-button" id="access-online" onclick="window.location.href='#links'" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px">
+		  <span class="action-img-span"><img id="find-in-library-img" alt="access online" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" alt="Access Online"/></span>
+		  <span class="action-lable-span">Access Online</span>
+		  </div>	
 		  {/if}	    
 	    {/if}
 
-	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="{if $eContentRecord->sourceUrl}border-top-right-radius:0px;border-top-left-radius:0px;{else}border-top-right-radius:8px;border-top-left-radius:8px;{/if}border-top-width:1px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;">
+	    <div class="round-rectangle-button" id="add-to-wish-list" onclick="getSaveToListForm('{$id|escape}', 'eContent'); return false;" style="border-top-width:1px;border-bottom-left-radius:8px;border-bottom-right-radius:8px;">
 		  <span class="action-img-span"><img id="add-to-wish-list-img" alt="add to wish list" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToWishList.png" /></span>
 		  <span class="action-lable-span">Add To Wish List</span>
 	    </div>
@@ -403,9 +410,14 @@ function redrawSaveStatus() {literal}{{/literal}
 	{if $eContentRecord->source != "OverDrive"}
 		<div id="availableOnline">
 			<span>
+			<br/>
 			<img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" alt="Available"/>
 			</span>
+			{if $eContentRecord->sourceUrl }
 			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='{$eContentRecord->sourceUrl}'">Available Online</a>
+			{else}
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='#links'">Available Online</a>
+			{/if}
 		</div>
 	{/if}		  
 	    <div id="holdingsSummaryPlaceholder" class="holdingsSummaryRecord">Loading...</div>
@@ -758,7 +770,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						{foreach from=$eContentRecord->getItems() item=eRec name=links}
 							{if $eRec->link}
 								<tr>
-									<td class="details_lable">{if $smarty.foreach.links.index == 0}Links{/if}</td>
+									<td class="details_lable" id="links">{if $smarty.foreach.links.index == 0}Links{/if}</td>
 									<td><a href="{$eRec->link}" target="_blank">{if $eRec->notes}{$eRec->notes}{else}{$eRec->link}{/if}</a></td>
 								</tr>
 							{/if}
