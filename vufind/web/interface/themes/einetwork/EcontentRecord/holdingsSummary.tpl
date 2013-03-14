@@ -4,7 +4,7 @@
 	{elseif $holdingsSummary.status == 'Checked Out'}
 		class="holdingsSummary overdriveCheckedOut"
 	{/if}>
-	
+	<br/>
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>

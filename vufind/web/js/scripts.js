@@ -224,10 +224,11 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	$('#popupbox').css('left', '50%');
 
 	$.get(urlToLoad, function(data) {
-
+		
 		//$('#popupbox').html(data);
 		//$('#popupbox').show();
 		if (parentId){
+		
 			//Automatically position the lightbox over the cursor
 			$("#popupbox").position({
 				my: "top right",
@@ -237,7 +238,7 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 			});
 			
 		}else{
-			
+
 			if (!left) left = '30%';
 			if (!top) top = '30%';
 			if (!height) height = '300px';
