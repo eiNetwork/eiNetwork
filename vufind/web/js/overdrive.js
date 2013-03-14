@@ -1,15 +1,3 @@
-function checkoutOverDriveItem1(overdriveId, formatId){
-	if (loggedIn){
-		var url = path + "/EcontentRecord/AJAX?method=GetOverDriveLoanPeriod&overDriveId=" + overdriveId + "&formatId=" + formatId;
-		ajaxLightbox(url,false,false,'320px',false,'150px');
-	}else{
-		ajaxLogin(function(){
-			checkoutOverDriveItem(overdriveId, formatId);
-		});
-	}
-}
-
-
 function checkoutOverDriveItem(elemId){
 	if (loggedIn){
 		showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
@@ -38,6 +26,36 @@ function checkoutOverDriveItem(elemId){
 			checkoutOverDriveItem(elemId);
 		});
 	}	
+}
+
+function editOverDriveEmail(email, overDriveId){
+	if (loggedIn){
+		showProcessingIndicator("Changing your hold email for you in OverDrive.  This may take a minute.");
+		var url = path + "/EcontentRecord/AJAX?method=EditOverDriveEmail&email=" + email + "&overDriveId=" + overDriveId;
+		$.ajax({
+			url: url,
+			success: function(data){
+				alert(data.message);
+				if (data.result){
+					
+					//window.location.href = path + "/MyResearch/Holds";
+				}else{
+					hideLightbox();
+				}
+				hideLightbox();			
+			},
+			dataType: 'json', 
+			error: function(){	
+				setTimeout(function() {alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");},1250);
+				hideLightbox();
+			}
+		});
+	}else{
+		ajaxLogin(function(){
+			editOverDriveEmail(email);
+		});
+	}	
+	
 }
 
 function placeOverDriveHold(elemId){
@@ -133,60 +151,6 @@ function returnOverDriveItem(overdriveId, transactionId){
 			returnOverDriveItem(overdriveId, transactionId);
 		});
 	}	
-}
-
-function addOverDriveRecordToWishList(recordId){
-	if (loggedIn){
-		showProcessingIndicator("Adding the title to your Wish List in OverDrive.  This may take a minute.");
-		var url = path + "/EcontentRecord/AJAX?method=AddOverDriveRecordToWishList&recordId=" + recordId;
-		$.ajax({
-			url: url,
-			success: function(data){
-				alert(data.message);
-				if (data.result){
-					window.location.href = path + "/MyResearch/OverdriveWishList";
-				}else{
-					hideLightbox();
-				}
-			},
-			dataType: 'json',
-			error: function(){
-				alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");
-				hideLightbox();
-			}
-		});
-	}else{
-		ajaxLogin(function(){
-			addOverDriveRecordToWishList(recordId);
-		});
-	}
-}
-
-function removeOverDriveRecordFromWishList(overDriveId){
-	if (loggedIn){
-		showProcessingIndicator("Removing the title from your Wish List in OverDrive.  This may take a minute.");
-		var url = path + "/EcontentRecord/AJAX?method=RemoveOverDriveRecordFromWishList&overDriveId=" + overDriveId;
-		$.ajax({
-			url: url,
-			success: function(data){
-				alert(data.message);
-				if (data.result){
-					window.location.href = path + "/MyResearch/OverdriveWishList";
-				}else{
-					hideLightbox();
-				}
-			},
-			dataType: 'json',
-			error: function(){
-				alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");
-				hideLightbox();
-			}
-		});
-	}else{
-		ajaxLogin(function(){
-			removeOverDriveRecordFromWishList(overDriveId);
-		});
-	}
 }
 
 function cancelOverDriveHold(overDriveId, formatId){

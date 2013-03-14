@@ -704,8 +704,6 @@ class OverDriveDriver {
 					curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $secureBaseUrl . 'BANGAuthenticate.dll?Action=LibraryWaitingList');
 					$waitingListConfirm = curl_exec($overDriveInfo['ch']);
 					$logger->log("Submitting email for notification {$secureBaseUrl}BANGAuthenticate.dll?Action=LibraryWaitingList  $post_string"  , PEAR_LOG_INFO);
-					$logger->log("Pre ZZZ", PEAR_LOG_INFO);
-					$logger->log($waitingListConfirm, PEAR_LOG_INFO);
 					
 					$waitingListConfirm = strip_tags($waitingListConfirm, "'<p><a><li><ul><div><em><b>'");
 					if (preg_match('/<section id="mainContent" class=".*?">(.*?)<\/section>/is', $waitingListConfirm, $matches)){
@@ -746,6 +744,11 @@ class OverDriveDriver {
 
 						//Delete the cache for the record
 						$memcache->delete('overdrive_record_' . $overDriveId);
+						
+					}elseif (preg_match("/You did not complete all of the required fields on the 'Holds' page/", $waitingListConfirm)){
+						$holdResult['result'] = false;
+						$holdResult['message'] = 'Please enter a valid email address on your profile.';
+	
 					}else{
 						$holdResult['result'] = false;
 						$holdResult['message'] = 'There was an error placing your hold.';
@@ -786,9 +789,9 @@ class OverDriveDriver {
 		global $memcache;
 		global $logger;
 
-		$cancelHoldResult = array();
-		$cancelHoldResult['result'] = false;
-		$cancelHoldResult['message'] = '';
+		$editResult = array();
+		$editResult['result'] = false;
+		$editResult['message'] = '';
 
 		$ch = curl_init();
 		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
@@ -798,33 +801,50 @@ class OverDriveDriver {
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['holdsUrl']);
 		$holdsPage = curl_exec($overDriveInfo['ch']);
 
-		//Navigate to hold cancellation page
-		$editEmailUrl = $overDriveInfo['baseLoginUrl'] . "?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListEdit.htm%3FID=" . $overDriveId . "%26Format=''";
+		//Navigate to edit email page
+		$editEmailUrl = $overDriveInfo['baseUrl'] . "WaitingListEdit.htm?ID=" . $overDriveId . "&Format=420";
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $editEmailUrl);
 		$editPage = curl_exec($overDriveInfo['ch']);
 
-		$logger->log("editPage---> ". $editPage, PEAR_LOG_INFO);
+		//$logger->log("editURLXXX---> ". $editEmailUrl, PEAR_LOG_INFO);
+		//$logger->log("editPage---> ". $editPage, PEAR_LOG_INFO);
 		
-		/*if (preg_match('/You have successfully cancelled your hold/', $cancellationResult)){
-			$cancelHoldResult['result'] = true;
-			$cancelHoldResult['message'] = 'Your hold was cancelled successfully.';
+		$postParams = array(
+			'ID' => $overDriveId,
+			'Format' => '420',
+			'URL' => 'WaitingListConfirm.htm',
+			'Email' => $email,
+			'Email2' => $email,
+			);
+		foreach ($postParams as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+		$submitUrl = $overDriveInfo['baseLoginUrl'] . '?Action=EditWaitingList';
+		$logger->log("waiting list URL QQQ---> ". $submitUrl, PEAR_LOG_INFO);
+		$logger->log("post string---> ". $post_string, PEAR_LOG_INFO);
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $submitUrl);
+		
+		$waitingListConfirm = curl_exec($overDriveInfo['ch']);
+		$logger->log("waiting list ZZZ---> ". $waitingListConfirm, PEAR_LOG_INFO);
+		
+		 if (preg_match('/You will receive an email when the title becomes available/', $waitingListConfirm)){
+			$editResult['result'] = true;
+			$editResult['message'] = 'Your email was changed successfully.';
 
-			//Check to see if the user has cached hold information and if so, clear it
-			$memcache->delete('overdrive_holds_' . $user->id);
-			$memcache->delete('overdrive_summary_' . $user->id);
-
-			//Delete the cache for the record
-			$memcache->delete('overdrive_record_' . $overDriveId);
 		}else{
-			$cancelHoldResult['result'] = false;
-			$cancelHoldResult['message'] = 'There was an error cancelling your hold.';
-		} */
+			$editResult['result'] = false;
+			$editResult['message'] = 'Please enter a valid email address.';
+		}
 
 		curl_close($overDriveInfo['ch']);
 
-		return $cancelHoldResult;		
+		return $editResult;		
 		
 	}
+	
+	
 
 	public function cancelOverDriveHold($overDriveId, $format, $user){
 		global $memcache;

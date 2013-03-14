@@ -12,7 +12,7 @@ class AJAX extends Action {
 
 	function launch() {
 		$method = $_GET['method'];
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'ReturnOverDriveItem', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'EditOverDriveEmail', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'ReturnOverDriveItem', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -382,14 +382,30 @@ class AJAX extends Action {
 		return json_encode($return);
 	}
 	
+	function EditOverDriveEmail(){
+
+		global $user;
+		$email = trim($_REQUEST['email']);
+		$overDriveId = $_REQUEST['overDriveId'];
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$driver = new OverDriveDriver();
+			$returnMessage = $driver->editOverDriveEmail($email, $overDriveId, $user);
+			return json_encode($returnMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to change email.'));
+		}		
+	}		
+	
 	function PlaceOverDriveHold(){
+
 		global $user;
 		$elemId = $_REQUEST['elemId'];
 		require_once ('Drivers/EContentDriver.php');
 		require_once ('sys/eContent/EContentRecord.php');
 		$driver = new EContentDriver();
 		//Get any items that are stored for the record
-
+		
 		$eContentRecord = new EContentRecord();
 		$eContentRecord->id = $elemId;
 		$eContentRecord->find(true);
