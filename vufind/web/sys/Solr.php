@@ -1179,7 +1179,7 @@ class Solr implements IndexEngine {
 			//Only show visible records
 			//https://github.com/mdnoble73/VuFind-Plus/commit/00e9794fb096af518eafa3f53d42648bdef65703 Fix Bib suppression logic
                         if (!isset($configArray['Index']['ignoreBibSuppression']) || $configArray['Index']['ignoreBibSuppression'] == false){
-				$filter[] = 'bib_suppression:notsuppressed';
+				$filter[] = '-bib_suppression:suppressed';
 			}
 			$blacklistRecords = null;
 			if (isset($searchLocation) && strlen($searchLocation->recordsToBlackList) > 0){
