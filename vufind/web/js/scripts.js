@@ -603,7 +603,10 @@ function showProcessingIndicator(message){
 	if (message != undefined){
 		$('#lightboxLoading').html(message);
 	}
-	lightbox(null,"400px","250px");
+	var new_top = $(document).scrollTop();
+	new_top = new_top + 250;
+	
+	lightbox(null,"400px", new_top);
 }
 
 function searchSubmit(){
