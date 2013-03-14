@@ -12,7 +12,7 @@ class AJAX extends Action {
 
 	function launch() {
 		$method = $_GET['method'];
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'EditOverDriveEmail', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'ReturnOverDriveItem', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'EditOverDriveEmail', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'ReturnOverDriveItem', 'CancelOverDriveHold'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -498,42 +498,7 @@ class AJAX extends Action {
 		
 		return $interface->fetch('EcontentRecord/ajax-loan-period.tpl');
 	}
-	
-	function AddOverDriveRecordToWishList(){
-		global $user;
-		if (isset($_REQUEST['recordId'])){
-			//TODO: get the overdrive id from the EContent REcord
-			require_once 'sys/eContent/EContentRecord.php';
-			$eContentRecord = new EContentRecord();
-			$eContentRecord->id = $_REQUEST['recordId'];
-			if ($eContentRecord->find(true)){
-				$overDriveId = $eContentRecord->getOverDriveId();
-			}
-		}else{
-			$overDriveId = $_REQUEST['overDriveId'];
-		}
-		if ($user && !PEAR::isError($user)){
-			require_once('Drivers/OverDriveDriver.php');
-			$driver = new OverDriveDriver();
-			$result = $driver->addItemToOverDriveWishList($overDriveId, $user);
-			return json_encode($result);
-		}else{
-			return json_encode(array('result'=>false, 'message'=>'You must be logged in to add an item to your wish list.'));
-		}
-	}
-	
-	function RemoveOverDriveRecordFromWishList(){
-		global $user;
-		$overDriveId = $_REQUEST['overDriveId'];
-		if ($user && !PEAR::isError($user)){
-			require_once('Drivers/OverDriveDriver.php');
-			$driver = new OverDriveDriver();
-			$result = $driver->removeOverDriveItemFromWishlist($overDriveId, $user);
-			return json_encode($result);
-		}else{
-			return json_encode(array('result'=>false, 'message'=>'You must be logged in to add an item to your wish list.'));
-		}
-	}
+
 	
 	function CancelOverDriveHold(){
 		global $user;
