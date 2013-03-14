@@ -503,11 +503,10 @@ class AJAX extends Action {
 	function CancelOverDriveHold(){
 		global $user;
 		$overDriveId = $_REQUEST['overDriveId'];
-		$format = $_REQUEST['formatId'];
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
-			$result = $driver->cancelOverDriveHold($overDriveId, $format, $user);
+			$result = $driver->cancelOverDriveHold($overDriveId, $user);
 			return json_encode($result);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to cancel holds.'));

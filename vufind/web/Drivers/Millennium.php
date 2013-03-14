@@ -2365,6 +2365,8 @@ class MillenniumDriver implements DriverInterface
 	}
 
 	protected function _getHoldResult($holdResultPage){
+		global $logger;
+		//$logger->log("getholdresult ", PEAR_LOG_INFO);
 		$hold_result = array();
 		//Get rid of header and footer information and just get the main content
 		$matches = array();
@@ -2377,7 +2379,7 @@ class MillenniumDriver implements DriverInterface
 			$cleanResponse = preg_replace("^\n|\r|&nbsp;^", "", $matches[1]);
 			$cleanResponse = preg_replace("^<br\s*/>^", "\n", $cleanResponse);
 			$cleanResponse = trim(strip_tags($cleanResponse));
-
+			//$logger->log("Clean Response\n".$cleanResponse."\nEnd Clean Response", PEAR_LOG_INFO);
 			if (strpos($cleanResponse, "\n") > 0){
 				list($book,$reason)= explode("\n",$cleanResponse);
 			}else{
@@ -2422,6 +2424,7 @@ class MillenniumDriver implements DriverInterface
 					$message = 'There are no holdable items for this title.';
 				}
 			}else{
+			//$logger->log("Hold Result Page\n".$holdResultPage."\nEnd Hold Result Page", PEAR_LOG_INFO);
 				if (preg_match('/success/', $holdResultPage) && preg_match('/request denied/', $holdResultPage) == 0){
 					//Hold was successful
 					$hold_result['result'] = true;
@@ -2431,6 +2434,10 @@ class MillenniumDriver implements DriverInterface
 						$hold_result['message'] = $reason;
 					}
 					return $hold_result;
+				}else if (preg_match('/No items requestable, request denied/', $holdResultPage)) {
+						$hold_result['result'] = false;
+						$hold_result['message'] = 'There are no holdable items for this title.';
+						return $hold_result;
 				}else{
 					$message = 'Unable to contact the circulation system.  Please try again in a few minutes.';
 				}

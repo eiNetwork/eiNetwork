@@ -153,10 +153,10 @@ function returnOverDriveItem(overdriveId, transactionId){
 	}	
 }
 
-function cancelOverDriveHold(overDriveId, formatId){
+function cancelOverDriveHold(overDriveId){
 	if (loggedIn){
 		showProcessingIndicator("Cancelling your hold in OverDrive.  This may take a minute.");
-		var url = path + "/EcontentRecord/AJAX?method=CancelOverDriveHold&overDriveId=" + overDriveId + "&formatId=" + formatId;
+		var url = path + "/EcontentRecord/AJAX?method=CancelOverDriveHold&overDriveId=" + overDriveId;
 		$.ajax({
 			url: url,
 			success: function(data){

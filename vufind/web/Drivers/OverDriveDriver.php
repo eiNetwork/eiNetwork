@@ -217,7 +217,6 @@ class OverDriveDriver {
 		
 		$bookshelf = $memcache->get('overdrive_checked_out_' . $user->id);
 		
-		$bookshelf = false;
 		if ($bookshelf == false){
 			$bookshelf = array();
 			$bookshelf['items'] = array();
@@ -318,8 +317,8 @@ class OverDriveDriver {
 		global $timer;
 		global $logger;
 
-		//$holds = $memcache->get('overdrive_holds_' . $user->id);
-		$holds = false;
+		$holds = $memcache->get('overdrive_holds_' . $user->id);
+
 		if ($holds == false){
 			$holds = array();
 			$holds['holds'] = array();
@@ -387,7 +386,7 @@ class OverDriveDriver {
 		global $configArray;
 		global $timer;
 
-		$summary = false;//= $memcache->get('overdrive_summary_' . $user->id);
+		$summary = $memcache->get('overdrive_summary_' . $user->id);
 		if ($summary == false){
 			$summary = array();
 			$ch = curl_init();
@@ -527,7 +526,7 @@ class OverDriveDriver {
 					if (preg_match('/<section id="mainContent" class=".*?">(.*?)<\/section>/is', $waitingListConfirm, $matches)){
 						$logger->log("Found main content section", PEAR_LOG_INFO);
 						$mainSection = $matches[1];
-						$logger->log("YOLK " . $mainSection, PEAR_LOG_INFO);
+						
 						if (preg_match('/already on/si', $mainSection)){
 							$holdResult['result'] = false;
 							$holdResult['message'] = 'This title is already on hold or checked out to you.';
@@ -645,7 +644,7 @@ class OverDriveDriver {
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $submitUrl);
 		
 		$waitingListConfirm = curl_exec($overDriveInfo['ch']);
-		$logger->log("waiting list ZZZ---> ". $waitingListConfirm, PEAR_LOG_INFO);
+		//$logger->log("waiting list ZZZ---> ". $waitingListConfirm, PEAR_LOG_INFO);
 		
 		 if (preg_match('/You will receive an email when the title becomes available/', $waitingListConfirm)){
 			$editResult['result'] = true;
@@ -664,7 +663,7 @@ class OverDriveDriver {
 	
 	
 
-	public function cancelOverDriveHold($overDriveId, $format, $user){
+	public function cancelOverDriveHold($overDriveId, $user){
 		global $memcache;
 
 		$cancelHoldResult = array();
@@ -680,7 +679,7 @@ class OverDriveDriver {
 		$holdsPage = curl_exec($overDriveInfo['ch']);
 
 		//Navigate to hold cancellation page
-		$holdCancelUrl = $overDriveInfo['baseLoginUrl'] . "?Action=RemoveFromWaitingList&id={{$overDriveId}}&format=$format&url=waitinglistremove.htm";
+		$holdCancelUrl = $overDriveInfo['baseLoginUrl'] . "?Action=RemoveFromWaitingList&id={{$overDriveId}}&format=420&url=waitinglistremove.htm";
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $holdCancelUrl);
 		$cancellationResult = curl_exec($overDriveInfo['ch']);
 
