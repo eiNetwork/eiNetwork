@@ -478,7 +478,7 @@
 							<!--<div style="text-align: center"><span id="item_status{$record.recordId}" style="text-align: center">Total {$record.holdQueueLength} {if $record.holdQueueLength == 1}copy{else}copies{/if}</span></div>-->
 		
 							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Cancel</span></div>
-							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Edit</span></div>
+							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="ajaxLightbox('/MyResearch/AJAX?method=editEmailPrompt&overDriveId={$record.overDriveId}', false, false, '300px','400px','auto')" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Edit</span></div>
 						</div>
 						
 						

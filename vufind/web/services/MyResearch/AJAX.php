@@ -37,7 +37,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_GET['method'];
-		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches','getUnavailableHoldingInfo'))){
+		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches', 'editEmailPrompt', 'getUnavailableHoldingInfo'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -108,6 +108,16 @@ class AJAX extends Action {
 		return $result;
 	
 	}
+	
+	function editEmailPrompt(){
+		global $interface;
+		$overDriveId = $_REQUEST['overDriveId'];
+		
+		$interface->assign("overDriveId", $overDriveId);
+		$result = $interface->fetch("MyResearch/editEmail.tpl");
+		echo $result;
+		
+	}		
 	/**
 	 * Get a list of preferred hold pickup branches for a user.
 	 *
