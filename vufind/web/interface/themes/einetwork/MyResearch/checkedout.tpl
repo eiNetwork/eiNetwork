@@ -368,7 +368,7 @@
 	    {if count($overDriveCheckedOutItems) > 0}
 		<div class="checkout">
 			{foreach from=$overDriveCheckedOutItems item=record}
-			<div id="record">
+			<div id="record{$record.overDriveId}">
 				<div class="item_image">
 					<img src="{$record.imageUrl}">
 				</div>
