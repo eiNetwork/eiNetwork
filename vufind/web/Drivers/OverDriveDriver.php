@@ -750,6 +750,8 @@ class OverDriveDriver {
 		if ($checkoutResult['result'] == true){
 			//Delete the cache for the record
 			global $memcache;
+			$memcache->delete('overdrive_checked_out_' . $user->id);
+			$memcache->delete('overdrive_summary_' . $user->id);
 			$memcache->delete('overdrive_record_' . $overDriveId);
 			$memcache->delete('overdrive_items_' . $overDriveId);
 			
@@ -984,6 +986,7 @@ class OverDriveDriver {
 		if (!preg_match("/$transactionId/si", $returnPage)){
 			$result['result'] = true;
 			$result['message'] = "Your title was returned successfully.";
+			$memcache->delete('overdrive_checked_out_' . $user->id);
 			$memcache->delete('overdrive_summary_' . $user->id);
 			//Delete the cache for the record
 			$memcache->delete('overdrive_record_' . $overDriveId);
