@@ -315,7 +315,7 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/> {$record.author}{/if}
 							</div>
-							<div class="notify_email">{$record.notifyEmail}</div>
+						<!--	<div class="notify_email">Email notifcation will be sent to:<br/>{$record.notifyEmail}</div> -->
 						</div>
 						
 						<div class="item_status" style="height: auto;min-height: 105px">
@@ -355,7 +355,8 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/>{$record.author}{/if}
 							</div>
-							<div class="item_type">
+							<div class="notify_email" style="margin-top:10px;">Email notifcation will be sent to:<br/>{$record.notifyEmail}</div>
+						<!--	<div class="item_type">
 								{$record.format}
 								{if is_array($record.format)}
 									{assign var=imagePath value='/interface/themes/einetwork/images/Art/Materialicons'}
@@ -471,7 +472,7 @@
 									    {/if}
 										<span class="iconlabel" >{translate text=$record.format}</span>
 									{/if}
-							</div>
+							</div> -->
 						</div>
 						
 						<div class="item_status" >
