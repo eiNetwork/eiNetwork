@@ -414,7 +414,7 @@
 					{/if}
 					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
 					{if $record.hasRead == true}
-					<input class="button" type="button" value="Read" onclick="downloadOverDriveItem('{$record.overDriveId},'610')"/>
+					<input class="button" type="button" value="Read" onclick="downloadOverDriveItem('{$record.overDriveId}','610')"/>
 					{/if}
 				</div>
 			</div>
