@@ -315,7 +315,7 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/> {$record.author}{/if}
 							</div>
-							<div class="item_type"></div>
+							<div class="notify_email">{$record.notifyEmail}</div>
 						</div>
 						
 						<div class="item_status" style="height: auto;min-height: 105px">
