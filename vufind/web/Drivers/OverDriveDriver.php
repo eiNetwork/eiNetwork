@@ -649,6 +649,8 @@ class OverDriveDriver {
 		 if (preg_match('/You will receive an email when the title becomes available/', $waitingListConfirm)){
 			$editResult['result'] = true;
 			$editResult['message'] = 'Your email was changed successfully.';
+			global $memcache;
+			$memcache->delete('overdrive_holds_' . $user->id);
 
 		}else{
 			$editResult['result'] = false;

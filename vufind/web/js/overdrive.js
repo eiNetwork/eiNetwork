@@ -9,6 +9,7 @@ function checkoutOverDriveItem(elemId){
 				if (data.result){
 					
 					//window.location.href = path + "/MyResearch/CheckedOut";
+					window.location.href = "#";
 				}else{
 					hideLightbox();
 				}
@@ -38,7 +39,7 @@ function editOverDriveEmail(email, overDriveId){
 				alert(data.message);
 				if (data.result){
 					
-					//window.location.href = path + "/MyResearch/Holds";
+					window.location.href = path + "/MyResearch/Holds";
 				}else{
 					hideLightbox();
 				}
