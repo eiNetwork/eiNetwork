@@ -321,7 +321,7 @@
 						<div class="item_status" style="height: auto;min-height: 105px">
 							
 							<div>
-								<input class="button yellow" type="button"  onclick="checkoutOverDriveItem('{$record.recordId}')"  value="Checkout"  style="padding-left: 0px;padding-right: 0px;color: #6D6D6D;" />
+								<input class="button yellow" type="button"  onclick="checkoutOverDriveItem('{$record.recordId}', 'Holds')"  value="Checkout"  style="padding-left: 0px;padding-right: 0px;color: #6D6D6D;" />
 
 							</div>
 							

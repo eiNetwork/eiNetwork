@@ -1,4 +1,4 @@
-function checkoutOverDriveItem(elemId){
+function checkoutOverDriveItem(elemId, page){
 	if (loggedIn){
 		showProcessingIndicator("Checking out the title for you in OverDrive.  This may take a minute.");
 		var url = path + "/EcontentRecord/"+elemId+"/AJAX?method=CheckoutOverDriveItem";
@@ -7,9 +7,9 @@ function checkoutOverDriveItem(elemId){
 			success: function(data){
 				alert(data.message);
 				if (data.result){
-					
-					//window.location.href = path + "/MyResearch/CheckedOut";
-					window.location.href = "#";
+					if(page == "Holds"){ 
+					window.location.href = path + "/MyResearch/Holds";
+					}
 				}else{
 					hideLightbox();
 				}
