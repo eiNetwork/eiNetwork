@@ -21,7 +21,6 @@
 		alert("{$title}");
 	{/if}
 {literal}});{/literal}
-
 function redrawSaveStatus() {literal}{{/literal}
 		getSaveStatus('{$id|escape:"javascript"}', 'saveLink');
 {literal}}{/literal}
@@ -72,11 +71,13 @@ function redrawSaveStatus() {literal}{{/literal}
 						{*}
 				</div>
 				<div id="record_action_button">
+					{if !isset($noRequest)}
 					<div class="round-rectangle-button" id="add-to-cart" {if $enableBookCart}onclick="getSaveToBookCart('{$id|escape:"url"}','VuFind');return false;"{/if}>
 						<span class="action-img-span"><img id="add-to-cart-img" alt="add to cart" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" /></span>
 						<span class="action-lable-span">Add to Cart</span>
 					</div>
-					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" onclick="getToRequest('{$path}/Record/{$id|escape:'url'}/Hold')">
+					{/if}
+					<div class="round-rectangle-button" id="request-now{$id|regex_replace:"/\./":""}" style="border-bottom-width:1px;border-bottom-left-radius:0px;border-bottom-right-radius:0px;{if isset($noRequest)}background-color: rgb(192, 192, 192); color: rgb(248, 248, 248); cursor: default;{/if}" {if !isset($noRequest)}onclick="getToRequest('{$path}/Record/{$id|escape:'url'}/Hold')"{/if}>
 						<span class="action-img-span"><img id="request-now-img" alt="request now" class="action-img" src="/interface/themes/einetwork/images/Art/ActionIcons/RequestNow.png" alt="Request Now"/></span>
 						<span class="action-lable-span">Request Now</span>
 					</div>
@@ -117,6 +118,7 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 				</div>
 			</div>
+			<hr />
 			{/if}
 {*  Blocked out because character count includes tags - using crappier verison below
 			
@@ -155,7 +157,11 @@ function redrawSaveStatus() {literal}{{/literal}
 				<div class="resultInformationLabel">{translate text='Contents'}</div>
 				<div class="recordDescription">
 					{foreach from=$toc item=line name=loop}
-						{assign var="con" value="`$con``$line.content`"}
+						{if $line.code =="g"}
+							{assign var="con" value="`$con``$line.content`<br>"}
+						{else}
+							{assign var="con" value="`$con``$line.content`"}
+						{/if}
 					{/foreach}
 					{if strlen($con) > 300}
 						<span id="shortTOC">
@@ -163,7 +169,7 @@ function redrawSaveStatus() {literal}{{/literal}
 							<a href='#' onclick='$("#shortTOC").slideUp();$("#fullTOC").slideDown()'>More</a>
 						</span>
 						<span id="fullTOC" style="display:none">
-							{$con|escape}
+							{$con}
 							<a href='#' onclick='$("#shortTOC").slideDown();$("#fullTOC").slideUp()'>Less</a>
 						</span>
 					{else}
@@ -181,14 +187,15 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/if}
 				</div>
 			</div>
-			{* <div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
+			 <div class="resultInformation">
+				<div class="resultInformationLabel">{translate text='Community Reviews test'}</div>
 				<div class="recordSubjects">
-					<div id="">
-						{include file="$module/view-comments.tpl"}
-					</div>
+					
+						{*include file="$module/view-comments.tpl"*}
+						<div class="ltfl_reviews"></div>
+				
 				</div>
-			</div> *}
+			</div> 
 			{* <div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Staff Reviews'}</div>
 				<div class="recordSubjects">
@@ -215,6 +222,22 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
+
+					{if $altTitle}
+					{foreach from=$altTitle item=title key=k name=loop}
+					<tr>
+						<td class="details_lable">Other Titles</td>
+						<td>
+							<table>
+								<tr><td>							
+								{$title}
+								</td></tr>
+							</table>
+						</td>
+					</tr>
+					{/foreach}
+					{/if}
+					
 					{if $edition}
 					<tr>
 						<td class="details_lable">Edition</td>
@@ -252,14 +275,26 @@ function redrawSaveStatus() {literal}{{/literal}
 					</td>
 					</tr>
 					{/if}
-					{if $contributors}
+					{if $contributors || $corporates || $meetings }
 					<tr>
 						<td class="details_lable">{translate text='Contributors'}</td>
 						<td>
 							<table>
+							{if $contributors}
 							{foreach from=$contributors item=contributor name=loop}
 							<tr><td><a href="{$path}/Author/Home?author={$contributor|trim|escape:"url"}">{$contributor|escape|trim}</a></td></tr>
 							{/foreach}
+							{/if}
+							{if $corporates}
+							{foreach from=$corporates item=corporate name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$corporate|trim|escape:"url"}">{$corporate|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
+							{if $meetings}
+							{foreach from=$meetings item=meeting name=loop}
+							<tr><td><a href="{$path}/Author/Home?author={$meeting|trim|escape:"url"}">{$meeting|escape|trim}</a></td></tr>
+							{/foreach}
+							{/if}
 							</table>
 						</td>
 					</tr>
@@ -326,6 +361,38 @@ function redrawSaveStatus() {literal}{{/literal}
 							<td><a href='{$goldRushLink}' target='_blank'>Check for online articles</a></td>
 						</tr>
 						{/if}
+					{/if}
+					{if $internetLinks}
+						<tr>
+							<td class="details_lable">{translate text="Links"}</td>
+							<td><table>
+								{foreach from=$internetLinks item=internetLink}
+									<tr><td>
+									{if $proxy}
+										<a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a>
+									{else}
+										<a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a>
+									{/if}
+									</td></tr>
+								{/foreach}
+								</table>
+							</td>
+					{/if}
+					{if $supLinks}
+						<tr>
+							<td class="details_lable">{translate text="Supplemental Links"}</td>
+							<td><table>
+								{foreach from=$supLinks item=internetLink}
+									<tr><td>
+									{if $proxy}
+										<a href="{$proxy}/login?url={$internetLink.link|escape:"url"}">{$internetLink.linkText|escape}</a>
+									{else}
+										<a href="{$internetLink.link|escape}">{$internetLink.linkText|escape}</a>
+									{/if}
+									</td></tr>
+								{/foreach}
+								</table>
+							</td>
 					{/if}
 					</table>
 				</div>

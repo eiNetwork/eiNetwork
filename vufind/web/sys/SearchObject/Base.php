@@ -569,7 +569,7 @@ abstract class SearchObject_Base
 	{
 		if (isset($_REQUEST['sort'])) {
 			$this->sort = $_REQUEST['sort'];
-			$_SESSION['lastSearchSort'] = $_REQUEST['sort'];
+			//$_SESSION['lastSearchSort'] = $_REQUEST['sort'];
 		} elseif (isset($_SESSION['lastSearchSort'])) {
 			$this->sort = $_SESSION['lastSearchSort'];
 		} else {

@@ -92,9 +92,9 @@
 				{if $showPublicationDate}
 				<td>
 					<label for="publishDateyearfrom" class='yearboxlabel'>From:</label>
-					<input type="text" size="4" maxlength="4" class="text" name="publishDateyearfrom" id="publishDateyearfrom" value="" />
+					<input type="text" size="4" maxlength="4" class="text" name="publishDateyearfrom" id="publishDateyearfrom" value="" style="width:128px"/><br/>
 					<label for="publishDateyearto" class='yearboxlabel'>To:</label>
-					<input type="text" size="4" maxlength="4" class="text" name="publishDateyearto" id="publishDateyearto" value="" />
+					<input type="text" size="4" maxlength="4" class="text" name="publishDateyearto" id="publishDateyearto" value="" style="width:128px"/>
 					<br/>
 					{*<div id='yearDefaultLinks'>
 						<a onclick="$('#publishDateyearfrom').val('2005');$('#publishDateyearto').val('');" href='javascript:void(0);'>since&nbsp;2005</a>
@@ -108,8 +108,10 @@
 		{/if}
 		<input type="submit" name="submit"  class="button" value="{translate text="Find"}" /><br />
         </div>
-
+  {*right-bar template*}
+  {include file="ei_tpl/right-bar.tpl"}
 </form>
+
 </div>
 
 
@@ -151,7 +153,7 @@
   {/if}
 {literal}
 	if($("#lookfor").length > 0 && $('input[name="lookfor0[]"]').length){
-		$('input[name="lookfor0[]"]:first').val( $("#lookfor").val());
+		//$('input[name="lookfor0[]"]:first').val( $("#lookfor").val());
 		$('select[name="type0[]"]:first').val( $("#search-select").val());
 	}
 {/literal}

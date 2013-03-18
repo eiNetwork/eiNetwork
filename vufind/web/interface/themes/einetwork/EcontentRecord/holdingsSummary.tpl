@@ -1,16 +1,20 @@
 <div id = "holdingsSummary"
 	{if $holdingsSummary.status == 'Available from OverDrive'}
 		class="holdingsSummary overdriveAvailable"
-	{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
+	{elseif $holdingsSummary.status == 'Checked Out'}
 		class="holdingsSummary overdriveCheckedOut"
 	{/if}>
+	<br/>
 	<div class="availability">
 		{if $holdingsSummary.status == 'Available from OverDrive'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png"/ alt="Available"></span>
-		{elseif $holdingsSummary.status == 'Checked out in OverDrive'}
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="checkoutOverDriveItem('{$holdingsSummary.recordId}')">{$holdingsSummary.status}</a>
+		{elseif $holdingsSummary.status == 'Checked Out'}
 			<span><img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/CheckedOut.png"/ alt="CheckedOut"></span>
+			<a style="cursor:pointer" class="overdriveCheckedOut" onclick="placeOverDriveHold('{$holdingsSummary.recordId}')">{$holdingsSummary.status}</a>
+			
 		{/if}
-		{$holdingsSummary.status}
+		
 	</div>
 
 	<div class="holdableCopiesSummary">
@@ -21,9 +25,12 @@
 			{if strcasecmp($holdingsSummary.source, 'OverDrive') == 0}
 				{*Available for use from OverDrive.*}
 			{elseif $holdingsSummary.source == 'Freegal'}
+			        {$holdingsSummary.status}
 				Downloadable from Freegal.
 			{elseif $holdingsSummary.accessType == 'free'}
-				Available for multiple simultaneous usage. 
+		
+				Available for multiple simultaneous usage.
+			
 			{elseif $holdingsSummary.onHold}
 				You are number {$holdingsSummary.holdPosition} on the wait list.
 			{elseif $holdingsSummary.checkedOut}
@@ -37,16 +44,16 @@
 -->			{/if}
 
 			<div class="holdableCopiesSummary">
-				{if $holdingsSummary.holdQueueLength > 0}
+			{if $holdingsSummary.holdQueueLength > 0}
 				{$holdingsSummary.holdQueueLength} {if $holdingsSummary.holdQueueLength == 1}person {else}people {/if} on waitlist for
-				{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}. 
 			{/if}
+			{if $holdingsSummary.totalCopies != 999999}{$holdingsSummary.totalCopies} total {if $holdingsSummary.totalCopies == 1}copy{else}copies{/if}.{/if} 
 	</div>
 
 		{/if} 
 		{if $showOtherEditionsPopup}
 		<div class="otherEditions">
-			<a href="#" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', true)">Other Formats and Languages</a>
+			<a style="cursor:pointer" onclick="loadOtherEditionSummaries('{$holdingsSummary.recordId}', true)">Other Formats and Languages</a>
 		</div>
 		{/if}
 	</div>

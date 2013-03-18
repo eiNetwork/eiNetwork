@@ -787,13 +787,13 @@ public function getMyHoldsViaDB($patron)
 							//Create a fake holding for subscriptions so something
 							//will be displayed in the holdings summary.
 							$holdings[$issueSummary['location']] = array(
-	                            'availability' => '1',
-	                            'location' => $issueSummary['location'],
-	                            'libraryDisplayName' => $issueSummary['location'],
-	                            'callnumber' => $issueSummary['cALL'],
-	                            'status' => 'Lib Use Only',
-	                            'statusfull' => 'In Library Use Only',
-							);
+							'availability' => '1',
+							'location' => $issueSummary['location'],
+							'libraryDisplayName' => $issueSummary['location'],
+							'callnumber' => $issueSummary['cALL'],
+							'status' => 'Lib Use Only',
+							'statusfull' => 'In Library Use Only',
+							);		
 						}
 					}
 				}

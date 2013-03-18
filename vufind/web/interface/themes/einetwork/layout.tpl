@@ -44,9 +44,16 @@
       {css filename="suggestions.css"}
       {css filename="reports.css"}
       {css filename="dcl.css"}
+ 
     {/if}
 	
       {css media="print" filename="print.css"}
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/default/default.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/light/light.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/dark/dark.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/bar/bar.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/nivo-slider.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/interface/themes/einetwork/css/SliderThemes/slider-style.css" type="text/css" media="screen" />
     
     <script type="text/javascript">
       path = '{$path}';
@@ -76,8 +83,8 @@
     {/if}
     
     {* Files that should not be combined *}
-    {if $includeAutoLogoutCode == true}
-      {*<script type="text/javascript" src="{$path}/js/autoLogout.js"></script>*}
+    {if $includeAutoLogoutCode == true }
+      <script type="text/javascript" src="{$path}/js/autoLogout.js"></script>
     {/if}
     
     {if isset($theme_css)}
@@ -99,9 +106,7 @@
     <div id="lightbox" onclick="hideLightbox(); return false;"></div>
     <div id="popupbox" class="popupBox"></div>
     {* End LightBox *}
-    
     {include file="bookcart.tpl"}
-    
     {*<div id="pageBody" class="{$page_body_style}">*}
     <div id="pageBody">  
     {*<div class="searchheader">*}
@@ -113,6 +118,11 @@
 	    {if isset($lastsearch) and isset($pageType) and ($pageType eq "record" or $pageType eq "EcontentRecord")}
 		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;"  onclick='window.location.href="{$lastsearch|escape}#record{$id|escape:"url"}"' >
 		  <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Search Results"}</span></p>
+		</div>
+	    {/if}
+	    {if $searchType == 'advanced'&&$pageType!='advanced'}
+		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;"  onclick='window.location.href="{$path}/Search/Advanced?edit={$searchId}"' >
+		    <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Advanced Search"}</span></p>
 		</div>
 	    {/if}
 	  </div>
@@ -167,7 +177,6 @@
       {include file="ei_tpl/footer.tpl"}
       
     </div> {* End page body *}
-    
     {* add analytics tracking code*}
 	{if $productionServer}
 	{literal}

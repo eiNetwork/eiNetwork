@@ -18,25 +18,23 @@
 						<input type="text" id="listTitle" name="title" value="{$list->title|escape:"html"}" size="50">
 					</td>
 				</tr>
-				<tr style="height:25px;vertical-align:middle">
+				<tr style="height:20px;vertical-align:middle">
 					<td>
-						{translate text="Description"}:
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<textarea name="desc" id="listDesc" rows="3" cols="50">{$list->desc|escape:"html"}</textarea>
+	
 					</td>
 				</tr>
 				<tr style="height:25px;vertical-align:middle">
 					<td>
-						{translate text="Access"}:
+			
 					</td>
 				</tr>
 				<tr style="vertical-align:middle">
 					<td>
-						{translate text="Public"} <input type="radio" name="public" value="1">
-						{translate text="Private"} <input type="radio" name="public" value="0" checked><br />
+
 					</td>
 				</tr>
 				<tr style="height:25px;vertical-align:middle">

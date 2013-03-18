@@ -83,7 +83,20 @@
 	{else}
 		<span class="iconlabel {$summFormats|lower|regex_replace:"/[^a-z0-9]/":""}">{translate text=$summFormats}</span>
 	{/if}
--->	
+-->
+
+	{if $source != "OverDrive"}
+		<div id="availableOnline">
+			<span>
+			<img class="format_img" src="/interface/themes/einetwork/images/Art/AvailabilityIcons/Available.png" alt="Available"/>
+			</span>			
+			{if $sourceUrl }
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='{$sourceUrl}'">Available Online</a>
+			{else}
+			<a style="cursor:pointer" class="overdriveAvailable" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}#links'">Available Online</a>
+			{/if}			
+		</div>
+	{/if}
 	
 	<div id = "holdingsEContentSummary{$summId|escape:"url"}" class="holdingsSummary">
 		<div class="statusSummary" id="statusSummary{$summId|escape:"url"}">
@@ -98,10 +111,17 @@
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
 	    <span class="resultAction_span">View Details</span>
 	</div>
-	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="window.location.href='{$sourceUrl}'">
+	{if sourceUrl}
+	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}#links'">
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}" >Access Online</span>
 	</div>
+	{else}
+	<div class="round-rectangle-button"  style="border-radius:0px;border-bottom-width:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="window.location.href='{$sourceUrl}'">
+	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
+	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}" >Access Online</span>
+	</div>	
+	{/if}
 <!--	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;" >
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" name="more_like_this" >More Like This</span>
@@ -132,10 +152,17 @@
 	    <span class="resultAction_img_span"><img alt="view_details" src="/interface/themes/einetwork/images/Art/ActionIcons/ViewDetails.png" class="resultAction_img"></span>
 	    <span class="resultAction_span">View Details</span>
 	</div>
+	{if $sourceUrl}
 	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="window.location.href='{$sourceUrl}'">
 	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}">Access Online</span>
 	</div>
+	{else}
+	<div class="round-rectangle-button"  style="border-top-right-radius:0px;border-top-left-radius:0px" name="selected[{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}]" id="selected{if $summShortId}{$summShortId}{else}{$summId|escape}{/if}" onclick="window.location.href='{$url}/EcontentRecord/{$summId|escape:"url"}/Home?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}#links'">
+	    <span class="resultAction_img_span"><img alt="add_to_cart" src="/interface/themes/einetwork/images/Art/ActionIcons/AddToCart.png" class="resultAction_img"></span>
+	    <span class="resultAction_span" id="RequestWord{$summId|escape:"url"}">Access Online</span>
+	</div>
+	{/if}
 <!--	<div class="round-rectangle-button" style="border-radius:0px;border-bottom-width:0px;">
 	    <span class="resultAction_img_span"><img alt="more like this" src="/interface/themes/einetwork/images/Art/ActionIcons/MoreLikeThis.png" class="resultAction_img"></span>
 	    <span class="resultAction_span" name="more_like_this" >More Like This</span>
@@ -181,6 +208,7 @@
 		
 </div>
 -->
+
 
 <script type="text/javascript">
 	addRatingId('{$summId|escape:"javascript"}', 'eContent');

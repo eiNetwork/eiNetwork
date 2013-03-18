@@ -11,6 +11,7 @@
   <div style="height:40px;font-size:15px;padding-top:12px;" id="itemTitle">{$BookTitle}</div>
  <table border="0" class="holdingsTable" style="width:510px;">
  <tbody>
+
  {foreach from=$holdings item=holding1}
  {foreach from=$holding1 item=holding}
   {if $lastSection != $holding.section}
@@ -64,9 +65,10 @@
   </div>
  </div>
   <div id="actionButton" style="height:60px;padding-top:10px;">
-    <input type="button" class="button" id="emailButton" value="Email" style="margin-left:230px;width:80px"/>
-    <input type="button" class="button" id="printButton" value="Print" style="width:80px" onclick="printFindLibrary()"/>
-    <input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="Done" onclick="hideLightbox()"/>
+    
+    <input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px;float:right" value="Done" onclick="hideLightbox()"/>
+    <input type="button" class="button" id="printButton" value="Print" style="width:80px;float:right" onclick="printFindLibrary()"/>
+    <input type="button" class="button" id="emailButton" value="Email" style="width:80px;float:right" onclick="emailCallNumberPrompt('{$CallNumber}','false','150px','400px','auto')"/>{*$user->email*}
   </div>
  {elseif isset($issueSummaries) && count($issueSummaries) > 0}
    {* Display Issue Summaries *}
@@ -168,7 +170,16 @@
    </div>
  </div>
 
-  {else}
-   No Copies Found
+{else}
+<div id="holdingInfoPopup" style="height:auto;max-height:450px;width:auto;height:inherit;padding-left:12px;padding-right:12px">
+  <div style="height:125px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)" id="headhead">
+    <span style="font-size:18px;">No Copies Found</span> <span onclick="hideLightbox()" style="float:right"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png"></span><br>
+  	Our apologies, no copies of this title are available at this time.
+  	  <div id="actionButton" style="height:60px;padding-top:10px;">
+
+    	<input type="button" class="button" id="doneButton"  style="background-color:rgb(244,213,56);width:80px" value="OK" onclick="hideLightbox()"/>
+  		</div>
+  </div>
+ </div>
 {/if}
 

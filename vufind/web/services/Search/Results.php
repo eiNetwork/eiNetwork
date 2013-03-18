@@ -36,7 +36,9 @@ class Results extends Action {
 		global $configArray;
 		global $timer;
 		global $user;
-
+		if(isset($_REQUEST['useLocation'])){
+			$_SESSION['useLocation'] = $_REQUEST['useLocation'];
+		}
 		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
@@ -69,7 +71,7 @@ class Results extends Action {
 				unset($queryParams[$dateFilter . 'yearfrom']);
 				unset($queryParams[$dateFilter . 'yearto']);
 				if (!isset($queryParams['sort'])){
-					$queryParams['sort'] = 'year';
+					$queryParams['sort'] = 'relevance';
 				}
 				$queryParamStrings = array();
 				foreach($queryParams as $paramName => $queryValue){
@@ -183,7 +185,6 @@ class Results extends Action {
 		$interface->assign('searchType',          $searchObject->getSearchType());
 		// Will assign null for an advanced search
 		$interface->assign('searchIndex',         $searchObject->getSearchIndex());
-
 		// We'll need recommendations no matter how many results we found:
 		$interface->assign('topRecommendations',
 		$searchObject->getRecommendationsTemplates('top'));
@@ -270,9 +271,9 @@ class Results extends Action {
 				header("Location: " . $interface->getUrl() . "/MyResearch/MyList/{$listId}");
 			}elseif ($record['recordtype'] == 'econtentRecord'){
 				$shortId = str_replace('econtentRecord', '', $record['id']);
-				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home");
+				header("Location: " . $interface->getUrl() . "/EcontentRecord/$shortId/Home?clear=1");
 			}else{
-				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home");
+				header("Location: " . $interface->getUrl() . "/Record/{$record['id']}/Home?clear=1");
 			}
 			
 		} else {
@@ -294,9 +295,30 @@ class Results extends Action {
 
 			$facetSet = $searchObject->getFacetList();
 			$interface->assign('facetSet',       $facetSet);
-
+			if(isset($facetSet['format'])){
+				//$facetSet['format']['list'] = $this->sortFromMap('format_category_map.properties', $facetSet['format']['list'], 'All Books');
+				$x = $facetSet['format'];
+				//build a tree array
+				$x = $this->sortFromMap('format_category_map.properties', $x, 'All Items');
+				//count number of items in array (categories and entries)
+				$j = 0;
+				$this->countTree($x, & $j);
+				//deconstruct into 2 dimensional array to load into view
+				$i = 0;
+				$flat = array();
+				$this->flatten_array($x, $flat, $i, $j, 0, 0);
+				//divide into columns
+				$temp = array();
+				for($i = 0; $i < ceil($j/10); $i++){
+					$temp[] = array_slice($flat, ($i*10), 10, 1);
+				}
+				$interface->assign('tree', $temp);
+				$tree_html = $interface->fetch('Search/facet_popup.tpl');
+				$interface->assign('tree_html', $tree_html);
+			}
 			//Check to see if a format category is already set
 			$categorySelected = false;
+			
 			if (isset($facetSet['top'])){
 				foreach ($facetSet['top'] as $title=>$cluster){
 					if ($cluster['label'] == 'Category'){
@@ -377,8 +399,13 @@ class Results extends Action {
 			$_SESSION['lastSearchURL'] = $searchObject->renderSearchUrl();
 		}
 
-		
 		// Done, display the page
+		$interface->assign('pageType',"search");
+		if($searchObject->getSearchType()=="advanced"){
+			$interface->assign("lookfor","");
+			$_SESSION['lastSearchURL'] = "";
+			$_SESSION['lastSearchId'] = "";
+		}
 		$interface->display('layout.tpl');
 	} // End launch()
 
@@ -397,6 +424,85 @@ class Results extends Action {
 				$jumpUrl = '../Record/' . urlencode($record->getUniqueID());
 				header('Location: ' . $jumpUrl);
 				die();
+			}
+		}
+	}
+	private function to_tree($array, $orig){
+		$flat = array();
+		$tree = array();
+		foreach ($array as $child => $parent) {
+			if (!isset($flat[$child])) {
+				$flat[$child] = array();
+			}
+			if (!empty($parent)) {
+				$temp = preg_replace('/_/', ' ', $child);
+				//echo "$temp<br/>";
+				if(isset($orig['list'][$temp])) $flat[$child] = $orig['list'][$temp];
+				$flat[$parent][$child] =& $flat[$child];
+			} else {
+				$tree[$child] =& $flat[$child];
+			}
+		}
+		return $tree;	
+	}
+	private function sortFromMap($map, array $array, $parent){
+		global $configArray;
+		$map = $configArray['Site']['translationMapsPath']."/".$map;
+		if(!file_exists($map)){
+			return;
+		}
+		$lines = parse_ini_file($map);
+		$lines[$parent] = NULL;
+		return $this->to_tree($lines, $array);	
+	}
+	private function countTree($array, $j){
+		foreach($array as $key => $value){
+			if(is_array($value) && (!empty($value))){
+				$j++;
+				$this->countTree($value, & $j);
+      		}	
+  		}
+	}
+	private function flatten_array(&$arr, &$dst, &$i, $j, $parent, $indent) {
+		if($i % 30 == 29 && $i < $j+1){
+			$dst[] = array('display'=>'Next', 'value'=>ceil($i / 30), 'parent'=> -1);
+			$i++;
+		}
+		if($i % 30 == 0 && $i != 0){
+			$dst[] = array('display'=>'Previous', 'value'=>(ceil($i / 30)+1), 'parent'=> -1);
+			$i++;
+		}
+		if(!isset($dst) || !is_array($dst)) {
+			$dst = array();
+		}
+		if(!is_array($arr)) {
+			$dst[] = $arr;
+		}elseif(isset($arr['value'])){
+			$i++;
+			$arr['id'] = $i;
+			$arr['indent'] = $indent;
+			$arr['parent'] = $parent;
+			$dst[] = $arr;
+		}else {
+			foreach($arr as $key=>&$subject) {
+				if(!empty($subject)){
+					if(!isset($arr[$key]['value'])){
+						$count = 0;
+						foreach($subject as $s){
+							if(is_array($s)){
+								$count += count($s);
+							}	
+						}
+						if($count != 0){
+							$i++;
+							$dst[] = array('display'=>$key, 'id'=>$i, 'parent'=>$parent, 'indent'=>$indent);
+							$this->flatten_array($subject, $dst, $i, $j, $i, $indent+1);
+						}
+					}else{
+						$this->flatten_array($subject, $dst, $i, $j, $parent, $indent);
+					}
+					
+				}
 			}
 		}
 	}

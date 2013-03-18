@@ -77,4 +77,9 @@
         <a href="{$url}/Search/Email" class="mail" onclick="getLightbox('Search', 'Email', null, null, '{translate text="Email this"}'); return false;">{translate text='Email this Search'}</a>
       </div>
     </div>
+    
+    <div id="right-bar">
+            {include file="ei_tpl/right-bar.tpl"}
+        </div>
+    
 </div>

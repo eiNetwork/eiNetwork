@@ -47,7 +47,11 @@ class Results extends Action {
 		global $configArray;
 		global $timer;
 		global $user;
-		
+		global $servername;
+		if(!$user){
+			header("Location: http://".$servername);
+			return;
+		}
 		$searchSource = isset($_REQUEST['searchSource']) ? $_REQUEST['searchSource'] : 'local';
 		// Include Search Engine Class
 		require_once 'sys/' . $configArray['Index']['engine'] . '.php';
@@ -147,9 +151,9 @@ class Results extends Action {
 		//=======================Get wish list information======================
 		$raw_wishLists= $user->getLists();
 		$wishLists; //szheng: this is the variable for wish list id and title.
-		$myFavoritesID;
+		$myFavoritesID = null;
 		$n = 0;
-		$bookCartID;
+		$bookCartID = null;
 		foreach ($raw_wishLists as $hello){
 			foreach($hello as $key =>$hellohello){
 				if($key == 'id'){
@@ -164,7 +168,7 @@ class Results extends Action {
 				$bookCartID = $wishLists[$n]['id'];
 				$n--;	
 			}
-			if($wishLists[$n]['title'] == 'My Favorites'){
+			if($n != -1 && $wishLists[$n]['title'] == 'My Favorites'){
 				$myFavoritesID = $wishLists[$n]['id'];
 			}
 			$n++;
@@ -194,7 +198,7 @@ class Results extends Action {
 						$bookCartID = $wishLists[$n]['id'];
 						$n--;	
 					}
-					if($wishLists[$n]['title'] == 'My Favorites'){
+					if($n >= 0 && $wishLists[$n]['title'] == 'My Favorites'){
 						$myFavoritesID = $wishLists[$n]['id'];
 					}
 					$n++;
@@ -216,12 +220,15 @@ class Results extends Action {
 			$myFavoritesID = $wishLists[0]['id'];
 		}
 		$goToListID;
+		$isBookCart = false;
 		if(isset($_REQUEST['goToListID'])){
 			$goToListID = $_REQUEST['goToListID'];
 			if($goToListID == "BookCart"){
 				$goToListID = $bookCartID;
+				$isBookCart = true;
+			}else{
+				$interface->assign('currentListID',$_REQUEST['goToListID']);
 			}
-			$interface->assign('currentListID',$_REQUEST['goToListID']);
 		}else{
 			$goToListID = $myFavoritesID;
 			$interface->assign('currentListID',$myFavoritesID);
@@ -233,13 +240,15 @@ class Results extends Action {
 		$favorites = $list->getResources(isset($_GET['tag']) ? $_GET['tag'] : null);
 		$n = 0;
 		$m = 0;
-		$favId;
+		$interface->assign('listTitle', $list->title);
+		$favId = array();
 		/*foreach($favorites as $key => $value){
 			echo $key."<br/>";
 			foreach($value as $keykey => $valuevalue){
 				echo "******".$keykey."=>".$valuevalue."<br/>";
 			}
 		}*/
+		
 		$recordTypes;
 		foreach($favorites as $key => $aa){
 			foreach($aa as $keykey => $bb){
@@ -254,7 +263,7 @@ class Results extends Action {
 			}
 		}
 		//$mail->send("zhengsiping@gmail.com", $configArray['Site']['email'], "hello", "nohello", "zhengsiping@gmail.com");
-		$requestIds;
+		$requestIds = array();
 		$n = 0;
 		if(count($favId)>0){
 			if($recordTypes[0] == "eContent"){
@@ -325,7 +334,7 @@ class Results extends Action {
 		// Set Interface Variables
 		//   Those we can construct BEFORE the search is executed
 		$interface->setPageTitle('Search Results');
-		if($_REQUEST['goToListID'] == 'BookCart')
+		if($isBookCart)
 		{
 			$interface->assign('pageType','BookCart');
 		}else{
@@ -334,7 +343,7 @@ class Results extends Action {
 		$temptemp =  $searchObject->getSortList();
 		foreach($temptemp as $key =>$value){
 			foreach($value as $keykey => $valuevalue){
-				if($_REQUEST['goToListID']=='BookCart'){
+				if($isBookCart){
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$valuevalue);
 				}else{
 					$temptemp[$key][$keykey]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$valuevalue);
@@ -352,7 +361,7 @@ class Results extends Action {
 			PEAR::raiseError($result->getMessage());
 		}
 		$timer->logTime('Process Search');
-
+		
 		// Some more variables
 		//   Those we can construct AFTER the search is executed, but we need
 		//   no matter whether there were any results
@@ -410,7 +419,7 @@ class Results extends Action {
 
 		$numProspectorTitlesToLoad = 0;
 		
-		if(count($raw_wishLists)==1 and $_REQUEST['goToListID'] != 'BookCart'){
+		if(count($raw_wishLists)==1 and !$isBookCart){
 			$interface->setTemplate('noList.tpl');
 		} elseif ($searchObject->getResultTotal() == 0) {
 			
@@ -493,7 +502,7 @@ class Results extends Action {
 
 			// Setup Display
 			$interface->assign('sitepath', $configArray['Site']['path']);
-			if(count($raw_wishLists)<=1&&$_REQUEST['goToListID']!="BookCart"){
+			if(count($raw_wishLists)<=1&&!$isBookCart){
 				$interface->setTemplate('noList.tpl');
 				
 			}else{
@@ -516,7 +525,7 @@ class Results extends Action {
 			$pager = new VuFindPager($options);
 			$tempPageLinks = $pager->getLinks();
 			foreach($tempPageLinks as $key => $value){
-				if($_REQUEST['goToListID']=='BookCart'){
+				if($isBookCart){
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=BookCart&",$value);
 				}else{
 					$tempPageLinks[$key]= str_replace("/Search/Results?","/List/Results?goToListID=".$goToListID."&",$value);
@@ -556,7 +565,9 @@ class Results extends Action {
 		//echo $rec['isbn'];
 		
 		// Done, display the page
+
 		$interface->display('layout.tpl');
+		
 	} // End launch()
 
 	private function getLists() {
@@ -691,7 +702,7 @@ class Results extends Action {
 				$interface->assign('profile', $profile);
 				global $locationSingleton;
 				//Get the list of pickup branch locations for display in the user interface.
-				$locations = $locationSingleton->getPickupBranches($profile, $profile['homeLocationId']);
+				$locations = $locationSingleton->getPickupBranchesPreferLocationFirst($profile, $profile['homeLocationId']);
 				$interface->assign('pickupLocations', $locations);
 				//set focus to the submit button if the user is logged in since the campus will be correct most of the time.
 				$interface->assign('focusElementId', 'submit');

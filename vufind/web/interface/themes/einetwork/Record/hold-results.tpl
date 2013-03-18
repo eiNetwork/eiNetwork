@@ -24,9 +24,9 @@
 			<div class='hold_result none'>Your hold request{if count($hold_message_data.titles) > 1}s{/if} could not be placed or needs additional information.</div>
 			{/if}
 		{/if}
-		<ol class='hold_result_details'>
+		<ul class='hold_result_details'>
 		{foreach from=$hold_message_data.titles item=title_data}
-		  <li class='title_hold_result'>
+		  <li class='title_hold_result' style="border-style:none">
 		  <span class='hold_result_item_title'>
 		  {if $title_data.title}
 		    {$title_data.title}
@@ -34,9 +34,12 @@
 		    {$title_data.bid}
 		  {/if}
 		  </span>
-		  <br /><span class='{if $title_data.result == true}hold_result_title_ok{else}hold_result_title_failed{/if}'>{$title_data.message}</span>
+		  <br />{if !$title_data.items }<span class='{if $title_data.result == true }hold_result_title_ok{else}hold_result_title_failed{/if}'>{$title_data.message}</span>
+		  {else}
+				<div class='hold_result'>Your request needs additional information.</div>
+		  {/if}
 		  {if $title_data.items}
-		  <div>
+		  <div style="text-align:center; padding-right: 20px;">
 		    <select  name="title[{$title_data.bid}]">
 		    <option class='hold_item' value="-1">Select an item</option>
 		    {foreach from=$title_data.items item=item_data}
@@ -47,9 +50,11 @@
 		  {/if}
 		  </li>
 		{/foreach}
-		</ol>
+		</ul>
 		{if $hold_message_data.showItemForm}
-		<input type='submit' class="button" value='Place Item Holds' />
+		<div style="float:right">
+			<input type='submit' class="button yellow" value='Request Now' />
+		</div>
 		</form>
 		{/if}
 	</div>

@@ -27,6 +27,9 @@
 					</tr>
 				{/if}
 				<tr>
+					<td><a style="color:#9999FF" href="/MyResearch/PinReset">I forgot or don't have my pin</a></td>
+				</tr>
+				<tr>
 					<td><input style="margin-left:320px;height:30px;width:80px;padding-top:0px;padding-bottom:0px;" type="submit" class="button yellow" name="submit" value="Login" /></td>
 				</tr>
 

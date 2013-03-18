@@ -296,10 +296,10 @@ class Library extends DB_DataObject
 		}
 		//Next check to see if we are in a library.
 		global $locationSingleton;
-		$physicalLocation = $locationSingleton->getActiveLocation();
+		$physicalLocation = $locationSingleton->getPhysicalLocation();
 		if (!is_null($physicalLocation)){
 			//Load the library based on the home branch for the user
-			return self::getLibraryForLocation($physicalLocation->libraryId);
+			return self::getLibraryForLocation($physicalLocation->locationId);
 		}
 		//Finally check to see if the user has logged in and if so, use that library
 		//MDN 7/9/2012 - Do not use home branch since that can lead to some very odd behavior.
@@ -315,7 +315,7 @@ class Library extends DB_DataObject
 		//Finally check to see if the user has logged in and if so, use that library
 		if (isset($user) && $user != false){
 			//Load the library based on the home branch for the user
-			return self::getLibraryForLocation($user->homeLocationId);
+			return self::getLibraryForLocation(isset($user->homeLocationId)?$user->homeLocationId:0);
 		}else{
 			return null;
 		}

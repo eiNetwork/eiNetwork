@@ -253,15 +253,15 @@ function doGetStatusSummaries()
 					//alert(sta);
 					if(sta =="Available from OverDrive"){
 						$("#RequestWord"+elemId).text("Checkout Now");
-						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=CheckoutOverDriveItem';
 						if(document.getElementById("selected"+elemId)){
-							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
+							document.getElementById("selected"+elemId).setAttribute("onclick","checkoutOverDriveItem('" + elemId + "')");
 						}
 					}else if(sta == "Checked Out"){
 						$("#RequestWord"+elemId).text("Request Now");
-						url = '/EcontentRecord/'+elemId+'/AJAX?method=GetHoldingsInfoPopup';
+						url = '/EcontentRecord/'+elemId+'/AJAX?method=PlaceOverDriveHold&elemId=' + elemId;
 						if(document.getElementById("selected"+elemId)){
-							document.getElementById("selected"+elemId).setAttribute("onclick","ajaxLightbox('"+url+"',false,false,'600px',false,'auto')");
+							document.getElementById("selected"+elemId).setAttribute("onclick","placeOverDriveHold('"+elemId+"')");
 						}
 					}else{
 						$("#RequestWord"+elemId).text("Access Online");

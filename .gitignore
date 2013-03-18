@@ -1,6 +1,5 @@
 # Specific locations within VuFind #
 ####################################
-.gitignore
 vufind/web/a.out
 sites/*
 !sites/default

@@ -2,6 +2,13 @@
 #loginHome{
 	height: 400px;
 }
+#loginHome2{
+	height: 500px;
+}
+.librarycard{
+	cursor: pointer;
+}
+
 .loginHome-left{
 	width: 232px;
 	height: auto;
@@ -18,10 +25,29 @@
 	width:704px;
 	height: auto;
 	display: table-cell;
-	padding-top: 100px;
+	padding-top: 50px;
 	
 }
-
+.loginMessage{
+	height:50px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:center;
+	color: #256292;
+}
+.loginMessage2{
+	height:50px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:center;
+	color: #256292;
+}
+.login-slider{
+	height:80px;
+	margin-top:-250px;
+	margin-bottom: 230px;
+	
+}
 .login{
 	width: 352px;
 	height: inherit;
@@ -30,6 +56,14 @@
 	font-size: 16px;
 }
 
+.login2{
+	width: 352px;
+	height: 50px;
+	display: table-cell;
+	padding-left:108px;
+	font-size: 16px;
+
+}
 .register{
 	width: 352px;
 	height: inherit;
@@ -39,7 +73,21 @@
 	font-size: 16px;
 }
 
-
+.register2{
+	width: 352px;
+	height: 50px;
+	display: table-cell;
+	padding-right: 18px;
+	padding-left: 170px;
+	font-size: 16px;
+}
+.startMessage{
+	height:210px;
+	font-size:22px;
+	font-weight:bold;
+	text-align:center;
+	color: #256292;
+}
 .login #email{
 	margin-top: 10px;
 }

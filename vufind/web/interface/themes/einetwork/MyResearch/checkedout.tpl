@@ -1,9 +1,11 @@
 <script type="text/javascript" src="{$url}/services/MyResearch/ajax.js"></script>
+<script type="text/javascript" src="{$url}/services/EcontentRecord/ajax.js"></script>
 <script type="text/javascript" src="{$path}/js/holds.js"></script>
 {if (isset($title)) }
 <script type="text/javascript">
     alert("{$title}");
 </script>
+
 {/if}
 <div id="page-content" class="content">
     <div id="left-bar">
@@ -117,7 +119,9 @@
 				    {elseif $format eq "Book on Tape"}
 				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png"/ alt="Book on Tape"></span>
 				    {elseif $format eq "CD-ROM"}
-				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="Video Download"></span>
+				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="CD-ROM"></span>
+				    {elseif $format eq "Electronic Resource"}
+				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>
 				    {elseif $format eq "Discussion Kit"}
 				    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png"/ alt="Discussion Kit"></span>
 				    {elseif $format eq "DVD"}
@@ -222,7 +226,9 @@
 				{elseif $format eq "Book on Tape"}
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png"/ alt="Book on Tape"></span>
 				{elseif $format eq "CD-ROM"}
-				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="Video Download"></span>
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="CD-ROM"></span>
+				{elseif $format eq "Electronic Resource"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>
 				{elseif $format eq "Discussion Kit"}
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png"/ alt="Discussion Kit"></span>
 				{elseif $format eq "DVD"}
@@ -260,53 +266,55 @@
 				{elseif $format eq "Video Download"}
 				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Video Download"></span>
 				{elseif $format eq "Adobe EPUB eBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Adobe PDF"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Adobe PDF eBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "EPUB eBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Kindle Book"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Kindle USB Book"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Kindle"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "External Link"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Interactive Book"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Internet Link"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Open EPUB eBook "}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Open PDF eBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "Plucker"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "MP3"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "MP3 AudioBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "MP3 AudioBook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "MP3 Audiobook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "WMA Audiobook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "WMA Music"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "WMA Video"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "OverDrive MP3 Audiobook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "OverDrive Music"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "OverDrive WMA Audiobook"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
-    {elseif $format eq "OverDrive Video"}
-    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Adobe PDF"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Adobe PDF eBook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "EPUB eBook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Kindle Book"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Kindle USB Book"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Kindle"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "External Link"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Interactive Book"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Internet Link"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Open EPUB eBook "}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Open PDF eBook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "Plucker"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "MP3"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "MP3 AudioBook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "MP3 AudioBook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "MP3 Audiobook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "WMA Audiobook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "WMA Music"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "WMA Video"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "OverDrive MP3 Audiobook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "OverDrive Music"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/MusicDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "OverDrive WMA Audiobook"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/AudioBookDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "OverDrive Video"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/VideoDownload.png"/ alt="Ebook Download"></span>
+				{elseif $format eq "OverDrive Read"}
+				<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/EbookDownload.png"/ alt="Ebook Download"></span>
 				{/if}
 				<span class="iconlabel" >{translate text=$record.format}</span>
 			    {/if}
@@ -335,7 +343,7 @@
 -->			    {if $record.overdue}
 				<input id="userreviewlink{$shortId}" type="button" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
 			    {else}
-				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}&itemBarCode={$record.barcode}')" value="Renew" />
 			    {/if}
 			    {if $record.renewMessage}
 				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">
@@ -360,7 +368,7 @@
 	    {if count($overDriveCheckedOutItems) > 0}
 		<div class="checkout">
 			{foreach from=$overDriveCheckedOutItems item=record}
-			<div id="record">
+			<div id="record{$record.overDriveId}">
 				<div class="item_image">
 					<img src="{$record.imageUrl}">
 				</div>
@@ -378,6 +386,12 @@
 					<div class="item_author">
 						{if strlen($record.record->author) > 0}<br/>{$record.record->author}{/if}
 					</div>
+					{if $record.earlyReturn == 1}
+					
+					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;margin-left: -8px;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					
+					{/if}
+
 					<div class="item_type">
 					    
 					    {if is_array($record.format)}
@@ -398,7 +412,10 @@
 					{if $record.expiresOn}
 					    Expires on&nbsp;{$record.expiresOn|date_format}
 					{/if}
-					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
+					{if $record.hasRead == true}
+					<input class="button" type="button" value="Read" onclick="downloadOverDriveItem('{$record.overDriveId}','610')"/>
+					{/if}
 				</div>
 			</div>
 			{/foreach}
@@ -422,7 +439,7 @@
 	    {if count($overDriveCheckedOutItems) > 0}
 		<div class="checkout">
 			{foreach from=$overDriveCheckedOutItems item=record}
-			<div id="record">
+			<div id="record{$record.overDriveId}">
 				<div class="item_image">
 					<img src="{$record.imageUrl}">
 				</div>
@@ -440,6 +457,11 @@
 					<div class="item_author">
 						{if strlen($record.record->author) > 0}<br/>{$record.record->author}{/if}
 					</div>
+					{if $record.earlyReturn == 1}
+					
+					<input class="button" type="button" value="Return" style="background-color:#F8F8F8;margin-left: -8px;" onclick="returnOverDriveItem('{$record.overDriveId}', '{$record.transactionId}')"/>
+					
+					{/if}					
 					<div class="item_type">
 					    
 					    {if is_array($record.format)}
@@ -457,7 +479,10 @@
 					</div>
 				</div>
 				<div class="item_status">
-					<input class="button" type="button" value="Download" onclick="javascript:location.href='{$record.downloadLink}'"/>
+					<input class="button" type="button" value="Download" onclick='DownloadCheckedoutOverdrive({$record.recordId},{$record.lockedFormat})'/>
+					{if $record.hasRead == true}
+					<input class="button" type="button" value="Read" onclick="downloadOverDriveItem('{$record.overDriveId}','610')"/>
+					{/if}
 				</div>
 			</div>
 			{/foreach}

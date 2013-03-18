@@ -102,7 +102,8 @@ class Holds extends MyResearch
 		//BEGIN for OverdriveHolds
 		$overDriveDriver = new OverDriveDriver();
 		$overDriveHolds = $overDriveDriver->getOverDriveHolds($user);
-		foreach ($overDriveHolds['holds'] as $sectionKey => $sectionData){
+
+		foreach ($overDriveHolds as $sectionKey => $sectionData){
 			foreach ($sectionData as $key => $item){
 				if ($item['recordId'] != -1){
 					$econtentRecord = new EContentRecord();
@@ -115,10 +116,11 @@ class Holds extends MyResearch
 				if ($sectionKey == 'available'){
 					$item['numRows'] = count($item['formats']) + 1;
 				}
-				$overDriveHolds['holds'][$sectionKey][$key] = $item;
+				$overDriveHolds[$sectionKey][$key] = $item;
 			}
 		}
-		$interface->assign('overDriveHolds', $overDriveHolds['holds']);
+
+		$interface->assign('overDriveHolds', $overDriveHolds);
 	
 		$interface->assign('ButtonBack',true);
 		$interface->assign('ButtonHome',true);
@@ -152,7 +154,7 @@ class Holds extends MyResearch
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {
 						$location = new Location();
-						$pickupBranches = $location->getPickupBranches($patronResult, null);
+						$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
 						$locationList = array();
 						foreach ($pickupBranches as $curLocation) {
 							$locationList[$curLocation->locationId] = $curLocation->displayName;
@@ -204,7 +206,6 @@ class Holds extends MyResearch
 				}
 			}
 		}
-		
 		//print_r($patron);
 		$interface->assign('patron',$patron);
 		//$interface->setTemplate('checkedout.tpl');

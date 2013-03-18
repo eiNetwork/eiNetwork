@@ -1,36 +1,27 @@
 (function($){
-	startIdleTimer();
-
+	resetTimer();
 })(jQuery);
-
-var autoLogoutTimer;
-function showLogoutMessage(){
-	lightbox('33%', '33%', 100, 100);
-	var message = "<div id='autoLogoutMessage'>Are you still there?  Click Continue to keep using the catalog or Logout to end your session immediately.</div>";
-	message += "<div id='autoLogoutActions'>";
-	message += "<div id='continueSession' class='autoLogoutButton' onclick='continueSession();'>Continue</div>";
-	message += "<div id='endSession' class='autoLogoutButton' onclick='endSession();'>Logout</div>";
-	message += "</div>";
-	$("#popupbox").html(message);
-	autoLogoutTimer = setTimeout("endSession()", 10000);
-}
-
-function startIdleTimer(){
-	var timeout = 90000;
-	$.idleTimer(timeout);
-	
-	$(document).on("idle.idleTimer", function(){
-		showLogoutMessage();
-	});
-}
-
-function continueSession(){
-	clearTimeout(autoLogoutTimer);
+var timer1, timer2;
+//move view back to top to see popup
+function resetTimer(){
 	hideLightbox();
-	startIdleTimer();
+    clearTimeout(timer1);
+    clearTimeout(timer2);
+    var wait=5;
+    timer1=setTimeout("alertUser()", (60000*wait)-1);
+    timer2=setTimeout("logout()", 70000*wait);
 }
 
-function endSession(){
+function alertUser(){
+	lightbox(null, null, null, '161px');
+	//window.scrollTo(x-coord, y-coord);
+	var message = "<div class='popupHeader' style='text-align:center' ><div class='highlight' >Attention:</div>Your catalog session is about to expire if you don't click \"Continue\".";
+	message += "</div><div style='margin-top:100px; text-align:center; font-size:12px;'><span class='button yellow' onclick='resetTimer()' style='color:black'>Continue</span><span class='button gray' onclick='logout()' style='background-color: #777777; border-color: #888888;'>Exit</span></div>";
+	$("#popupbox").html(message);
+	$('html').animate({scrollTop:0}, 'slow');//IE, FF
+    $('body').animate({scrollTop:0}, 'slow');//chrome, don't know if safary works
+}
+function logout(){
 	//Redirect to logout page
 	window.location = path + "/MyResearch/Logout";
 }

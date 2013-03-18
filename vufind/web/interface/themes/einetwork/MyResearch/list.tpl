@@ -1,8 +1,12 @@
 <script type="text/javascript" src="{$path}/js/lists.js"></script>
+<script type="text/javascript" src="{$path}/services/EcontentRecord/ajax.js"></script>
+<script type="text/javascript" src="/js/ei_js/search.js"></script>
+<script type="text/javascript" src="/services/List/ajax.js"></script>
 
 <div id="page-content" class="content">
-	<div id="sidebar">
-		{include file="MyResearch/menu.tpl"}
+	
+	<div id="left-bar">	
+		
 	</div>
 	
 	<div id="main-content">
@@ -46,7 +50,8 @@
 
 		</div>
 		<form action="{$url}/MyResearch/MyList/{$favList->id}" id="myListFormItem">
-		<div>
+		<div>	
+		
 		<input type="hidden" name="myListActionItem" id="myListActionItem"/>
 		<ul>
 		{foreach from=$resourceList item=resource name="recordLoop"}
@@ -56,7 +61,6 @@
 			</li>
 		{/foreach}
 		</ul>
-		<button value="placeHolds" id="FavPlaceHolds" class="listButton" onclick='return requestMarkedAction()'>Request Marked</button>
 		{if $allowEdit}
 		{*
 		<button value="moveMarked" id="FavMoveMarked" class="listButton" onclick='return moveMarkedAction()'>Move Marked</button>
@@ -72,34 +76,13 @@
 		</div>
 		</form>
 		
-		{if $pageLinks.all}<div class="pagination">{$pageLinks.all}</div>{/if}
+		{if $pageLinks.all}<div class="pagination"></div>{/if}
 		{else}
 		{translate text='You do not have any saved resources'}
 		{/if}
 	</div>
 
-	<div class="yui-u">
-		{if $tagList}
-		<h3 class="tag">{translate text='Your Tags'}</h3>
-
-		<ul>
-		{foreach from=$tags item=tag}
-			<li>{translate text='Tag'}: {$tag|escape:"html"}
-			<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;{foreach from=$tags item=mytag}{if $tag != $mytag}tag[]={$mytag|escape:"url"}&amp;{/if}{/foreach}">X</a>
-			</li>
-		{/foreach}
-		</ul>
-
-		<ul>
-		{foreach from=$tagList item=tag}
-			<li>
-				<a href="{$url}/MyResearch/MyList/{$favList->id}&amp;tag[]={$tag->tag|escape:"url"}{foreach from=$tags item=mytag}&amp;tag[]={$mytag|escape:"url"}{/foreach}">{$tag->tag|escape:"html"}</a> ({$tag->cnt})
-			</li>
-		{/foreach}
-		</ul>
-		{/if}
-	
-	</div>
+        {include file="ei_tpl/right-bar.tpl"}
 
 </div>
 

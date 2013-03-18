@@ -694,10 +694,10 @@ class MillenniumDriver implements DriverInterface
 						//Create a fake holding for subscriptions so something
 						//will be displayed in the holdings summary.
 						$holdings[$issueSummary['location']] = array(
-                            'availability' => '1',
-                            'location' => $issueSummary['location'],
-                            'libraryDisplayName' => $issueSummary['location'],
-                            'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',
+						'availability' => '1',
+						'location' => $issueSummary['location'],
+						'libraryDisplayName' => $issueSummary['location'],
+						'callnumber' => isset($issueSummary['cALL']) ? $issueSummary['cALL'] : '',			
 						);
 						$summaryInformation['inLibraryUseOnly'] = true;
 						$summaryInformation['status'] = 'Available';
@@ -707,7 +707,7 @@ class MillenniumDriver implements DriverInterface
 				}
 			}
 		}
-
+	
 		global $library;
 		global $locationSingleton;
 		$location = $locationSingleton->getActiveLocation();
@@ -974,7 +974,6 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['numAvailableOther'] = count($additionalAvailableLocations);
 			}
 		}
-
 		//If Status is still not set, apply some logic based on number of copies
 		if (!isset($summaryInformation['status'])){
 			if ($numCopies == 0){
@@ -991,6 +990,7 @@ class MillenniumDriver implements DriverInterface
 					$summaryInformation['class'] = 'unavailable';
 				}
 			}else{
+
 				if ($numHoldableCopies == 0 && $canShowHoldButton){
 					$summaryInformation['status'] = "Not Available For Checkout";
 					$summaryInformation['showPlaceHold'] = false;
@@ -999,6 +999,11 @@ class MillenniumDriver implements DriverInterface
 					$summaryInformation['status'] = "Checked Out";
 					$summaryInformation['showPlaceHold'] = $canShowHoldButton;
 					$summaryInformation['class'] = 'checkedOut';
+				}
+				if($summaryInformation["unavailableStatus"]=="IN PROCESSING"){
+					$summaryInformation['status'] = "Unavailable";
+					$summaryInformation['showPlaceHold'] = false;
+					$summaryInformation['class'] = 'unavailable';
 				}
 			}
 		}
@@ -1011,11 +1016,11 @@ class MillenniumDriver implements DriverInterface
 				$summaryInformation['status'] = $allItemStatus;
 			}
 		}
-		//if ($allItemStatus == 'In Library Use Only'){
-		//	$summaryInformation['inLibraryUseOnly'] = true;
-		//}else{
-		//	$summaryInformation['inLibraryUseOnly'] = false;
-		//}
+		if ($allItemStatus == 'Noncirculating'||((isset($summaryInformation["inLibraryUseOnly"]) && $summaryInformation["inLibraryUseOnly"])&&$allItemStatus==""&&!is_null($allItemStatus))){
+			$summaryInformation['inLibraryUseOnly'] = true;
+		}else{
+			$summaryInformation['inLibraryUseOnly'] = false;
+		}
 
 
 		if ($summaryInformation['availableCopies'] == 0 && $summaryInformation['isDownloadable'] == true){
@@ -1200,7 +1205,19 @@ class MillenniumDriver implements DriverInterface
 		}
 
 		//Get additional information about the patron's home branch for display.
-		$homeBranchCode = $patronDump['HOME_LIBR'];
+		$homeBranchCode = trim($patronDump['HOME_LIBR']);
+		//echo $homeBranchCode;
+		//Sanitize the home libr code
+		if ($homeBranchCode == 'none') {
+			$homeBranchCode = 'none';
+			//echo("No home branch code");
+		}elseif (strlen($homeBranchCode) > 2) {
+			if (substr($homeBranchCode,1,1) == 'x') {
+				$homeBranchCode = 'xa';
+			}else {
+				$homeBranchCode = substr($homeBranchCode,1,2);
+			}
+		}
 		//Translate home branch to plain text
 		global $user;
 		$homeBranch = $homeBranchCode;
@@ -1211,7 +1228,9 @@ class MillenniumDriver implements DriverInterface
 		if ($user) {
 			if ($user->homeLocationId == 0) {
 				$user->homeLocationId = $location->locationId;
-				if ($location->nearbyLocation1 > 0){
+				//commented this out because it was preventing users with no home library set to set their
+				//preferred libraries
+				/*if ($location->nearbyLocation1 > 0){
 					$user->myLocation1Id = $location->nearbyLocation1;
 				}else{
 					$user->myLocation1Id = $location->locationId;
@@ -1220,7 +1239,7 @@ class MillenniumDriver implements DriverInterface
 					$user->myLocation2Id = $location->nearbyLocation2;
 				}else{
 					$user->myLocation2Id = $location->locationId;
-				}
+				}*/
 				if ($user instanceof User) {
 					//Update the database
 					$user->update();
@@ -1997,13 +2016,11 @@ class MillenniumDriver implements DriverInterface
 			$curHold= array();
 			$curHold['create'] = null;
 			$curHold['reqnum'] = null;
-
 			//Holds page occassionally has a header with number of items checked out.
 			for ($i=0; $i < sizeof($scols); $i++) {
 				$scols[$i] = str_replace("&nbsp;"," ",$scols[$i]);
 				$scols[$i] = preg_replace ("/<br+?>/"," ", $scols[$i]);
 				$scols[$i] = html_entity_decode(trim(substr($scols[$i],0,stripos($scols[$i],"</t"))));
-				//print_r($scols[$i]);
 				if ($scount <= 1) {
 					$skeys[$i] = $scols[$i];
 				} else if ($scount > 1) {
@@ -2042,10 +2059,9 @@ class MillenniumDriver implements DriverInterface
 					}
 
 					if (stripos($skeys[$i],"PICKUP LOCATION") > -1) {
-
 						//Extract the current location for the hold if possible
 						$matches = array();
-						if (preg_match('/<select\\s+name=loc(.*?)x(\\d\\d).*?<option\\s+value="([a-z]{1,5})[+ ]*"\\s+selected="selected">.*/s', $scols[$i], $matches)){
+						if (preg_match('/<select\s+name=loc(.*?)x(\d\d).*?<option\s+value="([\w]{1,5})[+ ]*"\s+selected="selected">.*/s', $scols[$i], $matches)){
 							$curHold['locationId'] = $matches[1];
 							$curHold['locationXnum'] = $matches[2];
 							$curPickupBranch = new Location();
@@ -2061,6 +2077,10 @@ class MillenniumDriver implements DriverInterface
 
 							//Return the full select box for reference.
 							$curHold['locationSelect'] = $scols[$i];
+						}elseif (preg_match('/<select\s+name=loc(.*?)x(\d\d).*?<option\s+value="([\w]{1,5})[+ ]*"\s>.*/s', $scols[$i], $matches)){
+							//no library selected, and it wants a holding from a location
+							$curHold['location'] = "<font style='color:red'>No location selected</font>";
+							$curHold['locationUpdateable'] = true;
 						}else{
 							$curHold['location'] = $scols[$i];
 							//Trim the carrier code if any
@@ -2345,6 +2365,8 @@ class MillenniumDriver implements DriverInterface
 	}
 
 	protected function _getHoldResult($holdResultPage){
+		global $logger;
+		//$logger->log("getholdresult ", PEAR_LOG_INFO);
 		$hold_result = array();
 		//Get rid of header and footer information and just get the main content
 		$matches = array();
@@ -2357,7 +2379,7 @@ class MillenniumDriver implements DriverInterface
 			$cleanResponse = preg_replace("^\n|\r|&nbsp;^", "", $matches[1]);
 			$cleanResponse = preg_replace("^<br\s*/>^", "\n", $cleanResponse);
 			$cleanResponse = trim(strip_tags($cleanResponse));
-
+			//$logger->log("Clean Response\n".$cleanResponse."\nEnd Clean Response", PEAR_LOG_INFO);
 			if (strpos($cleanResponse, "\n") > 0){
 				list($book,$reason)= explode("\n",$cleanResponse);
 			}else{
@@ -2402,6 +2424,7 @@ class MillenniumDriver implements DriverInterface
 					$message = 'There are no holdable items for this title.';
 				}
 			}else{
+			//$logger->log("Hold Result Page\n".$holdResultPage."\nEnd Hold Result Page", PEAR_LOG_INFO);
 				if (preg_match('/success/', $holdResultPage) && preg_match('/request denied/', $holdResultPage) == 0){
 					//Hold was successful
 					$hold_result['result'] = true;
@@ -2411,6 +2434,10 @@ class MillenniumDriver implements DriverInterface
 						$hold_result['message'] = $reason;
 					}
 					return $hold_result;
+				}else if (preg_match('/No items requestable, request denied/', $holdResultPage)) {
+						$hold_result['result'] = false;
+						$hold_result['message'] = 'There are no holdable items for this title.';
+						return $hold_result;
 				}else{
 					$message = 'Unable to contact the circulation system.  Please try again in a few minutes.';
 				}
@@ -2748,9 +2775,23 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_POST, true);
 		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
 		$sresult = curl_exec($curl_connection);
-		if (preg_match('/<div id="renewfailmsg" style="display:none"  class="errormessage">(.*?)<\/div>.*?<font color="red">\\s*(.*?)<\/font>/si', $sresult, $matches)) {
+		$doc = new DOMDocument();
+		$doc->loadHTML($sresult);
+		$finder = new DomXPath($doc);
+		$id="renewfailmsg";
+		$items = $finder->query("//*[@id='$id']");
+		$classname="patFuncEntry";
+		$rows = $finder->query("//tr[contains(@class, '$classname')]");
+		//if (preg_match('/<div id="renewfailmsg" style="display:none"  class="errormessage">(.*?)<\/div>.*?<font color="red">\\s*(.*?)<\/font>/si', $sresult, $matches)) {
+		if($items->length > 0){
 			$success = false;
-			$message = 'Unable to renew this item, ' . strtolower($matches[2]) . '.';
+			//$message = 'Unable to renew this item, ' . strtolower($matches[2]) . '.';
+			$message = array();
+			foreach($rows as $item){
+				$error = $finder->query(".//font[@color='red']", $item);
+				$bc = $finder->query(".//td[contains(@class, 'patFuncBarcode')]", $item);
+				$message [trim($bc->item(0)->nodeValue)]= 'Unable to renew this item, '.str_replace(" Cannot renew;", "", $error->item(0)->nodeValue);
+			}
 		}else if (preg_match('/<h2>\\s*You cannot renew items because:\\s*<\/h2><ul><li>(.*?)<\/ul>/si', $sresult, $matches)) {
 			$success = false;
 			$message = 'Unable to renew this item, ' . strtolower($matches[1]) . '.';

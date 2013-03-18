@@ -67,10 +67,16 @@ function GetEContentHoldingsInfo(id, type, callback) {
 			//document.getElementById("access-online")
 			if(SummaryDetails =="Checked Out"){
 				$("#access-online .action-lable-span").text("Request Now");
-				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
+				if(document.getElementById("access-online")){
+					document.getElementById("access-online").setAttribute("onclick","placeOverDriveHold('" + id + "')");
+				}
+				//document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else if(SummaryDetails =="Available from OverDrive"){
 				$("#access-online .action-lable-span").text("Checkout Now");
-				document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
+				if(document.getElementById("access-online")){
+					document.getElementById("access-online").setAttribute("onclick","checkoutOverDriveItem('" + id + "')");
+				}
+				//document.getElementById("access-online").setAttribute("onclick","ajaxLightbox('"+url+"?method=GetHoldingsInfoPopup',false,false,'600px',false,'auto')");
 			}else{
 				$("#access-online .action-lable-span").text("Access Online");
 				
@@ -178,6 +184,22 @@ function deleteItem(id, itemId){
 	}
 	return false;
 }
+function DownloadCheckedoutOverdrive(id, lockedFormat){
+	
+	if (loggedIn){
+	
+		var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
+		var params = "method=GetHoldingsInfoPopup&lockedFormat=" + lockedFormat;
+		var fullUrl = url + "?" + params;
+		ajaxLightbox(fullUrl,false,false,'600px',false,'auto');
+	}else{
+		ajaxLogin(function(){
+			DownloadCheckedoutOverdrive(id);
+		});
+	}	
+	
+}
+
 function addItem(id){
 	var url = path + "/EcontentRecord/" + encodeURIComponent(id) + "/AJAX";
 	var params = "method=AddItem";

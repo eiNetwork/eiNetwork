@@ -101,34 +101,42 @@
     </script>
     {/literal}
     
-   
-    <div class="separator"><hr/></div>
     
+    <div class="separator"><hr/></div>
+
+   {php}
+        global $interface;
+   
+	$tmpList1 = new User_list();
+	$tmpList1->id = 1;    
+	$tmpList1->find();
+	while ($tmpList1->fetch()){
+	    $title1 = $tmpList1->title;
+    	}
+	$interface->assign("Title1", $title1 );
+	
+	$tmpList2 = new User_list();
+	$tmpList2->id = 2;    
+	$tmpList2->find();
+	while ($tmpList2->fetch()){
+	    $title2 = $tmpList2->title;
+    	}
+	$interface->assign("Title2", $title2 );
+		
+    {/php}    
     <div class="recommendations">
-        <div id="new-books">
-            <a>New Books</a>
+        <div id="title1">
+            <a href="{$url}/MyResearch/MyList/1">{$Title1}</a>
         </div>
-        <div id="new-movies">
-            <a>New Movies</a>
+        <div id="title2">
+            <a href="{$url}/MyResearch/MyList/2">{$Title2}</a>
         </div>
-        <div id="staff-picks">
-            <a>Staff Picks</a>
+        <div id="articles">
+            <a href="http://articles.einetwork.net">Databases and Articles</a>
         </div>
-        <div id="award-winning">
-            <a>Award Winning</a>
-        </div>
-        <div id="audio-books">
-            <a>Audio Books</a>
-        </div>
-        <div id="kids-book">
-            <a>Books for Kids</a>
-        </div>
-        <div id="cookbooks">
-            <a>Cookbooks</a>
-        </div>
-        <div id="rate-specility">
-            <a>Rare and Specialty</a>
-        </div>
+        <div id="interlibraryloan">
+            <a href="http://illiad.carnegielibrary.org/illiad/logon.html">Interlibrary Loan</a>
+        </div>	
         
     </div>
 </div>

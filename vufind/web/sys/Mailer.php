@@ -56,6 +56,9 @@ class VuFindMailer {
 		if (isset($configArray['Mail']['fromAddress'])){
 			$this->settings['fromAddress'] = $configArray['Mail']['fromAddress'];
 		}
+		require_once "services/Debug/Debugger.php";
+		Debugger::printTitle("a.out");
+		Debugger::tailAt("a.out",$configArray['Mail']);
 	}
 
 	/**

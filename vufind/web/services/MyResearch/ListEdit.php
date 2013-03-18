@@ -93,8 +93,8 @@ class ListEdit extends Action
 			}
 			$list = new User_list();
 			$list->title = $_REQUEST['title'];
-			$list->description = $_REQUEST['desc'];
-			$list->public = $_REQUEST['public'];
+			//$list->description = $_REQUEST['desc'];
+			//$list->public = $_REQUEST['public'];
 			$list->user_id = $this->user->id;
 			$list->insert();
 			$list->find();

@@ -62,7 +62,7 @@ html,body {
 	background-repeat: repeat;
 }
 #right-bar {
-	width: 251px;
+	width: 250px;
 	display: inline-block;
 	vertical-align: top;
 	float: right;
@@ -629,7 +629,7 @@ div.popupBox {
 	-webkit-transition-duration: 0.25s;
 	-webkit-transition-delay: 0.25s;
 }
-
+@media all { div.popupBox { background-color: rgb(46,46,46)\0/; } } /* IE8 uses \0/ */
 div.popupBox .header a {
 	float: right;
 	text-decoration: none;
@@ -775,6 +775,7 @@ ul.bulleted li {
 
 .sidegroup ul {
 	padding-left: 20px;
+	width: 211px;
 }
 
 
@@ -1060,7 +1061,14 @@ table.datagrid td {
 }
 
 table.datagrid td a {
-	color: #003366;
+	/*color: #003366;*/
+	font-size: 13px;
+}
+table.datagrid td a:hover {
+	/*color: #003366;*/
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 table.datagrid tr.evenrow {
@@ -2613,4 +2621,38 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 }
 .editEcontent input{
 	width: 565px;
+}
+.sim_hid{
+	display:none;
+}
+.sim_less, .sim_more{
+	color: #256292;
+	text-decoration: none;
+	cursor:pointer;
+}
+.fictionProfileTitle{
+	font-size: 14px;
+	font-weight:bold;
+}
+.fictionCharacter, .fictionTopics, .fictionSettings, .fictionGenres {
+	padding: 5px 0px 5px 8px;
+}
+.fictionProfile a:hover{
+	font-weight:bold;
+	color:#F0F0F0;
+}
+.fictionProfile a{
+	color:#F0F0F0;
+}
+.fictionCharacter div{
+	padding-left:12px;
+}
+.fictionAward{
+	padding-top:5px;
+}
+.fiction_sub_head{
+	padding-left:10px;
+}
+.fiction_sub_head a{
+	color: rgb(153,153,255);
 }

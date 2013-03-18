@@ -120,7 +120,9 @@
 										{elseif $format eq "Book on Tape"}
 										    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png" alt="Book on Tape"></span>
 										{elseif $format eq "CD-ROM"}
-										    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png" alt="Video Download"></span>
+										    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png" alt="CD-ROM"></span>
+										{elseif $format eq "Electronic Resource"}
+										    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>    
 										{elseif $format eq "Discussion Kit"}
 										    <span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png" alt="Discussion Kit"></span>
 										{elseif $format eq "DVD"}
@@ -176,7 +178,9 @@
 										{elseif $format eq "Book on Tape"}
 										<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/BookOnTape.png"/ alt="Book on Tape"></span>
 										{elseif $format eq "CD-ROM"}
-										<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="Video Download"></span>
+										<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/CDROM.png"/ alt="CD-ROM"></span>
+										{elseif $format eq "Electronic Resource"}
+										<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/OnlineBook.png"/ alt="Electronic Resource"></span>
 										{elseif $format eq "Discussion Kit"}
 										<span><img class="format_img" src="/interface/themes/einetwork/images/Art/Materialicons/DiscussionKit.png"/ alt="Discussion Kit"></span>
 										{elseif $format eq "DVD"}
@@ -241,21 +245,21 @@
 									<div id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Change Pick Up</span></div>
 								{elseif $record.status eq "In Transit"}
 									{*You can't do anything because item is in transit*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{elseif $record.status eq "Ready"}
 									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{elseif $record.status eq "Frozen"}
 									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
+									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);color: border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
 								
 								{else}
 									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="freezeSelectedHolds(this)"style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" ><span class="resultAction_span">Freeze</span></div>
@@ -288,7 +292,6 @@
 			
 			{*****BEGIN Overdrive Holds******}
 			<div style="margin-top: 20px;margin-bottom: 20px"><h3>{translate text='eContent Requests'}</h3></div>
-			
 			{if count($overDriveHolds.available) > 0}
 				
 				<div >&nbsp&nbsp&nbsp&nbspTitles available for checkout</div>
@@ -312,19 +315,16 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/> {$record.author}{/if}
 							</div>
-							<div class="item_type"></div>
+						<!--	<div class="notify_email">Email notifcation will be sent to:<br/>{$record.notifyEmail}</div> -->
 						</div>
 						
-						<div class="item_status">
-							
-							{foreach from=$record.formats item=format}
-							<div style="text-align: center;{if count($record.formats)==1}font-size:12px{else}font-size:11px{/if}">{$format.name}</div>
+						<div class="item_status" style="height: auto;min-height: 105px">
 							
 							<div>
-									<input class="button yellow" type="button"  onclick="checkoutOverDriveItem('{$format.overDriveId}','{$format.formatId}')"  value="Checkout Now"  style="color: #6D6D6D;{if count($record.formats)>1}height: 25px;{/if}padding-left: 10px" />
+								<input class="button yellow" type="button"  onclick="checkoutOverDriveItem('{$record.recordId}', 'Holds')"  value="Checkout"  style="padding-left: 0px;padding-right: 0px;color: #6D6D6D;" />
 
 							</div>
-							{/foreach}
+							
 						</div>
 						
 
@@ -355,7 +355,8 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/>{$record.author}{/if}
 							</div>
-							<div class="item_type">
+							<div class="notify_email" style="margin-top:10px;">Email notifcation will be sent to:<br/>{$record.notifyEmail}</div>
+						<!--	<div class="item_type">
 								{$record.format}
 								{if is_array($record.format)}
 									{assign var=imagePath value='/interface/themes/einetwork/images/Art/Materialicons'}
@@ -471,12 +472,14 @@
 									    {/if}
 										<span class="iconlabel" >{translate text=$record.format}</span>
 									{/if}
-							</div>
+							</div> -->
 						</div>
 						
 						<div class="item_status" >
-							<span id="item_status{$record.recordId}">Total {$record.holdQueueLength} {if $record.holdQueueLength == 1}copy{else}copies{/if}</span>
-								<input type="button" class="button yellow" onclick="cancelOverDriveHold('{$record.overDriveId}','{$record.formatId}')" value="Remove" style="color: #6D6D6D;"/>
+							<!--<div style="text-align: center"><span id="item_status{$record.recordId}" style="text-align: center">Total {$record.holdQueueLength} {if $record.holdQueueLength == 1}copy{else}copies{/if}</span></div>-->
+		
+							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelOverDriveHold('{$record.overDriveId}')" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Cancel</span></div>
+							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="ajaxLightbox('/MyResearch/AJAX?method=editEmailPrompt&overDriveId={$record.overDriveId}', false, false, '300px','400px','auto')" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Edit</span></div>
 						</div>
 						
 						

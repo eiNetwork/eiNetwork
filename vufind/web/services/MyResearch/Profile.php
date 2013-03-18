@@ -37,7 +37,7 @@ class Profile extends MyResearch
 		}elseif (isset($_POST['updatePin'])) {
 			$result = $this->catalog->updatePin();
 			$_SESSION['profileUpdateErrors'] = $result;
-
+			//sleep(5);
 			header("Location: " . $configArray['Site']['url'] . '/MyResearch/Profile');
 			exit();
 		}else if (isset($_POST['edit'])){
@@ -60,16 +60,25 @@ class Profile extends MyResearch
 		}
 
 		//Get the list of locations for display in the user interface.
-		global $locationSingleton;
+		/*global $locationSingleton;
 		$locationSingleton->whereAdd("validHoldPickupBranch = 1");
 		$locationSingleton->find();
 
 		$locationList = array();
 		while ($locationSingleton->fetch()) {
 			$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
+		}*/
+		$location = new Location();
+		//$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
+		$pickupBranches = $location->getPickupBranchesPreferLocationFirst($profile, null);
+		$locationList = array();
+		foreach ($pickupBranches as $curLocation) {
+			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
-		$interface->assign('locationList', $locationList);
+		// sort alphabetically
+		asort($locationList);
 		
+		$interface->assign('locationList', $locationList);
 		if ($this->catalog->checkFunction('isUserStaff')){
 			$userIsStaff = $this->catalog->isUserStaff();
 			$interface->assign('userIsStaff', $userIsStaff);

@@ -16,6 +16,7 @@ class BookCoverProcessor{
 	private $logger;
 	private $configArray;
 	private $timer;
+	private $oclc;
 	public function loadCover($configArray, $timer, $logger){
 		$this->configArray = $configArray;
 		$this->timer = $timer;
@@ -166,6 +167,10 @@ class BookCoverProcessor{
 		if (strlen($this->upc) == 0){
 			$this->upc = null;
 		}
+		$this->oclc = isset($_GET['oclc']) ? "":"";
+		if(strlen($this->oclc) == 0){
+			$this->oclc = null;
+		}
 		$this->id = isset($_GET['id']) ? $_GET['id'] : null;
 		$this->isEContent = isset($_GET['econtent']);
 		$this->category = isset($_GET['category']) ? strtolower($_GET['category']) : null;
@@ -186,8 +191,10 @@ class BookCoverProcessor{
 			$this->cacheName = $this->isn;
 		}else if (!is_null($this->upc)){
 			$this->cacheName = $this->upc;
+		}else if (!is_null($this->oclc)){
+			$this->cacheName = $this->oclc;
 		}else{
-			$this->error = "ISN, UPC, or id must be provided.";
+			$this->error = "ISN, UPC, id, or OCLC must be provided.";
 			return false;
 		}
 		$this->cacheFile = $this->bookCoverPath . '/' . $this->size . '/' . $this->cacheName . '.png';
@@ -586,7 +593,7 @@ class BookCoverProcessor{
 		}
 
 		$url = isset($this->configArray['Syndetics']['url']) ? $this->configArray['Syndetics']['url'] : 'http://syndetics.com';
-		$url .= "/index.aspx?type=xw12&isbn={$this->isn}/{$size}&client={$id}&upc=" . (!is_null($this->upc) ? $this->upc : '');
+		$url .= "/index.aspx?type=xw12&isbn={$this->isn}/{$size}&client={$id}&upc=" . (!is_null($this->upc) ? $this->upc : '')."&oclc=".(!is_null($this->oclc) ? $this->oclc : '');
 		return $this->processImageURL($url);
 	}
 

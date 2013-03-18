@@ -55,7 +55,7 @@
 			<div class="pay_balance">
 				<span>{$profile.fines}  due in library fines</span>
 				<br/>
-				<a href="http://catalog.einetwork.net/patroninfo"><input type="button" class="button" value="Pay Balance"/></a>
+				<a href='{$ecommerceLink}'><input type="button" class="button" value="Pay Balance"/></a>
 			</div>
 		</div>
 	</div>
@@ -162,7 +162,7 @@
 			<div id="preferred_alternative" class="profile_row">
 				<table>
 				<tr style="font-weight: bolder">
-					<td>{translate text='Preferred Pick-up Location'}</td>
+					<td>{translate text='Preferred Library'}</td>
 					<td>{translate text='Alternative Library'}</td>
 				</tr>
 				<tr>

@@ -44,13 +44,13 @@ class Record extends Action
 
 	public $isbn;
 	public $upc;
-
+	public $oclc;
 	public $cacheId;
 
 	public $db;
 
 	public $description;
-
+	
 	function __construct($subAction = false, $record_id = null)
 	{
 		global $interface;
@@ -103,6 +103,7 @@ class Record extends Action
 		$timer->logTime('Processed the marc record');
 
 		//Load information for display in the template rather than processing specific fields in the template
+		//Title fields
 		$marcField = $marcRecord->getField('245');
 		$recordTitle = $this->getSubfieldData($marcField, 'a');
 		$interface->assign('recordTitle', $recordTitle);
@@ -112,6 +113,30 @@ class Record extends Action
 		$recordTitleWithAuth = trim($this->concatenateSubfieldData($marcField, array('a', 'b', 'h', 'n', 'p', 'c')));
 		$interface->assign('recordTitleWithAuth', $recordTitleWithAuth);
 
+		//Alternate title array
+		$marcField130 = $marcRecord->getFields('130');
+		$marcField240 = $marcRecord->getFields('240');
+		$marcField246 = $marcRecord->getFields('246');
+		$marcField730 = $marcRecord->getFields('730');
+		$marcField740 = $marcRecord->getFields('740');
+		
+		if ($marcField130 || $marcField240 || $marcField246 || $marcfield730 || $marcField740){
+			$altTitle = array();
+			foreach ($marcField130 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField240 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField246 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			foreach ($marcField730 as $field){
+				$altTitle[] = $this->getSubfieldData($field, 'a');
+			}
+			$interface->assign('altTitle', $altTitle);
+		}
+		
 		$marcField = $marcRecord->getField('100');
 		if ($marcField){
 			$mainAuthor = $this->concatenateSubfieldData($marcField, array('a', 'b', 'c', 'd'));
@@ -128,10 +153,28 @@ class Record extends Action
 		if ($marcFields){
 			$contributors = array();
 			foreach ($marcFields as $marcField){
-				$contributors[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'c', 'd'));
+				$contributors[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'd', 'q', 'c', 'e', '4'));
 			}
 			$interface->assign('contributors', $contributors);
 		}
+		
+		$marcFields = $marcRecord->getFields('710');
+		if ($marcFields){
+			$corporates = array();
+			foreach ($marcFields as $marcField){
+				$corporates[] = $this->concatenateSubfieldData($marcField, array('a', 'b', 'd', 'c'));
+			}
+			$interface->assign('corporates', $corporates);
+		}
+		
+		$marcFields = $marcRecord->getFields('711');
+		if ($marcFields){
+			$meetings = array();
+			foreach ($marcFields as $marcField){
+				$meetings[] = $this->concatenateSubfieldData($marcField, array('a', 'd', 'c'));
+			}
+			$interface->assign('meetings', $meetings);
+		}		
 
 		$marcFields = $marcRecord->getFields('260');
 		if ($marcFields){
@@ -166,7 +209,6 @@ class Record extends Action
 			}
 			$interface->assign('physicalDescriptions', $physicalDescriptions);
 		}
-
 		// Get ISBN for cover and review use
 		$mainIsbnSet = false;
 		if ($isbnFields = $this->marcRecord->getFields('020')) {
@@ -214,7 +256,12 @@ class Record extends Action
 				$interface->assign('upc', $this->upc);
 			}
 		}
-
+		if($oclcField = $this->marcRecord->getField('035')){
+			if($oclcField = $oclcField->getSubField('a')){
+				$this->oclc = preg_replace("/[^0-9]/","", $oclcField->getData());
+				$interface->assign('oclc', $this->oclc);
+			}
+		}
 		if ($issnField = $this->marcRecord->getField('022')) {
 			if ($issnField = $issnField->getSubfield('a')) {
 				$this->issn = trim($issnField->getData());
@@ -243,15 +290,6 @@ class Record extends Action
 			}
 		}
 		$useMarcSeries = true;
-		if ($this->isbn){
-			require_once 'Drivers/marmot_inc/GoDeeperData.php';
-			$series = GoDeeperData::getSeries($this->isbn);
-			if (isset($series)){
-				$interface->assign('series', $series);
-				$useMarcSeries = false;
-			}
-		}
-		if($useMarcSeries){
 			$marcField440 = $marcRecord->getFields('440');
 			$marcField490 = $marcRecord->getFields('490');
 			$marcField830 = $marcRecord->getFields('830');
@@ -269,8 +307,20 @@ class Record extends Action
 					$series[] = $this->getSubfieldData($field, 'a');
 				}
 				$interface->assign('series', $series);
+				$useMarcSeries = false;
 			}
-		}
+				
+		if($useMarcSeries){
+			if ($this->isbn){
+				require_once 'Drivers/marmot_inc/GoDeeperData.php';
+				$series = GoDeeperData::getSeries($this->isbn);
+				if (isset($series)){
+				$interface->assign('series', $series);
+				
+				}
+			}
+		}	
+
 		//Load description from Syndetics
 		$useMarcSummary = true;
 		if ($this->isbn || $this->upc){
@@ -303,18 +353,28 @@ class Record extends Action
 					foreach ($marcFields as $marcField){
 						$searchSubject = "";
 						$subject = array();
+						$title = '';
 						foreach ($marcField->getSubFields() as $subField){
 							if ($subField->getCode() != 2){
 								$searchSubject .= " " . $subField->getData();
-								$subject[] = array(
-		                            'search' => trim($searchSubject),
-		                            'title'  => $subField->getData(),
-								);
+								$title .=$subField->getData()." ";
 							}
 						}
+						$subject[] = array(
+								'search' => trim($searchSubject),
+								'title'  => $title,
+								//'code'	 => $subField->getCode()
+						);
+						/*if($subject[0]['code'] == 'a' && $subject[1]['code'] == 'v'){
+							
+							$subject = array(array("search"=>$subject[1]["search"], "title"=>$subject[0]['title'].' '.$subject[1]['title']));
+						}else{
+							unset($subject['code']);
+						}*/
 						$subjects[] = $subject;
 					}
 				}
+				$subjects = $this->multi_unique($subjects);
 				$interface->assign('subjects', $subjects);
 			}
 		}
@@ -395,59 +455,20 @@ class Record extends Action
 		if (count($notes) > 0){
 			$interface->assign('notes', $notes);
 		}
-
-		$linkFields =$marcRecord->getFields('856') ;
-		if ($linkFields){
-			$internetLinks = array();
-			$purchaseLinks = array();
-			$field856Index = 0;
-			foreach ($linkFields as $marcField){
-				$field856Index++;
-				//Get the link
-				if ($marcField->getSubfield('u')){
-					$link = $marcField->getSubfield('u')->getData();
-					if ($marcField->getSubfield('3')){
-						$linkText = $marcField->getSubfield('3')->getData();
-					}elseif ($marcField->getSubfield('y')){
-						$linkText = $marcField->getSubfield('y')->getData();
-					}elseif ($marcField->getSubfield('z')){
-						$linkText = $marcField->getSubfield('z')->getData();
-					}else{
-						$linkText = $link;
-					}
-					$showLink = true;
-					//Process some links differently so we can either hide them
-					//or show them in different areas of the catalog.
-					if (preg_match('/purchase|buy/i', $linkText) ||
-						preg_match('/barnesandnoble|tatteredcover|amazon|smashwords\.com/i', $link)){
-						$showLink = false;
-					}
-					$isBookLink = preg_match('/acs\.dcl\.lan|vufind\.douglascountylibraries\.org|catalog\.douglascountylibraries\.org/i', $link);
-					if ($isBookLink == 1){
-						//e-book link, don't show
-						$showLink = false;
-					}
-	     
-					if ($showLink){
-						//Rewrite the link so we can track usage
-						$link = $configArray['Site']['path'] . '/Record/' . $this->id . '/Link?index=' . $field856Index;
-						$internetLinks[] = array(
-		        		  'link' => $link,
-		        		  'linkText' => $linkText,
-						);
-					}
-				}
-			}
-			if (count($internetLinks) > 0){
-				$interface->assign('internetLinks', $internetLinks);
-			}
+		$internetLinks = $this->get856Links($marcRecord);
+		if (count($internetLinks) > 0){
+			$interface->assign('internetLinks', $internetLinks);
 		}
-		if (isset($purchaseLinks) && count($purchaseLinks) > 0){
+		$supLinks = $this->get856Links($marcRecord, true);
+		if (count($supLinks) > 0){
+			$interface->assign('supLinks', $supLinks);
+		}
+		/*if (isset($purchaseLinks) && count($purchaseLinks) > 0){
 			$interface->assign('purchaseLinks', $purchaseLinks);
-		}
+		}*/
 
 		//Determine the cover to use
-		$bookCoverUrl = $configArray['Site']['coverUrl'] . "/bookcover.php?id={$this->id}&amp;isn={$this->isbn}&amp;size=large&amp;upc={$this->upc}&amp;category=" . urlencode($format_category) . "&amp;format=" . urlencode(isset($recordFormat[0]) ? $recordFormat[0] : '');
+		$bookCoverUrl = $configArray['Site']['coverUrl'] . "/bookcover.php?id={$this->id}&amp;isn={$this->isbn}&amp;size=large&amp;upc={$this->upc}&amp;oclc={$this->oclc}&amp;category=" . urlencode($format_category) . "&amp;format=" . urlencode(isset($recordFormat[0]) ? $recordFormat[0] : '');
 		$interface->assign('bookCoverUrl', $bookCoverUrl);
 		
 		//Load accelerated reader data
@@ -724,4 +745,77 @@ class Record extends Action
 		}
 		return $notes;
 	}
+	private function multi_unique($array) {
+		$new = array();
+		$new1 = array();
+        foreach ($array as $k=>$na)
+            $new[$k] = serialize($na);
+        $uniq = array_unique($new);
+        foreach($uniq as $k=>$ser)
+            $new1[$k] = unserialize($ser);
+        return ($new1);
+    }
+    /**
+     * Takes a marcrecord sub type from 856 and return whether its full-text or supplemental
+     */
+    private function isLinkFull($marcField){
+    	$ind = $marcField->getIndicator(2);
+    	switch ((int)$ind){
+    		case 2:
+    			return false;
+    		case 0:
+    		case 1:
+    		//case blank ?
+    		default:
+    			return true;
+    	}
+    	
+    }
+    protected function get856Links($marcRecord, $supp = false){
+    	global $configArray; 
+    	$linkFields =$marcRecord->getFields('856') ;
+    	$internetLinks = array();
+    	if ($linkFields){
+    		$field856Index = 0;
+    		foreach ($linkFields as $marcField){
+    			$field856Index++;
+    			$isFull = $this->isLinkFull($marcField);
+    			//Get the link
+    			if ($marcField->getSubfield('u') && ($isFull != $supp)){
+    				$link = $marcField->getSubfield('u')->getData();
+    				if ($marcField->getSubfield('3')){
+    					$linkText = $marcField->getSubfield('3')->getData();
+    				}elseif ($marcField->getSubfield('y')){
+    					$linkText = $marcField->getSubfield('y')->getData();
+    				}elseif ($marcField->getSubfield('z')){
+    					$linkText = $marcField->getSubfield('z')->getData();
+    				}else{
+    					$linkText = $link;
+    				}
+    				$showLink = true;
+    				//Process some links differently so we can either hide them
+    				//or show them in different areas of the catalog.
+    				if (preg_match('/purchase|buy/i', $linkText) ||
+    						preg_match('/barnesandnoble|tatteredcover|amazon|smashwords\.com/i', $link)){
+    					$showLink = false;
+    				}
+    				$isBookLink = preg_match('/acs\.dcl\.lan|vufind\.douglascountylibraries\.org|catalog\.douglascountylibraries\.org/i', $link);
+    				if ($isBookLink == 1){
+    					//e-book link, don't show
+    					$showLink = false;
+    				}
+    	
+    				if ($showLink){
+    					//Rewrite the link so we can track usage
+    					$link = $configArray['Site']['path'] . '/Record/' . $this->id . '/Link?index=' . $field856Index;
+    					$internetLinks[] = array(
+    							'link' => $link,
+    							'linkText' => $linkText,
+    					);
+    				}
+    			}
+    		}
+    	}
+    	return $internetLinks;
+    }
 }

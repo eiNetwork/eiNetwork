@@ -207,11 +207,14 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	hideSelects('hidden');
 
 	// Find out how far down the screen the user has scrolled.
-	var new_top =  document.body.scrollTop;
+	//var new_top = document.body.scrollTop;
+	var new_top = $(document).scrollTop();
+	//add top of screen buffer
+	new_top = new_top + 125;
 
 	// Get the height of the document
 	var documentHeight = $(document).height();
-
+ 
 	$('#lightbox').show();
 	$('#lightbox').css('height', documentHeight + 'px');
 	
@@ -219,11 +222,13 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 	$('#popupbox').show();
 	$('#popupbox').css('top', '50%');
 	$('#popupbox').css('left', '50%');
-	
+
 	$.get(urlToLoad, function(data) {
-		$('#popupbox').html(data);
-		$('#popupbox').show();
+		
+		//$('#popupbox').html(data);
+		//$('#popupbox').show();
 		if (parentId){
+		
 			//Automatically position the lightbox over the cursor
 			$("#popupbox").position({
 				my: "top right",
@@ -231,24 +236,29 @@ function ajaxLightbox(urlToLoad, parentId, left, width, top, height){
 				of: parentId,
 				collision: "flip"
 			});
+			
 		}else{
+
 			if (!left) left = '30%';
 			if (!top) top = '30%';
 			if (!height) height = '300px';
 			
 			if(width!=null||width.indexOf("%")<=0){
+				
 				var reg = /\d*/;
 				var newWidth = reg.exec(width);
 				var newHeight = reg.exec(height);
 				var left = ($(document).width()-parseInt(newWidth))/2;
 			}
 			if (!width) width = '400px';
-			$('#popupbox').css('top', top);
+			$('#popupbox').css('top', new_top);
 			$('#popupbox').css('left', left);
 			$('#popupbox').css('width', width);
 			$('#popupbox').css('height', height);
 			
-			$(document).scrollTop(0);
+			//$(document).scrollTop(0);
+		$('#popupbox').html(data);
+		$('#popupbox').show();
 		}
 		if ($("#popupboxHeader").length > 0){
 			$("#popupbox").draggable({ handle: "#popupboxHeader" });
@@ -549,6 +559,7 @@ function getOverDriveSummary(){
 
 var ajaxCallback = null;
 function ajaxLogin(callback){
+		  
 	ajaxCallback = callback;
 	ajaxLightbox(path + '/MyResearch/AJAX?method=LoginForm',false,false,'450px',false,'320px');
 }
@@ -592,7 +603,10 @@ function showProcessingIndicator(message){
 	if (message != undefined){
 		$('#lightboxLoading').html(message);
 	}
-	lightbox(null,"400px","250px");
+	var new_top = $(document).scrollTop();
+	new_top = new_top + 250;
+	
+	lightbox(null,"400px", new_top);
 }
 
 function searchSubmit(){
@@ -765,19 +779,19 @@ $(divId).tooltip({
  */
 function addList(form, failMsg)
 {
-	for (var i = 0; i < form.public.length; i++) {
+	/*for (var i = 0; i < form.public.length; i++) {
 		if (form.public[i].checked) {
 			var isPublic = form.public[i].value;
 		}
-	}
+	}*/
 
 	var url = path + "/MyResearch/AJAX";
 	var recordId = form.recordId.value;
 	var source = form.source.value;
 	var params = "method=AddList&" +
 							 "title=" + encodeURIComponent(form.title.value) + "&" +
-							 "public=" + isPublic + "&" +
-							 "desc=" + encodeURIComponent(form.desc.value) + "&" +
+							// "public=" + isPublic + "&" +
+							// "desc=" + encodeURIComponent(form.desc.value) + "&" +
 							 "followupModule=" + form.followupModule.value + "&" +
 							 "followupAction=" + form.followupAction.value + "&" +
 							 "followupId=" + form.followupId.value;
@@ -792,7 +806,7 @@ function addList(form, failMsg)
 					var newId = data.newId;
 					//Save the record to the list
 					var url = path + "/Resource/Save?lightbox=true&selectedList=" + newId + "&id=" + recordId + "&source=" + source;
-					ajaxLightbox(url,false,false,'450px',false,'350px');
+					ajaxLightbox(url,false,false,'450px',false,'250px');
 				} else {
 					alert(value.length > 0 ? value : failMsg);
 				}
@@ -831,7 +845,7 @@ function sendAJAXEmail(url, params, strings){
 			} else {
 					document.getElementById('popupbox').innerHTML = '<h3>' + strings.failure + '</h3>';
 			}
-		},
+	F	},
 		error: function(transaction) {
 				document.getElementById('popupbox').innerHTML = strings.failure;
 		}
@@ -929,15 +943,15 @@ function saveRecord(id, source, formElem, strings) {
 function performSaveRecord(id, source, formElem, strings, service, successCallback)
 {
 	document.body.style.cursor = 'wait';
-	var tags = formElem.elements['mytags'].value;
-	var notes = formElem.elements['notes'].value;
+	//var tags = formElem.elements['mytags'].value;
+	//var notes = formElem.elements['notes'].value;
 	var list = formElem.elements['list'].options[formElem.elements['list'].selectedIndex].value;
 
 	var url = path + "/Resource/AJAX";
 	var params = "method=SaveRecord&" +
-							 "mytags=" + encodeURIComponent(tags) + "&" +
+							// "mytags=" + encodeURIComponent(tags) + "&" +
 							 "list=" + list + "&" +
-							 "notes=" + encodeURIComponent(notes) + "&" +
+							// "notes=" + encodeURIComponent(notes) + "&" +
 							 "id=" + id + "&" +
 							 "source=" + source;
 	$.ajax({

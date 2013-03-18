@@ -40,7 +40,6 @@ class SearchSources{
 		}
 
 		$marmotAdded = false;
-
 		//Local search
 		if (isset($location) && $location != null && $location->useScope && strlen($location->defaultLocationFacet) > 0){
 			$searchOptions['local'] = array(
@@ -55,7 +54,7 @@ class SearchSources{
 		}else{
 			$marmotAdded = true;
 			$searchOptions['local'] = array(
-              'name' => 'Marmot Catalog',
+              'name' => 'Library Catalog',
               'description' => "The entire Marmot catalog.",
 			);
 		}

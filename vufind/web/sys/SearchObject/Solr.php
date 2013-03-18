@@ -60,6 +60,10 @@ class SearchObject_Solr extends SearchObject_Base
 	private $searchSubType  = '';
 	// Used to pass hidden filter queries to Solr
 	private $hiddenFilters = array();
+	
+	// Multiselect facets
+	private $multiSelectFacets = array();
+	
 
 	// Spelling
 	private $spellingLimit = 3;
@@ -80,7 +84,7 @@ class SearchObject_Solr extends SearchObject_Base
 
 		global $configArray;
 		global $timer;
-		global $library;
+		global $librarySingleton;
 		// Include our solr index
 		$class = $configArray['Index']['engine'];
 		require_once "sys/$class.php";
@@ -92,6 +96,11 @@ class SearchObject_Solr extends SearchObject_Base
 		$this->allFacetSettings = getExtraConfigArray('facets');
 		$this->facetConfig = array();
 		$facetLimit = $this->getFacetSetting('Results_Settings', 'facet_limit');
+		
+		$this->multiSelectFacets = explode(',', $this->getFacetSetting(
+		     'Results_Settings', 'multiselect_facets'
+		));		
+		
 		if (is_numeric($facetLimit)) {
 			$this->facetLimit = $facetLimit;
 		}
@@ -102,8 +111,8 @@ class SearchObject_Solr extends SearchObject_Base
 
 		// Load search preferences:
 		$searchSettings = getExtraConfigArray('searches');
-		if (isset($library)){
-			if ($library->showTagging == 0){
+		if (isset($librarySingleton)){
+			if ($librarySingleton->showTagging == 0){
 				unset($searchSettings['Basic_Searches']['tag']);
 			}
 		}
@@ -182,6 +191,20 @@ class SearchObject_Solr extends SearchObject_Base
 				$this->addFilter('illustrated:Illustrated');
 			} else if ($_REQUEST['illustration'] == 0) {
 				$this->addFilter('illustrated:"Not Illustrated"');
+			}
+		}
+                //Current location add building filter by default
+		$searchLocation = Location::getSearchLocation();
+		if ($searchLocation != null){
+			$useLocation = isset($_SESSION['useLocation'])?$_SESSION['useLocation']:false;
+			/*if($this->hasFilter("building:\"{$searchLocation->defaultLocationFacet}\"")){
+				$_SESSION['useLocation'] = false;
+			}*/
+			//get the file that called for the search
+			$trace = debug_backtrace();
+			//if from the List folder, ignore use location
+			if (strlen($searchLocation->defaultLocationFacet) && $useLocation && !strpos($trace[1]['file'],'List') && !strpos($trace[1]['file'],'MyResearch')){
+				$this->addFilter("building:\"{$searchLocation->defaultLocationFacet}\"");
 			}
 		}
 	}
@@ -1021,6 +1044,9 @@ class SearchObject_Solr extends SearchObject_Base
 
 		// Define Filter Query
 		$filterQuery = $this->hiddenFilters;
+
+		$orFilterQuery = array();
+		
 		//Remove any empty filters if we get them
 		//(typically happens when a subdomain has a function disabled that is enabled in the main scope)
 		foreach ($this->filterList as $field => $filter) {
@@ -1032,15 +1058,34 @@ class SearchObject_Solr extends SearchObject_Base
 			foreach ($filter as $value) {
 				// Special case -- allow trailing wildcards:
 				if (substr($value, -1) == '*') {
-					$filterQuery[] = "$field:$value";
+					if (in_array($field, $this->multiSelectFacets)) {
+					    $orFilterQuery[$field][] = "$field:$value";
+					} else {
+					    $filterQuery[] = "$field:$value";
+					}
 				} elseif (preg_match('/\\A\\[.*?\\sTO\\s.*?]\\z/', $value)){
-					$filterQuery[] = "$field:$value";
+					if (in_array($field, $this->multiSelectFacets)) {
+					    $orFilterQuery[$field][] = "$field:$value";
+					} else {
+					    $filterQuery[] = "$field:$value";
+					}
 				} else {
 					if (!empty($value)){
-						$filterQuery[] = "$field:\"$value\"";
+						if (in_array($field, $this->multiSelectFacets)) {
+						    $orFilterQuery[$field][] = "$field:\"$value\"";
+						} else {
+						    $filterQuery[] = "$field:\"$value\"";
+						}
 					}
 				}
 			}
+		}
+
+		if(!empty($orFilterQuery)) {
+		    foreach ($orFilterQuery as $field => $filter) {
+		        $filterQuery[] = '{!tag=' . $field . '_filter}' 
+		            . '('. implode(" OR ", $filter) . ')';
+		    }
 		}
 
 		// If we are only searching one field use the DisMax handler
@@ -1054,6 +1099,9 @@ class SearchObject_Solr extends SearchObject_Base
 		if (!empty($this->facetConfig)) {
 			$facetSet['limit'] = $this->facetLimit;
 			foreach ($this->facetConfig as $facetField => $facetName) {
+				if (in_array($facetField, $this->multiSelectFacets)) {
+				    $facetField = '{!ex=' . $facetField . '_filter}' . $facetField;
+				}
 				$facetSet['field'][] = $facetField;
 			}
 			if ($this->facetOffset != null) {
@@ -1095,6 +1143,35 @@ class SearchObject_Solr extends SearchObject_Base
 		// The first record to retrieve:
 		//  (page - 1) * limit = start
 		$recordStart = ($this->page - 1) * $this->limit;
+		
+		// ANDRE LESSA DEBUG
+		// echo '<pre>';		
+		// echo $this->query;      // Query string
+		// echo '<br/>';
+		// echo $this->index;      // DisMax Handler
+		// echo '<br/>';
+		// print_r ($filterQuery);      // Filter query
+		// echo '<br/>';
+		// echo $recordStart;      // Starting record
+		// echo '<br/>';
+		// echo $this->limit;      // Records per page
+		// echo '<br/>';
+		// print_r ($facetSet);         // Fields to facet on
+		// echo '<br/>';
+		// echo $spellcheck;       // Spellcheck query
+		// echo '<br/>';
+		// echo $this->dictionary; // Spellcheck dictionary
+		// echo '<br/>';
+		// echo $finalSort;        // Field to sort on
+		// echo '<br/>';
+		// echo $this->fields;     // Fields to return
+		// echo '<br/>';
+		// echo $this->method;     // HTTP Request method
+		// echo '<br/>';
+		// echo $returnIndexErrors; // Include errors in response?
+		// echo '<br/>';
+		// echo '</pre>';		
+		
 		$this->indexResult = $this->indexEngine->search(
 		$this->query,      // Query string
 		$this->index,      // DisMax Handler
@@ -1372,15 +1449,37 @@ class SearchObject_Solr extends SearchObject_Base
 		}
 		$relatedLocationFacets = null;
 		$relatedHomeLocationFacets = null;
+		$homeLibrary = $librarySingleton->getPatronHomeLibrary();
 		if (!is_null($currentLibrary)){
 			$relatedLocationFacets = $locationSingleton->getLocationsFacetsForLibrary($currentLibrary->libraryId);
 		}else{
-			$homeLibrary = $librarySingleton->getPatronHomeLibrary();
 			if (!is_null($homeLibrary)){
 				$relatedHomeLocationFacets = $locationSingleton->getLocationsFacetsForLibrary($homeLibrary->libraryId);
 			}
 		}
-
+                global $user;
+		//global $configArray;
+		$locationList = array();
+                $locationList2 = array();
+		if($user){
+                        //$this->setFacetSortOrder('count');
+			$locationS = new Location;
+			//$locationS->whereAdd("locationId = ".$user->myLocation1Id." or locationId = ".$user->myLocation2Id);
+                        $locationS->whereAdd("locationId = ".$user->myLocation1Id);
+			$locationS->find();
+			
+			while ($locationS->fetch()) {
+				$locationList[$locationS->locationId] = $locationS->displayName;
+			}
+                        
+			$locationS2 = new Location;
+			$locationS2->whereAdd("locationId = ".$user->myLocation2Id);
+			$locationS2->find();
+			
+			while ($locationS2->fetch()) {
+				$locationList2[$locationS2->locationId] = $locationS2->displayName;
+			}                        
+		}
 
 		$allFacets = array_merge($this->indexResult['facet_counts']['facet_fields'], $this->indexResult['facet_counts']['facet_dates']);
 		foreach ($allFacets as $field => $data) {
@@ -1403,7 +1502,7 @@ class SearchObject_Solr extends SearchObject_Base
 			if ($field == 'institution' && isset($currentLibrary) && !is_null($currentLibrary)){
 				$doInstitutionProcessing = true;
 			}
-			if ($field == 'building' && (!is_null($relatedLocationFacets) || !is_null($activeLocationFacet))){
+			if ($field == 'building' ){//&& (!is_null($relatedLocationFacets) || !is_null($activeLocationFacet))){
 				$doBranchProcessing = true;
 			}elseif($field == 'available_at'){
 				$doBranchProcessing = true;
@@ -1463,17 +1562,24 @@ class SearchObject_Solr extends SearchObject_Base
 						}elseif (isset($currentLibrary) && $facet[0] == $currentLibrary->facetLabel . ' Online'){
 							$valueKey = '1' . $valueKey;
 							$numValidRelatedLocations++;
-						}else if (!is_null($relatedLocationFacets) && in_array($facet[0], $relatedLocationFacets)){
-							$valueKey = '2' . $valueKey;
-							$numValidRelatedLocations++;
-						}else if (!is_null($relatedLocationFacets) && in_array($facet[0], $relatedLocationFacets)){
-							$valueKey = '2' . $valueKey;
+						}/*else if (!is_null($relatedLocationFacets) && in_array($facet[0], $relatedLocationFacets)){
+							$valueKey = '5' . $valueKey;
 							$numValidRelatedLocations++;
 						}else if (!is_null($relatedHomeLocationFacets) && in_array($facet[0], $relatedHomeLocationFacets)){
-							$valueKey = '2' . $valueKey;
+							$valueKey = '5' . $valueKey;
+							$numValidRelatedLocations++;
+						}*/elseif (!is_null($homeLibrary) &&  $facet[0] == $homeLibrary->displayName){
+							$valueKey = '3' . $valueKey;
+							$numValidRelatedLocations++;
+						}elseif (!empty($locationList) &&  in_array($facet[0], $locationList)){
+							$valueKey = '3' . $valueKey;
+							$numValidRelatedLocations++;
+						}elseif (!empty($locationList2) &&  in_array($facet[0], $locationList2)){
+							$valueKey = '4' . $valueKey;
 							$numValidRelatedLocations++;
 						}elseif ($facet[0] == 'Marmot Digital Library' || $facet[0] == 'Digital Collection' || $facet[0] == 'OverDrive' || $facet[0] == 'Online'){
-							$valueKey = '4' . $valueKey;
+							//$valueKey = isset($currentLibrary)?'2' . $valueKey:'4'.$valueKey;
+                                                        $valueKey = '5' . $valueKey;
 							$numValidRelatedLocations++;
 						}elseif (!is_null($currentLibrary) && $facet[0] == $currentLibrary->facetLabel . ' Online'){
 							$valueKey = '3' . $valueKey;
@@ -1515,7 +1621,7 @@ class SearchObject_Solr extends SearchObject_Base
 			//Only show one system unless we are in the global scope
 			if ($field == 'institution' && isset($currentLibrary)){
 				$list[$field]['valuesToShow'] = $numValidLibraries;
-			}else if (($field == 'building' || $field == 'available_at') && isset($relatedLocationFacets) && $numValidRelatedLocations > 0){
+			}else if (($field == 'building' || $field == 'available_at') &&  $numValidRelatedLocations > 0){
 				$list[$field]['valuesToShow'] = $numValidRelatedLocations;
 			}else{
 				$list[$field]['valuesToShow'] = 5;
@@ -1523,7 +1629,7 @@ class SearchObject_Solr extends SearchObject_Base
 
 			//Sort the facet alphabetically?
 			//Sort the system and location alphabetically unless we are in the global scope
-			if (in_array($field, array('institution', 'building', 'available_at'))  && isset($currentLibrary) ){
+			if (in_array($field, array('institution', 'building', 'available_at'))){
 				$list[$field]['showAlphabetically'] = true;
 			}else{
 				$list[$field]['showAlphabetically'] = false;

@@ -216,6 +216,85 @@ class Location extends DB_DataObject
 		return $locationList;
 	}
 
+	function getPickupBranchesPreferLocationFirst($patronProfile, $selectedBranchId){
+		//Get the library for the patron's home branch.
+		global $librarySingleton;
+		if ($patronProfile){
+			if (is_object($patronProfile)){
+				$patronProfile = get_object_vars($patronProfile);
+			}
+		}
+		$homeLibrary = $librarySingleton->getLibraryForLocation($patronProfile['homeLocationId']);
+
+
+		if (isset($homeLibrary) && $homeLibrary->inSystemPickupsOnly == 1){
+			if (strlen($homeLibrary->validPickupSystems) > 0){
+				$pickupIds = array();
+				$pickupIds[] = $homeLibrary->libraryId;
+				$validPickupSystems = split('\|', $homeLibrary->validPickupSystems);
+				foreach ($validPickupSystems as $pickupSystem){
+					$pickupLocation = new Library();
+					$pickupLocation->subdomain = $pickupSystem;
+					$pickupLocation->find();
+					if ($pickupLocation->N == 1){
+						$pickupLocation->fetch();
+						$pickupIds[] = $pickupLocation->libraryId;
+					}
+				}
+				$this->whereAdd("libraryId IN (" . implode(',', $pickupIds) . ")", 'AND');
+				//Deal with Steamboat Springs Juvenile which is a special case.
+				//$this->whereAdd("code <> 'ssjuv'", 'AND');
+			}else{
+				$this->whereAdd("libraryId = {$homeLibrary->libraryId}", 'AND');
+				$this->whereAdd("validHoldPickupBranch = 1", 'AND');
+				$this->whereAdd("locationId = {$patronProfile['homeLocationId']}", 'OR');
+			}
+		}else{
+			$this->whereAdd("validHoldPickupBranch = 1");
+		}
+
+		if (isset($selectedBranchId) && is_numeric($selectedBranchId)){
+			$this->whereAdd("locationId = $selectedBranchId", 'OR');
+		}
+		$this->orderBy('displayName');
+
+		$this->find();
+
+		//Load the locations and sort them based on the user profile information as well as their physical location.
+		$physicalLocation = $this->getPhysicalLocation();
+		$locationList = array();
+		while ($this->fetch()) {
+			if ($this->locationId == $selectedBranchId){
+				$selected = 'selected';
+			}else{
+				$selected = '';
+			}
+			$this->selected = $selected;
+			if ($this->locationId == 0){
+				//skip the not assigned locationid 0 even if the user hasn't picked one
+				//echo ("Location " . $this->locationId);
+			}else{
+				//if (isset($physicalLocation) && $physicalLocation->locationId == $this->locationId){
+					//If the user is in a branch, those holdings come first.
+				//$locationList['1' . $this->displayName] = clone $this;
+				if (isset($patronProfile['myLocation1Id']) && $this->locationId == $patronProfile['myLocation1Id']){
+					//Next come nearby locations for the user	
+				$locationList['1' . $this->displayName] = clone $this; 	
+				} elseif (isset($patronProfile['myLocation2Id']) && $this->locationId == $patronProfile['myLocation2Id']){
+				//Next come nearby locations for the user
+				$locationList['2' . $this->displayName] = clone $this;
+				} elseif (isset($homeLibrary) && $this->libraryId == $homeLibrary->libraryId){
+					//Other locations that are within the same library system
+					$locationList['3' . $this->displayName] = clone $this;
+				} else {
+					//Finally, all other locations are shown sorted alphabetically.
+					$locationList['4' . $this->displayName] = clone $this;
+				}
+			}
+		}
+		ksort($locationList);
+		return $locationList;
+	}
 	/**
 	 * Returns the active location to use when doing search scoping, etc.
 	 * This does not include the IP address
@@ -232,8 +311,8 @@ class Location extends DB_DataObject
 		$this->activeLocation = null;
 
 		//load information about the library we are in.
-		global $library;
-		if (is_null($library)){
+		global $librarySingleton;
+		if (is_null($librarySingleton)){
 			//If we are not in a library, then do not allow branch scoping, etc.
 			$this->activeLocation = null;
 		}else{
@@ -246,7 +325,7 @@ class Location extends DB_DataObject
 				$activeLocation->code = $locationCode;
 				if ($activeLocation->find(true)){
 					//Only use the location if we are in the subdomain for the parent library
-					if ($library->libraryId == $activeLocation->libraryId){
+					if ($librarySingleton->libraryId == $activeLocation->libraryId){
 						$this->activeLocation = clone($activeLocation);
 					}
 				}
@@ -276,7 +355,7 @@ class Location extends DB_DataObject
 		global $user;
 		if (isset($user) && $user != false){
 			$homeLocation = new Location();
-			$homeLocation->locationId = $user->homeLocationId;
+			$homeLocation->locationId = isset($user->homeLocationId)?$user->homeLocationId:0;
 			if ($homeLocation->find(true)){
 				$this->userHomeLocation = clone($homeLocation);
 			}

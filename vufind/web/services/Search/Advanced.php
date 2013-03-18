@@ -38,7 +38,6 @@ class Advanced extends Action {
 		$facetList = $searchObject->getFacetList();
 		// Shutdown the search object
 		$searchObject->close();
-
 		// Load a saved search, if any:
 		$savedSearch = $this->loadSavedSearch();
 
@@ -55,7 +54,7 @@ class Advanced extends Action {
 			$interface->assign('formatCategoryLimit', $facets[$label]);
 			unset($facets[$label]);
 		}
-
+		$interface->assign('pageType','advanced');
 		$interface->assign('facetList', $facets);
 
 		// Integer for % width of each column (be careful to avoid divide by zero!)
@@ -78,7 +77,6 @@ class Advanced extends Action {
 
 		// Send search type settings to the template
 		$interface->assign('advSearchTypes', $searchObject->getAdvancedTypes());
-
 		// If we found a saved search, let's assign some details to the interface:
 		if ($savedSearch) {
 			$interface->assign('searchDetails', $savedSearch->getSearchTerms());

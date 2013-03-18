@@ -51,7 +51,10 @@ class AJAXGetCallNumber extends Record{
 		$id = $this->id;
 		$marcField = $this->marcRecord->getField('245');
 		$booTitle = $this->getSubfieldData($marcField,'a');
+		$booTitle = rtrim($booTitle, "/");
+		//$booTitle = rtrim($booTitle, ";");
 		$interface->assign('BookTitle',$booTitle);
+		$interface->assign("CallNumber", $id);
 		try {
 			$catalog = new CatalogConnection($configArray['Catalog']['driver']);
 		} catch (PDOException $e) {
@@ -103,6 +106,8 @@ class AJAXGetCallNumber extends Record{
 			}else{
 				$interface->assign('holdings', array());
 				$holdingData->holdings = array();
+				$holdingsResult = $interface->fetch("Record/view-holdings.tpl");
+				echo $holdingsResult;
 			}
 
 			// Get Acquisitions Data

@@ -84,7 +84,7 @@ function getExtraConfigArray($name)
 			if (!is_null($activeLocation)){
 				if (strlen($activeLocation->defaultLocationFacet) && $activeLocation->useScope){
 					unset($extraConfigs[$name]['Results']['institution']);
-					unset($extraConfigs[$name]['Results']['building']);
+					//unset($extraConfigs[$name]['Results']['building']);
 					unset($extraConfigs[$name]['Author']['institution']);
 					unset($extraConfigs[$name]['Author']['building']);
 				}

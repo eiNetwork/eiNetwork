@@ -46,11 +46,19 @@ class Renew extends Action
 			$logger->log("Renewing item " . $_REQUEST['itemId'], PEAR_LOG_INFO);
 			$renewResult = $this->catalog->driver->renewItem($user->password, $_REQUEST['itemId'], $_REQUEST['itemIndex']);
 			$logger->log("Result = " . print_r($renewResult, true), PEAR_LOG_INFO);
+			$message = $renewResult['message'];
+			if(is_array($message)){
+				$renewResult['message'] = $message[$_REQUEST['itemBarCode']];
+				/*$a = "";
+				foreach($message as $key=>$value){
+					$a .= $key;
+				}
+				$renewResult['message'] = $a;*/
+			}
 			$_SESSION['renewResult'][$renewResult['itemId']] = $renewResult;
 		} else {
 			PEAR::raiseError(new PEAR_Error('Cannot Renew Item - ILS Not Supported'));
 		}
-
 		//Redirect back to the hold screen with status from the renewal
 		header("Location: " . $configArray['Site']['path'] . '/MyResearch/CheckedOut');
 	}

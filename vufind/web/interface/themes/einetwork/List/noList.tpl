@@ -31,7 +31,10 @@
                      {/if}
                      <dl class="narrowList navmenu narrowbegin" {if count($wishList)<=1}style="margin-top:10px"{/if}>
                             <dd>
-                                    <input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox',false,false,'400px',false,'250px'); return false;" class="button navmenu dd" value="create new wish list" style="width:180px"/>
+                                    <input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox2',false,false,'400px',false,'200px'); return false;" class="button navmenu dd" value="Create New Wish List" style="width:180px"/>
+                            </dd>
+                            <dd>
+                            	<input type="button" onclick="window.location = '/List/Import';" class="button navmenu dd" value="Import a Wish List" style="width:180px"/>
                             </dd>
                      </dl>
             </div>
@@ -44,6 +47,8 @@
     <div id="searchInfo">
 	<div class="resulthead">
             <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
+            {* <div>Create a new List</div> *} 
+            {*<div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>*}
 	</div>
       {* End Listing Options *}
 

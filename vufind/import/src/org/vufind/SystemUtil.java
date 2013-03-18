@@ -50,7 +50,7 @@ public class SystemUtil {
 		try {
 			int exitVal = process.waitFor();
 			if (exitVal == 0) {
-				logger.debug("Process ended with exit value of 0");
+				//logger.debug("Process ended with exit value of 0");
 			} else {
 				logger.error("Process errored with exit value of " + exitVal);
 			}

@@ -28,8 +28,9 @@ function getSaveToBookCart(id, source,obj){
                 };
                 saveToBookCart(id, source,successCallback);
 	}else{
+
                 successCallback = function() {
-                    window.location.reload();
+                    //window.location.reload();
                 };
 		ajaxLogin(function (){
 			
@@ -319,21 +320,14 @@ function getBookCartItemCount(){
 		}
 	});
 }
-function newAddList(form, failMsg)
-{
-	for (var i = 0; i < form.public.length; i++) {
-		if (form.public[i].checked) {
-			var isPublic = form.public[i].value;
-		}
-	}
-
+function newAddList(form, failMsg){
 	var url = path + "/MyResearch/AJAX";
 	var recordId = form.recordId.value;
 	var source = form.source.value;
 	var params = "method=AddList&" +
 							 "title=" + encodeURIComponent(form.title.value) + "&" +
-							 "public=" + isPublic + "&" +
-							 "desc=" + encodeURIComponent(form.desc.value) + "&" +
+							 //"public=" + isPublic + "&" +
+							 //"desc=" + encodeURIComponent(form.desc.value) + "&" +
 							 "followupModule=" + form.followupModule.value + "&" +
 							 "followupAction=" + form.followupAction.value + "&" +
 							 "followupId=" + form.followupId.value;
@@ -350,6 +344,36 @@ function newAddList(form, failMsg)
 					//var url = path + "/Resource/Save?lightbox=true&selectedList=" + newId + "&id=" + recordId + "&source=" + source;
 					//ajaxLightbox(url);
                                         window.location.href = '/List/Results?goToListID='+newId;
+				} else {
+					alert(value.length > 0 ? value : failMsg);
+				}
+			} else {
+				$('#popupbox').html(failMsg);
+				setTimeout("hideLightbox();", 3000);
+			}
+		},
+		error: function() {
+			$('#popupbox').html(failMsg);
+			setTimeout("hideLightbox();", 3000);
+		}
+	});
+}
+function editListName(form, failMsg){ 
+	var url = path + "/List/ListEdit";
+	var recordId = form.recordId.value;
+	var source = form.source.value;
+	var params = "method=editList&" +
+							 "title=" + encodeURIComponent(form.title.value) + "&" +
+							 "id=" +  recordId;
+	$.ajax({
+		url: url+'?'+params,
+		dataType: "json",
+		success: function(data) {
+			var value = data.result;
+			if (value) {
+				if (value == "Done") {
+						$("#"+form.followupId.value).html(form.title.value);
+						hideLightbox();
 				} else {
 					alert(value.length > 0 ? value : failMsg);
 				}
@@ -432,11 +456,13 @@ function printPage(inLeft,inTop,inWidth,innerHTML){
     printWin.close();
 }
 function printFindLibrary(){
+   
   var left = $(document).width()/2-285;
     var top = 300;
     var width = 570;
+    var itemName = $('#itemTitle').html();
     //var innerHTML = $("#headhead").html()+"<table>";
-    var innerHTML = '<div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)"> <span style="font-size:18px;">Item Call Numbers</span></div><table>';
+    var innerHTML = '<div style="height:40px;padding-top:12px;border-bottom:1px solid rgb(238,238,238)"> <span style="font-size:18px;">' + itemName + '</span></div><table>';
     if($("#showAndHideUnavailable").text()=="show unavailable items"){
         innerHTML += $("#callNumberBody").html();
         printPage(left,top,width,innerHTML);
@@ -448,6 +474,16 @@ function printFindLibrary(){
         printPage(left,top,width,innerHTML);
     }
 }
+function emailCallNumberPrompt(callNumber,left,top,width,height){
+
+    var unavailableShown = $(".itemUnavailable").is(":visible");
+
+    var url = "/Record/AJAX?method=EmailPrompt&id="+callNumber+"&unavailableShown="+unavailableShown;  
+    //hideLightbox();
+    ajaxLightbox(url,false,left,width,top,height);
+    
+}
+
 function renewItem(url){
     document.body.style.cursor = 'wait';
      $.ajax({
@@ -537,4 +573,42 @@ function getSaveToListForm(id, source){
 		});
 	}
 	return false;
+}
+function getHeight(){
+	$("#main-content").css("min-height", function(){ 
+	    return 4+$('#left-bar').height();
+	});
+}
+function similarTitles(){
+	var len = $('.sep').length;
+	$('.sep').each(function (index){
+		if(index < 3){
+			$(this).wrap('<div class="sim"/>');
+		}else{
+			$(this).wrap('<div class="sim_hid" />');
+		}
+		if(index == 2 && len > 3){
+			$(this).append("<dd class='sim_more'>More</dd>");
+			$('.sim_more').click(function(){showSim();});
+		}
+		if(index == (len-1) && len > 3){
+			$(this).append("<dd class='sim_less'>Less</dd>");
+			$('.sim_less').click(function(){hideSim();});
+		}
+	});
+	getHeight();
+}
+function showSim(){
+	$('.sim_hid').each(function(){
+		$(this).show();
+	});
+	$('.sim_more').hide();
+	getHeight();
+}
+function hideSim(){
+	$('.sim_hid').each(function(){
+		$(this).hide();
+	});
+	$('.sim_more').show();
+	getHeight();
 }

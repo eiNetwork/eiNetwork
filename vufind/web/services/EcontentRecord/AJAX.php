@@ -12,15 +12,11 @@ class AJAX extends Action {
 
 	function launch() {
 		$method = $_GET['method'];
-		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'AddOverDriveRecordToWishList', 'RemoveOverDriveRecordFromWishList', 'CancelOverDriveHold'))){
+		if (in_array($method, array('RateTitle', 'GetSeriesTitles', 'GetComments', 'DeleteItem', 'DownloadOverDriveItem', 'EditOverDriveEmail', 'SaveComment', 'CheckoutOverDriveItem', 'PlaceOverDriveHold', 'ReturnOverDriveItem', 'CancelOverDriveHold'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-			require_once "services/Debug/Debugger.php";
-			Debugger::tailAt("a.out",$_GET['method']);
 			$result = $this->$method();
-			Debugger::tailAt("a.out","result is ");
-			Debugger::tailAt("a.out",$result);
 			echo $result;
 		}else if (in_array($method, array('GetGoDeeperData', 'AddItem', 'EditItem', 'GetOverDriveLoanPeriod', 'getPurchaseOptions','GetHoldingsInfoPopup'))){
 			header('Content-type: text/html');
@@ -96,7 +92,10 @@ class AJAX extends Action {
 		global $configArray;
 		$interface->assign('showOtherEditionsPopup', $configArray['Content']['showOtherEditionsPopup']);
 		$id = strip_tags($_REQUEST['id']);
+		$lockedFormat = ($_REQUEST['lockedFormat']);
+		
 		$interface->assign('id', $id);
+		$interface->assign('lockedFormat', $lockedFormat);
 		//Load holdings information from the driver
 		require_once ('Drivers/EContentDriver.php');
 		require_once ('sys/eContent/EContentRecord.php');
@@ -383,35 +382,95 @@ class AJAX extends Action {
 		return json_encode($return);
 	}
 	
-	function PlaceOverDriveHold(){
+	function EditOverDriveEmail(){
+
 		global $user;
+		$email = trim($_REQUEST['email']);
 		$overDriveId = $_REQUEST['overDriveId'];
-		$format = $_REQUEST['formatId'];
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
-			$holdMessage = $driver->placeOverDriveHold($overDriveId, $format, $user);
+			$returnMessage = $driver->editOverDriveEmail($email, $overDriveId, $user);
+			return json_encode($returnMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to change email.'));
+		}		
+	}		
+	
+	function PlaceOverDriveHold(){
+
+		global $user;
+		$elemId = $_REQUEST['elemId'];
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+		
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $elemId;
+		$eContentRecord->find(true);
+		$holdings = $driver->getHolding($elemId);
+		$overDriveId = $holdings[0]->links[0][overDriveId];
+		
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$odriver = new OverDriveDriver();
+			$holdMessage = $odriver->placeOverDriveHold($overDriveId, $user);
 			return json_encode($holdMessage);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
 		}
 	}
 	
-	function CheckoutOverDriveItem(){
+	function DownloadOverDriveItem(){
 		global $user;
-		require_once "services/Debug/Debugger.php";
-		Debugger::tailAt("a.out","hello");
 		$overDriveId = $_REQUEST['overDriveId'];
 		$format = $_REQUEST['formatId'];
-		$lendingPeriod = $_REQUEST['lendingPeriod'];
-		$logger = new Logger();
-		$logger->log("Lending period = $lendingPeriod", PEAR_LOG_INFO);
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
-			$result = $driver->checkoutOverDriveItem($overDriveId, $format, $lendingPeriod, $user);
-			require_once "services/Debug/Debugger.php";
-			Debugger::tailAt("a.out",$result);
+			$downloadMessage = $driver->downloadOverDriveItem($overDriveId, $format, $user);
+			return json_encode($downloadMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
+		}		
+		
+	}
+	
+	function ReturnOverDriveItem(){
+		global $user;
+		$overDriveId = $_REQUEST['overDriveId'];
+		$transactionId = $_REQUEST['transactionId'];
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$driver = new OverDriveDriver();
+			$returnMessage = $driver->returnOverDriveItem($overDriveId, $transactionId, $user);
+			return json_encode($returnMessage);
+		}else{
+			return json_encode(array('result'=>false, 'message'=>'You must be logged in to place a hold.'));
+		}		
+		
+	}	
+	
+	function CheckoutOverDriveItem(){
+		global $user;
+		$id = strip_tags($_REQUEST['id']);
+		require_once ('Drivers/EContentDriver.php');
+		require_once ('sys/eContent/EContentRecord.php');
+		$driver = new EContentDriver();
+		//Get any items that are stored for the record
+		$eContentRecord = new EContentRecord();
+		$eContentRecord->id = $id;
+		$eContentRecord->find(true);
+		
+		$holdings = $driver->getHolding($id);
+		$overDriveId = $holdings[0]->links[0][overDriveId];
+	
+		if ($user && !PEAR::isError($user)){
+			require_once('Drivers/OverDriveDriver.php');
+			$driver = new OverDriveDriver();
+			$result = $driver->checkoutOverDriveItem($overDriveId, $user);
+
 			return json_encode($result);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to checkout an item.'));
@@ -439,51 +498,15 @@ class AJAX extends Action {
 		
 		return $interface->fetch('EcontentRecord/ajax-loan-period.tpl');
 	}
-	
-	function AddOverDriveRecordToWishList(){
-		global $user;
-		if (isset($_REQUEST['recordId'])){
-			//TODO: get the overdrive id from the EContent REcord
-			require_once 'sys/eContent/EContentRecord.php';
-			$eContentRecord = new EContentRecord();
-			$eContentRecord->id = $_REQUEST['recordId'];
-			if ($eContentRecord->find(true)){
-				$overDriveId = $eContentRecord->getOverDriveId();
-			}
-		}else{
-			$overDriveId = $_REQUEST['overDriveId'];
-		}
-		if ($user && !PEAR::isError($user)){
-			require_once('Drivers/OverDriveDriver.php');
-			$driver = new OverDriveDriver();
-			$result = $driver->addItemToOverDriveWishList($overDriveId, $user);
-			return json_encode($result);
-		}else{
-			return json_encode(array('result'=>false, 'message'=>'You must be logged in to add an item to your wish list.'));
-		}
-	}
-	
-	function RemoveOverDriveRecordFromWishList(){
-		global $user;
-		$overDriveId = $_REQUEST['overDriveId'];
-		if ($user && !PEAR::isError($user)){
-			require_once('Drivers/OverDriveDriver.php');
-			$driver = new OverDriveDriver();
-			$result = $driver->removeOverDriveItemFromWishlist($overDriveId, $user);
-			return json_encode($result);
-		}else{
-			return json_encode(array('result'=>false, 'message'=>'You must be logged in to add an item to your wish list.'));
-		}
-	}
+
 	
 	function CancelOverDriveHold(){
 		global $user;
 		$overDriveId = $_REQUEST['overDriveId'];
-		$format = $_REQUEST['formatId'];
 		if ($user && !PEAR::isError($user)){
 			require_once('Drivers/OverDriveDriver.php');
 			$driver = new OverDriveDriver();
-			$result = $driver->cancelOverDriveHold($overDriveId, $format, $user);
+			$result = $driver->cancelOverDriveHold($overDriveId, $user);
 			return json_encode($result);
 		}else{
 			return json_encode(array('result'=>false, 'message'=>'You must be logged in to cancel holds.'));

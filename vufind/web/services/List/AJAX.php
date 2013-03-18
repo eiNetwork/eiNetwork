@@ -886,7 +886,7 @@ class AJAX extends Action {
 
 				global $locationSingleton;
 				//Get the list of pickup branch locations for display in the user interface.
-				$locations = $locationSingleton->getPickupBranches($profile, $profile['homeLocationId']);
+				$locations = $locationSingleton->getPickupBranchesPreferLocationFirst($profile, $profile['homeLocationId']);
 				$interface->assign('pickupLocations', $locations);
 				//set focus to the submit button if the user is logged in since the campus will be correct most of the time.
 				$interface->assign('focusElementId', 'submit');
@@ -958,7 +958,7 @@ class AJAX extends Action {
 		global $user;
 		if($user){
 			$raw_wishLists= $user->getLists();
-			$bookCartId;
+			$bookCartId = null;
 			//echo count($raw_wishLists);
 			foreach ($raw_wishLists as $hello){
 				$tempId;
@@ -995,6 +995,7 @@ class AJAX extends Action {
 	}
 	function deleteList(){
 		global $user;
+		global $configArray;
 		$solrConnector = new User_list_solr($configArray['Index']['url']);
 		$list = User_list::staticGet($_REQUEST['listId']);
 		$list->user_id = $user->id;

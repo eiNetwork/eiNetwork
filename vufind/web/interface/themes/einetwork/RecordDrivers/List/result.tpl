@@ -4,7 +4,7 @@
   <div class="selectTitle">
     <input type="checkbox" name="selected[{$summId|escape:"url"}]" id="selected{$summId|escape:"url"}" style="display:none" />&nbsp;
   </div>
-  {if $user->disableCoverArt != 1}      
+  {if 1 != 1}      
   <div class="imageColumn">
     <a href="{$url}/MyResearch/MyList/{$summShortId}">
     <img src="{img filename="list.png"}" class="alignleft listResultImage" alt="{translate text='No Cover Image'}"/><br />

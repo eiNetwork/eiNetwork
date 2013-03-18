@@ -37,7 +37,7 @@ class AJAX extends Action {
 	function launch()
 	{
 		$method = $_GET['method'];
-		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches','getUnavailableHoldingInfo'))){
+		if (in_array($method, array('GetSuggestions', 'GetListTitles', 'getOverDriveSummary',"getAllItems", 'AddList','updatePreferredBranches', 'editEmailPrompt', 'getUnavailableHoldingInfo'))){
 			header('Content-type: text/plain');
 			header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -108,6 +108,16 @@ class AJAX extends Action {
 		return $result;
 	
 	}
+	
+	function editEmailPrompt(){
+		global $interface;
+		$overDriveId = $_REQUEST['overDriveId'];
+		
+		$interface->assign("overDriveId", $overDriveId);
+		$result = $interface->fetch("MyResearch/editEmail.tpl");
+		echo $result;
+		
+	}		
 	/**
 	 * Get a list of preferred hold pickup branches for a user.
 	 *
@@ -220,14 +230,21 @@ class AJAX extends Action {
 		}
 		
 		//Get the list of locations for display in the user interface.
-		global $locationSingleton;
+		/*global $locationSingleton;
 		$locationSingleton->whereAdd("validHoldPickupBranch = 1");
 		$locationSingleton->find();
 
 		$locationList = array();
 		while ($locationSingleton->fetch()) {
 			$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
+		}*/
+		$location = new Location();
+		$pickupBranches = $location->getPickupBranchesPreferLocationFirst($patronResult, null);
+		$locationList = array();
+		foreach ($pickupBranches as $curLocation) {
+			$locationList[$curLocation->locationId] = $curLocation->displayName;
 		}
+		asort($locationList);
 		$interface->assign('locationList', $locationList);
 		/*if ($this->catalog->checkFunction('isUserStaff')){
 			$userIsStaff = $this->catalog->isUserStaff();
@@ -235,7 +252,6 @@ class AJAX extends Action {
 		}else{
 			$interface->assign('userIsStaff', false);
 		}*/
-		
 		foreach($user as $key=>$value){
 			//echo $key.'=>'.$value.'</br>';
 			if($key == 'cat_username')
@@ -281,7 +297,7 @@ class AJAX extends Action {
 			$patronProfile = $catalog->getMyProfile($patron);
 
 			$location = new Location();
-			$locationList = $location->getPickupBranches($patronProfile, $patronProfile['homeLocationId']);
+			$locationList = $location->getPickupBranchesPreferLocationFirst($patronProfile, $patronProfile['homeLocationId']);
 
 			foreach ($locationList as $location){
 				$output .= "<Location id='{$location->code}' selected='{$location->selected}'>$location->displayName</Location>";
@@ -456,7 +472,7 @@ class AJAX extends Action {
 			$summary = $overDriveDriver->getOverDriveSummary($user);
 			$sumOfCheckoutItems += $summary["numCheckedOut"];
 			//$sumOfRequestItems = $sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"];
-			$sumOfRequestItems = isset($summary["numEContentWishList"])?$sumOfRequestItems + $summary["numEContentWishList"] + $summary["numUnavailableHolds"]:$sumOfRequestItems +  $summary["numUnavailableHolds"];
+			$sumOfRequestItems += $summary["numAvailableHolds"] + $summary["numUnavailableHolds"];
 			$sum["SumOfCheckoutItems"] = $sumOfCheckoutItems;
 			$sum["SumOfRequestItems"] = $sumOfRequestItems;
 			return json_encode($sum);
@@ -528,10 +544,12 @@ class AJAX extends Action {
 			$locationSingleton->find();
 	
 			$locationList = array();
+			
 			while ($locationSingleton->fetch()) {
 				$locationList[$locationSingleton->locationId] = $locationSingleton->displayName;
 			}
 			$interface->assign('locationList', $locationList);
+			$interface->assign('home', $locationSingleton->getUserHomeLocation());
 			$returnwords  ="";
 			return $interface->fetch('MyResearch/ajax-location.tpl');
 			

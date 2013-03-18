@@ -14,7 +14,7 @@
   <tr >
   	<td style = "padding-bottom:5px;"><span><strong>
   	{$holding.location|escape}
-    {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
+    {*if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if*}
   	</strong></span></td>
   	<td style = "padding-bottom:5px;" class="holdingsCallNumber">
   	{$holding.callnumber|escape}
@@ -95,7 +95,7 @@
 			     <tr class='holdingsLine'>
 			      <td style = "padding-bottom:5px;"><span><strong>
 				    {$holding.location|escape}
-				    {if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if}
+				    {*if $holding.locationLink} (<a href='{$holding.locationLink}' target='_blank'>Map</a>){/if*}
 				    </strong></span></td>
 				    <td style = "padding-bottom:5px;">
 				    {$holding.callnumber|escape}

@@ -119,6 +119,7 @@ class Solr implements IndexEngine {
 	 */
 	private $scopingDisabled = false;
 
+	private $_exlusionFilters = array();
 	/**
 	 * Constructor
 	 *
@@ -200,7 +201,9 @@ class Solr implements IndexEngine {
 		if (isset($searchSettings['Cache']['type'])) {
 			$this->_specCache = $searchSettings['Cache']['type'];
 		}
-
+		if (isset($searchSettings['ExclusionFilters']) && is_array($searchSettings['ExclusionFilters'])) {
+			$this->_exlusionFilters = $searchSettings['ExclusionFilters'];
+		}
 		if (isset($_SESSION['shards'])){
 			$this->_loadShards($_SESSION['shards']);
 		}
@@ -944,7 +947,7 @@ class Solr implements IndexEngine {
 			// Is this a Dismax search?
 			if (isset($ss['DismaxFields'])) {
 				// Specify the fields to do a Dismax search on:
-				$options['qf'] = implode(' ', $ss['DismaxFields']);
+				$options['qf'] = implode(' ', $ss['DismaxFields']);				
 
 				// Specify the default dismax search handler so we can use any
 				// global settings defined by the user:
@@ -1026,6 +1029,43 @@ class Solr implements IndexEngine {
 			//Add rating as part of the ranking, normalize so ratings of less that 2.5 are below unrated entries.
 			$boostFactors[] = 'product(sum(abs(rating),-2.5),10)';
 
+			/**
+			 *
+			 * Start of section added by LESSA.
+			 * 
+			 * Increase or decrease publishDate's boosting depending on existence of certain keywords in the query;
+			 * Since the default Solr Search uses the AND operator, the "mm" solr parameter is added to ensure that
+			 * the time-reference words are not "required" to be found in the documents. If you set it to 100%, only
+			 * documents that contain the special keyword (e.g. newest) will be considered;
+			 * This logic works great when using the "All Fields" search, and because of the structure of "Keyword" queries, 
+			 * it might not return any results with that option;
+			 * 						
+			 */
+			
+			$b = eiNetworkNewestDateBoosting(
+					$query,
+					array("latest", "newest")
+					);
+			if ($b) {
+				$boostFactors[]	= $b;
+				$options['mm'] = "80%";
+			}
+
+			$b = eiNetworkEarliestDateBoosting(
+					$query,
+					array("first", "earliest")
+					);
+			if ($b) {
+				$boostFactors[]	= $b;
+				$options['mm'] = "80%";
+			}
+								
+			/**
+			 *
+			 * End of section added by LESSA.
+			 *
+			 */
+																					
 			if (isset($searchLibrary) && !is_null($searchLibrary) && $searchLibrary->boostByLibrary == 1){
 				$boostFactors[] = "lib_boost_{$searchLibrary->subdomain}";
 			}
@@ -1043,6 +1083,56 @@ class Solr implements IndexEngine {
 					$options['bf'] = "sum(" . implode(',', $boostFactors) . ")";
 				}
 				//print ($options['bq']);
+				
+				/**
+				 *
+				 * Start of section added by LESSA.
+				 * 
+				 * These calls will be activated when using the "All Fields" (i.e.dismax) option;	
+				 * 				
+				 * Facet Boosting:
+				 * --------------								
+				 * - If any of the words in the FacetBoosting list are found in the query, 
+				 *    the specific field values are boosted accordingly;
+				 * - Multiple calls to this function will work fine, if lined up in sequence;
+				 * - Notice the field name needs to match the name associated with the actual facet;
+				 * 
+				 *				
+				 * Author Boosting:
+				 * ---------------	
+				 * - With the eiNetworkAuthorBoosting call, the author fields will be boosted;
+				 * - Note that the "Keyword" search already boosts the author field;				
+				 *
+				 */				
+
+				$bq = "";
+				
+				$bq = eiNetworkFacetBoosting(
+						$query,
+						$bq,
+						array("ebooks", "ebook", "e-books","kindle"),
+						"material_type:(\"Kindle\")^50 OR material_type:(\"EPub Ebook\")^50 OR material_type:(\"Adobe PDF eBook\")^50 OR material_type:(\"Disney Online Book\")^50 ");	
+
+				$bq = eiNetworkFacetBoosting(
+						$query,
+						$bq,
+						array("kids", "children", "teens", "tweens", "adolescent"),
+						"target_audience_full:(\"Children\")^50 OR target_audience_full:(\"Pre-Teen\")^100");								
+		
+
+				$bq = eiNetworkAuthorBoosting(
+						$query,
+						$bq);								
+
+				// The bq parameter creates a boost query for dismax searches;
+				$options['bq'] = $bq;
+				
+				/**
+				 *
+				 * End of section added by LESSA.
+				 *
+				 */
+				
 			}else{
 				$baseQuery = $options['q'];
 				//Boost items in our system
@@ -1051,8 +1141,35 @@ class Solr implements IndexEngine {
 				}else{
 					$boost = '';
 				}
+				
+				/**
+				 *
+				 * Start of section added by LESSA.
+				 *
+				 * If any of the words in this list are found in the query, the specific field values are boosted accordingly;
+				 * Multiple calls to this function will work if lined up in sequence;
+				 * Notice the field name needs to match the name associated with the actual facet;
+				 * This will work when using the "Search by Keyword" option;	
+				 *				
+				 */				
+
+				$baseQuery = eiNetworkFacetBoosting(
+						$query,
+						$baseQuery,
+						array("cats", "lion","tiger","panther","lions"),
+						"target_audience_full:(\"Juvenile\")^50 OR literary_form_full:(\"Fiction\")^100");								
+
+				// The logic above extends the existing $baseQuery to include the additional boosters;
+				// Author Boosting is not included here because the Keyword search default config already handles that.
+				
+				/**
+				 *
+				 * End of section added by LESSA.
+				 *
+				 */
+										
 				$options['q'] = "{!boost b=$boost} $baseQuery";
-				//echo ("Advanced Query " . $options['q']);
+				//echo ("Advanced Query " . $options['q']);				
 			}
 
 			$timer->logTime("apply boosting");
@@ -1060,8 +1177,9 @@ class Solr implements IndexEngine {
 			//*************************
 			//Marmot overrides for filtering based on library system and location
 			//Only show visible records
-			if (isset($configArray['Index']['ignoreBibSuppression']) && $configArray['Index']['ignoreBibSuppression'] == true){
-				$filter[] = 'bib_suppression:notsuppressed';
+			//https://github.com/mdnoble73/VuFind-Plus/commit/00e9794fb096af518eafa3f53d42648bdef65703 Fix Bib suppression logic
+                        if (!isset($configArray['Index']['ignoreBibSuppression']) || $configArray['Index']['ignoreBibSuppression'] == false){
+				$filter[] = '-bib_suppression:suppressed';
 			}
 			$blacklistRecords = null;
 			if (isset($searchLocation) && strlen($searchLocation->recordsToBlackList) > 0){
@@ -1091,17 +1209,21 @@ class Solr implements IndexEngine {
 				$filter[] = $blacklist;
 			}
 			if ($this->scopingDisabled == false){
-				if (isset($searchLibrary)){
+				//moved to search results to add parameters into facet list
+				/*if (isset($searchLibrary)){
 					if (strlen($searchLibrary->defaultLibraryFacet) > 0){
 						$filter[] = "(institution:\"{$searchLibrary->defaultLibraryFacet}\" OR institution:\"Shared Digital Collection\" OR institution:\"Digital Collection\" OR institution:\"{$searchLibrary->defaultLibraryFacet} Online\")";
 					}
 				}
 
 				if ($searchLocation != null){
-					if (strlen($searchLocation->defaultLocationFacet)){
-						$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\" OR building:\"Shared Digital Collection\" OR building:\"Digital Collection\" OR building:\"{$searchLocation->defaultLocationFacet} Online\")";
-					}
-				}
+					$useLocation = isset($_SESSION['useLocation'])?$_SESSION['useLocation']:false;
+					if (strlen($searchLocation->defaultLocationFacet) && $useLocation){
+						 //Better default in building search removed.  Replaced with inferior location facet on by default
+							//$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\" OR building:\"Shared Digital Collection\" OR building:\"Digital Collection\" OR building:\"{$searchLocation->defaultLocationFacet} Online\")";
+						 
+						$filter[] = "(building:\"{$searchLocation->defaultLocationFacet}\")";					}
+				}*/
 
 				global $defaultCollection;
 				if (isset($defaultCollection) && strlen($defaultCollection) > 0){
@@ -1116,18 +1238,25 @@ class Solr implements IndexEngine {
 		// Build Facet Options
 		if ($facet && !empty($facet['field'])) {
 			$options['facet'] = 'true';
-			$options['facet.mincount'] = 1;
+			$options['facet.mincount'] = 0;
 			$options['facet.limit'] = (isset($facet['limit'])) ? $facet['limit'] : null;
 			unset($facet['limit']);
-			if (isset($facet['field']) && is_array($facet['field']) && in_array('date_added', $facet['field'])){
-				$options['facet.date'] = 'date_added';
-				$options['facet.date.end'] = 'NOW';
-				$options['facet.date.start'] = 'NOW-1YEAR';
-				$options['facet.date.gap'] = '+1WEEK';
-				foreach ($facet['field'] as $key => $value){
-					if ($value == 'date_added'){
-						unset($facet['field'][$key]);
-						break;
+			if(isset($facet['field']) && is_array($facet['field'])){
+				foreach($facet['field'] as $key=> $value){
+					if(array_key_exists($value, $this->_exlusionFilters)){
+						$facet['field'][$key] = "{!ex=dt}".$value;
+					}
+				}
+				if (in_array('date_added', $facet['field'])){
+					$options['facet.date'] = 'date_added';
+					$options['facet.date.end'] = 'NOW';
+					$options['facet.date.start'] = 'NOW-1YEAR';
+					$options['facet.date.gap'] = '+1WEEK';
+					foreach ($facet['field'] as $key => $value){
+						if ($value == 'date_added'){
+							unset($facet['field'][$key]);
+							break;
+						}
 					}
 				}
 			}
@@ -1191,12 +1320,55 @@ class Solr implements IndexEngine {
 		}
 
 		$timer->logTime("end solr setup");
+				
 		$result = $this->_select($method, $options, $returnSolrError);
+		
+		/**
+		 *
+		 * Start of section added by LESSA.
+		 *
+		 * Just a simple debugging tool to visualize the Solr requests and responses for any given query;
+		 * Change the Boolean values accordingly;
+		 * 		
+		 */
+		
+		$DEBUG_REQUEST = false;
+		$DEBUG_RESPONSE = false;		
+
+		if ($DEBUG_REQUEST){
+			echo '<br/>REQUEST:</br><hr/><pre>';
+			print_r ($options);
+			echo '</pre><br/>';
+		}
+				
+		if ($DEBUG_RESPONSE){
+			echo '<br/>RESPONSE:</br><hr/><pre>';			
+			print_r ($result);
+			echo '</pre><br/>';			
+		}
+
+		/**
+		 *
+		 * End of section added by LESSA.
+		 *
+		 */
+				
 		$timer->logTime("run select");
 		if (PEAR::isError($result)) {
 			PEAR::raiseError($result);
 		}
-
+		// START OF FIX 		
+		if (array_key_exists('error', $result)) {
+                        $server_err_msg = "PoweredbyJetty://";
+                        $tmp = preg_replace('/\s+/', '', $result["error"]);
+			if (strlen(strpos($tmp, $server_err_msg))>0) {
+				$result = array("response" => array("numfound" => 0, "docs" => array()), "error" => false);
+			}		
+		}		
+		// END OF FIX
+                
+                //$result = array("response" => array("numfound" => 0, "docs" => array()), "error" => false);
+           
 		return $result;
 	}
 
@@ -1474,7 +1646,11 @@ class Solr implements IndexEngine {
 						}
 					}
 					if(is_array($value)) {
-						foreach ($value as $additional) {
+						foreach ($value as $key=>$additional) {
+							$temp = explode(":", $additional);
+							if(array_key_exists($temp[0], $this->_exlusionFilters) || array_key_exists(substr($temp[0],1), $this->_exlusionFilters)){
+								$additional = "{!tag=dt}".$additional;
+							}
 							$additional = urlencode($additional);
 							$query[] = "$function=$additional";
 						}
@@ -1976,3 +2152,108 @@ function stripNonValidXMLCharacters($string) {
 	}
 	return $newString;
 }
+
+/**
+ *
+ * Start of section added by LESSA.
+ *
+ * Functions added to support the changes in this file.
+ * 
+ */
+
+function eiNetworkFacetBoosting($query, $baseQuery, $keywords, $query_extra) {
+	$matches = array();
+	$matchFound = preg_match_all(
+	                "/\b(" . implode($keywords,"|") . ")\b/i", 
+	                $query, 
+	                $matches,
+					PREG_PATTERN_ORDER
+	              );
+	if ($matchFound) {
+		$matches_num = sizeof(array_unique($matches[0]));
+		if ($matches_num > 0){
+			$found_closing_parenthesis = false;
+			if (strlen($baseQuery) > 0 && $baseQuery[strlen($baseQuery)-1] == ')'){
+				$baseQuery = substr($baseQuery, 0, -1);
+				$found_closing_parenthesis = true;						
+			}
+			if (strlen($baseQuery) > 0) {
+				$baseQuery = "{$baseQuery} OR {$query_extra}";
+			} else {
+				$baseQuery = "{$query_extra}";
+			}			
+
+			if ($found_closing_parenthesis == true){
+				$baseQuery = "{$baseQuery})";
+			}			
+		}
+	}
+	return $baseQuery;
+}			
+
+function eiNetworkNewestDateBoosting($query, $keywords) {
+	$bf = false;
+	$matches = array();
+	$matchFound = preg_match_all(
+	                "/\b(" . implode($keywords,"|") . ")\b/i", 
+	                $query, 
+	                $matches,
+					PREG_PATTERN_ORDER
+	              );
+	if ($matchFound) {
+		$matches_num = sizeof(array_unique($matches[0]));
+		if ($matches_num > 0){
+			$bf = 'product(recip(rord(publishDate),1000,10000,10000),50)';
+		}
+	}
+	return $bf;
+}
+
+function eiNetworkEarliestDateBoosting($query, $keywords) {
+	$bf = false;
+	$matches = array();
+	$matchFound = preg_match_all(
+	                "/\b(" . implode($keywords,"|") . ")\b/i", 
+	                $query, 
+	                $matches,
+					PREG_PATTERN_ORDER
+	              );
+	if ($matchFound) {
+		$matches_num = sizeof(array_unique($matches[0]));
+		if ($matches_num > 0){
+			$bf = 'product(recip(rord(publishDate),1000,10000,10000),-50)';
+		}
+	}
+	return $bf;
+}		
+
+function eiNetworkAuthorBoosting($query, $baseQuery) {
+	$found_closing_parenthesis = false;
+	if (strlen($baseQuery) > 0 && $baseQuery[strlen($baseQuery)-1] == ')'){
+		$baseQuery = substr($baseQuery, 0, -1);
+		$found_closing_parenthesis = true;						
+	}
+	
+	$q = str_replace('"', "", $query);
+	// Same weights used in the Keyword Search
+	$query_extra = "author:(\"{$q}\")^250 OR author:({$q})^200 OR author2:({$q})^50 OR author_additional:({$q})^50";
+	
+	if (strlen($baseQuery) > 0) {
+		$baseQuery = "{$baseQuery} OR {$query_extra}";
+	} else {
+		$baseQuery = "{$query_extra}";
+	}			
+
+	if ($found_closing_parenthesis == true){
+		$baseQuery = "{$baseQuery})";
+	}			
+
+	return $baseQuery;
+}
+
+
+/**
+ *
+ * End of section added by LESSA.
+ *
+ */

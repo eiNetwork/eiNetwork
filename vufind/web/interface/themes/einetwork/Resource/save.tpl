@@ -3,7 +3,7 @@
 	<span onclick="hideLightbox()"><img class="close-button" src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" ></span>
 </div>
 <div id="popupboxContent" class="popupContent">
-<form onSubmit="saveRecord('{$id|escape}', '{$source|escape}', this, {literal}{{/literal}add: '{translate text='Add to favorites'}', error: '{translate text='add_favorite_fail'}'{literal}}{/literal}); return false;">
+<form onSubmit="saveRecord('{$id|escape}', '{$source|escape}', this, {literal}{{/literal}add: '{translate text='Add to wish list'}', error: '{translate text='add_favorite_fail'}'{literal}}{/literal}); return false;">
 <input type="hidden" name="submit" value="1" />
 <input type="hidden" name="record_id" value="{$id|escape}" />
 <input type="hidden" name="source" value="{$source|escape}" />
@@ -41,20 +41,16 @@
         <option value="{$list.id}">{$list.title|escape:"html"}</option>
 	{/if}
         {foreachelse}
-        <option value="">{translate text='My Favorites'}</option>
+        <option value="">{translate text='My Wish Lists'}</option>
         {/foreach}
       </select>
       {/if}
-      <a href="{$path}/MyResearch/ListEdit?id={$id|escape:"url"}&amp;source={$source|escape}"
-         onclick="ajaxLightbox('{$path}/MyResearch/ListEdit?id={$id|escape}&source={$source|escape}&lightbox',false,false,'450px',false,'320px'); return false;">{translate text="or create a new list"}</a>
+      <a style="color:#9999FF" href="{$path}/MyResearch/ListEdit?id={$id|escape:"url"}&amp;source={$source|escape}"
+         onclick="ajaxLightbox('{$path}/MyResearch/ListEdit?id={$id|escape}&source={$source|escape}&lightbox',false,false,'450px',false,'200px'); return false;">{translate text="or create a new list"}</a>
     </td>
   </tr>
   {if $showLists}
-  <tr style="height:25px;vertical-align:middle"><td>{translate text='Add Tags'}</td></tr>
-  <tr><td><input type="text" name="mytags" value="" size="50" maxlength="255"></td></tr>
-  <tr style="padding-top:10px;padding-bottom:10px;vertical-align:middle"><td colspan="2">{translate text='add_tag_note'}</td></tr>
-  <tr><td>{translate text='Add a Note'}</td></tr>
-  <tr><td><textarea name="notes" rows="3" cols="50"></textarea></td></tr>
+  
   <tr><td><input type="submit" class="button" value="{translate text='Save'}" style="margin-left:320px;width:70px;background-color:rgb(244,213,56)"></td></tr>
   {/if}
 </table>
