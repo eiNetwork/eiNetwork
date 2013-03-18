@@ -753,8 +753,7 @@ class OverDriveDriver {
 			//Delete the cache for the record
 			global $memcache;
 			$memcache->delete('overdrive_checked_out_' . $user->id);
-			$memcache->delete('overdrive_summary_' . $user->id);
-			$memcache->delete('overdrive_record_' . $overDriveId);
+			$memcache->delete('overdrive_holds_' . $user->id);
 			$memcache->delete('overdrive_items_' . $overDriveId);
 			
 		//	//Record that the entry was checked out in strands
