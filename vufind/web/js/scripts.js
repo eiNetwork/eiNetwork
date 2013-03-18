@@ -309,8 +309,8 @@ function newShowElementInLightbox(title, elementSelector,left,top,width,height){
 	$('#popupbox').css('left', left);
 	$('#popupbox').css('width', width);
 	$('#popupbox').css('height', height);
-	var lightboxContents = "<div onmouseup='this.style.cursor='default';' class='popupHeader'>" + "<span class='popupHeader-title'>"+title+"</span>" + "<span><img src='/interface/themes/einetwork/images/closeHUDButton.png' class='close-button' style='float:right' onclick='hideLightbox()'></span></div>";
-	lightboxContents += "<div class='content'>" + $(elementSelector).html() + "</div>";	
+	var lightboxContents = "<div onmouseup='this.style.cursor=default;' class='popupHeader'>" + "<span class='popupHeader-title'>"+title+"</span>" + "<span><img src='/interface/themes/einetwork/images/closeHUDButton.png' class='close-button' style='float:right' onclick='hideLightbox()'></span></div>";
+	lightboxContents += "<div class='content' style='overflow-y: scroll; overflow-x: hidden;'>" + $(elementSelector).html() + "</div>";	
 	$('#popupbox').html(lightboxContents);
 }
 function waitingLightbox(left,top,width,height){
