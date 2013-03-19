@@ -145,6 +145,72 @@ class OverDriveDriver {
 		$availabilityUrl = "http://api.overdrive.com/v1/collections/$productsKey/products/$overDriveId/availability";
 		return $this->_callUrl($availabilityUrl);
 	}
+
+	public function _parseOverDriveCheckedOutItems($checkedOutSection, $overDriveInfo){
+		$bookshelf = array();
+		$bookshelf['items'] = array();
+		if (preg_match_all('/<li class="mobile-four bookshelf-title-li".*?data-transaction="(.*?)".*?>.*?<div class="is-enhanced" data-transaction=".*?" title="(.*?)".*?<img.*?class="lrgImg" src="(.*?)".*?data-crid="(.*?)".*?<div.*?class="dwnld-container".*?>(.*?)<div class="expiration-date".*?<noscript>(.*?)<\/noscript>.*?data-earlyreturn="(.*?)"/si', $checkedOutSection, $bookshelfInfo, PREG_SET_ORDER)) {
+			//echo("\r\n");
+			//print_r($bookshelfInfo);
+			for ($i = 0; $i < count($bookshelfInfo); $i++){
+				$bookshelfItem = array();
+				$group = 1;
+				$bookshelfItem['transactionId'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['title'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['imageUrl'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['overDriveId'] = $bookshelfInfo[$i][$group++];
+				//Figure out which eContent record this is for.
+				$eContentRecord = new EContentRecord();
+				$eContentRecord->externalId = $bookshelfItem['overDriveId'];
+				$eContentRecord->source = 'OverDrive';
+				if ($eContentRecord->find(true)){
+					$bookshelfItem['recordId'] = $eContentRecord->id;
+				}else{
+					$bookshelfItem['recordId'] = -1;
+				}
+				$formatSection = $bookshelfInfo[$i][$group++];
+				//print_r("\r\nFormat Section $i\r\n$formatSection\r\n");
+				$bookshelfItem['expiresOn'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['earlyreturn'] = $bookshelfInfo[$i][$group++];
+				//Check to see if a format has been selected
+				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
+					$bookshelfItem['formatSelected'] = false;
+					$bookshelfItem['formats'] = array();
+					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
+						$format = array();
+						$format['id'] = $formatOptions[$fmt][1];
+						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
+						$format['enhanced'] = $formatOptions[$fmt][3];
+						$format['name'] = $formatOptions[$fmt][4];
+						if ($format['locked'] == 1){
+							$bookshelfItem['formatSelected'] = true;
+							$bookshelfItem['selectedFormat'] = $format;
+							$bookshelfItem['downloadUrl'] = $overDriveInfo['baseLoginUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $bookshelfItem['overDriveId'] . '&FormatID=' . $format['id'] . '&url=MyAccount.htm';
+						}
+						$bookshelfItem['formats'][] = $format;
+					}
+				}
+				//Parse special formats
+				if (preg_match('/<div class="dwnld-kindle" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-odread" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-locked-in" data-transaction=".*?">(.*?)<\/div>/si', $formatSection, $specialDownloads)) {
+					$bookshelfItem['kindle'] = $specialDownloads[1];
+					$overDriveRead = $specialDownloads[2];
+					if (strlen($overDriveRead) > 0){
+						$bookshelfItem['overdriveRead'] = true;
+						if (preg_match('/href="(.*?)"/si', $overDriveRead, $matches)){
+							$bookshelfItem['overdriveReadUrl'] = $overDriveInfo['baseUrlWithSession'] . $matches[1];
+						}
+					}else{
+						$bookshelfItem['overdriveRead'] = false;
+					}
+					//$bookshelfItem['overdriveRead'] = $specialDownloads[2];
+					$bookshelfItem['lockedIn'] = $specialDownloads[3];
+				}
+
+				$bookshelf['items'][] = $bookshelfItem;
+			}
+		}
+		return $bookshelf;
+	}
 	
 	private function _parseOverDriveHolds($holdsSection){
 		$holds = array();
@@ -199,6 +265,33 @@ class OverDriveDriver {
 		return $holds;
 	}
 
+	private function _parseLendingOptions($lendingPeriods){
+		$lendingOptions = array();
+		//print_r($lendingPeriods);
+		if (preg_match('/<script>.*?var hazVariableLending.*?<\/script>.*?<noscript>(.*?)<\/noscript>/si', $lendingPeriods, $matches)){
+			preg_match_all('/<li>\\s?\\d+\\s-\\s(.*?)<select name="(.*?)">(.*?)<\/select><\/li>/si', $matches[1], $lendingPeriodInfo, PREG_SET_ORDER);
+			for ($i = 0; $i < count($lendingPeriodInfo); $i++){
+				$lendingOption = array();
+				$lendingOption['name'] = $lendingPeriodInfo[$i][1];
+				//$lendingOptions[] = 'test';
+				$lendingOption['id'] = $lendingPeriodInfo[$i][2];
+				$options = $lendingPeriodInfo[$i][3];
+				$lendingOption['options']= array();
+				preg_match_all('/<option value="(.*?)".*?(selected="selected")?>(.*?)<\/option>/si', $options, $optionInfo, PREG_SET_ORDER);
+				for ($j = 0; $j < count($optionInfo); $j++){
+					$option = array();
+					$option['value'] = $optionInfo[$j][1];
+					$option['selected'] = strlen($optionInfo[$j][2]) > 0;
+					$option['name'] = $optionInfo[$j][3];
+					$lendingOption['options'][] = $option;
+				}
+				$lendingOptions[] = $lendingOption;
+			}
+		}
+		//print_r($lendingOptions);
+		return $lendingOptions;
+	}
+	
 	/**
 	 * Loads information about items that the user has checked out in OverDrive
 	 *
@@ -240,7 +333,7 @@ class OverDriveDriver {
 			}
 
 			//Load the Bookshelf Page
-			$logger->log("Bookshelf URL june ".$overDriveInfo['bookshelfUrl'], PEAR_LOG_INFO);
+			//$logger->log("Bookshelf URL ".$overDriveInfo['bookshelfUrl'], PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['bookshelfUrl']);
 			$bookshelfPage = curl_exec($overDriveInfo['ch']);
 			
@@ -348,9 +441,9 @@ class OverDriveDriver {
 
 			//Load the My Holds page
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['holdsUrl']);
-			$logger->log("holds URL june ". $overDriveInfo['holdsUrl'], PEAR_LOG_INFO);
+			//$logger->log("holds URL ". $overDriveInfo['holdsUrl'], PEAR_LOG_INFO);
 			$holdsPage = curl_exec($overDriveInfo['ch']);
-			//$logger->log("holds page start june ". $holdsPage." holds page end", PEAR_LOG_INFO);
+			//$logger->log("holds page start ". $holdsPage." holds page end", PEAR_LOG_INFO);
 			
 			if ($closeSession){
 				curl_close($overDriveInfo['ch']);
@@ -387,26 +480,50 @@ class OverDriveDriver {
 		global $timer;
 
 		$summary = $memcache->get('overdrive_summary_' . $user->id);
-		if ($summary == false){
+		if ($summary == false || isset($_REQUEST['reload'])){
 			$summary = array();
 			$ch = curl_init();
 
 			$overDriveInfo = $this->_loginToOverDrive($ch, $user);
-			$holds = $this->getOverDriveHolds($user, $overDriveInfo);
-			
-			if (isset($holds['error'])){
-				$summary['numAvailableHolds'] = "Err";
-				$summary['numUnavailableHolds'] = "Err";
-			}else{
-				$summary['numAvailableHolds'] = count($holds['available']);
-				$summary['numUnavailableHolds'] = count($holds['unavailable']);
+			//Navigate to the account page
+			//Load the My Holds page
+			//print_r("Account url: " . $overDriveInfo['accountUrl']);
+			global $logger;
+			//$logger->log("Account url: " . $overDriveInfo['accountUrl'], PEAR_LOG_INFO);
+			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['accountUrl']);
+			$accountPage = curl_exec($overDriveInfo['ch']);			
+			//Get bookshelf information
+			if (preg_match('/<li .*?id="myAccount1Tab".*?>(.*?)<li [^>\/]*?id="myAccount2Tab".*?>/s', $accountPage, $matches)) {
+				$checkedOutSection = $matches[1];
+				//print_r($checkedOutSection);
+				//Get a list of titles that are checked out
+				$checkedOut = $this->_parseOverDriveCheckedOutItems($checkedOutSection, $overDriveInfo);
+				//print_r($checkedOut);
+				$summary['numCheckedOut'] = count($checkedOut['items']);
+				$summary['checkedOut'] = $checkedOut;
 			}
 
-			$checkedOut = $this->getOverDriveCheckedOutItems($user, $overDriveInfo);
-			if (isset($checkedOut['error'])){
-				$summary['numCheckedOut'] = "Err";
-			}else{
-				$summary['numCheckedOut'] = count($checkedOut['items']);
+			//Get holds
+			if (preg_match('/<li .*?id="myAccount2Tab".*?>(.*?)<li [^>\/]*?id="myAccount3Tab".*?>/s', $accountPage, $matches)) {
+				$holdsSection = $matches[1];
+				//print_r($holdsSection);
+				//Get a list of titles that are checked out
+				$holds = $this->_parseOverDriveHolds($holdsSection);
+				//echo("<br>\r\n");
+				//print_r($holds);
+				//echo("<br>\r\n");
+				$summary['numAvailableHolds'] = count($holds['available']);
+				$summary['numUnavailableHolds'] = count($holds['unavailable']);
+				//$logger->log("number unavailable holds: " . $summary['numUnavailableHolds'], PEAR_LOG_INFO);				
+				$summary['holds'] = $holds;
+			}
+
+			//Get lending options
+			if (preg_match('/<li .*?id="myAccount4Tab".*?>(.*?)<!-- myAccountContent -->/s', $accountPage, $matches)) {
+				$lendingOptionsSection = $matches[1];
+				$lendingOptions = $this->_parseLendingOptions($lendingOptionsSection);
+				$summary['lendingOptions'] = $lendingOptions;
+				$logger->log("lending options 0: " . $lendingOptions[0], PEAR_LOG_INFO);	
 			}
 
 			curl_close($ch);
@@ -414,7 +531,6 @@ class OverDriveDriver {
 			$timer->logTime("Finished loading titles from overdrive summary");
 			$memcache->set('overdrive_summary_' . $user->id, $summary, 0, $configArray['Caching']['overdrive_summary']);
 		}
-
 		return $summary;
 	}
 
@@ -468,7 +584,7 @@ class OverDriveDriver {
 				}
 			}
 			$waitingListUrl .= '%3FID=' . $overDriveId . '%26Format=' . $format;
-			$logger->log("Wait list URL june ". $waitingListUrl, PEAR_LOG_INFO);
+			//$logger->log("Wait list URL ". $waitingListUrl, PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $waitingListUrl);
 			$logger->log("Click place a hold button " . $waitingListUrl, PEAR_LOG_DEBUG);			
 			$setEmailPage = curl_exec($overDriveInfo['ch']);
@@ -639,8 +755,8 @@ class OverDriveDriver {
 		$post_string = implode ('&', $post_items);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
 		$submitUrl = $overDriveInfo['baseLoginUrl'] . '?Action=EditWaitingList';
-		$logger->log("waiting list URL QQQ---> ". $submitUrl, PEAR_LOG_INFO);
-		$logger->log("post string---> ". $post_string, PEAR_LOG_INFO);
+		//$logger->log("waiting list URL QQQ---> ". $submitUrl, PEAR_LOG_INFO);
+		//$logger->log("post string---> ". $post_string, PEAR_LOG_INFO);
 		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $submitUrl);
 		
 		$waitingListConfirm = curl_exec($overDriveInfo['ch']);
@@ -731,12 +847,12 @@ class OverDriveDriver {
 			$checkoutUrl = $overDriveInfo['checkoutUrl'];
 			//Set up the required parameters
 			$checkoutUrl = $checkoutUrl.'&ReserveID='.$overDriveId.'&URL=MyAccount.htm?PerPage=80';
-			$logger->log("Checkout URL june ".$checkoutUrl, PEAR_LOG_INFO);
+			//$logger->log("Checkout URL ".$checkoutUrl, PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $checkoutUrl);
 			
 			//Send the command and process the result
 			$checkoutResultPage = curl_exec($ch);
-			//$logger->log("Checkout Result june".$checkoutResult, PEAR_LOG_INFO);
+			//$logger->log("Checkout Result ".$checkoutResult, PEAR_LOG_INFO);
 			if (strpos($checkoutResultPage,'Your title has been checked out') > 0) {
 				$checkoutResult['result'] = true;
 				$checkoutResult['message'] = "Your title was checked out successfully. Please go to Checked Out Items to download the title from your Account.";
@@ -753,7 +869,8 @@ class OverDriveDriver {
 			//Delete the cache for the record
 			global $memcache;
 			$memcache->delete('overdrive_checked_out_' . $user->id);
-			$memcache->delete('overdrive_holds_' . $user->id);
+			$memcache->delete('overdrive_summary_' . $user->id);
+			$memcache->delete('overdrive_record_' . $overDriveId);
 			$memcache->delete('overdrive_items_' . $overDriveId);
 			
 		//	//Record that the entry was checked out in strands
@@ -808,9 +925,9 @@ class OverDriveDriver {
 		$pageInfo = curl_getinfo($ch);
 
 		$urlWithSession = $pageInfo['url'];
-		$logger->log("Session URL june ".$urlWithSession, PEAR_LOG_INFO);
+		//$logger->log("Session URL ".$urlWithSession, PEAR_LOG_INFO);
 		$urlWithSessionSSL = str_replace('http://', 'https://secure23.libraryreserve.com/', $urlWithSession);
-		$logger->log("Session URL SSL june ".$urlWithSessionSSL, PEAR_LOG_INFO);
+		//$logger->log("Session URL SSL ".$urlWithSessionSSL, PEAR_LOG_INFO);
 		
 		//Go to the login form
 		$loginUrl = str_replace('Default.htm', 'SignIn.htm?URL=MyAccount.htm%3fPerPage%3d80',  $urlWithSessionSSL);
@@ -819,7 +936,7 @@ class OverDriveDriver {
 		$loginPageContent = curl_exec($ch);
 		$loginPageInfo = curl_getinfo($ch);
 		$loginFormUrl = $loginPageInfo['url'];
-		$logger->log("Login Form URL june ".$loginFormUrl, PEAR_LOG_INFO);
+		//$logger->log("Login Form URL ".$loginFormUrl, PEAR_LOG_INFO);
 
 		//Post to the login form
 		curl_setopt($ch, CURLOPT_POST, true);
@@ -853,12 +970,14 @@ class OverDriveDriver {
 		$matchAccount = strpos($myAccountMenuContent, 'Checkouts remaining:');
 		$matchSignOut = strpos($myAccountMenuContent, 'URL=SignOutConfirm.htm');
 		if (($matchAccount > 0) && ($matchSignOut > 0)){
-			//$logger->log("Logging in to OverDrive june test ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
+			//$logger->log("Logging in to OverDrive ($matchAccount, $matchCart), page results: \r\n" . $myAccountMenuContent, PEAR_LOG_INFO);
 			$overDriveInfo = array(
+				'accountUrl' => str_replace('BANGAuthenticate.dll', 'MyAccount.htm?PerPage=80', $loginUrl),
 				'holdsUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80#myAccount2',  $urlWithSessionSSL),
 				'bookshelfUrl' => str_replace('Default.htm', 'MyAccount.htm?PerPage=80&ForceLoginFlag=0',  $urlWithSessionSSL),
 				'placeHoldUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&amp;ForceLoginFlag=0&amp;URL=WaitingListForm.htm',  $urlWithSessionSSL),
 				'baseLoginUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll',  $urlWithSessionSSL),
+				'editLendingOptionsUrl' => str_replace('BANGAuthenticate.dll', '', $loginUrl),
 				'downloadUrl' => str_replace('Default.htm', '',  $urlWithSessionSSL),
 				'waitingListUrl' => str_replace('Default.htm', 'BANGAuthenticate.dll?Action=AuthCheck&ForceLoginFlag=0&URL=WaitingListForm.htm',  $urlWithSession),
 				'contentInfoPage' => str_replace('Default.htm', 'ContentDetails.htm',  $urlWithSessionSSL),
@@ -999,4 +1118,59 @@ class OverDriveDriver {
 		}
 		return $result;
 	}	
+
+	public function selectOverDriveDownloadFormat($overDriveId, $formatId, $user){
+		global $logger;
+		global $memcache;
+		$ch = curl_init();
+		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+
+		//Switch back to get method
+		curl_setopt($overDriveInfo['ch'], CURLOPT_HTTPGET, true);
+
+		$result = array(
+			'result' => true,
+			'downloadUrl' => $overDriveInfo['baseLoginUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $overDriveId . '&FormatID=' . $formatId . '&url=MyAccount.htm'
+		);
+		$memcache->delete('overdrive_summary_' . $user->id);
+		curl_close($ch);
+		return $result;
+	}
+
+	public function updateLendingOptions(){
+		global $memcache;
+		global $user;
+		global $logger;
+		$ch = curl_init();
+		$overDriveInfo = $this->_loginToOverDrive($ch, $user);
+		$closeSession = true;
+
+		$updateSettingsUrl = $overDriveInfo['editLendingOptionsUrl']  . 'BANGAuthenticate.dll?Action=EditUserLendingPeriodsFormatClass';
+		$postParams = array(
+			'URL' => 'MyAccount.htm?PerPage=80#myAccount4',
+		);
+
+		//Load settings
+		foreach ($_REQUEST as $key => $value){
+			if (preg_match('/class_\d+_preflendingperiod/i', $key)){
+				$postParams[$key] = $value;
+			}
+		}
+
+		$post_items = array();
+		foreach ($postParams as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($overDriveInfo['ch'], CURLOPT_POSTFIELDS, $post_string);
+		curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $updateSettingsUrl);
+
+		$logger->log("Updating user lending options $updateSettingsUrl $post_string", PEAR_LOG_DEBUG);
+		$lendingOptionsPage = curl_exec($overDriveInfo['ch']);
+		//$logger->log($lendingOptionsPage, PEAR_LOG_DEBUG);
+
+		$memcache->delete('overdrive_summary_' . $user->id);
+		return true;
+	}	
 }
+
