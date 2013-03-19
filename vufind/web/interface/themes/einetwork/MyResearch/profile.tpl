@@ -107,7 +107,7 @@
 				</tr>
 				<tr>
 					<td>{$card_number}</td>
-					<td>{$profile.expires|escape}</td>
+					<td><div {if $profile.expireclose} style="color: red" {/if}>{$profile.expires|escape}</div></td>
 				</tr>
 				</table>
 			</div>
@@ -158,7 +158,6 @@
 				</table>
 			</div>
 
-
 			<div id="preferred_alternative" class="profile_row">
 				<table>
 				<tr style="font-weight: bolder">
@@ -183,6 +182,38 @@
 			</div>	
 			
 		</div>
+		<div id="overdrivetab" class="profile_row">
+			{if $overDriveLendingOptions}
+				<table>
+					<tr style="font-weight: bolder"><td colspan="2">{translate text='OverDrive E-Content Lending Options'}</td></tr>
+<!--					<div>{$overDriveLendingOptions|print_r}</div>-->
+					{foreach from=$overDriveLendingOptions item=lendingOption name=lending}
+						{if $smarty.foreach.lending.iteration is odd}<tr>{/if}
+							<td text-align="left">
+								<div style="font-weight: bolder">{$lendingOption.name}</div><br/>
+								<div id="{$lendingOption.id}Select">
+									{if $edit}
+									<select name="{$lendingOption.id}">
+										{foreach from=$lendingOption.options item=option}
+												<option value="{$option.value}" {if $option.selected}selected{/if}>{$option.name}</option>
+
+										{/foreach}
+									</select>
+									{else}
+										{foreach from=$lendingOption.options item=option}
+										{if $option.selected}
+										{$option.name}
+										{/if}
+										{/foreach}
+									{/if}
+								</div>
+							</td>
+						{if $smarty.foreach.lending.iteration is even}</tr>{/if}
+					{/foreach}
+				</table>
+			{/if}				
+		</div>
+
 		{if $canUpdate}
 			{if $edit == true}
 			<input  type='submit' value='Update Profile' name='update'  class='button'/>
