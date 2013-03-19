@@ -2438,8 +2438,12 @@ class MillenniumDriver implements DriverInterface
 						$hold_result['result'] = false;
 						$hold_result['message'] = 'There are no holdable items for this title.';
 						return $hold_result;
+				}else if (preg_match('/Sorry, this title is unavailable for request/', $holdResultPage)) {
+						$hold_result['result'] = false;
+						$hold_result['message'] = 'There are no holdable items for this title.';
+						return $hold_result;
 				}else{
-					$message = 'Unable to contact the circulation system.  Please try again in a few minutes.';
+					$message = 'Unable to contact the circulation system.  Please try again in a few minutes 2.';
 				}
 			}
 			$hold_result['result'] = false;
