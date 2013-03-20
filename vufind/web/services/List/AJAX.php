@@ -904,6 +904,17 @@ class AJAX extends Action {
 		$forReturn;
 		$forReturn['html'] = $html_result;
 		$forReturn['status'] = $hold_message_data['successful'];
+		$ava = array();
+		$i= 0;
+		
+		foreach ($hold_message_data['titles'] as $title){
+			if($title['result']){
+				$ava[$i] = $title['bid'];
+				$i++;
+			}
+		}
+		$forReturn['avaiblity'] = $ava;
+		//echo json_encode($forReturn['avaiblity']);
 		echo json_encode($forReturn);
 		/*foreach($hold_message_data['titles'] as $value)
 		{
