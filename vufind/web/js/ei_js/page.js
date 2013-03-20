@@ -232,8 +232,16 @@ function newAJAXLightbox(id, source,listId,urlToLoad, connect_type,dataToLoad,da
                     $('#popupbox').show();
                     if(data['status']!='none')
                     {
-                        //alert(listId+"     "+id);
-                         deleteItemInList(id,source);
+                        if(id != 0){
+			    deleteItemInList(id,source);
+                        }else{
+			    
+			    for(var i = 0;i<data['avaiblity'].length;i++){
+			    //console.log(data['avaiblity'][i]);
+			    deleteItemInList(data['avaiblity'][i],'VuFind');
+			    
+			    }
+			}
                     }
                     if (parentId){
                             //Automatically position the lightbox over the cursor
@@ -501,9 +509,9 @@ function renewItem(url){
 		}
 	});
 }
+
 function requestAllItems(listId){
-    
-	id = 0;
+
 	document.body.style.cursor = 'wait';
         var tags = "";
         var notes = '';
@@ -521,7 +529,8 @@ function requestAllItems(listId){
 	
 	var url = path + "/List/AJAX";
 
-        newAJAXLightbox(id,'VuFind',listId,url,'post',send,'json',false, '440px', false,'450px','500px');    
+        newAJAXLightbox(0,'VuFind',listId,url,'post',send,'json',false, '440px', false,'450px','500px');
+
 }
 
 function requestAllItems1(listId){
