@@ -124,9 +124,9 @@
 		    <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Advanced Search"}</span></p>
 		</div>
 	    {else}
-		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;" onclick='window.location.href="https://www.surveymonkey.com/s/H8KHY2B"' >
+<!--		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;" onclick='window.location.href="https://www.surveymonkey.com/s/H8KHY2B"' >
 		    <p style="margin-top:10px;vertical-align:middle;text-align: center"><span style="vertical-align:middle">Take a Short Survey</span></p>
-		</div>	    
+		</div>-->	    
 	    {/if}
 	  </div>
 	  <div class ="center-header">
