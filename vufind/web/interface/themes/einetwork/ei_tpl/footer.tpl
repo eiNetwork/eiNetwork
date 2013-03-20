@@ -6,7 +6,6 @@
             <ul>
 <!--                <li style="margin-left: -35px"><a href="http://m.einetwork.net/">Mobile Catalog</a></li>-->
                 <li style="margin-left: -35px"><a href="http://www.einetwork.net/ils/acquire_web_ngc.html">Suggest a Purchase</a></li>
-                <li><a href="/Forms/Feedback">Feedback</a></li>
             </ul>
         </div>
         <div id="middle">
