@@ -210,7 +210,7 @@ function newAJAXLightbox(id, source,listId,urlToLoad, connect_type,dataToLoad,da
 	hideSelects('hidden');
 
 	// Find out how far down the screen the user has scrolled.
-	var new_top =  document.body.scrollTop;
+	var new_top =  document.body.scrollTop + 125;
 
 	// Get the height of the document
 	var documentHeight = $(document).height();
@@ -220,6 +220,8 @@ function newAJAXLightbox(id, source,listId,urlToLoad, connect_type,dataToLoad,da
 	$('#popupbox').show();
 	$('#popupbox').css('top', '50%');
 	$('#popupbox').css('left', '50%');
+	$('#popupbox').css('overflow-y', 'auto');
+	$('#popupbox').css('overflow-x', 'hidden');
 	$.ajax({
                type: connect_type,
                url: urlToLoad,
@@ -247,7 +249,7 @@ function newAJAXLightbox(id, source,listId,urlToLoad, connect_type,dataToLoad,da
                             if (!width) width = 'auto';
                             if (!height) height = 'auto';
                             
-                            $('#popupbox').css('top', top);
+                            $('#popupbox').css('top', new_top);
                             $('#popupbox').css('left', left);
                             $('#popupbox').css('width', width);
                             $('#popupbox').css('height', height);
@@ -499,8 +501,30 @@ function renewItem(url){
 		}
 	});
 }
-
 function requestAllItems(listId){
+    
+	id = 0;
+	document.body.style.cursor = 'wait';
+        var tags = "";
+        var notes = '';
+	var send = "";
+        send = "method=processRequestItem&holdType=hold&campus="+$("#campus").val();
+        $.each($(".resultsList"),function (){
+    	var pid = this.getAttribute("id");
+	id = pid.replace("record",".");
+	var temp = pid.replace("record","");	
+	if(!$("#request-now"+temp).hasClass("it-is-here")){
+	    send = send+"&selected["+id+"]=on";
+	    //requestItem(id,listId);
+	  }
+         })
+	
+	var url = path + "/List/AJAX";
+
+        newAJAXLightbox(id,'VuFind',listId,url,'post',send,'json',false, '440px', false,'450px','500px');    
+}
+
+function requestAllItems1(listId){
     var send = "";
     send = "holdType=hold&campus="+$("#campus").val();
     $.each($(".resultsList"),function (){
