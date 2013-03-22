@@ -89,7 +89,24 @@ class HoldItems extends Action
 		if (!$atLeast1Successful){
 			$hold_message_data['successful'] = 'none';
 		}
-
+		
+		if(isset($_REQUEST['newlistId']) && $_REQUEST['newlistId'] != "false" ){
+			
+			$list = User_list::staticGet($_REQUEST['newlistId']);
+			
+			foreach ($hold_message_data['titles'] as $title){
+				if($title['result'] && !isset($return['items'])){
+	
+				$resource = new Resource();
+				$resource->record_id = $title['bid'];
+				$resource->source = "Vufind";
+				$resource->find(true);
+				$list->removeResource($resource);
+				}
+			}
+		}
+		
+		
 		$class = $configArray['Index']['engine'];
 		$db = new $class($configArray['Index']['url']);
 

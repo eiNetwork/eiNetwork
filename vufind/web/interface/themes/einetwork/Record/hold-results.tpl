@@ -1,3 +1,18 @@
+	{if $smarty.session.toDeletes}
+	<script type="text/javascript">
+		$(document).ready(
+	{foreach from=$smarty.session.toDeletes item=toDelete}
+		deleteItemInList('{$toDelete}','VuFind');
+	{/foreach});	
+	</script>
+	{php}
+	//$_SESSION['toDeletes'] = false;
+	{/php}
+	{/if}
+	<script type="text/javascript">
+	$('#newlistId').val($("#listId").val());	
+		
+	</script>
 	<div onmouseup="this.style.cursor='default';" class="popupHeader">
 		<span class="popupHeader-title">{translate text='Item Request Result'}</span>
 		<span><img src="/interface/themes/einetwork/images/closeHUDButton.png" style="float:right" onclick="hideLightbox()"></span>
@@ -6,6 +21,7 @@
 		{if $hold_message_data.showItemForm}
 		<form action='{$path}/MyResearch/HoldItems' method="POST">
 		<input type='hidden' name='campus' value='{$hold_message_data.campus}'/>
+		<input type='hidden' name='newlistId' id='newlistId' value='false'/>
 		{/if}
 		{if $hold_message_data.error}
 		  <div class='hold_result_error'>{$hold_message_data.error}</div>
