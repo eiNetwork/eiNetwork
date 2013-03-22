@@ -93,6 +93,7 @@
   </head>
   
   <body class="{$module} {$action}">
+
     {*- Set focus to the correct location by default *}
     <script type="text/javascript">{literal}
     jQuery(function (){
@@ -124,9 +125,9 @@
 		    <p style="margin-top:10px;margin-left:10px;vertical-align:middle"><span><img alt="BackArrow" src="/interface/themes/einetwork/images/Art/BackArrow.png" style="vertical-align:middle"/></span><span style="margin-left:8px;vertical-align:middle">{translate text="Back to Advanced Search"}</span></p>
 		</div>
 	    {else}
-<!--		<div class="button" style="margin-top:20px;height:38px;font-size:15px;padding:0px;" onclick='window.location.href="https://www.surveymonkey.com/s/H8KHY2B"' >
-		    <p style="margin-top:10px;vertical-align:middle;text-align: center"><span style="vertical-align:middle">Take a Short Survey</span></p>
-		</div>-->	    
+		<div class="button yellow" style="margin-top:20px;height:38px;font-size:15px;padding:0px;" onclick='window.location.href="http://www.surveymonkey.com/s/NewLibraryCatalog"' >
+		    <p style="margin-top:10px;vertical-align:middle;text-align: center"><span style="vertical-align:middle">A Quick Survey</span></p>
+		</div>	    
 	    {/if}
 	  </div>
 	  <div class ="center-header">
@@ -182,22 +183,7 @@
     </div> {* End page body *}
     {* add analytics tracking code*}
 	{if $productionServer}
-	{literal}
-	<script type="text/javascript">
-	
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-4759493-8']);
-	  _gaq.push(['_trackPageview']);
-	  _gaq.push(['_trackPageLoadTime']);
-	
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	
-	</script> 
-	{/literal}
+
 	{/if}  
   
   {* Strands tracking *}
