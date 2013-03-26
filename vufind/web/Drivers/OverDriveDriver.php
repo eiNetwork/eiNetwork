@@ -149,6 +149,7 @@ class OverDriveDriver {
 	public function _parseOverDriveCheckedOutItems($checkedOutSection, $overDriveInfo){
 		$bookshelf = array();
 		$bookshelf['items'] = array();
+		global $logger;
 		if (preg_match_all('/<li class="mobile-four bookshelf-title-li".*?data-transaction="(.*?)".*?>.*?<div class="is-enhanced" data-transaction=".*?" title="(.*?)".*?<img.*?class="lrgImg" src="(.*?)".*?data-crid="(.*?)".*?<div.*?class="dwnld-container".*?>(.*?)<div class="expiration-date".*?<noscript>(.*?)<\/noscript>.*?data-earlyreturn="(.*?)"/si', $checkedOutSection, $bookshelfInfo, PREG_SET_ORDER)) {
 			//echo("\r\n");
 			//print_r($bookshelfInfo);
@@ -171,39 +172,30 @@ class OverDriveDriver {
 				$formatSection = $bookshelfInfo[$i][$group++];
 				//print_r("\r\nFormat Section $i\r\n$formatSection\r\n");
 				$bookshelfItem['expiresOn'] = $bookshelfInfo[$i][$group++];
-				$bookshelfItem['earlyreturn'] = $bookshelfInfo[$i][$group++];
+				$bookshelfItem['earlyReturn'] = $bookshelfInfo[$i][$group++];
 				//Check to see if a format has been selected
 				if (preg_match_all('/<li class="dwnld-litem.*?".*?data-fmt="(.*?)".*?data-lckd="(.*?)".*?data-enhanced="(.*?)".*?<a.*?>(.*?)<\/a>/si', $formatSection, $formatOptions, PREG_SET_ORDER)) {
-					$bookshelfItem['formatSelected'] = false;
+					$bookshelfItem['lockedFormat'] = 0;
+                                        $bookshelfItem['hasRead'] = false;
 					$bookshelfItem['formats'] = array();
 					for ($fmt = 0; $fmt < count($formatOptions); $fmt++){
 						$format = array();
 						$format['id'] = $formatOptions[$fmt][1];
-						$format['locked'] = $formatOptions[$fmt][2]; //This means the format is selected
+						if( $format['id'] == 610){
+							$bookshelfItem['hasRead'] = true;	
+						}    
+						$format['locked'] = $formatOptions[$fmt][2];
+                                                if($format['locked'] == 1){//This means the format is selected
+							$bookshelfItem['lockedFormat'] = $format['id'];	
+						}
 						$format['enhanced'] = $formatOptions[$fmt][3];
 						$format['name'] = $formatOptions[$fmt][4];
 						if ($format['locked'] == 1){
-							$bookshelfItem['formatSelected'] = true;
-							$bookshelfItem['selectedFormat'] = $format;
+
 							$bookshelfItem['downloadUrl'] = $overDriveInfo['baseLoginUrl'] . 'BANGPurchase.dll?Action=Download&ReserveID=' . $bookshelfItem['overDriveId'] . '&FormatID=' . $format['id'] . '&url=MyAccount.htm';
 						}
 						$bookshelfItem['formats'][] = $format;
 					}
-				}
-				//Parse special formats
-				if (preg_match('/<div class="dwnld-kindle" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-odread" data-transaction=".*?">(.*?)<\/div>.*?<div class="dwnld-locked-in" data-transaction=".*?">(.*?)<\/div>/si', $formatSection, $specialDownloads)) {
-					$bookshelfItem['kindle'] = $specialDownloads[1];
-					$overDriveRead = $specialDownloads[2];
-					if (strlen($overDriveRead) > 0){
-						$bookshelfItem['overdriveRead'] = true;
-						if (preg_match('/href="(.*?)"/si', $overDriveRead, $matches)){
-							$bookshelfItem['overdriveReadUrl'] = $overDriveInfo['baseUrlWithSession'] . $matches[1];
-						}
-					}else{
-						$bookshelfItem['overdriveRead'] = false;
-					}
-					//$bookshelfItem['overdriveRead'] = $specialDownloads[2];
-					$bookshelfItem['lockedIn'] = $specialDownloads[3];
 				}
 
 				$bookshelf['items'][] = $bookshelfItem;
@@ -216,6 +208,8 @@ class OverDriveDriver {
 		$holds = array();
 		$holds['available'] = array();
 		$holds['unavailable'] = array();
+		
+		global $logger;
 		//Match holds
 		//Get the individual holds by splitting the section based on each <li class="mobile-four">
 		//Trim to the first li
@@ -226,6 +220,7 @@ class OverDriveDriver {
 		foreach ($heldTitles as $titleHtml){
 			//echo("\r\nSection " . $i++ . "\r\n$titleHtml");
 			if (preg_match('/<div class="coverID">.*?<a href="ContentDetails\\.htm\\?id=(.*?)">.*?<img class="lrgImg" src="(.*?)".*?<div class="trunc-title-line".*?title="(.*?)".*?<div class="trunc-author-line".*?title="(.*?)".*?<div class="(?:holds-info)?".*?>(.*)/si', $titleHtml, $holdInfo)){
+
 				$hold = array();
 				$grpCtr = 1;
 				$hold['overDriveId'] = $holdInfo[$grpCtr++];
@@ -300,7 +295,7 @@ class OverDriveDriver {
 	 *
 	 * @return array
 	 */
-	public function getOverDriveCheckedOutItems($user, $overDriveInfo = null){
+	public function getOverDriveCheckedOutItems1($user, $overDriveInfo = null){
 		global $memcache;
 		global $configArray;
 		global $timer;
@@ -404,7 +399,7 @@ class OverDriveDriver {
 		return $bookshelf;
 	}
 
-	public function getOverDriveHolds($user, $overDriveInfo = null){
+	public function getOverDriveHolds1($user, $overDriveInfo = null){
 		global $memcache;
 		global $configArray;
 		global $timer;
@@ -466,6 +461,26 @@ class OverDriveDriver {
 		return $holds;
 	}
 
+        public function getOverDriveCheckedOutItems($user, $overDriveInfo = null){
+		global $memcache;
+		global $configArray;
+		global $timer;
+
+		$summary = $this->getOverDriveSummary($user);
+		$checkedOutTitles = $summary['checkedOut'];
+		return $checkedOutTitles;
+	}
+
+	public function getOverDriveHolds($user, $overDriveInfo = null){
+		global $memcache;
+		global $configArray;
+		global $timer;
+
+		$summary = $this->getOverDriveSummary($user);
+		$holds = array();
+		$holds = $summary['holds'];
+		return $holds;
+	}
 	/**
 	 * Returns a summary of information about the user's account in OverDrive.
 	 *
@@ -478,6 +493,7 @@ class OverDriveDriver {
 		global $memcache;
 		global $configArray;
 		global $timer;
+		global $logger;
 
 		$summary = $memcache->get('overdrive_summary_' . $user->id);
 		if ($summary == false || isset($_REQUEST['reload'])){
@@ -488,7 +504,6 @@ class OverDriveDriver {
 			//Navigate to the account page
 			//Load the My Holds page
 			//print_r("Account url: " . $overDriveInfo['accountUrl']);
-			global $logger;
 			//$logger->log("Account url: " . $overDriveInfo['accountUrl'], PEAR_LOG_INFO);
 			curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $overDriveInfo['accountUrl']);
 			$accountPage = curl_exec($overDriveInfo['ch']);			
@@ -514,7 +529,7 @@ class OverDriveDriver {
 				//echo("<br>\r\n");
 				$summary['numAvailableHolds'] = count($holds['available']);
 				$summary['numUnavailableHolds'] = count($holds['unavailable']);
-				//$logger->log("number unavailable holds: " . $summary['numUnavailableHolds'], PEAR_LOG_INFO);				
+				$logger->log("number unavailable holds: " . $summary['numUnavailableHolds'], PEAR_LOG_INFO);				
 				$summary['holds'] = $holds;
 			}
 
@@ -672,11 +687,7 @@ class OverDriveDriver {
 						$holdResult['result'] = true;
 						$holdResult['message'] = 'Your hold was placed successfully.';
 
-						$memcache->delete('overdrive_holds_' . $user->id);
 						$memcache->delete('overdrive_summary_' . $user->id);
-
-						//Delete the cache for the record
-						$memcache->delete('overdrive_record_' . $overDriveId);
 						
 					}elseif (preg_match("/You did not complete all of the required fields on the 'Holds' page/", $waitingListConfirm)){
 						$holdResult['result'] = false;
@@ -766,7 +777,7 @@ class OverDriveDriver {
 			$editResult['result'] = true;
 			$editResult['message'] = 'Your email was changed successfully.';
 			global $memcache;
-			$memcache->delete('overdrive_holds_' . $user->id);
+			$memcache->delete('overdrive_summary_' . $user->id);
 
 		}else{
 			$editResult['result'] = false;
@@ -779,8 +790,6 @@ class OverDriveDriver {
 		
 	}
 	
-	
-
 	public function cancelOverDriveHold($overDriveId, $user){
 		global $memcache;
 
@@ -806,11 +815,8 @@ class OverDriveDriver {
 			$cancelHoldResult['message'] = 'Your hold was cancelled successfully.';
 
 			//Check to see if the user has cached hold information and if so, clear it
-			$memcache->delete('overdrive_holds_' . $user->id);
 			$memcache->delete('overdrive_summary_' . $user->id);
 
-			//Delete the cache for the record
-			$memcache->delete('overdrive_record_' . $overDriveId);
 		}else{
 			$cancelHoldResult['result'] = false;
 			$cancelHoldResult['message'] = 'There was an error cancelling your hold.';
@@ -868,10 +874,9 @@ class OverDriveDriver {
 		if ($checkoutResult['result'] == true){
 			//Delete the cache for the record
 			global $memcache;
-			$memcache->delete('overdrive_checked_out_' . $user->id);
+
 			$memcache->delete('overdrive_summary_' . $user->id);
-			$memcache->delete('overdrive_record_' . $overDriveId);
-			$memcache->delete('overdrive_items_' . $overDriveId);
+                        $memcache->delete('overdrive_items_' . $overDriveId);
 			
 		//	//Record that the entry was checked out in strands
 		//	global $configArray;
@@ -1106,10 +1111,8 @@ class OverDriveDriver {
 		if (!preg_match("/$transactionId/si", $returnPage)){
 			$result['result'] = true;
 			$result['message'] = "Your title was returned successfully.";
-			$memcache->delete('overdrive_checked_out_' . $user->id);
 			$memcache->delete('overdrive_summary_' . $user->id);
-			//Delete the cache for the record
-			$memcache->delete('overdrive_record_' . $overDriveId);
+
 		}else{
 			$logger->log("OverDrive return failed", PEAR_LOG_ERR);
 			//$logger->log($checkoutPage, PEAR_LOG_INFO);
