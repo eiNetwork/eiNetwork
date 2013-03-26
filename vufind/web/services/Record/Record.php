@@ -174,6 +174,15 @@ class Record extends Action
 				$meetings[] = $this->concatenateSubfieldData($marcField, array('a', 'd', 'c'));
 			}
 			$interface->assign('meetings', $meetings);
+		}
+		
+		$marcFields = $marcRecord->getFields('730');
+		if ($marcFields){
+			$uniform = array();
+			foreach ($marcFields as $marcField){
+				$uniform[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('uniform', $uniform);
 		}		
 
 		$marcFields = $marcRecord->getFields('260');
@@ -209,6 +218,78 @@ class Record extends Action
 			}
 			$interface->assign('physicalDescriptions', $physicalDescriptions);
 		}
+		
+		$marcFields = $marcRecord->getFields('501');
+		if ($marcFields){
+			$withNotes = array();
+			foreach ($marcFields as $marcField){
+				$withNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('withNotes', $withNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('504');
+		if ($marcFields){
+			$biblioNotes = array();
+			foreach ($marcFields as $marcField){
+				$biblioNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('biblioNotes', $biblioNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('508');
+		if ($marcFields){
+			$productionNotes = array();
+			foreach ($marcFields as $marcField){
+				$productionNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('productionNotes', $productionNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('511');
+		if ($marcFields){
+			$performerNotes = array();
+			foreach ($marcFields as $marcField){
+				$performerNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('performerNotes', $performerNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('520');
+		if ($marcFields){
+			$summaryNotes = array();
+			foreach ($marcFields as $marcField){
+				$summaryNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('summaryNotes', $summaryNotes);
+		}
+
+		$marcFields = $marcRecord->getFields('521');
+		if ($marcFields){
+			$targetNotes = array();
+			foreach ($marcFields as $marcField){
+				$targetNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('targetNotes', $targetNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('546');
+		if ($marcFields){
+			$languageNotes = array();
+			foreach ($marcFields as $marcField){
+				$languageNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('languageNotes', $languageNotes);
+		}
+		
+		$marcFields = $marcRecord->getFields('546');
+		if ($marcFields){
+			$languageNotes = array();
+			foreach ($marcFields as $marcField){
+				$languageNotes[] = $this->getSubfieldData($marcField, 'a');
+			}
+			$interface->assign('languageNotes', $languageNotes);
+		}		
 		// Get ISBN for cover and review use
 		$mainIsbnSet = false;
 		if ($isbnFields = $this->marcRecord->getFields('020')) {
