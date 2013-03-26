@@ -668,6 +668,7 @@ class IndexRecord implements RecordInterface
 		$interface->assign('summSubTitle', $this->getSubtitle());
 		$interface->assign('summTitleStatement', $this->getTitleSection());
 		$interface->assign('summAuthor', $this->getPrimaryAuthor());
+		$interface->assign('summCorpAuthor', $this->getCorporateAuthor());
 		$publishers = $this->getPublishers();
 		$pubDates = $this->getPublicationDates();
 		$pubPlaces = $this->getPlacesOfPublication();
@@ -1089,7 +1090,7 @@ class IndexRecord implements RecordInterface
 	protected function getCorporateAuthor()
 	{
 		// Not currently stored in the Solr index
-		return null;
+		return $this->fields['author2'];
 	}
 
 	/**

@@ -37,7 +37,17 @@
       {else}
         <a href="{$url}/Author/Home?author={$summAuthor|escape:"url"}">{$summAuthor|highlight:$lookfor}</a>
       {/if}
-    {/if} 
+    {/if}
+    {if $summCorpAuthor}
+      {translate text=''}
+      {if is_array($summCorpAuthor)}
+        {foreach from=$summCorpAuthor item=corpAuthor}
+          <a href="{$url}/Author/Home?author={$corpAuthor|escape:"url"}">{$corpAuthor|highlight:$lookfor}</a>
+        {/foreach}
+      {else}
+        <a href="{$url}/Author/Home?author={$summCorpAuthor|escape:"url"}">{$summCorpAuthor|highlight:$lookfor}</a>
+      {/if}
+    {/if}
 	{if $summDate}
 		<div>
 			{$summDate.0|escape}
