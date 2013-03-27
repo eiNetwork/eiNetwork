@@ -120,7 +120,7 @@ class Record extends Action
 		$marcField730 = $marcRecord->getFields('730');
 		$marcField740 = $marcRecord->getFields('740');
 		
-		if ($marcField130 || $marcField240 || $marcField246 || $marcfield730 || $marcField740){
+		if ($marcField130 || $marcField240 || $marcField246 || $marcField730 || $marcField740){
 			$altTitle = array();
 			foreach ($marcField130 as $field){
 				$altTitle[] = $this->getSubfieldData($field, 'a');
@@ -176,14 +176,14 @@ class Record extends Action
 			$interface->assign('meetings', $meetings);
 		}
 		
-		$marcFields = $marcRecord->getFields('730');
-		if ($marcFields){
-			$uniform = array();
-			foreach ($marcFields as $marcField){
-				$uniform[] = $this->getSubfieldData($marcField, 'a');
-			}
-			$interface->assign('uniform', $uniform);
-		}		
+		//$marcFields = $marcRecord->getFields('730');
+		//if ($marcFields){
+		//	$uniform = array();
+		//	foreach ($marcFields as $marcField){
+		//		$uniform[] = $this->getSubfieldData($marcField, 'a');
+		//	}
+		//	$interface->assign('uniform', $uniform);
+		//}		
 
 		$marcFields = $marcRecord->getFields('260');
 		if ($marcFields){

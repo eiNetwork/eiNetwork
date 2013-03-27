@@ -144,7 +144,7 @@ function readConfig()
 	
 	if ($servername == 'default'){
 		global $logger;
-		$logger->log('Did not find servername for server ' . $_SERVER['SERVER_NAME'], PEAR_LOG_ERR);
+		//$logger->log('Did not find servername for server ' . $_SERVER['SERVER_NAME'], PEAR_LOG_ERR);
 		PEAR::raiseError("Invalid configuration, could not find site for " . $_SERVER['SERVER_NAME']);
 	}
 	
