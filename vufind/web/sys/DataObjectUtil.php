@@ -193,7 +193,7 @@ class DataObjectUtil
 				}
 
 			}else if ($property['type'] == 'checkbox'){
-				$logger->log($_REQUEST[$propertyName]."xxx", PEAR_LOG_ERROR);
+				//$logger->log($_REQUEST[$propertyName]."xxx", PEAR_LOG_ERROR);
 				$object->$propertyName = isset($_REQUEST[$propertyName]) && $_REQUEST[$propertyName] == 'on' ? 1 : 0;
 
 			}else if ($property['type'] == 'multiSelect'){
