@@ -332,6 +332,11 @@
 			{elseif $record.daysUntilDue <= 7}
 			    <span class='dueSoonLabel'>(Due in {$record.daysUntilDue} days )</span>
 			{/if}
+			{if $record.renewCount == 1}
+			    <span class='dueSoonLabel'>Renewed&nbsp;{$record.renewCount}&nbsp;time</br></span>
+			{elseif $record.renewCount > 1}
+			    <span class='dueSoonLabel'>Renewed&nbsp;{$record.renewCount}&nbsp;times</br></span>
+			{/if}
 			{*if $record.fine}
 			    <span class='overdueLabel'>FINE {$record.fine}</div>
 			{/if*}
