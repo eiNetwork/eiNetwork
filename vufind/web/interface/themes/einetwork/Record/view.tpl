@@ -239,35 +239,9 @@ function redrawSaveStatus() {literal}{{/literal}
 						</table>
 					</td>
 					</tr>
-					
-					
-					{if $edition}
-					<tr>
-						<td class="details_lable">Edition</td>
-						<td>
-							<table>
-							{foreach from=$editionsThis item=edition name=loop}
-								<tr><td>{$edition|escape}</td></tr>
-							{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					{if $physicalDescriptions}
-					<tr>
-						<td class="details_lable">Description</td>
-						<td>
-							<table>
-								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
-									<tr><td>{$physicalDescription|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
 					{if $withNotes}
 					<tr>
-						<td class="details_lable">With Notes</td>
+						<td class="details_lable">Also Includes</td>
 						<td>
 							<table>
 								{foreach from=$withNotes item=with name=loop}
@@ -277,96 +251,6 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $biblioNotes}
-					<tr>
-						<td class="details_lable">Bibliography Notes</td>
-						<td>
-							<table>
-								{foreach from=$biblioNotes item=biblio name=loop}
-									<tr><td>{$biblio|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
-					{if $productionNotes}
-					<tr>
-						<td class="details_lable">Creation/Production Notes</td>
-						<td>
-							<table>
-								{foreach from=$productionNotes item=produce name=loop}
-									<tr><td>{$produce|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
-					{if $performerNotes}
-					<tr>
-						<td class="details_lable">Participant/Performer Notes</td>
-						<td>
-							<table>
-								{foreach from=$performerNotes item=perform name=loop}
-									<tr><td>{$perform|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
-					{if $summaryNotes}
-					<tr>
-						<td class="details_lable">Summary Notes</td>
-						<td>
-							<table>
-								{foreach from=$summaryNotes item=summary name=loop}
-									<tr><td>{$summary|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
-					{if $targetNotes}
-					<tr>
-						<td class="details_lable">Target Audience Notes</td>
-						<td>
-							<table>
-								{foreach from=$targetNotes item=target name=loop}
-									<tr><td>{$target|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
-					{if $languageNotes}
-					<tr>
-						<td class="details_lable">Language Notes</td>
-						<td>
-							<table>
-								{foreach from=$languageNotes item=languagenote name=loop}
-									<tr><td>{$languagenote|escape|trim}</td></tr>
-								{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}					
-					
-					<!--{if $corporateAuthor}
-					<tr>
-					<td class="details_lable">Addit Author</td>
-					<td>
-						<table>
-							<tr>
-								<td><a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape|trim}</a></td>
-							</tr>
-						</table>
-					</td>
-					</tr>
-					{/if}-->
 					{if $contributors || $corporates || $meetings }
 					<tr>
 						<td class="details_lable">{translate text='Contributors'}</td>
@@ -391,18 +275,45 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $uniform}
-						<tr>
-							<td class="details_lable">Uniform Title</td>
-							<td>
-								<table>
-								{foreach from=$uniform item=uni}
-									<tr><td>{$uni|escape|trim}</td></tr>
+					
+					{if $performerNotes}
+					<tr>
+						<td class="details_lable">Participants/Performers</td>
+						<td>
+							<table>
+								{foreach from=$performerNotes item=perform name=loop}
+									<tr><td>{$perform|escape|trim}</td></tr>
 								{/foreach}
-								</table>
-							</td>
-						</tr>
-					{/if}					
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
+					{if $productionNotes}
+					<tr>
+						<td class="details_lable">Other Contributors</td>
+						<td>
+							<table>
+								{foreach from=$productionNotes item=produce name=loop}
+									<tr><td>{$produce|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
+					{if $targetNotes}
+					<tr>
+						<td class="details_lable">Audience</td>
+						<td>
+							<table>
+								{foreach from=$targetNotes item=target name=loop}
+									<tr><td>{$target|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
 					{if $recordLanguage}
 						<tr>
 							<td class="details_lable">{translate text='Language'}</td>
@@ -411,10 +322,37 @@ function redrawSaveStatus() {literal}{{/literal}
 								{foreach from=$recordLanguage item=lang}
 									<tr><td>{$lang|escape|trim}</td></tr>
 								{/foreach}
+								
+									{if $languageNotes}
+					<tr>
+						<td>
+							
+								{foreach from=$languageNotes item=languagenote name=loop}
+									<tr><td>{$languagenote|escape|trim}</td></tr>
+								{/foreach}
+							
+						</td>
+					</tr>
+					{/if}
 								</table>
 							</td>
 						</tr>
 					{/if}
+						
+					
+					{if $edition}
+					<tr>
+						<td class="details_lable">Edition</td>
+						<td>
+							<table>
+							{foreach from=$editionsThis item=edition name=loop}
+								<tr><td>{$edition|escape}</td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
 					{if $notes}
 					{foreach from=$notes item=note key=k name=loop}
 					<tr>
@@ -441,6 +379,69 @@ function redrawSaveStatus() {literal}{{/literal}
 					{/foreach}
 					{/if}
 
+					{if $physicalDescriptions}
+					<tr>
+						<td class="details_lable">Description</td>
+						<td>
+							<table>
+								{foreach from=$physicalDescriptions item=physicalDescription name=loop}
+									<tr><td>{$physicalDescription|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					{if $biblioNotes}
+					<tr>
+						<td class="details_lable">Bibliography Notes</td>
+						<td>
+							<table>
+								{foreach from=$biblioNotes item=biblio name=loop}
+									<tr><td>{$biblio|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
+					<!--{if $summaryNotes}
+					<tr>
+						<td class="details_lable">Summary Notes</td>
+						<td>
+							<table>
+								{foreach from=$summaryNotes item=summary name=loop}
+									<tr><td>{$summary|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}-->	
+					<!--{if $corporateAuthor}
+					<tr>
+					<td class="details_lable">Addit Author</td>
+					<td>
+						<table>
+							<tr>
+								<td><a href="{$path}/Author/Home?author={$corporateAuthor|trim|escape:"url"}">{$corporateAuthor|escape|trim}</a></td>
+							</tr>
+						</table>
+					</td>
+					</tr>
+					{/if}-->
+	
+					{if $uniform}
+						<tr>
+							<td class="details_lable">Uniform Title</td>
+							<td>
+								<table>
+								{foreach from=$uniform item=uni}
+									<tr><td>{$uni|escape|trim}</td></tr>
+								{/foreach}
+								</table>
+							</td>
+						</tr>
+					{/if}					
+					
 					{if $isbns}
 					<tr>
 						<td class="details_lable">ISBN</td>
