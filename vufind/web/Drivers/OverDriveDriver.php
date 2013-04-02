@@ -858,13 +858,16 @@ class OverDriveDriver {
 			
 			//Send the command and process the result
 			$checkoutResultPage = curl_exec($ch);
-			//$logger->log("Checkout Result ".$checkoutResult, PEAR_LOG_INFO);
-			if (strpos($checkoutResultPage,'Your title has been checked out') > 0) {
+			//$logger->log("Checkout Result ".$checkoutResultPage." end OD checkout result", PEAR_LOG_INFO);
+			if (strpos($checkoutResultPage,'Digital Media Catalog - Error page') == 0) {
 				$checkoutResult['result'] = true;
 				$checkoutResult['message'] = "Your title was checked out successfully. Please go to Checked Out Items to download the title from your Account.";
+			}elseif (strpos($checkoutResultPage,'reached your checkout limit') > 0) {
+				$checkoutResult['result'] = false;
+				$checkoutResult['message'] = "Sorry, you have reached your checkout limit";				
 			}else{
 				$checkoutResult['result'] = false;
-				$checkoutResult['message'] = "Sorry, your title could not be checked out.";
+				$checkoutResult['message'] = "Sorry, your title could not be checked out";
 			}
 		}else{
 			$checkoutResult['result'] = false;
