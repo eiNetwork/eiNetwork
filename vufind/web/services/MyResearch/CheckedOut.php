@@ -105,30 +105,31 @@ class CheckedOut extends MyResearch{
 					}
 
 					$transList = array();
+
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
 						$itemId = isset($data['itemid']) ? $data['itemid'] : null;
-						if ($itemBarcode != null && isset($_SESSION['renewResult'][$itemBarcode])){
-							$renewMessage = $_SESSION['renewResult'][$itemBarcode]['message'];
-							$renewResult = $_SESSION['renewResult'][$itemBarcode]['result'];
+						if ($itemBarcode != null && isset($_SESSION['renew_message'][$itemBarcode])){
+							$renewMessage = $_SESSION['renew_message'][$itemBarcode]['message'];
+							$renewResult = $_SESSION['renew_message'][$itemBarcode]['result'];
 							$data['renewMessage'] = $renewMessage;
 							$data['renewResult']  = $renewResult;
 							$result['transactions'][$i] = $data;
-							unset($_SESSION['renewResult'][$itemBarcode]);
-							//$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
-						}else if ($itemId != null && isset($_SESSION['renewResult'][$itemId])){
-							$renewMessage = $_SESSION['renewResult'][$itemId]['message'];
-							$renewResult = $_SESSION['renewResult'][$itemId]['result'];
+							unset($_SESSION['renew_message'][$itemBarcode]);
+							$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
+						}else if ($itemId != null && isset($_SESSION['renew_message'][$itemId])){
+							$renewMessage = $_SESSION['renew_message'][$itemId]['message'];
+							$renewResult = $_SESSION['renew_message'][$itemId]['result'];
 							$data['renewMessage'] = $renewMessage;
 							$data['renewResult']  = $renewResult;
 							$result['transactions'][$i] = $data;
-							unset($_SESSION['renewResult'][$itemId]);
-							//$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
+							unset($_SESSION['renew_message'][$itemId]);
+							$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
 						}else{
 							$renewMessage = null;
 							$renewResult = null;
 						}
-
+					
 					}
 					$interface->assign('transList', $result['transactions']);
 				}
