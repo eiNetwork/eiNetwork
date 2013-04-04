@@ -2779,23 +2779,9 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_POST, true);
 		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
 		$sresult = curl_exec($curl_connection);
-		$doc = new DOMDocument();
-		$doc->loadHTML($sresult);
-		$finder = new DomXPath($doc);
-		$id="renewfailmsg";
-		$items = $finder->query("//*[@id='$id']");
-		$classname="patFuncEntry";
-		$rows = $finder->query("//tr[contains(@class, '$classname')]");
-		//if (preg_match('/<div id="renewfailmsg" style="display:none"  class="errormessage">(.*?)<\/div>.*?<font color="red">\\s*(.*?)<\/font>/si', $sresult, $matches)) {
-		if($items->length > 0){
+		if (preg_match('/<div id="renewfailmsg" style="display:none"  class="errormessage">(.*?)<\/div>.*?<font color="red">\\s*(.*?)<\/font>/si', $sresult, $matches)) {
 			$success = false;
-			//$message = 'Unable to renew this item, ' . strtolower($matches[2]) . '.';
-			$message = array();
-			foreach($rows as $item){
-				$error = $finder->query(".//font[@color='red']", $item);
-				$bc = $finder->query(".//td[contains(@class, 'patFuncBarcode')]", $item);
-				$message [trim($bc->item(0)->nodeValue)]= 'Unable to renew this item, '.str_replace(" Cannot renew;", "", $error->item(0)->nodeValue);
-			}
+			$message = 'Unable to renew this item, ' . strtolower($matches[2]) . '.';
 		}else if (preg_match('/<h2>\\s*You cannot renew items because:\\s*<\/h2><ul><li>(.*?)<\/ul>/si', $sresult, $matches)) {
 			$success = false;
 			$message = 'Unable to renew this item, ' . strtolower($matches[1]) . '.';

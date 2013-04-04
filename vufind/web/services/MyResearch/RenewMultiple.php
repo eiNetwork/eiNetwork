@@ -27,6 +27,7 @@ class RenewMultiple extends Action
 	{
 		global $configArray;
 		global $user;
+		$logger = new Logger();
 
 		try {
 			$this->catalog = new CatalogConnection($configArray['Catalog']['driver']);
@@ -39,14 +40,41 @@ class RenewMultiple extends Action
 			}
 		}
 		
-		//Renew the hold
+		////Renew the hold
+		//if (method_exists($this->catalog->driver, 'renewItem')) {
+		//	$selectedItems = $_GET['selected'];
+		//	$renewMessages = array();
+		//	foreach ($selectedItems as $itemInfo => $selectedState){
+		//		list($itemId, $itemIndex) = explode('|', $itemInfo);
+		//		$renewResult = $this->catalog->driver->renewItem($user->password, $itemId, $itemIndex);
+		//		$_SESSION['renewResult'][$renewResult['itemId']] = $renewResult;
+		//	}
+		//} else {
+		//	PEAR::raiseError(new PEAR_Error('Cannot Renew Item - ILS Not Supported'));
+		//}
+		
+		//Call the Millennium Driver method to renew the item
 		if (method_exists($this->catalog->driver, 'renewItem')) {
 			$selectedItems = $_GET['selected'];
 			$renewMessages = array();
+			$_SESSION['renew_message']['Unrenewed'] = 0;
+			$_SESSION['renew_message']['Renewed'] = 0;
+			$i = 0;
 			foreach ($selectedItems as $itemInfo => $selectedState){
+				if ($i != 0){
+					usleep(1000);
+				}
+				$i++;
 				list($itemId, $itemIndex) = explode('|', $itemInfo);
 				$renewResult = $this->catalog->driver->renewItem($user->password, $itemId, $itemIndex);
-				$_SESSION['renewResult'][$renewResult['itemId']] = $renewResult;
+				$logger->log("Renew result for item ".$itemid." ".$renewResult['result']." message ".$renewResult['message'], PEAR_LOG_INFO);
+				$_SESSION['renew_message'][$renewResult['itemId']] = $renewResult;
+				$_SESSION['renew_message']['Total']++;
+				if ($renewResult['result']){
+					$_SESSION['renew_message']['Renewed']++;
+				}else{
+					$_SESSION['renew_message']['Unrenewed']++;
+				}
 			}
 		} else {
 			PEAR::raiseError(new PEAR_Error('Cannot Renew Item - ILS Not Supported'));
