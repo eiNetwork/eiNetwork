@@ -40,19 +40,6 @@ class RenewMultiple extends Action
 			}
 		}
 		
-		////Renew the hold
-		//if (method_exists($this->catalog->driver, 'renewItem')) {
-		//	$selectedItems = $_GET['selected'];
-		//	$renewMessages = array();
-		//	foreach ($selectedItems as $itemInfo => $selectedState){
-		//		list($itemId, $itemIndex) = explode('|', $itemInfo);
-		//		$renewResult = $this->catalog->driver->renewItem($user->password, $itemId, $itemIndex);
-		//		$_SESSION['renewResult'][$renewResult['itemId']] = $renewResult;
-		//	}
-		//} else {
-		//	PEAR::raiseError(new PEAR_Error('Cannot Renew Item - ILS Not Supported'));
-		//}
-		
 		//Call the Millennium Driver method to renew the item
 		if (method_exists($this->catalog->driver, 'renewItem')) {
 			$selectedItems = $_GET['selected'];
