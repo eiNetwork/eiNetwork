@@ -685,18 +685,6 @@ function redrawSaveStatus() {literal}{{/literal}
 					</tr>
 					{/if}
 					
-					{if $eContentRecord->physicalDescription}
-					<tr>
-						<td class="details_lable">Description</td>
-						<td>
-							<table>
-								<tr><td>{$eContentRecord->physicalDescription|escape}</td></tr>
-								
-							</table>
-						</td>
-					</tr>
-					{/if}
-					
 					{if $targetNotes}
 					<tr>
 						<td class="details_lable">Audience</td>
@@ -756,18 +744,31 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
+					
 					{if $eContentRecord->notes}
 					<tr>
 					<td class="details_lable">Notes</td>
 					<td>
 						<table>
-
 								<tr><td>{$eContentRecord->notes}</td></tr>
 
 						</table>
 					</td>
 					</tr>
 					{/if}
+					
+					{if $eContentRecord->physicalDescription}
+					<tr>
+						<td class="details_lable">Description</td>
+						<td>
+							<table>
+								<tr><td>{$eContentRecord->physicalDescription|escape}</td></tr>
+								
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
 					{if $eContentRecord->isbn}
 					<tr>
 						<td class="details_lable">ISBN</td>
