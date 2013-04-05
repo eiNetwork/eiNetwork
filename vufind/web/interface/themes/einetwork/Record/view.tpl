@@ -223,7 +223,20 @@ function redrawSaveStatus() {literal}{{/literal}
 					</tr>
 					{/if}
 					
-				
+					{if $editionsThis}
+					<tr>
+						<td class="details_lable">Edition</td>
+						<td>
+							<table>
+							{foreach from=$editionsThis item=editions name=loop}
+								<tr><td>{$editions|escape}</td></tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
+					{if $altTitle}
 					<tr>
 					<td class="details_lable">Other Titles</td>
 					<td>
@@ -239,6 +252,7 @@ function redrawSaveStatus() {literal}{{/literal}
 						</table>
 					</td>
 					</tr>
+					{/if}
 					{if $withNotes}
 					<tr>
 						<td class="details_lable">Also Includes</td>
@@ -338,20 +352,6 @@ function redrawSaveStatus() {literal}{{/literal}
 							</td>
 						</tr>
 					{/if}
-						
-					
-					{if $edition}
-					<tr>
-						<td class="details_lable">Edition</td>
-						<td>
-							<table>
-							{foreach from=$editionsThis item=edition name=loop}
-								<tr><td>{$edition|escape}</td></tr>
-							{/foreach}
-							</table>
-						</td>
-					</tr>
-					{/if}
 					
 					{if $notes}
 					{foreach from=$notes item=note key=k name=loop}
@@ -378,7 +378,6 @@ function redrawSaveStatus() {literal}{{/literal}
 					</tr>
 					{/foreach}
 					{/if}
-
 					{if $physicalDescriptions}
 					<tr>
 						<td class="details_lable">Description</td>

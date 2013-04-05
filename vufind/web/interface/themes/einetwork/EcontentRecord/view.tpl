@@ -671,13 +671,14 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
-					{if $edition}
+					
+					{if $eContentRecord->edition}
 					<tr>
 						<td class="details_lable">Edition</td>
 						<td>
 							<table>
-							{foreach from=$editionsThis item=edition name=loop}
-								<tr><td>{$edition|escape}</td></tr>
+							{foreach from=$eContentRecord->edition item=edition name=loop}
+								<tr><td>{$eContentRecord->edition|escape}</td></tr>
 							{/foreach}
 							</table>
 						</td>
@@ -695,6 +696,20 @@ function redrawSaveStatus() {literal}{{/literal}
 						</td>
 					</tr>
 					{/if}
+					
+					{if $targetNotes}
+					<tr>
+						<td class="details_lable">Audience</td>
+						<td>
+							<table>
+								{foreach from=$targetNotes item=target name=loop}
+									<tr><td>{$target|escape|trim}</td></tr>
+								{/foreach}
+							</table>
+						</td>
+					</tr>
+					{/if}
+					
 					{if $eContentRecord->language}
 						<tr>
 							<td class="details_lable">{translate text='Language'}</td>
@@ -704,18 +719,6 @@ function redrawSaveStatus() {literal}{{/literal}
 								</table>
 							</td>
 						</tr>
-					{/if}
-					{if $eContentRecord->notes}
-					<tr>
-					<td class="details_lable">Note</td>
-					<td>
-						<table>
-
-								<tr><td>{$eContentRecord->notes}</td></tr>
-
-						</table>
-					</td>
-					</tr>
 					{/if}
 					<!--{if $corporateAuthor}
 					<tr>
@@ -751,6 +754,18 @@ function redrawSaveStatus() {literal}{{/literal}
 							{/if}							
 							</table>
 						</td>
+					</tr>
+					{/if}
+					{if $eContentRecord->notes}
+					<tr>
+					<td class="details_lable">Notes</td>
+					<td>
+						<table>
+
+								<tr><td>{$eContentRecord->notes}</td></tr>
+
+						</table>
+					</td>
 					</tr>
 					{/if}
 					{if $eContentRecord->isbn}
