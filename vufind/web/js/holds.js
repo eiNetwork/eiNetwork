@@ -63,15 +63,22 @@ function thawSelectedHolds(obj){
 	return false;
 }
 
-function getSelectedTitles(){
-	var selectedTitles = $("input.titleSelect:checked ").map(function() {
-		return $(this).attr('name') + "=" + $(this).val();
-	}).get().join("&");
-	if (selectedTitles.length == 0){
-		var ret = alert('You have not selected any items, please select items to renew');
-	}
+//function getSelectedTitles(){
+//	var selectedTitles = $("input.titleSelect:checked ").map(function() {
+//		return $(this).attr('name') + "=" + $(this).val();
+//	}).get().join("&");
+//	if (selectedTitles.length == 0){
+//		var ret = alert('You have not selected any items, please select items to renew');
+//	}
+//	return selectedTitles;
+//}
+
+function getSelectedTitles(obj){
+	var name=$(obj).attr("name");
+	var id=$(obj).attr("id");
+	var selectedTitles=name+"="+id;
 	return selectedTitles;
-}
+	}
 
 function renewSelectedTitles(){
 	var selectedTitles = getSelectedTitles();

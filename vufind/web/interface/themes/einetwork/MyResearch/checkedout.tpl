@@ -1,6 +1,6 @@
 <script type="text/javascript" src="{$url}/services/MyResearch/ajax.js"></script>
 <script type="text/javascript" src="{$url}/services/EcontentRecord/ajax.js"></script>
-<script type="text/javascript" src="{$path}/js/holds.js"></script>
+<script type="text/javascript" src="{$path}/js/checkedout.js"></script>
 {if (isset($title)) }
 <script type="text/javascript">
     alert("{$title}");
@@ -32,13 +32,13 @@
 	    {*******BEGIN checked out item list*****}
 	    <div class="item_renew">
 		<h3>{translate text='Physical Checked Out Items'}</h3>
-<!--		<a href="{$path}/MyResearch/RenewAll">
-		    <input id="item_select_all" type="button" class="button" value="Renew All"/>
-		</a>
--->
-	    <div class="item_renew" style="text-align:right; padding-right:25px; padding-bottom:10px;" >
-		<a href="#" onclick="return renewSelectedTitles();" class="button"> Renew Selected Items</a>
-	    </div>
+		{if $patronCanRenew}
+			<div class="item_renew" style="text-align:right; padding-right:25px; padding-bottom:10px;" >
+			<a href="#" onclick="return renewSelectedTitles();" class="button"> Renew Selected Items</a>
+			</div>
+		{else}
+		    Our apologies, you cannot renew items if you have overdue items on your account.   You may renew items that are not overdue at <a href=http://catalog.einetwork.net/> http://catalog.einetwork.net </a>
+		{/if}
 	    </div>
 	    <div class="item_renew">
 	    </div>
