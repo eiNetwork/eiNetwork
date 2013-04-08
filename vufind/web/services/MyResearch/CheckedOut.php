@@ -105,10 +105,14 @@ class CheckedOut extends MyResearch{
 					}
 
 					$transList = array();
+					$patronCanRenew = true;
 
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
 						$itemId = isset($data['itemid']) ? $data['itemid'] : null;
+						if ($data['overdue']) {
+							$patronCanRenew = false;
+						}
 						if ($itemBarcode != null && isset($_SESSION['renew_message'][$itemBarcode])){
 							$renewMessage = $_SESSION['renew_message'][$itemBarcode]['message'];
 							$renewResult = $_SESSION['renew_message'][$itemBarcode]['result'];
@@ -132,6 +136,7 @@ class CheckedOut extends MyResearch{
 					
 					}
 					$interface->assign('transList', $result['transactions']);
+					$interface->assign('patronCanRenew', $patronCanRenew);
 				}
 			}
 		}
