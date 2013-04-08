@@ -37,7 +37,7 @@
 			<a href="#" onclick="return renewSelectedTitles();" class="button"> Renew Selected Items</a>
 			</div>
 		{else}
-		    Our apologies, you cannot renew items if you have overdue items on your account.   You may renew items that are not overdue at <a href=http://catalog.einetwork.net/> http://catalog.einetwork.net </a>
+		    <font color="red"><b>Our apologies, you cannot renew items if you have overdue items on your account at this time.    </br>You may renew items that are not overdue at <a href=http://catalog.einetwork.net/> http://catalog.einetwork.net </a></b></font>
 		{/if}
 	    </div>
 	    <div class="item_renew">
@@ -323,6 +323,8 @@
 			    <span class='overdueLabel'>FINE {$record.fine}</div>
 			{/if*}
 			{*******BEGIN renew******}
+			
+			{if $patronCanRenew}
 			<div class="item_renew">
 			    {assign var=id value=$record.id scope="global"}
 			    {assign var=shortId value=$record.shortId scope="global"}
@@ -340,6 +342,7 @@
 			      </div>
 			    {/if}
 			</div>
+			{/if}
 			{*******END renew******}
 		    </div>
 		</div>
