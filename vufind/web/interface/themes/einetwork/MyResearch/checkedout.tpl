@@ -319,9 +319,9 @@
 			{elseif $record.renewCount > 1}
 			    <span class='dueSoonLabel'>Renewed&nbsp;{$record.renewCount}&nbsp;times</br></span>
 			{/if}
-			{*if $record.fine}
-			    <span class='overdueLabel'>FINE {$record.fine}</div>
-			{/if*}
+			{if $record.fine}
+			    <span class='overdueLabel'>FINE {$record.fine}</span>
+			{/if}
 			{*******BEGIN renew******}
 			
 			{if $patronCanRenew}
@@ -330,11 +330,9 @@
 			    {assign var=shortId value=$record.shortId scope="global"}
 			    {* disable renewals if the item is overdue *}  
 			    {if $record.overdue}
-				<input type="checkbox" disabled="disabled" name="selected[{$record.renewIndicator}]" class="titleSelect" id="selected{$record.itemid}" />&nbsp;&nbsp;Renew&nbsp;			    
-<!--				<input id="userreviewlink{$shortId}" type="button" disabled="disabled" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}')" value="Renew" />
+<!--				<input type="checkbox" disabled="disabled" name="selected[{$record.renewIndicator}]" class="titleSelect" id="selected{$record.itemid}" />&nbsp;&nbsp;Renew&nbsp;			    
 -->			    {else}
-<!--				<input id="userreviewlink{$shortId}" type="button" class="userreviewlink button" onclick="renewItem('/MyResearch/Renew?itemId={$record.itemid}&itemBarCode={$record.barcode}')" value="Renew" />
--->				<input type="checkbox" name="selected[{$record.renewIndicator}]" class="titleSelect" id="selected{$record.itemid}" />&nbsp;&nbsp;Renew&nbsp;
+				<input type="checkbox" name="selected[{$record.renewIndicator}]" class="titleSelect" id="selected{$record.itemid}" />&nbsp;&nbsp;Renew&nbsp;
 			    {/if}
 			    {if $record.renewMessage}
 				<div class='{if $record.renewResult == true}renewPassed{else}renewFailed{/if}' style="margin-top:10px">

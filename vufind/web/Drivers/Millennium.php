@@ -2772,6 +2772,8 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
 		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
 		$sresult = curl_exec($curl_connection);
+		$logger->log('renew item go to items page url ' . $curl_url. " postfields ".$post_string, PEAR_LOG_INFO);
+		
 
 		//Post renewal information
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items";
@@ -2779,18 +2781,19 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_POST, true);
 		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
 		$sresult = curl_exec($curl_connection);
-		if (preg_match('/<div id="renewfailmsg" style="display:none"  class="errormessage">(.*?)<\/div>.*?<font color="red">\\s*(.*?)<\/font>/si', $sresult, $matches)) {
-			$success = false;
-			$message = 'Unable to renew this item, ' . strtolower($matches[2]) . '.';
-		}else if (preg_match('/<h2>\\s*You cannot renew items because:\\s*<\/h2><ul><li>(.*?)<\/ul>/si', $sresult, $matches)) {
-			$success = false;
-			$message = 'Unable to renew this item, ' . strtolower($matches[1]) . '.';
-		}else if (preg_match('/Your record is in use/si', $sresult, $matches)) {
-			$success = false;
-			$message = 'Unable to renew this item, your record is in use by the system.';
-		}else{
+		$logger->log('renew item post renewal info url ' . $curl_url. " postfields ".$renewItemParams, PEAR_LOG_INFO);
+		if (strpos($sresult,'RENEWED successfully') > 0) {
 			$success = true;
 			$message = 'Your item was successfully renewed';
+		}else if (strpos($sresult,'Cannot renew; item is requested by another user') > 0){
+			$success = false;
+			$message = 'Your item could not be renewed because another user has requested it';
+		}else if (strpos($sresult,'Your record is in use by system. Please try again later.') > 0){
+			$success = false;
+			$message = 'Your item could not be renewed because your record is in use by the system';
+		}else{
+			$success = false;
+			$message = 'Your item could not be renewed because the renewal limit has been reached';
 		}
 		curl_close($curl_connection);
 		unlink($cookieJar);
