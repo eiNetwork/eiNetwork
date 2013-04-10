@@ -105,8 +105,16 @@ class CheckedOut extends MyResearch{
 					}
 
 					$transList = array();
+					// Check expiration date, ptype, and mblock fields to determine if the patron can renew items
+					// ptypes 6 (business) and 8 (ILL) do not block renewals even if the card is expired or blocked
 					$patronCanRenew = true;
-
+					if (($profile["expireclose"] == -1) && ($profile["ptype"] != '6') && ($profile["ptype"] != '8')) {
+						$patronCanRenew = false;
+					}else{
+						$patronCanRenew = true;
+					}
+					$interface->assign('patronCanRenew', $patronCanRenew);
+					
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
 						$itemId = isset($data['itemid']) ? $data['itemid'] : null;
@@ -133,7 +141,6 @@ class CheckedOut extends MyResearch{
 					
 					}
 					$interface->assign('transList', $result['transactions']);
-					$interface->assign('patronCanRenew', $patronCanRenew);
 				}
 			}
 		}

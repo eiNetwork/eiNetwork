@@ -1158,6 +1158,7 @@ class MillenniumDriver implements DriverInterface
 		global $timer;
 		global $user;
 		global $configArray;
+		global $logger;
 		if (is_object($patron)){
 			$patron = get_object_vars($patron);
 			$id2 = $this->_getBarcode();
@@ -1264,7 +1265,10 @@ class MillenniumDriver implements DriverInterface
 		$timeExpire = strtotime($monthExp . "/" . $dayExp . "/" . $yearExp);
 		$timeNow = time();
 		$timeToExpire = $timeExpire - $timeNow;
-		if ($timeToExpire <= 30 * 24 * 60 * 60){
+		//$logger->log('expire date '.$patronDump['EXP_DATE'].' time to expire ' . $timeToExpire, PEAR_LOG_INFO);
+		if ($timeToExpire < 0) {
+			$expireClose = -1 ;
+		}else if ($timeToExpire <= 30 * 24 * 60 * 60){
 			$expireClose = 1;
 		}else{
 			$expireClose = 0;
