@@ -9,6 +9,9 @@ function getSelectedTitles(){
 }
 
 function renewSelectedTitles(){
+
+	showProcessingIndicator('Renewing your items. This may take a minute.');
+
 	var selectedTitles = getSelectedTitles();
 	if (selectedTitles.length > 0){ 
 		$('#renewForm').submit()
