@@ -37,7 +37,7 @@
 			<a href="#" onclick="return renewSelectedTitles();" class="button"> Renew Selected Items</a>
 			</div>
 		{else}
-		    <font color="red"><b>Our apologies, you cannot renew items if you have overdue items on your account at this time.    </br>You may renew items that are not overdue at <a href=http://catalog.einetwork.net/> http://catalog.einetwork.net </a></b></font>
+		    <font color="red"><b>Our apologies, you cannot renew items because there is a problem with your account.  Please check with your local library to resolve this issue.  </a></b></font>
 		{/if}
 	    </div>
 	    <div class="item_renew">
