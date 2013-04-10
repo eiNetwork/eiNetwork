@@ -1315,6 +1315,7 @@ class MillenniumDriver implements DriverInterface
 				'numHoldsRequested' => $numHoldsRequested,
 				'bypassAutoLogout' => ($user) ? $user->bypassAutoLogout : 0,
 				'ptype' => $patronDump['P_TYPE'],
+				'mblock' => $patronDump['MBLOCK'],
 				'notices' => $patronDump['NOTICE_PREF'],
 		);
 

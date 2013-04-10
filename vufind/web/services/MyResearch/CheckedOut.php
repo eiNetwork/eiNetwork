@@ -108,12 +108,19 @@ class CheckedOut extends MyResearch{
 					// Check expiration date, ptype, and mblock fields to determine if the patron can renew items
 					// ptypes 6 (business) and 8 (ILL) do not block renewals even if the card is expired or blocked
 					$patronCanRenew = true;
+					$renewalBlockReason = null;
 					if (($profile["expireclose"] == -1) && ($profile["ptype"] != '6') && ($profile["ptype"] != '8')) {
 						$patronCanRenew = false;
+						$renewalBlockReason = "your card is expired";
+					}else if (($profile["mblock"] != "-") && ($profile["ptype"] != '6') && ($profile["ptype"] != '8')) {
+						$patronCanRenew = false;
+						$renewalBlockReason = "your account is blocked";
 					}else{
 						$patronCanRenew = true;
+						$renewalBlockReason = null;
 					}
 					$interface->assign('patronCanRenew', $patronCanRenew);
+					$interface->assign('renewalBlockReason', $renewalBlockReason);
 					
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
