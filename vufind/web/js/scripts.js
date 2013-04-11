@@ -1067,3 +1067,18 @@ function loadOtherEditionSummaries(id, isEcontent){
 }function testLightBox(){
 	showElementInLightbox('test','<p>hello</p>');
 }
+
+
+function preload(arrayOfImages) {
+
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+        // Alternatively you could use:
+        // (new Image()).src = this;
+    });
+
+}
+
+preload([
+    '/images/loading_bar.gif'
+]);
