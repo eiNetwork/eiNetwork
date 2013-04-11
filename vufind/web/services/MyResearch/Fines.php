@@ -40,7 +40,7 @@ class Fines extends MyResearch
 					if (count($result)) {
 						// Drop the index object into a global
 						//  so it's accessible inside the callback.
-						$finesIndexEngine = $this->db;
+						/*$finesIndexEngine = $this->db;
 	
 						$dg = new Structures_DataGrid();
 						$dg->renderer->setTableAttribute('width', '100%');
@@ -61,7 +61,9 @@ class Fines extends MyResearch
 							$interface->assign('finesData', $dg->getOutput());
 						} else {
 							$interface->assign('finesData', $dg->renderer->toHTML());
-						}
+						}*/
+						$interface->assign('finesData', $result);
+						$interface->assign('edit', true);
 					} else {
 						$interface->assign('finesData', translate('You do not have any fines'));
 					}

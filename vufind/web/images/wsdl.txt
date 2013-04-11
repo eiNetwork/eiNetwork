@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions targetNamespace="http://webapps.iii.com/wsclient/patronio" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://webapps.iii.com/wsclient/patronio" xmlns:intf="http://webapps.iii.com/wsclient/patronio" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+
+ <wsdl:types>
+  <schema targetNamespace="http://webapps.iii.com/wsclient/patronio" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="FinePaymentElement">
+    <sequence>
+     <element name="amount" type="xsd:int"/>
+     <element name="initials" nillable="true" type="xsd:string"/>
+     <element name="invoice" nillable="true" type="xsd:string"/>
+     <element name="type" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOfFinePaymentElement">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="impl:FinePaymentElement[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="PatronField">
+    <sequence>
+     <element name="fieldTag" nillable="true" type="xsd:string"/>
+     <element name="marcTag" nillable="true" type="xsd:string"/>
+     <element name="value" nillable="true" type="xsd:string"/>
+     <element name="valueIsBinary" type="xsd:boolean"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOfPatronField">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="impl:PatronField[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="PatronFine">
+    <sequence>
+     <element name="amountPaid" type="xsd:int"/>
+     <element name="billingFee" type="xsd:int"/>
+     <element name="campusCode" nillable="true" type="xsd:string"/>
+     <element name="chargeLocation" nillable="true" type="xsd:string"/>
+     <element name="chargeType" nillable="true" type="xsd:string"/>
+     <element name="collectorInitials" nillable="true" type="xsd:string"/>
+     <element name="creationMethod" nillable="true" type="xsd:string"/>
+     <element name="dateAssessed" nillable="true" type="xsd:dateTime"/>
+     <element name="datePaid" nillable="true" type="xsd:dateTime"/>
+     <element name="description" nillable="true" type="xsd:string"/>
+     <element name="invoice" type="xsd:int"/>
+     <element name="itemCharge" type="xsd:int"/>
+     <element name="itemCheckoutDate" nillable="true" type="xsd:dateTime"/>
+     <element name="itemDateReturned" nillable="true" type="xsd:dateTime"/>
+     <element name="itemDueDate" nillable="true" type="xsd:dateTime"/>
+     <element name="itemLoanRule" type="xsd:int"/>
+     <element name="itemRecordNum" type="xsd:int"/>
+     <element name="itemTitle" nillable="true" type="xsd:string"/>
+     <element name="occurrence" type="xsd:int"/>
+     <element name="originalPatronID" type="xsd:int"/>
+     <element name="patronID" type="xsd:int"/>
+     <element name="printBill" type="xsd:boolean"/>
+     <element name="processingFee" type="xsd:int"/>
+     <element name="terminalPaidAt" type="xsd:int"/>
+     <element name="transferDate" nillable="true" type="xsd:dateTime"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOfPatronFine">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="impl:PatronFine[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="Patron">
+    <sequence>
+     <element name="finePayment" nillable="true" type="impl:ArrayOfFinePaymentElement"/>
+     <element name="patronFields" nillable="true" type="impl:ArrayOfPatronField"/>
+     <element name="patronFines" nillable="true" type="impl:ArrayOfPatronFine"/>
+     <element name="patronID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="PatronIOFault">
+    <sequence>
+     <element name="code" type="xsd:int"/>
+     <element name="description" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="createPatronResponse">
+      <wsdl:part name="createPatronReturn" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="deletePatronResponse">
+      <wsdl:part name="deletePatronReturn" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="payPatronFineRequest">
+      <wsdl:part name="in0" type="soapenc:string"/>
+      <wsdl:part name="in1" type="soapenc:string"/>
+      <wsdl:part name="in2" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="searchPatronsResponse">
+      <wsdl:part name="searchPatronsReturn" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="deletePatronRequest">
+      <wsdl:part name="in0" type="soapenc:string"/>
+      <wsdl:part name="in1" type="soapenc:string"/>
+      <wsdl:part name="in2" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="updatePatronResponse">
+      <wsdl:part name="updatePatronReturn" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="createPatronRequest">
+      <wsdl:part name="in0" type="soapenc:string"/>
+      <wsdl:part name="in1" type="soapenc:string"/>
+      <wsdl:part name="in2" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="searchPatronsRequest">
+      <wsdl:part name="in0" type="soapenc:string"/>
+      <wsdl:part name="in1" type="soapenc:string"/>
+      <wsdl:part name="in2" type="soapenc:string"/>
+   </wsdl:message>
+   <wsdl:message name="PatronIOFault">
+      <wsdl:part name="fault" type="impl:PatronIOFault"/>
+   </wsdl:message>
+   <wsdl:message name="payPatronFineResponse">
+      <wsdl:part name="payPatronFineReturn" type="impl:Patron"/>
+   </wsdl:message>
+   <wsdl:message name="updatePatronRequest">
+      <wsdl:part name="in0" type="soapenc:string"/>
+      <wsdl:part name="in1" type="soapenc:string"/>
+      <wsdl:part name="in2" type="impl:Patron"/>
+   </wsdl:message>
+
+   <wsdl:portType name="PatronIO">
+      <wsdl:operation name="searchPatrons" parameterOrder="in0 in1 in2">
+         <wsdl:input message="impl:searchPatronsRequest" name="searchPatronsRequest"/>
+         <wsdl:output message="impl:searchPatronsResponse" name="searchPatronsResponse"/>
+         <wsdl:fault message="impl:PatronIOFault" name="PatronIOFault"/>
+      </wsdl:operation>
+      <wsdl:operation name="createPatron" parameterOrder="in0 in1 in2">
+         <wsdl:input message="impl:createPatronRequest" name="createPatronRequest"/>
+         <wsdl:output message="impl:createPatronResponse" name="createPatronResponse"/>
+         <wsdl:fault message="impl:PatronIOFault" name="PatronIOFault"/>
+      </wsdl:operation>
+      <wsdl:operation name="updatePatron" parameterOrder="in0 in1 in2">
+         <wsdl:input message="impl:updatePatronRequest" name="updatePatronRequest"/>
+         <wsdl:output message="impl:updatePatronResponse" name="updatePatronResponse"/>
+         <wsdl:fault message="impl:PatronIOFault" name="PatronIOFault"/>
+      </wsdl:operation>
+      <wsdl:operation name="payPatronFine" parameterOrder="in0 in1 in2">
+         <wsdl:input message="impl:payPatronFineRequest" name="payPatronFineRequest"/>
+         <wsdl:output message="impl:payPatronFineResponse" name="payPatronFineResponse"/>
+         <wsdl:fault message="impl:PatronIOFault" name="PatronIOFault"/>
+      </wsdl:operation>
+      <wsdl:operation name="deletePatron" parameterOrder="in0 in1 in2">
+         <wsdl:input message="impl:deletePatronRequest" name="deletePatronRequest"/>
+         <wsdl:output message="impl:deletePatronResponse" name="deletePatronResponse"/>
+         <wsdl:fault message="impl:PatronIOFault" name="PatronIOFault"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="PatronIOSoapBinding" type="impl:PatronIO">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="searchPatrons">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="searchPatronsRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="searchPatronsResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="PatronIOFault">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="PatronIOFault" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="createPatron">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="createPatronRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="createPatronResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="PatronIOFault">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="PatronIOFault" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="updatePatron">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="updatePatronRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="updatePatronResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="PatronIOFault">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="PatronIOFault" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="payPatronFine">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="payPatronFineRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="payPatronFineResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="PatronIOFault">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="PatronIOFault" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+      <wsdl:operation name="deletePatron">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="deletePatronRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="deletePatronResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="PatronIOFault">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="PatronIOFault" namespace="http://webapps.iii.com/wsclient/patronio" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="PatronIOService">
+      <wsdl:port binding="impl:PatronIOSoapBinding" name="PatronIO">
+         <wsdlsoap:address location="http://localhost:7282/iii/patronio/services/PatronIO"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>
