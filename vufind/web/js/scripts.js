@@ -180,7 +180,11 @@ function lightbox(left, width, top, height){
 	}
 	var loadMsg = $('#lightboxLoading').html();
 
-	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><iframe src="' + path + '/images/loading_bar.gif" class="loading-frame"  frameborder="0" border="0" cellspacing="0"></iframe></div>');
+	if (navigator.userAgent.indexOf('Firefox') != -1){
+		$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><iframe src="' + path + '/images/loading_bar.gif" class="loading-frame"  frameborder="0" border="0" cellspacing="0"></iframe></div>');
+	} else {
+		$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><img src="' + path + '/images/loading_bar.gif" class="lightboxLoadingImage"/></div>');
+	}
 
 	hideSelects('hidden');
 
