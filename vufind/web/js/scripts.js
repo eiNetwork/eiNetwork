@@ -180,8 +180,8 @@ function lightbox(left, width, top, height){
 	}
 	var loadMsg = $('#lightboxLoading').html();
 
-	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><img src="' + path + '/images/loading_bar.gif" class="lightboxLoadingImage"/></div>');
-   
+	$('#popupbox').html('<div class="lightboxLoadingContents"><div class="lightboxLoadingMessage">' + loadMsg + '</div><iframe src="' + path + '/images/loading_bar.gif" class="loading-frame"  frameborder="0" border="0" cellspacing="0"></iframe></div>');
+
 	hideSelects('hidden');
 
 	// Find out how far down the screen the user has scrolled.

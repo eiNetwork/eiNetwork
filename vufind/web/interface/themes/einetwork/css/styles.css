@@ -2656,3 +2656,11 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .fiction_sub_head a{
 	color: rgb(153,153,255);
 }
+
+.loading-frame {
+	width:240px;
+	height:40px;
+	margin:0;
+	padding:0;
+	border-style:none;
+}

@@ -10,11 +10,12 @@ function getSelectedTitles(){
 
 function renewSelectedTitles(){
 
-	showProcessingIndicator('Renewing your items. This may take a minute.');
-
 	var selectedTitles = getSelectedTitles();
-	if (selectedTitles.length > 0){ 
+	if (selectedTitles.length > 0){
+		$('.loading-frame').css('display','none'); // fix for firefox to display iframe with loading throbber
 		$('#renewForm').submit()
+		$('.loading-frame').css('display','block');
+		showProcessingIndicator('Renewing your items. This may take a minute.');
 	}
 	return false;
 }
