@@ -67,6 +67,11 @@
 		{/if}
 		{if $user->cat_username}
 		<div><h2>Account Settings</h2></div>
+		{if $profile.expireclose == 1}
+		<font color="red"><b>Your library card is due to expire within the next 30 days.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
+		{else if $profile.expireclose == -1}
+		<font color="red"><b>Your library card is expired.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
+		{/if}
 		<form id="profileForm" action="" method="post" {if $edit == true}onsubmit="return checkWhenSubmit();"{/if}>
 		<h3 id="info">Information</h3>
 		<input class="button" type="button" onclick="ajaxLightbox('/MyResearch/AJAX?method=getPinUpdateForm',false,false,'400px',false,'250px');return false;" value="Modify PIN Number"/>

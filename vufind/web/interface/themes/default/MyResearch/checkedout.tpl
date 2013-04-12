@@ -5,6 +5,13 @@
     alert("{$title}");
 </script>
 {/if}
+{if ($expireclose)) }
+<script type="text/javascript">
+    alert("Your card is about to expire");
+</script>
+{/if}
+
+
 <div id="page-content" class="content">
   <div id="sidebar">
     {include file="MyResearch/menu.tpl"}
@@ -31,7 +38,7 @@
 				</script>
 			{/if}
           
-      <div class="myAccountTitle">{translate text='Your Checked Out Items'}</div>
+      <div class="myAccountTitle">{translate text='Your Checked Out Items'} expire close {$expireclose}</div>
       {if $userNoticeFile}
         {include file=$userNoticeFile}
       {/if}
