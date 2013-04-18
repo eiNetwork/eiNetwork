@@ -138,29 +138,19 @@ left:12px;
 }
 
 .HUD .column{
-position: relative;
-width: 186px;
-height: 290px;
-bottom: 10px;
-float: left;
-margin-right: 16px;
-width:196px;
-top:4px;
+	position: relative;
+	width: 186px;
+	height: 290px;
+	bottom: 10px;
+	float: left;
+	margin: 0 16px 0 0;
+	width:196px;
+	top:4px;
+	border-right:solid #696969 1px;
 }
 
-.HUD .column:after{
-position: absolute;
-float: left;
-margin-left: 185px;
-top: 10px;
-width: 1px;
-height: 100%;
-content: "";
-background-color: #696969;	
-}
-
-.HUD .column.last:after{
-visibility: hidden;	
+.HUD .column.last {
+	border:none;
 }
 
 .HUD .buttonContainer{
@@ -189,7 +179,8 @@ width: 670px;
 }*/
 
 .HUD .option{
-padding: 8px 0px 6px;
+	margin:0 0 0 -10px;
+	padding: 8px 0px 6px;
 }
 
 .HUD .suboption{
