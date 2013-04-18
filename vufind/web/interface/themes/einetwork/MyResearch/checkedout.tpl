@@ -5,8 +5,8 @@
 <script type="text/javascript">
     alert("{$title}");
 </script>
-
 {/if}
+
 <div id="page-content" class="content">
     <div id="left-bar">
 	<div class="sort">
@@ -28,6 +28,10 @@
 	<div>
 	    <h2>Checked Out Items</h2>
 	</div>
+	{if $profile.expireclose == 1}
+	    <font color="red"><b>Your library card is due to expire within the next 30 days.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
+	{/if}
+	    
 	<form id="renewForm" action="{$path}/MyResearch/RenewMultiple">
 	    {*******BEGIN checked out item list*****}
 	    <div class="item_renew">
@@ -37,7 +41,7 @@
 			<a href="#" onclick="return renewSelectedTitles();" class="button"> Renew Selected Items</a>
 			</div>
 		{else}
-		    <font color="red"><b>Our apologies, you cannot renew items because {$renewalBlockReason}.  Please check with your local library to resolve this issue.  </a></b></font>
+		    <font color="red"><b>Our apologies, you cannot renew items because {$renewalBlockReason}.  Please visit your local library to ensure access to all online service.  </a></b></font>
 		{/if}
 	    </div>
 	    <div class="item_renew">

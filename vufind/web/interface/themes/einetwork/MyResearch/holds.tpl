@@ -42,6 +42,12 @@
 				<h2>{translate text='Requested Items'}</h2>
 				
 			</div>
+			{if $profile.expireclose == 1}
+			<font color="red"><b>Your library card is due to expire within the next 30 days.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
+			{elseif $profile.expireclose == -1}
+			<font color="red"><b>Your library card is expired.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
+			{/if}
+
 			<div style="margin-top: 30px">
 				<h3>Physical Requests</h3>
 			</div>

@@ -121,6 +121,7 @@ class CheckedOut extends MyResearch{
 					}
 					$interface->assign('patronCanRenew', $patronCanRenew);
 					$interface->assign('renewalBlockReason', $renewalBlockReason);
+					//$interface->assign('expireclose', $profile["expireclose"]);
 					
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
