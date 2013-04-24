@@ -184,7 +184,10 @@ class MillenniumDriver implements DriverInterface
 		$id_ = substr(str_replace('.b', '', $id), 0, -1);
 
 		$req =  $host . "/search~S{$scope}/.b" . $id_ . "/.b" . $id_ . "/1,1,1,B/holdings~" . $id_;
-		$millenniumCache->holdingsInfo = file_get_contents($req);
+		//convert holdings info to handle diacritics
+		$holdingsInfo = file_get_contents($req);
+		$millenniumCache->holdingsInfo = mb_convert_encoding($holdingsInfo,"UTF-8",mb_detect_encoding($holdingsInfo));
+		
 		$timer->logTime('got holdings from millennium');
 
 		$req =  $host . "/search~S{$scope}/.b" . $id_ . "/.b" . $id_ . "/1,1,1,B/frameset~" . $id_;
