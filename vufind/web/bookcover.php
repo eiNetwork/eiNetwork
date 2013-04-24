@@ -36,6 +36,8 @@ if (!function_exists('vufind_autoloader')){
 	spl_autoload_register('vufind_autoloader');
 }
 global $timer;
+
+
 if (empty($timer)){
 	$timer = new Timer(microtime(false));
 }
@@ -45,7 +47,7 @@ require_once 'sys/ConfigArray.php';
 $configArray = readConfig();
 $timer->logTime("Read config");
 if (isset($configArray['System']['timings'])){
-	$timer->enableTimings($configArray['System']['timings']);
+	//$timer->enableTimings($configArray['System']['timings']);
 }
 
 //Start a logger

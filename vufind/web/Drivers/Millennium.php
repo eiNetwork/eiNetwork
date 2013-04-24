@@ -2800,8 +2800,8 @@ class MillenniumDriver implements DriverInterface
 			$success = false;
 			$message = 'Your item could not be renewed because the renewal limit has been reached';
 		}
-		curl_close($curl_connection);
-		unlink($cookieJar);
+		//curl_close($curl_connection);
+		//unlink($cookieJar);
 
 		if ($success){
 			UsageTracking::logTrackingData('numRenewals');
@@ -3223,7 +3223,7 @@ class MillenniumDriver implements DriverInterface
 
 	}
 
-	protected function _getLoginFormValues($patronInfo, $admin = false){
+	protected function _getLoginFormValues($admin = false){
 		$loginData = array();
 		if ($admin){
 			global $configArray;
