@@ -2766,6 +2766,9 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
 		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
 		curl_setopt($curl_connection, CURLOPT_POST, true);
+		
+		
+		/*
 		$post_data = $this->_getLoginFormValues($patronDump);
 		foreach ($post_data as $key => $value) {
 			$post_items[] = $key . '=' . urlencode($value);
@@ -2781,7 +2784,7 @@ class MillenniumDriver implements DriverInterface
 		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
 		$sresult = curl_exec($curl_connection);
 		$logger->log('renew item go to items page url ' . $curl_url. " postfields ".$post_string, PEAR_LOG_INFO);
-		
+		*/
 
 		//Post renewal information
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items";
