@@ -100,6 +100,9 @@ function performSaveToBookCart(id, source, strings, service, successCallback)
 
 function AJAXtest()
 {
+	
+	var failMsg = '';
+
 	var url = path + "/SaveToBookCart/AJAX";
 	$.ajax({
 		url: url+'?hello=OK',
@@ -301,6 +304,9 @@ $("#cart-descrpiion").ready(function(){
         getBookCartItemCount();
     })
 function getBookCartItemCount(){
+
+	var failMsg = '';
+
      $.ajax({
 		type: 'post',
                 url: "/List/AJAX",

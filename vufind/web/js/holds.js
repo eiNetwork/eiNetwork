@@ -1,3 +1,9 @@
+$(document).ready(function() {
+	$('#update-selected-btn').click(function(){
+		updateSelected();
+	});
+});
+
 function updateSelectedHolds(){
 	var selectedTitles = getSelectedTitles();
 	alert(selectedTitles);
@@ -86,4 +92,23 @@ function renewSelectedTitles(){
 		$('#renewForm').submit()
 	}
 	return false;
+}
+
+function updateSelected(){
+	
+	var freeze_records = new Array();
+	var cancel_records = new Array();
+	
+	$('.freeze_checkboxes').each(function () {
+    	freeze_records.push('waitingholdselected='+$(this).attr('name'));
+    });
+    
+    $('.cancel_checkboxes').each(function () {
+    	cancel_records.push('waitingholdselected='+$(this).attr('name'));
+    });
+    
+    console.log('Freeze: ' + freeze_records);
+    console.log('Cancel: ' + cancel_records);
+	
+	
 }

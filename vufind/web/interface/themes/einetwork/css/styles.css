@@ -2668,3 +2668,20 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .lightboxLoadingImage {
 	margin:20px 0 0 0;
 }
+
+/* New Requested Items styling */
+
+.hold-buttons {
+	float: right;
+	width: 300px;
+}
+
+.requested-items-button {
+	float: left;
+	padding-right: 25px;
+	padding-bottom: 10px;
+}
+
+.requested-items-button a {
+	background-color:#FFE66D;
+}

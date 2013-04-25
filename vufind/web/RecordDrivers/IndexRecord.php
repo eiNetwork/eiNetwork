@@ -1090,7 +1090,7 @@ class IndexRecord implements RecordInterface
 	protected function getCorporateAuthor()
 	{
 		// Not currently stored in the Solr index
-		return $this->fields['author2'];
+		//return $this->fields['author2'];
 	}
 
 	/**

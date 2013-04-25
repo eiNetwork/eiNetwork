@@ -42,6 +42,16 @@
 				<h2>{translate text='Requested Items'}</h2>
 				
 			</div>
+			
+			<div class="hold-buttons">
+				<div class="requested-items-button">
+					<a id="freeze-all-btn" href="#" onclick="" class="button">Freeze All</a>
+				</div>
+				<div class="requested-items-button">
+					<a id="update-selected-btn" href="#" onclick="" class="button">Update Selected</a>
+				</div>
+			</div>
+			
 			{if $profile.expireclose == 1}
 			<font color="red"><b>Your library card is due to expire within the next 30 days.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
 			{elseif $profile.expireclose == -1}
@@ -51,17 +61,13 @@
 			<div style="margin-top: 30px">
 				<h3>Physical Requests</h3>
 			</div>
-			<div id='holdsUpdateBranchSelction' style=";padding-bottom: 10px;width: 660px">
-				&nbsp&nbsp&nbsp&nbspChange Pickup Location to: 
-				{html_options name="withSelectedLocation" options=$pickupLocations selected=$resource.currentPickupId}
-				{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
-			</div>
+			
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
 				<div class="checkout">
 					{foreach from=$recordList.$sectionKey item=record name="recordLoop"}
 						<div id="record{$record.recordId|escape}" class="item_list  record{$smarty.foreach.recordLoop.iteration}">
-							
+						
 							<div class="item_image">
 								{if $user->disableCoverArt != 1}
 									<a href="{$url}/Record/{$record.recordId|escape:"url"}?searchId={$searchId}&amp;recordIndex={$recordIndex}&amp;page={$page}" id="descriptionTrigger{$record.recordId|escape:"url"}">
@@ -236,53 +242,17 @@
 								{*****Cancel********************}
 								{****Change Pick Up Location****}
 								
-								{if $record.status eq "Available"}
-									<div id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Freeze</span></div>
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px"><span class="resultAction_span">Cancel</span></div>
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Change Pick Up</span></div>
-								
-								{elseif $record.status eq "Frozen"}
-									{if $record.frozen}
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="thawSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Unfreeze</span></div>
-									{else}
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="freezeSelectedHolds(this) style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px""><span class="resultAction_span">Freeze</span></div>
-									{/if}
-									<div id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px"><span class="resultAction_span">Cancel</span></div>
-									<div id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Change Pick Up</span></div>
-								{elseif $record.status eq "In Transit"}
-									{*You can't do anything because item is in transit*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
-								
-								{elseif $record.status eq "Ready"}
-									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
-								
-								{elseif $record.status eq "Frozen"}
-									{*You can't do anything because item is ready to pick up*}
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="background-color: rgb(192,192,192);border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="background-color: rgb(192,192,192);border-radius:0px;border-bottom-width:0px; color: #FFFFFF;"/>
-									<input id="{$record.cancelId}" disabled="disabled" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="background-color: rgb(192,192,192);color: border-top-right-radius:0px;border-top-left-radius:0px; color: #FFFFFF;"/>
-								
-								{else}
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="freezeSelectedHolds(this)"style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" ><span class="resultAction_span">Freeze</span></div>
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px"><span class="resultAction_span">Cancel</span></div>
-									<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Change Pick Up</span></div>
-								{/if}
-								
-								
+								<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+									<input class="freeze_checkboxes" type="checkbox" name="{$record.cancelId}" value="true" /> Freeze<br />
+									<input class="cancel_checkboxes" type="checkbox" name="{$record.cancelId}" value="true" /> Cancel
+								</div>
 							
-								{*if $record.frozen}
-								<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Unfreeze" onclick="thawSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-								{else}
-								<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Freeze" onclick="freezeSelectedHolds(this)" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px; color: #6D6D6D;"/>
-								{/if}
-								<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Cancel" onclick="cancelSelectedHolds(this)" style="border-radius:0px;border-bottom-width:0px; color: #6D6D6D;"/>
-								<input id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" value="Change Pick Up" onclick="updateSeledHold(this)" style="border-top-right-radius:0px;border-top-left-radius:0px; color: #6D6D6D;"/>
-								*}
+								<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+									&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
+									{html_options name="$withSelectedLocation_record.recordId|escape" options=$pickupLocations selected=$resource.currentPickupId}
+									{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
+								</div>
+								
 							</div>
 						</div>
 					{/foreach}
@@ -361,7 +331,7 @@
 							<div class="item_author">
 								{if strlen($record.author) > 0}<br/>{$record.author}{/if}
 							</div>
-							<div class="notify_email" style="margin-top:10px;">Email notifcation will be sent to:<br/>{$record.notifyEmail}</div>
+							<div class="notify_email" style="margin-top:10px;">Email notification will be sent to:<br/>{$record.notifyEmail}</div>
 						<!--	<div class="item_type">
 								{$record.format}
 								{if is_array($record.format)}
