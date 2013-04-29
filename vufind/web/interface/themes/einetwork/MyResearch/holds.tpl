@@ -65,6 +65,8 @@
 			{foreach from=$recordList item=recordData key=sectionKey}
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}
 				<div class="checkout">
+				
+				<form id="items-hold">
 					{foreach from=$recordList.$sectionKey item=record name="recordLoop"}
 						<div id="record{$record.recordId|escape}" class="item_list  record{$smarty.foreach.recordLoop.iteration}">
 						
@@ -242,20 +244,108 @@
 								{*****Cancel********************}
 								{****Change Pick Up Location****}
 								
-								<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
-									<input class="freeze_checkboxes" type="checkbox" name="{$record.cancelId}" value="true" /> Freeze<br />
-									<input class="cancel_checkboxes" type="checkbox" name="{$record.cancelId}" value="true" /> Cancel
-								</div>
-							
-								<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
-									&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
-									{html_options name="$withSelectedLocation_record.recordId|escape" options=$pickupLocations selected=$resource.currentPickupId}
-									{*<input type="submit" name="updateSelected" value="Go" onclick="return updateSelectedHolds();"/>*}
-								</div>
+								{if $record.status eq "Available"}
+								
+									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+								
+										<input class="freeze_checkboxes" disabled="disabled" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+										
+									</div>
+									
+									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+										&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
+										
+										<select name="data[{$record.cancelId}][location]">
+										   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+										</select>
+										
+									</div>
+									
+								{elseif $record.status eq "Frozen"}
+								
+									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+								
+										{if $record.frozen}
+											<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" checked="checked" /> Unfreeze<br />
+										{else}
+											<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										{/if}
+									
+										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+									
+									</div>
+										
+									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+										Change Pickup Location to:<br />
+										
+										<select name="data[{$record.cancelId}][location]">
+										   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+										</select>
+										
+									</div>
+								
+								{elseif $record.status eq "In Transit"}
+								
+									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+								
+										<input disabled="disabled" class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input disabled="disabled" class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+								
+									</div>
+									
+									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+										Change Pickup Location to:<br />
+								
+											<select disabled="disabled" name="data[{$record.cancelId}][location]">
+											   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+											</select>
+											
+									</div>
+								
+								{elseif $record.status eq "Ready"}
+								
+									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+								
+										<input disabled="disabled" class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input disabled="disabled" class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+								
+									</div>
+									
+									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+										Change Pickup Location to:<br />
+								
+											<select disabled="disabled" name="data[{$record.cancelId}][location]">
+											   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+											</select>
+											
+									</div>
+								
+								{else}
+								
+									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
+								
+										<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+								
+									</div>
+									
+									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
+										Change Pickup Location to:<br />
+								
+											<select name="data[{$record.cancelId}][location]">
+											   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+											</select>
+											
+									</div>
+								
+								{/if}
 								
 							</div>
 						</div>
 					{/foreach}
+					
+				</form>
 					
 				</div>
 
@@ -456,9 +546,8 @@
 		
 							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelOverDriveHold('{$record.overDriveId}')" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Cancel</span></div>
 							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="ajaxLightbox('/MyResearch/AJAX?method=editEmailPrompt&overDriveId={$record.overDriveId}', false, false, '300px','400px','auto')" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Edit</span></div>
+						
 						</div>
-						
-						
 						
 					</div>
 				    {/foreach}

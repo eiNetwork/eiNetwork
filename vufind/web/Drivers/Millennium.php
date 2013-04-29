@@ -2480,13 +2480,120 @@ class MillenniumDriver implements DriverInterface
 	 * Update a hold that was previously placed in the system.
 	 * Can cancel the hold or update pickup locations.
 	 */
-	public function updateHoldDetailed($requestId, $patronId, $type, $title, $xnum, $cancelId, $locationId, $freezeValue='off')
+	public function updateHoldDetailed($data)
 	{
 		global $logger;
 		global $configArray;
-
-		$id2= $patronId;
+		
 		$patronDump = $this->_getPatronDump($this->_getBarcode());
+		
+		$hold_update_params = "updateholdssome=YES&currentsortorder=current_pickup&";
+		
+		$x = 0;
+		
+		$data_count = count($data);
+		
+		foreach($data as $key => $value){
+		
+			$x++;
+		
+			$items = array();
+		
+			$cancel_name = str_replace('~','x', "cancel" . $key);
+			$items[$cancel_name] = $value['cancel'];
+			
+			$freeze_name = explode('~', $key);
+			$freeze_name = "freeze" . $freeze_name[0];
+			$items[$freeze_name] = $value['freeze'];
+			
+			$location_name = explode('~', $key);
+			$location_name = "loc" . $location_name[0];
+			
+			$location = new Location();
+			
+			$location_id = $value['location'];
+			
+			$location->whereAdd("locationId = '$location_id'");
+			$location->find();
+			
+			if ($location->N == 1) {
+				$location->fetch();
+				$items[$location_name] = str_replace('+','', str_pad(trim($location->code), 5, "+"));
+			}
+			
+			$n = 0;
+			
+			$item_count = count($items);
+			
+			foreach($items as $key=>$value){
+				
+				$hold_update_params .= $key  . "=" . $value;
+	
+				$n++;
+			
+				if ($n < $item_count) $hold_update_params .= "&";
+				
+			}
+			
+			if ($x < $data_count) $hold_update_params .= "&";
+			
+		}
+		
+		//Login to the patron's account
+		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
+		$success = false;
+
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo";
+		$logger->log('Loading page ' . $curl_url, PEAR_LOG_INFO);
+
+		$curl_connection = curl_init($curl_url);
+		$header=array();
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+		$header[] = "Cache-Control: max-age=0";
+		$header[] = "Connection: keep-alive";
+		$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+		$header[] = "Accept-Language: en-us,en;q=0.5";
+		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl_connection, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
+		$post_data = $this->_getLoginFormValues($patronDump);
+		foreach ($post_data as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+		$sresult = curl_exec($curl_connection);
+		
+
+		$scope = $this->getDefaultScope();
+	
+		//go to the holds page and get the number of holds on the account
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
+		$sresult = curl_exec($curl_connection);
+		$holds = $this->parseHoldsPage($sresult);
+		$numHoldsStart = count($holds['available'] + $holds['unavailable']);
+		
+		//Issue a get request with the information about what to do with the holds
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $hold_update_params);
+		curl_setopt($curl_connection, CURLOPT_HTTPPOST, true);
+		$sresult = curl_exec($curl_connection);
+		
+		//$holds = $this->parseHoldsPage($sresult);
+		//At this stage, we get messages if there were any errors freezing holds.
+		
+		die();
 
 		//Recall Holds
 		$bib = $cancelId;

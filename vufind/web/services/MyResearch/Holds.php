@@ -35,6 +35,15 @@ class Holds extends MyResearch
 		global $interface;
 		global $user;
 		global $timer;
+		
+		
+		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+			
+			$result = $this->catalog->driver->updateHoldDetailed($_REQUEST['data']);
+			
+			die();
+			
+		}
 
 		if (isset($_REQUEST['multiAction'])){
 			$multiAction = $_REQUEST['multiAction'];
