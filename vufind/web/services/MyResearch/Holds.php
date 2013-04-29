@@ -171,7 +171,15 @@ class Holds extends MyResearch
 						$interface->assign('pickupLocations', $locationList);
 
 						$xnum = -01;
+						
+						$totalUnavailable = count($result['holds']['unavailable']);
+						
+						$frozenRecords = 0;
+						
+						$x = 0;
+						
 						foreach ($result['holds'] as $sectionKey => $sectionData) {
+							
 							if ($sectionKey == 'unavailable'){
 								$link = $_SERVER['REQUEST_URI'];
 								if (preg_match('/[&?]page=/', $link)){
@@ -190,11 +198,31 @@ class Holds extends MyResearch
 									$pager = new VuFindPager($options);
 									$interface->assign('pageLinks', $pager->getLinks());
 								}
+								
+								foreach($sectionData as $key => $value){
+									
+									if ($value['status'] == 'Frozen' || $value['status'] == 'Available'){
+										$frozenRecords++;
+									}
+									
+								}
+								
+								
 							}
 							
 							//Processing of freeze messages?
 							$timer->logTime("Got recordList of holds to display");
 						}
+						
+						if ($frozenRecords >= $totalUnavailable){
+							$freezeButton = 'unfreeze';
+						} else {
+							$freezeButton = 'freeze';
+						}
+						
+						
+						$interface->assign('freezeButton', $freezeButton);
+						
 						//Make sure available holds come before unavailable
 						$interface->assign('recordList', $result['holds']);
 

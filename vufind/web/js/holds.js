@@ -6,6 +6,10 @@ $(document).ready(function() {
 	$('#freeze-all-btn').click(function(){
 		freezeAll();
 	});
+	
+	$('#unfreeze-all-btn').click(function(){
+		unfreezeAll();
+	});
 });
 
 function freezeAll(){
@@ -26,6 +30,36 @@ function freezeAll(){
     });
     
     showProcessingIndicator('Attempting to freeze all your items. This may take a minute.');
+    
+    $.ajax({
+		type: 'POST',
+		url: '/MyResearch/Holds/',
+		data: values,
+		success: function(data) {
+				document.location.href='/MyResearch/Holds';
+		}
+	});
+	
+}
+
+function unfreezeAll(){
+	
+	var inputs = $('.freeze_checkboxes');
+
+    var values = {};
+    
+    inputs.each(function() {
+    	
+    	if ($(this).is(':checked') ){
+    		$(this).val('off')
+    	} else {
+    		$(this).val('off')
+    	}
+    	
+    	values[this.name] = $(this).val();
+    });
+    
+    showProcessingIndicator('Attempting to unfreeze all your items. This may take a minute.');
     
     $.ajax({
 		type: 'POST',
