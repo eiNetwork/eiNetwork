@@ -255,15 +255,15 @@
 								
 									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
 								
-										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+										<input class="physical_items cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
 										
 									</div>
 									
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]">
-										   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+										<select name="data[{$record.cancelId}][location]" class="physical_items">
+										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
 									</div>
@@ -273,20 +273,20 @@
 									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
 								
 										{if $record.frozen}
-											<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" checked="checked" /> Frozen<br />
+											<input id="frozen_state_on" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Unfreeze<br />
 										{else}
-											<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Frozen<br />
+											<input id="frozen_state_off" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
 										{/if}
 									
-										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+										<input class="physical_items cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
 									
 									</div>
 										
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]">
-										   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+										<select name="data[{$record.cancelId}][location]" class="physical_items">
+										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
 									</div>
@@ -302,16 +302,16 @@
 								
 									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
 								
-										<input class="freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Frozen<br />
-										<input class="cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
+										<input id="frozen_state_off" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input class="physical_items cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
 								
 									</div>
 									
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 								
-											<select name="data[{$record.cancelId}][location]">
-											   {html_options options=$pickupLocations selected=$resource.currentPickupId}
+											<select name="data[{$record.cancelId}][location]" class="physical_items">
+											   {html_options options=$pickupLocations selected=$record.currentPickupId}
 											</select>
 											
 									</div>

@@ -177,7 +177,7 @@ class Holds extends MyResearch
 						$frozenRecords = 0;
 						
 						$x = 0;
-						
+												
 						foreach ($result['holds'] as $sectionKey => $sectionData) {
 							
 							if ($sectionKey == 'unavailable'){
@@ -201,7 +201,7 @@ class Holds extends MyResearch
 								
 								foreach($sectionData as $key => $value){
 									
-									if ($value['status'] == 'Frozen' || $value['status'] == 'Available'){
+									if ($value['status'] == 'Frozen' || $value['status'] == 'Available' || $value['status'] == 'In Transit'){
 										$frozenRecords++;
 									}
 									
@@ -214,12 +214,13 @@ class Holds extends MyResearch
 							$timer->logTime("Got recordList of holds to display");
 						}
 						
+						echo $frozenRecords . " " . $totalUnavailable;
+						
 						if ($frozenRecords >= $totalUnavailable){
 							$freezeButton = 'unfreeze';
 						} else {
 							$freezeButton = 'freeze';
 						}
-						
 						
 						$interface->assign('freezeButton', $freezeButton);
 						

@@ -2506,20 +2506,23 @@ class MillenniumDriver implements DriverInterface
 			$freeze_name = "freeze" . $freeze_name[0];
 			$items[$freeze_name] = $value['freeze'];
 			
-			$location_name = explode('~', $key);
-			$location_name = "loc" . $location_name[0];
+			$location_name = str_replace('~','x', "loc" . $key);
+			
+			$locationId = $value['location'];
 			
 			$location = new Location();
-			
-			$location_id = $value['location'];
-			
-			$location->whereAdd("locationId = '$location_id'");
-			$location->find();
-			
-			if ($location->N == 1) {
-				$location->fetch();
-				$items[$location_name] = str_replace('+','', str_pad(trim($location->code), 5, "+"));
+			if (isset($locationId) && is_numeric($locationId)){
+				$location->whereAdd("locationId = '$locationId'");
+				$location->find();
+				if ($location->N == 1) {
+					$location->fetch();
+					$paddedLocation = str_pad(trim($location->code), 5, "+");
+				}
+			}else{
+				$paddedLocation = null;
 			}
+			
+			$items[$location_name] = $paddedLocation;
 			
 			$n = 0;
 			

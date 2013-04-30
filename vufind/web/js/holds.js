@@ -14,74 +14,31 @@ $(document).ready(function() {
 
 function freezeAll(){
 	
-	var inputs = $('.freeze_checkboxes');
+	//var inputs = $('#items-hold :input, select');
 
     var values = {};
     
-    inputs.each(function() {
+    $('.physical_items').each(function() {
+    
+    	//alert($(this).val());
     	
-    	if ($(this).is(':checked') ){
-    		$(this).val('on')
-    	} else {
-    		$(this).val('on')
-    	}
+    	if ($(this).is('input')){
     	
-    	values[this.name] = $(this).val();
-    });
-    
-    showProcessingIndicator('Attempting to freeze all your items. This may take a minute.');
-    
-    $.ajax({
-		type: 'POST',
-		url: '/MyResearch/Holds/',
-		data: values,
-		success: function(data) {
-				document.location.href='/MyResearch/Holds';
-		}
-	});
-	
-}
-
-function unfreezeAll(){
-	
-	var inputs = $('.freeze_checkboxes');
-
-    var values = {};
-    
-    inputs.each(function() {
+    		if ($(this).attr('id') == 'frozen_state_off'){
+	    		
+	    		$(this).val('on');
+	    		
+    		} else {
+	    		
+	    		if ($(this).is(':checked')){
+		    		$(this).val('on')
+		    	} else {
+		    		$(this).val('off')
+		    	}
+	    		
+    		}
     	
-    	if ($(this).is(':checked') ){
-    		$(this).val('off')
-    	} else {
-    		$(this).val('off')
-    	}
-    	
-    	values[this.name] = $(this).val();
-    });
-    
-    showProcessingIndicator('Attempting to unfreeze all your items. This may take a minute.');
-    
-    $.ajax({
-		type: 'POST',
-		url: '/MyResearch/Holds/',
-		data: values,
-		success: function(data) {
-				document.location.href='/MyResearch/Holds';
-		}
-	});
-	
-}
-
-function updateSelected(){
-	
-	var inputs = $('#items-hold :input, select');
-
-    var values = {};
-    inputs.each(function() {
-    	if ($(this).is(':checked')){
-    		$(this).val('on')
-    	} else {
-    		$(this).val('off')
+	    	
     	}
     	
     	values[this.name] = $(this).val();
@@ -94,7 +51,104 @@ function updateSelected(){
 		url: '/MyResearch/Holds/',
 		data: values,
 		success: function(data) {
-				document.location.href='/MyResearch/Holds';
+			//console.log(data);
+			document.location.href='/MyResearch/Holds';
+		}
+	});
+	
+}
+
+function unfreezeAll(){
+	
+	//var inputs = $('#items-hold :input, select');
+
+    var values = {};
+    
+    $('.physical_items').each(function() {
+    
+    	//alert($(this).val());
+    	
+    	if ($(this).is('input')){
+    	
+    		if ($(this).attr('id') == 'frozen_state_on'){
+	    		
+	    		$(this).val('off');
+	    		
+    		} else {
+	    		
+	    		if ($(this).is(':checked')){
+		    		$(this).val('on')
+		    	} else {
+		    		$(this).val('off')
+		    	}
+	    		
+    		}
+    	
+	    	
+    	}
+    	
+    	values[this.name] = $(this).val();
+    });
+    
+    showProcessingIndicator('Updating your items. This may take a minute.');
+    
+    $.ajax({
+		type: 'POST',
+		url: '/MyResearch/Holds/',
+		data: values,
+		success: function(data) {
+			//console.log(data);
+			document.location.href='/MyResearch/Holds';
+		}
+	});
+	
+}
+
+function updateSelected(){
+	
+	//var inputs = $('#items-hold :input, select');
+
+    var values = {};
+    
+    $('.physical_items').each(function() {
+    
+    	//alert($(this).val());
+    	
+    	if ($(this).is('input')){
+    	
+    		if ($(this).attr('id') == 'frozen_state_on' && $(this).is(':checked')){
+	    		
+	    		$(this).val('off');
+	    		
+    		} else if($(this).attr('id') == 'frozen_state_off' && $(this).is(':checked')){
+	    		
+	    		$(this).val('on');
+	    		
+    		} else {
+	    		
+	    		if ($(this).is(':checked')){
+		    		$(this).val('on')
+		    	} else {
+		    		$(this).val('off')
+		    	}
+	    		
+    		}
+    	
+	    	
+    	}
+    	
+    	values[this.name] = $(this).val();
+    });
+    
+    showProcessingIndicator('Updating your items. This may take a minute.');
+    
+    $.ajax({
+		type: 'POST',
+		url: '/MyResearch/Holds/',
+		data: values,
+		success: function(data) {
+			//console.log(data);
+			document.location.href='/MyResearch/Holds';
 		}
 	});
 	
