@@ -160,6 +160,31 @@ class Holds extends MyResearch
 				}
 				
 				$result = $this->catalog->getMyHolds($patron, $page, $recordsPerPage, $selectedSortOption);
+				
+				$result_count = count($result['holds']['unavailable']);
+				
+				global $memcache;
+				
+				$numUnavailableHolds = $memcache->get("numUnavailableHolds");
+					
+				if ($numUnavailableHolds > $result_count){
+					
+					$total_cancelations = $numUnavailableHolds - $result_count;
+					
+					
+					
+					if ($total_cancelations == 1) {
+						$message = "You have successfully canceled 1 hold";
+						$interface->assign('cancel_message', $message);
+					} else {
+						$message = "You have successfully canceled " . $total_cancelations . " holds";
+						$interface->assign('cancel_message', $message);
+					}
+					
+				}
+				
+				$memcache->set("numUnavailableHolds", $result['numUnavailableHolds']);
+				
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {
 						$location = new Location();

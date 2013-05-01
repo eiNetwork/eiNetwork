@@ -66,6 +66,13 @@
 				<h3>Physical Requests</h3>
 			</div>
 			
+			
+			{if $cancel_message <> ''}
+			<div class="cancel-message">
+				{$cancel_message}
+			</div>
+			{/if}
+			
 			{foreach from=$recordList item=recordData key=sectionKey}
 			
 				{if is_array($recordList.$sectionKey) && count($recordList.$sectionKey) > 0}

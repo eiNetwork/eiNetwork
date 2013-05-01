@@ -2578,6 +2578,7 @@ class MillenniumDriver implements DriverInterface
 
 		$scope = $this->getDefaultScope();
 	
+		/*
 		//go to the holds page and get the number of holds on the account
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
 		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
@@ -2585,6 +2586,7 @@ class MillenniumDriver implements DriverInterface
 		$sresult = curl_exec($curl_connection);
 		$holds = $this->parseHoldsPage($sresult);
 		$numHoldsStart = count($holds['available'] + $holds['unavailable']);
+		*/
 		
 		//Issue a get request with the information about what to do with the holds
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
@@ -2596,6 +2598,7 @@ class MillenniumDriver implements DriverInterface
 		//$holds = $this->parseHoldsPage($sresult);
 		//At this stage, we get messages if there were any errors freezing holds.
 
+		/*
 		//Go back to the hold page to check make sure our hold was cancelled
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
 		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
@@ -2605,24 +2608,26 @@ class MillenniumDriver implements DriverInterface
 		$numHoldsEnd = count($holds['available'] + $holds['unavailable']);
 		
 		//print_r($holds);
+		*/
 
 		curl_close($curl_connection);
 
 		unlink($cookieJar);
-
+		
+		/*
 		//Finally, check to see if the update was successful.
 		if ($type == 'cancel' || $type=='recall'){
 			if ($numHoldsEnd != $numHoldsStart){
 				$logger->log('Cancelled ok', PEAR_LOG_INFO);
 				$success = true;
 			}
-		}
-		
-		die();
+		}*/
 
 		//Make sure to clear any cached data
 		global $memcache;
 		$memcache->delete("patron_dump_{$this->_getBarcode()}");
+		
+		/*
 		usleep(250);
 		//Clear holds for the patron
 		unset($this->holds[$patronId]);
@@ -2644,7 +2649,7 @@ class MillenniumDriver implements DriverInterface
                     'title' => $title,
                     'result' => true,
                     'message' => 'Your hold was updated successfully.');
-		}
+		}*/
 		
 	}
 
