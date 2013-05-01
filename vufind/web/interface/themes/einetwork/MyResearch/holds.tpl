@@ -262,7 +262,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]" class="physical_items">
+										<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
 										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
@@ -273,9 +273,9 @@
 									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
 								
 										{if $record.frozen}
-											<input id="frozen_state_on" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Unfreeze<br />
+											<input id="frozen_state_on" class="physical_items freeze_checkboxes update_all" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Unfreeze<br />
 										{else}
-											<input id="frozen_state_off" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+											<input id="frozen_state_off" class="physical_items freeze_checkboxes update_all" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
 										{/if}
 									
 										<input class="physical_items cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
@@ -285,7 +285,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]" class="physical_items">
+										<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
 										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
@@ -302,7 +302,7 @@
 								
 									<div class="requested_update_check" style="float:right;width:100px;margin-top:20px">
 								
-										<input id="frozen_state_off" class="physical_items freeze_checkboxes" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
+										<input id="frozen_state_off" class="physical_items freeze_checkboxes update_all" type="checkbox" name="data[{$record.cancelId}][freeze]" /> Freeze<br />
 										<input class="physical_items cancel_checkboxes" type="checkbox" name="data[{$record.cancelId}][cancel]" /> Cancel
 								
 									</div>
@@ -310,7 +310,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 								
-											<select name="data[{$record.cancelId}][location]" class="physical_items">
+											<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
 											   {html_options options=$pickupLocations selected=$record.currentPickupId}
 											</select>
 											

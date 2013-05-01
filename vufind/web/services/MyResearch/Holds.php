@@ -214,8 +214,6 @@ class Holds extends MyResearch
 							$timer->logTime("Got recordList of holds to display");
 						}
 						
-						echo $frozenRecords . " " . $totalUnavailable;
-						
 						if ($frozenRecords >= $totalUnavailable){
 							$freezeButton = 'unfreeze';
 						} else {
