@@ -2251,6 +2251,7 @@ class MillenniumDriver implements DriverInterface
 
 		} else {
 
+
 			//User is logged in before they get here, always use the info from patrondump
 			$username = $patronDump['PATRN_NAME'];
 
@@ -2368,6 +2369,7 @@ class MillenniumDriver implements DriverInterface
 			if ($hold_result['result'] == true){
 				UsageTracking::logTrackingData('numHolds');
 			}
+
 			return $hold_result;
 		}
 	}
@@ -2450,6 +2452,11 @@ class MillenniumDriver implements DriverInterface
 						$hold_result['result'] = false;
 						$hold_result['message'] = 'There are no holdable items for this title.';
 						return $hold_result;
+
+				} else if (preg_match('/Request denied - already on hold for or checked out to you/', $holdResultPage)){
+					$hold_result['result'] = false;
+					$hold_result['message'] = 'Request denied - already on hold for or checked out to you.';
+					return $hold_result;
 				}else{
 					$message = 'Unable to contact the circulation system.  Please try again in a few minutes 2.';
 				}
