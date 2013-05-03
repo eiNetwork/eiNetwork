@@ -63,16 +63,10 @@
 			<font color="red"><b>Your library card is expired.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
 			{/if}
 
+
 			<div style="margin-top: 30px">
 				<h3>Physical Requests</h3>
 			</div>
-			
-			
-			{if $cancel_message <> ''}
-			<div class="cancel-message">
-				{$cancel_message}
-			</div>
-			{/if}
 			
 			{foreach from=$recordList item=recordData key=sectionKey}
 			
@@ -270,7 +264,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										&nbsp&nbsp&nbsp&nbspChange Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
+										<select name="data[{$record.cancelId}][location]" class="physical_items update_all location_dropdown">
 										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
@@ -293,7 +287,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 										
-										<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
+										<select name="data[{$record.cancelId}][location]" class="physical_items update_all location_dropdown">
 										   {html_options options=$pickupLocations selected=$record.currentPickupId}
 										</select>
 										
@@ -318,7 +312,7 @@
 									<div id='holdsUpdateBranchSelction' style="float:right;clear:left;margin-top:20px;">
 										Change Pickup Location to:<br />
 								
-											<select name="data[{$record.cancelId}][location]" class="physical_items update_all">
+											<select name="data[{$record.cancelId}][location]" class="physical_items update_all location_dropdown">
 											   {html_options options=$pickupLocations selected=$record.currentPickupId}
 											</select>
 											
@@ -529,9 +523,14 @@
 						<div class="item_status" >
 							<!--<div style="text-align: center"><span id="item_status{$record.recordId}" style="text-align: center">Total {$record.holdQueueLength} {if $record.holdQueueLength == 1}copy{else}copies{/if}</span></div>-->
 		
-							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="cancelOverDriveHold('{$record.overDriveId}')" style="border-bottom-width:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px"><span class="resultAction_span">Cancel</span></div>
-							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="ajaxLightbox('/MyResearch/AJAX?method=editEmailPrompt&overDriveId={$record.overDriveId}', false, false, '300px','400px','auto')" style="border-top-right-radius:0px;border-top-left-radius:0px"><span class="resultAction_span">Edit</span></div>
-						
+							<div class="requested_update_check_econtent" style="width:100px;margin:20px 0 20px 44px;">
+								
+								<input class="econtent_items econtent_cancel_checkboxes" type="checkbox" name="{$record.overDriveId}" /> Cancel
+							
+							</div>
+
+							<div id="{$record.cancelId}" name="waitingholdselected[]" class="round-rectangle-button" onclick="ajaxLightbox('/MyResearch/AJAX?method=editEmailPrompt&overDriveId={$record.overDriveId}', false, false, '300px','400px','auto')" style="padding-top:10px;"><span class="resultAction_span">Edit Email Address</span></div>
+
 						</div>
 						
 					</div>
