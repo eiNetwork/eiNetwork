@@ -173,10 +173,10 @@ class Holds extends MyResearch
 					$total_cancelations = $numUnavailableHolds - $result_count;
 					
 					if ($total_cancelations == 1) {
-						$message = "You have successfully canceled 1 physical item";
+						$message = "You have successfully canceled 1 hold";
 						$interface->assign('cancel_message', $message);
 					} else {
-						$message = "You have successfully canceled " . $total_cancelations . " physical items";
+						$message = "You have successfully canceled " . $total_cancelations . " holds";
 						$interface->assign('cancel_message', $message);
 					}
 
