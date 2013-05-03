@@ -172,8 +172,6 @@ class Holds extends MyResearch
 					
 					$total_cancelations = $numUnavailableHolds - $result_count;
 					
-					
-					
 					if ($total_cancelations == 1) {
 						$message = "You have successfully canceled 1 hold";
 						$interface->assign('cancel_message', $message);
@@ -186,7 +184,7 @@ class Holds extends MyResearch
 					
 				}
 				
-				$memcache->set("numUnavailableHolds", $result['numUnavailableHolds']);
+				$memcache->set("numUnavailableHolds", $result['numUnavailableHolds'], 0, 30);
 				
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {
