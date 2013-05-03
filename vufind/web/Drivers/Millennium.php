@@ -2480,7 +2480,176 @@ class MillenniumDriver implements DriverInterface
 	 * Update a hold that was previously placed in the system.
 	 * Can cancel the hold or update pickup locations.
 	 */
-	public function updateHoldDetailed($data)
+	public function updateHoldDetailed($requestId, $patronId, $type, $title, $xnum, $cancelId, $locationId, $freezeValue='off')
+	{
+		global $logger;
+		global $configArray;
+
+		$id2= $patronId;
+		$patronDump = $this->_getPatronDump($this->_getBarcode());
+
+		//Recall Holds
+		$bib = $cancelId;
+
+		if (!isset($xnum) ){
+			$waitingHolds = isset($_REQUEST['waitingholdselected']) ? $_REQUEST['waitingholdselected'] : array();
+			$availableHolds = isset($_REQUEST['availableholdselected']) ? $_REQUEST['availableholdselected'] : array();
+			$xnum = array_merge($waitingHolds, $availableHolds);
+		}
+		$location = new Location();
+		if (isset($locationId) && is_numeric($locationId)){
+			$location->whereAdd("locationId = '$locationId'");
+			$location->find();
+			if ($location->N == 1) {
+				$location->fetch();
+				$paddedLocation = str_pad(trim($location->code), 5, "+");
+			}
+		}else{
+			$paddedLocation = null;
+		}
+		$id=$patronDump['RECORD_#'];
+
+		$cancelValue = ($type == 'cancel' || $type == 'recall') ? 'on' : 'off';
+
+		if (is_array($xnum)){
+			$extraGetInfo = array(
+                'updateholdssome' => 'YES',
+                'currentsortorder' => 'current_pickup',
+			);
+			foreach ($xnum as $tmpXnumInfo){
+				list($tmpBib, $tmpXnum) = split("~", $tmpXnumInfo);
+				$extraGetInfo['cancel' . $tmpBib . 'x' . $tmpXnum] = $cancelValue;
+				if ($paddedLocation){
+					$extraGetInfo['loc' . $tmpBib . 'x' . $tmpXnum] = $paddedLocation;
+				}
+				if (strlen($freezeValue) > 0){
+					$extraGetInfo['freeze' . $tmpBib] = $freezeValue;
+				}
+			}
+		}else{
+			$extraGetInfo = array(
+                'updateholdssome' => 'YES',
+                'cancel' . $bib . $xnum => $cancelValue,
+                'currentsortorder' => 'current_pickup',
+			);
+			if ($paddedLocation){
+				$extraGetInfo['loc' . $bib . $xnum] = $paddedLocation;
+			}
+			if (strlen($freezeValue) > 0){
+				$extraGetInfo['freeze' . $bib] = $freezeValue;
+			}
+
+		}
+
+		$get_items = array();
+		foreach ($extraGetInfo as $key => $value) {
+			$get_items[] = $key . '=' . urlencode($value);
+		}
+		$holdUpdateParams = implode ('&', $get_items);
+
+		//Login to the patron's account
+		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
+		$success = false;
+
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo";
+		$logger->log('Loading page ' . $curl_url, PEAR_LOG_INFO);
+
+		$curl_connection = curl_init($curl_url);
+		$header=array();
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+		$header[] = "Cache-Control: max-age=0";
+		$header[] = "Connection: keep-alive";
+		$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+		$header[] = "Accept-Language: en-us,en;q=0.5";
+		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl_connection, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
+		$post_data = $this->_getLoginFormValues($patronDump);
+		foreach ($post_data as $key => $value) {
+			$post_items[] = $key . '=' . urlencode($value);
+		}
+		$post_string = implode ('&', $post_items);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+		$sresult = curl_exec($curl_connection);
+
+		$scope = $this->getDefaultScope();
+		//go to the holds page and get the number of holds on the account
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
+		$sresult = curl_exec($curl_connection);
+		$holds = $this->parseHoldsPage($sresult);
+		$numHoldsStart = count($holds['available'] + $holds['unavailable']);
+
+		//Issue a get request with the information about what to do with the holds
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $holdUpdateParams);
+		curl_setopt($curl_connection, CURLOPT_HTTPPOST, true);
+		$sresult = curl_exec($curl_connection);
+		$holds = $this->parseHoldsPage($sresult);
+		//At this stage, we get messages if there were any errors freezing holds.
+
+		//Go back to the hold page to check make sure our hold was cancelled
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/holds";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
+		$sresult = curl_exec($curl_connection);
+		$holds = $this->parseHoldsPage($sresult);
+		$numHoldsEnd = count($holds['available'] + $holds['unavailable']);
+
+		curl_close($curl_connection);
+
+		unlink($cookieJar);
+
+		//Finally, check to see if the update was successful.
+		if ($type == 'cancel' || $type=='recall'){
+			if ($numHoldsEnd != $numHoldsStart){
+				$logger->log('Cancelled ok', PEAR_LOG_INFO);
+				$success = true;
+			}
+		}
+
+		//Make sure to clear any cached data
+		global $memcache;
+		$memcache->delete("patron_dump_{$this->_getBarcode()}");
+		usleep(250);
+		//Clear holds for the patron
+		unset($this->holds[$patronId]);
+
+		if ($type == 'cancel' || $type == 'recall'){
+			if ($success){
+				return array(
+                    'title' => $title,
+                    'result' => true,
+                    'message' => 'Your hold was cancelled successfully.');
+			}else{
+				return array(
+                    'title' => $title,
+                    'result' => false,
+                    'message' => 'Your hold could not be cancelled.  Please try again later or see your librarian.');
+			}
+		}else{
+			return array(
+                    'title' => $title,
+                    'result' => true,
+                    'message' => 'Your hold was updated successfully.');
+		}
+	}
+
+
+	/**
+	 * Batch Request added by markaduffy
+	 */
+	public function updateHoldBatched($data)
 	{
 		global $logger;
 		global $configArray;
@@ -2737,9 +2906,91 @@ class MillenniumDriver implements DriverInterface
 		return $hold_result;
 	}
 
+	public function curlLogin($url, $post_values, $cookieJar) {
+
+		global $memcache;
+
+		$timeout = 30;
+
+		$curl_connection = curl_init();
+
+		//echo $memcache->get('millenium_cookie');
+
+		//echo $memcache->get('millenium_cookie');
+
+		//if ($memcache->get('millenium_cookie') == false || filesize($memcache->get('millenium_cookie')) == 0){
+
+			curl_setopt($curl_connection, CURLOPT_URL, $url);
+			curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
+			curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+			curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
+			curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
+			curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
+			curl_setopt($curl_connection, CURLOPT_HEADER, 1);
+			curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl_connection, CURLOPT_POST, 1);
+			curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_values);
+			curl_setopt($curl_connection, CURLOPT_HTTPHEADER,
+			array("Content-type: application/x-www-form-urlencoded"));
+			curl_exec($curl_connection);
+
+		//}
+		
+		return $curl_connection;
+
+	}
+
+	public function curlPost($curl_connection, $url, $post_values, $cookieJar) {
+
+		$timeout = 30;
+
+		curl_setopt($curl_connection, CURLOPT_URL, $url);
+		curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		//curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
+		curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
+		curl_setopt($curl_connection, CURLOPT_HEADER, 1);
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl_connection, CURLOPT_POST, 1);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_values);
+		curl_setopt($curl_connection, CURLOPT_HTTPHEADER,
+		array("Content-type: application/x-www-form-urlencoded"));
+		$html = curl_exec($curl_connection);
+		return $html;
+
+	}
+
+	public function getPage($curl_connection, $url, $cookieJar){
+
+		$timeout=30;
+		$header = 1;
+		$referer = $url;
+
+		curl_setopt($curl_connection, CURLOPT_URL, $url);
+		curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_HEADER, (int)$header);
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
+		curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
+		$html = curl_exec($curl_connection);
+
+		if (strpos($html,'You are logged into eiNetwork') > 0){
+			//$memcache->set('millenium_auth', true);
+		}
+
+		return $html;
+	}
+
 	public function renewItem($patronId, $itemId, $itemIndex){
 		global $logger;
 		global $configArray;
+		global $memcache;
 
 		//Setup the call to Millennium
 		$id2= $patronId;
@@ -2752,62 +3003,50 @@ class MillenniumDriver implements DriverInterface
 		);
 
 		$get_items = array();
+
 		foreach ($extraGetInfo as $key => $value) {
 			$get_items[] = $key . '=' . urlencode($value);
 		}
+
 		$renewItemParams = implode ('&', $get_items);
 
 		//Login to the patron's account
-		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
+
+		if (!$memcache->get('millenium_cookie') || !file_exists($memcache->get('millenium_cookie'))){
+			$cookieJar = tempnam("/usr/local/mark/eiNetwork/vufind/tmp", "CURLCOOKIE");
+			chmod($cookieJar, 0777);
+			$memcache->set('millenium_cookie', $cookieJar);
+		} else {
+			$cookieJar = $memcache->get('millenium_cookie');
+		}
+
 		$success = false;
 
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo";
 		$logger->log('Loading page ' . $curl_url, PEAR_LOG_INFO);
 
-		$curl_connection = curl_init($curl_url);
-		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
-		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
-		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
-		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
-		curl_setopt($curl_connection, CURLOPT_POST, true);
-		
-		
-		/*
 		$post_data = $this->_getLoginFormValues($patronDump);
+		
 		foreach ($post_data as $key => $value) {
-			$post_items[] = $key . '=' . urlencode($value);
+			$post_values[] = $key . '=' . urlencode($value);
 		}
-		$post_string = implode ('&', $post_items);
-		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
-		$sresult = curl_exec($curl_connection);
-
-		//Go to the items page
+		$post_values = implode ('&', $post_values);
+		
 		$scope = $this->getDefaultScope();
-		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items";
-		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
-		curl_setopt($curl_connection, CURLOPT_HTTPGET, true);
-		$sresult = curl_exec($curl_connection);
-		$logger->log('renew item go to items page url ' . $curl_url. " postfields ".$post_string, PEAR_LOG_INFO);
-		*/
 
-		//Post renewal information
-		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items";
-		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
-		curl_setopt($curl_connection, CURLOPT_POST, true);
-		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
-		$sresult = curl_exec($curl_connection);
+		$curl_connection = $this->curlLogin($configArray['Catalog']['url'] . "/patroninfo", $post_values, $cookieJar);
+		
+		$result = $this->curlPost($curl_connection, $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items", $renewItemParams, $cookieJar);
+
 		$logger->log('renew item post renewal info url ' . $curl_url. " postfields ".$renewItemParams, PEAR_LOG_INFO);
-		if (strpos($sresult,'RENEWED successfully') > 0) {
+
+		if (strpos($result,'RENEWED successfully') > 0) {
 			$success = true;
 			$message = 'Your item was successfully renewed';
-		}else if (strpos($sresult,'Cannot renew; item is requested by another user') > 0){
+		}else if (strpos($result,'item is requested by another user') > 0){
 			$success = false;
 			$message = 'Your item could not be renewed because another user has requested it';
-		}else if (strpos($sresult,'Your record is in use by system. Please try again later.') > 0){
+		}else if (strpos($result,'Your record is in use by system. Please try again later.') > 0){
 			$success = false;
 			$message = 'Your item could not be renewed because your record is in use by the system';
 		}else{
@@ -2816,7 +3055,7 @@ class MillenniumDriver implements DriverInterface
 		}
 		
 		curl_close($curl_connection);
-		unlink($cookieJar);
+		//unlink($cookieJar);
 
 		if ($success){
 			UsageTracking::logTrackingData('numRenewals');
@@ -2826,6 +3065,7 @@ class MillenniumDriver implements DriverInterface
                     'itemId' => $itemId,
                     'result'  => $success,
                     'message' => $message);
+
 	}
 
 	public function updatePatronInfo($patronId){

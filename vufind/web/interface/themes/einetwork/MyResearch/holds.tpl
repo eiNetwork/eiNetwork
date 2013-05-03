@@ -22,6 +22,7 @@
 		</div>
 	</div>
 	
+	
 	<div id="main-content">
 		{if $user->cat_username}
 			{if $showStrands && $user->disableRecommendations == 0}
