@@ -51,8 +51,6 @@ function freezeAll(){
     	values[this.name] = $(this).val();
     });
     
-    console.log(values);
-    
     showProcessingIndicator('Freezing all your items. This may take a minute.');
     
     $.ajax({
@@ -60,7 +58,6 @@ function freezeAll(){
 		url: '/MyResearch/Holds/',
 		data: values,
 		success: function(data) {
-			//console.log(data);
 			document.location.href='/MyResearch/Holds';
 		}
 	});
@@ -92,7 +89,6 @@ function unfreezeAll(){
 		url: '/MyResearch/Holds/',
 		data: values,
 		success: function(data) {
-			//console.log(data);
 			document.location.href='/MyResearch/Holds';
 		}
 	});
