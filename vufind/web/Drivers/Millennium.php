@@ -3022,7 +3022,7 @@ class MillenniumDriver implements DriverInterface
 		session_start();
 
 		if (!$_SESSION['millenium_cookie'] || !file_exists($_SESSION['millenium_cookie'])){
-			$cookieJar = tempnam("/usr/local/VuFind-plus/vufind/tmp/", "CURLCOOKIE");
+			$cookieJar = tempnam("/usr/local/VuFind-Plus/vufind/tmp/", "CURLCOOKIE");
 			$_SESSION['millenium_cookie'] = $cookieJar;
 		} else {
 			$cookieJar = $_SESSION['millenium_cookie'];
