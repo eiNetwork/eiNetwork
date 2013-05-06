@@ -3020,7 +3020,7 @@ class MillenniumDriver implements DriverInterface
 		//Login to the patron's account
 
 		if (!$memcache->get('millenium_cookie') || !file_exists($memcache->get('millenium_cookie'))){
-			$cookieJar = tempnam("/usr/local/mark/eiNetwork/vufind/tmp", "CURLCOOKIE");
+			$cookieJar = tempnam("/usr/local/VuFind-Plus/vufind/tmp", "CURLCOOKIE");
 			chmod($cookieJar, 0777);
 			$memcache->set('millenium_cookie', $cookieJar);
 		} else {
