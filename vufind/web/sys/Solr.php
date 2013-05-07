@@ -119,7 +119,7 @@ class Solr implements IndexEngine {
 	 */
 	private $scopingDisabled = false;
 
-	private $_exlusionFilters = array();
+	private $_exclusionFilters = array();
 	/**
 	 * Constructor
 	 *
@@ -202,7 +202,7 @@ class Solr implements IndexEngine {
 			$this->_specCache = $searchSettings['Cache']['type'];
 		}
 		if (isset($searchSettings['ExclusionFilters']) && is_array($searchSettings['ExclusionFilters'])) {
-			$this->_exlusionFilters = $searchSettings['ExclusionFilters'];
+			$this->_exclusionFilters = $searchSettings['ExclusionFilters'];
 		}
 		if (isset($_SESSION['shards'])){
 			$this->_loadShards($_SESSION['shards']);
@@ -1238,16 +1238,23 @@ class Solr implements IndexEngine {
 		// Build Facet Options
 		if ($facet && !empty($facet['field'])) {
 			$options['facet'] = 'true';
-			$options['facet.mincount'] = 0;
-			$options['facet.limit'] = (isset($facet['limit'])) ? $facet['limit'] : null;
+                        $options['facet.mincount'] = 1;
+                        $options['facet.limit'] = (isset($facet['limit'])) ? $facet['limit'] : null;
 			unset($facet['limit']);
 			if(isset($facet['field']) && is_array($facet['field'])){
 				foreach($facet['field'] as $key=> $value){
-					if(array_key_exists($value, $this->_exlusionFilters)){
+                                        echo "<pre>Checking for exclusion filter $value </pre>";
+                                        //echo '<br/>Exclusion:</br><hr/><pre>';
+                                        //print_r ($this->_exclusionFilters);
+                                        //echo '</pre><br/>';
+					if(array_key_exists($value, $this->_exclusionFilters)){
 						$facet['field'][$key] = "{!ex=dt}".$value;
+                                                //echo "<pre>Processing exclusion filter $value </pre>";
+                                                $optionsKey = 'f.'.$value.'.facet.mincount';
+                                                $options[$optionsKey] = 0;
 					}
 				}
-				if (in_array('date_added', $facet['field'])){
+                       			if (in_array('date_added', $facet['field'])){
 					$options['facet.date'] = 'date_added';
 					$options['facet.date.end'] = 'NOW';
 					$options['facet.date.start'] = 'NOW-1YEAR';
@@ -1260,8 +1267,7 @@ class Solr implements IndexEngine {
 					}
 				}
 			}
-
-			$options['facet.field'] = (isset($facet['field'])) ? $facet['field'] : null;
+                        $options['facet.field'] = (isset($facet['field'])) ? $facet['field'] : null;
 			unset($facet['field']);
 			$options['facet.prefix'] = (isset($facet['prefix'])) ? $facet['prefix'] : null;
 			unset($facet['prefix']);
@@ -1301,8 +1307,8 @@ class Solr implements IndexEngine {
 			$options['hl.simple.post'] = '{{{{END_HILITE}}}}';
 		}
 
-		if ($this->debug) {
-			echo '<pre>Search options: ' . print_r($options, true) . "\n";
+		//if ($this->debug) {
+                        echo '<pre>Search options: ' . print_r($options, true) . "\n";
 
 			if ($filter) {
 				echo "\nFilterQuery: ";
@@ -1317,7 +1323,7 @@ class Solr implements IndexEngine {
 
 			echo "</pre>\n";
 			$options['debugQuery'] = 'on';
-		}
+		//}
 
 		$timer->logTime("end solr setup");
 				
@@ -1648,7 +1654,7 @@ class Solr implements IndexEngine {
 					if(is_array($value)) {
 						foreach ($value as $key=>$additional) {
 							$temp = explode(":", $additional);
-							if(array_key_exists($temp[0], $this->_exlusionFilters) || array_key_exists(substr($temp[0],1), $this->_exlusionFilters)){
+							if(array_key_exists($temp[0], $this->_exclusionFilters) || array_key_exists(substr($temp[0],1), $this->_exclusionFilters)){
 								$additional = "{!tag=dt}".$additional;
 							}
 							$additional = urlencode($additional);
