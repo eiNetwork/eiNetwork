@@ -393,12 +393,24 @@ class Record extends Action
 				
 		if($useMarcSeries){
 			if ($this->isbn){
+
+				require_once 'Drivers/einetwork/novelist.php';
+
+				$novelist = new Novelist($this->isbn);
+
+				$series_titles = $novelist->getSeries();
+
+				$interface->assign('series', $series_titles);
+
+				/*
 				require_once 'Drivers/marmot_inc/GoDeeperData.php';
+				
 				$series = GoDeeperData::getSeries($this->isbn);
 				if (isset($series)){
 				$interface->assign('series', $series);
+
 				
-				}
+				}*/
 			}
 		}	
 

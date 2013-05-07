@@ -1,10 +1,10 @@
 	<div id="left-bar">
-            	{if $series && !in_array("Syndetics.com", $series)}
+            	{if $series}
 		<div class="sidegroup" id="series">
                     <dl class="narrowList navmenu narrowbegin">
                         <dt>{translate text='Series'}:</dt>
 			{foreach from=$series item=seriesItem name=loop}
-					<dd class="left-bar-value"><a href="{$path}/Search/Results?lookfor=%22{$seriesItem|escape:"url"}%22&amp;type=Series">{$seriesItem|escape}</a></dd>
+					<dd class="left-bar-value"><a href="{$path}/Search/Results?lookfor=%22{$seriesItem.full_title|escape:"url"}%22&amp;type=Series">{$seriesItem.full_title|escape}</a></dd>
 			{/foreach}
                     </dl>
 		</div>
