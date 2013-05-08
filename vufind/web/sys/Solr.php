@@ -1239,17 +1239,13 @@ class Solr implements IndexEngine {
 		if ($facet && !empty($facet['field'])) {
 			$options['facet'] = 'true';
                         $options['facet.mincount'] = 1;
+                        $options['f.format.facet.mincount'] = 0;
                         $options['facet.limit'] = (isset($facet['limit'])) ? $facet['limit'] : null;
 			unset($facet['limit']);
 			if(isset($facet['field']) && is_array($facet['field'])){
 				foreach($facet['field'] as $key=> $value){
-                                        echo "<pre>Checking for exclusion filter $value </pre>";
-                                        //echo '<br/>Exclusion:</br><hr/><pre>';
-                                        //print_r ($this->_exclusionFilters);
-                                        //echo '</pre><br/>';
 					if(array_key_exists($value, $this->_exclusionFilters)){
 						$facet['field'][$key] = "{!ex=dt}".$value;
-                                                //echo "<pre>Processing exclusion filter $value </pre>";
                                                 $optionsKey = 'f.'.$value.'.facet.mincount';
                                                 $options[$optionsKey] = 0;
 					}
@@ -1307,7 +1303,7 @@ class Solr implements IndexEngine {
 			$options['hl.simple.post'] = '{{{{END_HILITE}}}}';
 		}
 
-		//if ($this->debug) {
+		if ($this->debug) {
                         echo '<pre>Search options: ' . print_r($options, true) . "\n";
 
 			if ($filter) {
@@ -1323,7 +1319,7 @@ class Solr implements IndexEngine {
 
 			echo "</pre>\n";
 			$options['debugQuery'] = 'on';
-		//}
+		}
 
 		$timer->logTime("end solr setup");
 				
