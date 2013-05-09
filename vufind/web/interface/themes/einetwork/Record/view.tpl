@@ -188,11 +188,11 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 			 <div class="resultInformation">
-				<div class="resultInformationLabel">{translate text='Community Reviews test'}</div>
+				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
 				<div class="recordSubjects">
 					
 						{*include file="$module/view-comments.tpl"*}
-						<div class="ltfl_reviews"></div>
+<!--						<div class="ltfl_reviews"></div>-->
 				
 				</div>
 			</div> 
@@ -459,13 +459,13 @@ function redrawSaveStatus() {literal}{{/literal}
 						
 						<td>{$issn}</td>
 						</tr>
-						{if $goldRushLink}
+<!--						{if $goldRushLink}
 						<tr>
 							<td></td>
 							<td><a href='{$goldRushLink}' target='_blank'>Check for online articles</a></td>
 						</tr>
 						{/if}
-					{/if}
+-->					{/if}
 					{if $internetLinks}
 						<tr>
 							<td class="details_lable">{translate text="Links"}</td>
@@ -502,7 +502,7 @@ function redrawSaveStatus() {literal}{{/literal}
 				</div>
 			</div>
 		</div>
-		{* tabs for series, similar titles, and people who viewed also viewed *}
+<!--		{* tabs for series, similar titles, and people who viewed also viewed *}
 		{if $showStrands}
 			<div id="relatedTitleInfo" class="ui-tabs">
 				<ul>
@@ -621,7 +621,7 @@ function redrawSaveStatus() {literal}{{/literal}
 			</div>
 			
 		{/if}
-		
+-->		
 <!--		<div id="moredetails-tabs">
 			{* Define tabs for the display *}
 			<ul>
@@ -701,11 +701,11 @@ function redrawSaveStatus() {literal}{{/literal}
 		</div> {* End of tabs*}
 -->		
 		{literal}
-		<script type="text/javascript">
+<!--		<script type="text/javascript">
 			$(function() {
 				$("#moredetails-tabs").tabs();
 			});
-		</script>
+		</script>-->
 		{/literal}
             </div>
 	</div>

@@ -388,7 +388,11 @@ class Record extends Action
 					$series[] = $this->getSubfieldData($field, 'a');
 				}
 				$interface->assign('series', $series);
-				$useMarcSeries = false;
+				
+				if (sizeof($series) > 0) {
+					$useMarcSeries = false;
+					echo "Use MARC Series is false series count ".sizeof($series);
+				}
 			}
 				
 		if($useMarcSeries){
@@ -628,9 +632,21 @@ class Record extends Action
 		$this->cacheId = 'Record|' . $_GET['id'] . '|' . get_class($this);
 
 		// Find Similar Records
-		global $memcache;
-		$similar = $memcache->get('similar_titles_' . $this->id);
-		if ($similar == false){
+		// Try Novelist first
+		if ($this->isbn){
+			require_once 'Drivers/einetwork/novelist.php';
+			$novelist = new Novelist($this->isbn);
+			$similarTitles = $novelist->getSimilarTitles();
+			echo "number of similar titles from Novelist ".sizeof($similarTitles);
+			$interface->assign('similarTitles', $similarTitles);		
+			$timer->logTime('Loaded similar titles from Novelist');
+		}
+		//if not found in Novelist, try in the catalog
+		if (sizeof($similarTitles) == 0) {
+			echo "no similar titles from Novelist";
+			global $memcache;
+			$similar = $memcache->get('similar_titles_' . $this->id);
+			if ($similar == false){
 			$similar = $this->db->getMoreLikeThis($this->id);
 			// Send the similar items to the template; if there is only one, we need
 			// to force it to be an array or things will not display correctly.
@@ -641,22 +657,43 @@ class Record extends Action
 				$timer->logTime("Did not find any similar records");
 			}
 			$memcache->set('similar_titles_' . $this->id, $similar, 0, $configArray['Caching']['similar_titles']);
-		}
-		$interface->assign('similarRecords', $similar);
-		$timer->logTime('Loaded similar titles');
-		
-		// Find Other Editions
-		if ($configArray['Content']['showOtherEditionsPopup'] == false){
-			$editions = OtherEditionHandler::getEditions($this->id, $this->isbn, isset($this->record['issn']) ? $this->record['issn'] : null);
-			if (!PEAR::isError($editions)) {
-				$interface->assign('editions', $editions);
-			}else{
-				$logger->logTime("Did not find any other editions");
 			}
-			$timer->logTime('Got Other editions');
+			$interface->assign('similarRecords', $similar);
+			$timer->logTime('Loaded similar records from Catalog');
 		}
 		
-		$interface->assign('showStrands', isset($configArray['Strands']['APID']) && strlen($configArray['Strands']['APID']) > 0);
+		// find similar authors
+		if ($this->isbn){
+			require_once 'Drivers/einetwork/novelist.php';
+			$novelist = new Novelist($this->isbn);
+			$similarAuthors = $novelist->getSimilarAuthors();
+			echo " number of similar authors from Novelist ".sizeof($similarAuthors);
+			$interface->assign('similarAuthors', $similarAuthors);		
+			$timer->logTime('Loaded similar authors from Novelist');
+		}
+
+		// find similar series
+		if ($this->isbn){
+			require_once 'Drivers/einetwork/novelist.php';
+			$novelist = new Novelist($this->isbn);
+			$similarSeries = $novelist->getSimilarSeries();
+			echo " number of similar series from Novelist ".sizeof($similarSeries);
+			$interface->assign('similarSeries', $similarSeries);		
+			$timer->logTime('Loaded similar Series from Novelist');
+		}
+		
+		//// Find Other Editions
+		////if ($configArray['Content']['showOtherEditionsPopup'] == false){
+		//	$editions = OtherEditionHandler::getEditions($this->id, $this->isbn, isset($this->record['issn']) ? $this->record['issn'] : null);
+		//	if (!PEAR::isError($editions)) {
+		//		$interface->assign('editions', $editions);
+		//	}else{
+		//		$logger->logTime("Did not find any other editions");
+		//	}
+		//	$timer->logTime('Got Other editions');
+		//}
+		
+		//$interface->assign('showStrands', isset($configArray['Strands']['APID']) && strlen($configArray['Strands']['APID']) > 0);
 
 		// Send down text for inclusion in breadcrumbs
 		$interface->assign('breadcrumbText', $this->recordDriver->getBreadcrumb());
