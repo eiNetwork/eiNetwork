@@ -125,7 +125,6 @@ function downloadOverDriveItem(overDriveId, formatId){
 	}
 }
 
-
 function returnOverDriveItem(overdriveId, transactionId){
 	if (loggedIn){
 		showProcessingIndicator("Returning the title for you in OverDrive.  This may take a minute.");
@@ -162,23 +161,19 @@ function cancelOverDriveHold(overDriveId){
 		var url = path + "/EcontentRecord/AJAX?method=CancelOverDriveHold&overDriveId=" + overDriveId;
 		$.ajax({
 			url: url,
-			dataType: 'json',
-			beforeSend: function(xhr){
-				activeOverDriveConnections++;
-			},
 			success: function(data){
-
-				activeOverDriveConnections--;
-
-				if (activeOverDriveConnections == 0){
-					showProcessingIndicator('You have successfully updated your holds. Please wait while we refresh the page.');
+				alert(data.message);
+				if (data.result){
 					window.location.href = path + "/MyResearch/Holds";
+					hideLightbox();
+				}else{
+					hideLightbox();
 				}
-
 			},
+			dataType: 'json',
 			error: function(){
 				alert("An error occurred processing your request in OverDrive.  Please try again in a few minutes.");
-				//showProcessingIndicator('An error occurred processing your request in OverDrive.  Please try again in a few minutes.');
+				hideLightbox();
 			}
 		});
 	}else{

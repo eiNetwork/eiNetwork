@@ -39,13 +39,12 @@ class Holds extends MyResearch
 		
 		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 			
-			$result = $this->catalog->driver->updateHoldBatched($_REQUEST['data']);
+			$result = $this->catalog->driver->updateHoldDetailed($_REQUEST['data']);
 			
 			die();
 			
 		}
 
-		/*
 		if (isset($_REQUEST['multiAction'])){
 			$multiAction = $_REQUEST['multiAction'];
 			$waitingHoldSelected = $_REQUEST['waitingHoldSelected'];
@@ -76,7 +75,7 @@ class Holds extends MyResearch
 			//Redirect back here without the extra parameters.
 			header("Location: " . $configArray['Site']['url'] . '/MyResearch/Holds?accountSort=' . ($selectedSortOption = isset($_REQUEST['accountSort']) ? $_REQUEST['accountSort'] : 'title'));
 			die();
-		}*/
+		}
 
 		global $librarySingleton;
 		$interface->assign('allowFreezeHolds', true);
@@ -172,6 +171,8 @@ class Holds extends MyResearch
 					
 					$total_cancelations = $numUnavailableHolds - $result_count;
 					
+					
+					
 					if ($total_cancelations == 1) {
 						$message = "You have successfully canceled 1 hold";
 						$interface->assign('cancel_message', $message);
@@ -179,12 +180,10 @@ class Holds extends MyResearch
 						$message = "You have successfully canceled " . $total_cancelations . " holds";
 						$interface->assign('cancel_message', $message);
 					}
-
-					$memcache->delete("numUnavailableHolds");
 					
 				}
 				
-				$memcache->set("numUnavailableHolds", $result['numUnavailableHolds'], 0, 30);
+				$memcache->set("numUnavailableHolds", $result['numUnavailableHolds']);
 				
 				if (!PEAR::isError($result)) {
 					if (count($result) > 0 ) {

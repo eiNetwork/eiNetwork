@@ -35,11 +35,77 @@ require_once 'sys/eContent/EContentRecord.php';
 
 class CheckedOut extends MyResearch{
 	function launch(){
+		
 		global $configArray;
 		global $interface;
 		global $user;
 		global $timer;
+		
 		$logger = new Logger();
+
+		$renew_message = array();
+
+		if (isset($_GET['selected'])){
+
+			//Call the Millennium Driver method to renew the item
+			if (method_exists($this->catalog->driver, 'renewItem')) {
+				
+				$selectedItems = $_GET['selected'];
+				$renewMessages = array();
+				
+				$renew_message['Total'] = 0;
+				$renew_message['Unrenewed'] = 0;
+				$renew_message['Renewed'] = 0;
+				
+				$i = 0;
+				foreach ($selectedItems as $itemInfo => $selectedState){
+
+					$i++;
+					list($itemId, $itemIndex) = explode('|', $itemInfo);
+					
+					$data[$i]['itemId'] = $itemId;
+					$data[$i]['itemIndex'] = $itemIndex;
+
+				}
+
+				if ($renewResult = $this->catalog->driver->renewItem($user->password, $data)){
+
+					/*
+					echo "<pre>";
+					print_r($renewResult);
+					echo "</pre>";
+
+					die();
+					*/
+					
+					foreach($renewResult['items'] as $key => $value){
+
+						if ($this->checkItem($value['id'], $data)){
+
+							if ($value['renew_success']){
+								$renew_message['Renewed']++;
+							} else {
+								$renew_message['Unrenewed']++;
+							}
+
+							$renew_message[$value['id']] = array(
+			                    'itemId' => $value['id'],
+			                    'result'  => $value['renew_success'],
+			                    'message' => $value['renew_message']
+			                );
+
+							$renew_message['Total']++;
+
+						}
+
+					}
+
+				}
+
+
+			}
+
+		}
 		
 		// Get My Transactions
 		$oneOrMoreRenewableItems = false;
@@ -126,21 +192,22 @@ class CheckedOut extends MyResearch{
 					foreach ($result['transactions'] as $i => $data) {
 						$itemBarcode = isset($data['barcode']) ? $data['barcode'] : null;
 						$itemId = isset($data['itemid']) ? $data['itemid'] : null;
-						if ($itemBarcode != null && isset($_SESSION['renew_message'][$itemBarcode])){
-							$renewMessage = $_SESSION['renew_message'][$itemBarcode]['message'];
-							$renewResult = $_SESSION['renew_message'][$itemBarcode]['result'];
+
+						if ($itemId != null && isset($renew_message[$itemId])){
+							$renewMessage = $renew_message[$itemId]['message'];
+							$renewResult = $renew_message[$itemId]['result'];
 							$data['renewMessage'] = $renewMessage;
 							$data['renewResult']  = $renewResult;
 							$result['transactions'][$i] = $data;
-							unset($_SESSION['renew_message'][$itemBarcode]);
+							unset($renew_message[$itemId]);
 							$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
 						}else if ($itemId != null && isset($_SESSION['renew_message'][$itemId])){
-							$renewMessage = $_SESSION['renew_message'][$itemId]['message'];
-							$renewResult = $_SESSION['renew_message'][$itemId]['result'];
+							$renewMessage = $renew_message[$itemId]['message'];
+							$renewResult = $renew_message[$itemId]['result'];
 							$data['renewMessage'] = $renewMessage;
 							$data['renewResult']  = $renewResult;
 							$result['transactions'][$i] = $data;
-							unset($_SESSION['renew_message'][$itemId]);
+							unset($renew_message[$itemId]);
 							$logger->log("Found renewal message in session for $itemBarcode", PEAR_LOG_INFO);
 						}else{
 							$renewMessage = null;
@@ -454,5 +521,16 @@ class CheckedOut extends MyResearch{
 
 	}
 
+	private function checkItem($id, $data){
+
+		foreach($data as $key => $value){
+
+			if ($id == $value['itemId']) return true;
+
+		}
+
+		return false;
+
+	}
 
 }

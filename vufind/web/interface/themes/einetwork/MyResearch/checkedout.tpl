@@ -32,7 +32,7 @@
 	    <font color="red"><b>Your library card is due to expire within the next 30 days.  Please visit your local library to renew your card to ensure access to all online service.  </a></b></font>
 	{/if}
 	    
-	<form id="renewForm" action="{$path}/MyResearch/RenewMultiple">
+	<form id="renewForm" action="{$path}/MyResearch/CheckedOut">
 	    {*******BEGIN checked out item list*****}
 	    <div class="item_renew">
 		<h3>{translate text='Physical Checked Out Items'}</h3>
