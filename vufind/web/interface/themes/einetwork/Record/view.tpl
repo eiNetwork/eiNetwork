@@ -10,9 +10,6 @@
 	{if $isbn}
 		GetReviewInfo('{$id|escape:"url"}', '{$isbn|escape:"url"}');
 	{/if}
-	{if $enablePospectorIntegration == 1}
-		GetProspectorInfo('{$id|escape:"url"}');
-	{/if}
 	{if $user}
 		redrawSaveStatus();
 	{/if}
