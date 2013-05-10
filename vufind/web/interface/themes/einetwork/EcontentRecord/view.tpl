@@ -1,7 +1,4 @@
 <script type="text/javascript" src="{$path}/services/EcontentRecord/ajax.js"></script>
-{if !empty($addThis)}
-<script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js?pub={$addThis|escape:"url"}"></script>
-{/if}
 <script type="text/javascript">
 {literal}$(document).ready(function(){{/literal}
 	GetEContentHoldingsInfo('{$id|escape:"url"}');

@@ -74,8 +74,8 @@
 			<dt style="font-weight: bold; margin: 15px 10px 10px;">{translate text='Similar Series'}</dt>
 				{foreach from=$similarSeries item=similar name=loop}
 					{if $smarty.foreach.loop.iteration <= 2}
-						<dt style="float: left;clear: left"><a href="{$path}/Union/Search?basicType=Keyword&lookfor=%22{$similar.main_name|escape:"url"}%22&amp;"><img src={$similar.bookjacket_url} alt={$similar.reason} width="61" height="100" style="padding-left: 10"></a>&nbsp;&nbsp;</dt>
-						<dd style="text-align: left; margin: 0 10 0 0; padding: 20 0 70 0px"><a href="{$path}/Union/Search?basicType=Keyword&lookfor=%22{$similar.full_title|escape:"url"}%22&amp;">{$similar.main_name|escape}&#32;by&#32;{$similar.author|escape}</a></dd>
+						<dt style="float: left;clear: left"><a href="{$path}/Union/Search?basicType=Keyword&lookfor=%22{$similar.main_name|escape:"url"}%22&amp;"><img src={$similar.bookjacket_url} width="61" height="100" style="padding-left: 10"></a>&nbsp;&nbsp;</dt>
+						<dd style="text-align: left; margin: 0 10 0 0; padding: 20 0 70 0px"><a href="{$path}/Union/Search?basicType=Keyword&lookfor=%22{$similar.main_name|escape:"url"}%22&amp;">{$similar.main_name|escape}&#32;by&#32;{$similar.author|escape}</a></dd>
 					{/if}
 				{/foreach}
 			</dl>

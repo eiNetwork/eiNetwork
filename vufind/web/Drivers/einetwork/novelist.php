@@ -73,6 +73,11 @@ class Novelist{
 
 	function getSimilarTitles(){
 		
+		//echo "Get Similar Titles novelist.php";
+		//echo "<pre>";
+		//print_r($this->test);
+		//echo "</pre>";
+		
 		$similarTitles = $this->novelist_data['FeatureContent']['SimilarTitles'];
 	
 		if (isset($similarTitles)){

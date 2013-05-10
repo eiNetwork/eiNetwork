@@ -282,14 +282,14 @@ class Record extends Action
 			$interface->assign('languageNotes', $languageNotes);
 		}
 		
-		$marcFields = $marcRecord->getFields('546');
-		if ($marcFields){
-			$languageNotes = array();
-			foreach ($marcFields as $marcField){
-				$languageNotes[] = $this->getSubfieldData($marcField, 'a');
-			}
-			$interface->assign('languageNotes', $languageNotes);
-		}		
+		//$marcFields = $marcRecord->getFields('546');
+		//if ($marcFields){
+		//	$languageNotes = array();
+		//	foreach ($marcFields as $marcField){
+		//		$languageNotes[] = $this->getSubfieldData($marcField, 'a');
+		//	}
+		//	$interface->assign('languageNotes', $languageNotes);
+		//}		
 		// Get ISBN for cover and review use
 		$mainIsbnSet = false;
 		if ($isbnFields = $this->marcRecord->getFields('020')) {
@@ -391,7 +391,7 @@ class Record extends Action
 				
 				if (sizeof($series) > 0) {
 					$useMarcSeries = false;
-					echo "Use MARC Series is false series count ".sizeof($series);
+					//echo "Use MARC Series is false series count ".sizeof($series);
 				}
 			}
 				
@@ -637,13 +637,13 @@ class Record extends Action
 			require_once 'Drivers/einetwork/novelist.php';
 			$novelist = new Novelist($this->isbn);
 			$similarTitles = $novelist->getSimilarTitles();
-			echo "number of similar titles from Novelist ".sizeof($similarTitles);
+			//echo "number of similar titles from Novelist ".sizeof($similarTitles);
 			$interface->assign('similarTitles', $similarTitles);		
 			$timer->logTime('Loaded similar titles from Novelist');
 		}
 		//if not found in Novelist, try in the catalog
 		if (sizeof($similarTitles) == 0) {
-			echo "no similar titles from Novelist";
+			//echo "no similar titles from Novelist";
 			global $memcache;
 			$similar = $memcache->get('similar_titles_' . $this->id);
 			if ($similar == false){
@@ -667,7 +667,7 @@ class Record extends Action
 			require_once 'Drivers/einetwork/novelist.php';
 			$novelist = new Novelist($this->isbn);
 			$similarAuthors = $novelist->getSimilarAuthors();
-			echo " number of similar authors from Novelist ".sizeof($similarAuthors);
+			//echo " number of similar authors from Novelist ".sizeof($similarAuthors);
 			$interface->assign('similarAuthors', $similarAuthors);		
 			$timer->logTime('Loaded similar authors from Novelist');
 		}
@@ -677,7 +677,7 @@ class Record extends Action
 			require_once 'Drivers/einetwork/novelist.php';
 			$novelist = new Novelist($this->isbn);
 			$similarSeries = $novelist->getSimilarSeries();
-			echo " number of similar series from Novelist ".sizeof($similarSeries);
+			//echo " number of similar series from Novelist ".sizeof($similarSeries);
 			$interface->assign('similarSeries', $similarSeries);		
 			$timer->logTime('Loaded similar Series from Novelist');
 		}
