@@ -1880,6 +1880,7 @@ class MillenniumDriver implements DriverInterface
 		$timer->logTime("Got holds page from Millennium");
 
 		$holds = $this->parseHoldsPage($sresult);
+
 		$timer->logTime("Parsed Holds page");
 
 		//Get a list of all record id so we can load supplemental information
@@ -1889,13 +1890,16 @@ class MillenniumDriver implements DriverInterface
 				$recordIds[] = "'" . $hold['shortId'] . "'";
 			}
 		}
+
 		//Get records from resource table
 		$resourceInfo = new Resource();
 		if (count($recordIds) > 0){
 			$recordIdString = implode(",", $recordIds);
+
 			mysql_select_db($configArray['Database']['database_vufind_dbname']);
 			$resourceSql = "SELECT * FROM resource where source = 'VuFind' AND shortId in ({$recordIdString})";
 			$resourceInfo->query($resourceSql);
+
 			$timer->logTime('Got records for all titles');
 
 			//Load title author, etc. information
@@ -1962,6 +1966,7 @@ class MillenniumDriver implements DriverInterface
 		//Limit to a specific number of records
 		if (isset($holds['unavailable'])){
 			$numUnavailableHolds = count($holds['unavailable']);
+
 			if ($recordsPerPage != -1){
 				$startRecord = ($page - 1) * $recordsPerPage;
 				$holds['unavailable'] = array_slice($holds['unavailable'], $startRecord, $recordsPerPage);
@@ -1976,6 +1981,7 @@ class MillenniumDriver implements DriverInterface
 		if (!isset($holds['unavailable'])){
 			$holds['unavailable'] = array();
 		}
+
 		//Sort the hold sections so vailable holds are first.
 		ksort($holds);
 
