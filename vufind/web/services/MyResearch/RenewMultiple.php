@@ -42,33 +42,66 @@ class RenewMultiple extends Action
 		
 		//Call the Millennium Driver method to renew the item
 		if (method_exists($this->catalog->driver, 'renewItem')) {
+			
 			$selectedItems = $_GET['selected'];
 			$renewMessages = array();
+			
 			$_SESSION['renew_message']['Unrenewed'] = 0;
 			$_SESSION['renew_message']['Renewed'] = 0;
+			
 			$i = 0;
 			foreach ($selectedItems as $itemInfo => $selectedState){
-				if ($i != 0){
-					usleep(1000);
-				}
+
 				$i++;
 				list($itemId, $itemIndex) = explode('|', $itemInfo);
-				$renewResult = $this->catalog->driver->renewItem($user->password, $itemId, $itemIndex);
-				$logger->log("Renew result for item ".$itemid." ".$renewResult['result']." message ".$renewResult['message'], PEAR_LOG_INFO);
-				$_SESSION['renew_message'][$renewResult['itemId']] = $renewResult;
-				$_SESSION['renew_message']['Total']++;
-				if ($renewResult['result']){
-					$_SESSION['renew_message']['Renewed']++;
-				}else{
-					$_SESSION['renew_message']['Unrenewed']++;
-				}
+				
+				$data[$i]['itemId'] = $itemId;
+				$data[$i]['itemIndex'] = $itemIndex;
+
 			}
+
+			$renewResult = $this->catalog->driver->renewItem($user->password, $data);
+
+			foreach($renewResult['items'] as $key => $value){
+
+				if ($this->checkItem($value['id'], $data)){
+
+					if ($value['renew_success']){
+						$_SESSION['renew_message']['Renewed']++;
+					} else {
+						$_SESSION['renew_message']['Unrenewed']++;
+					}
+
+					$_SESSION['renew_message'][$value['id']] = array(
+	                    'itemId' => $value['id'],
+	                    'result'  => $value['renew_success'],
+	                    'message' => $value['renew_message']
+	                );
+
+					$_SESSION['renew_message']['Total']++;
+
+				}
+
+			}
+
 		} else {
 			PEAR::raiseError(new PEAR_Error('Cannot Renew Item - ILS Not Supported'));
 		}
 
 		//Redirect back to the hold screen with status from the renewal
 		header("Location: " . $configArray['Site']['url'] . '/MyResearch/CheckedOut');
+	}
+
+	private function checkItem($id, $data){
+
+		foreach($data as $key => $value){
+
+			if ($id == $value['itemId']) return true;
+
+		}
+
+		return false;
+
 	}
 
 }

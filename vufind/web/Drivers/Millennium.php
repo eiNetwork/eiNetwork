@@ -2251,7 +2251,6 @@ class MillenniumDriver implements DriverInterface
 
 		} else {
 
-
 			//User is logged in before they get here, always use the info from patrondump
 			$username = $patronDump['PATRN_NAME'];
 
@@ -2369,7 +2368,6 @@ class MillenniumDriver implements DriverInterface
 			if ($hold_result['result'] == true){
 				UsageTracking::logTrackingData('numHolds');
 			}
-
 			return $hold_result;
 		}
 	}
@@ -2452,11 +2450,6 @@ class MillenniumDriver implements DriverInterface
 						$hold_result['result'] = false;
 						$hold_result['message'] = 'There are no holdable items for this title.';
 						return $hold_result;
-
-				} else if (preg_match('/Request denied - already on hold for or checked out to you/', $holdResultPage)){
-					$hold_result['result'] = false;
-					$hold_result['message'] = 'Request denied - already on hold for or checked out to you.';
-					return $hold_result;
 				}else{
 					$message = 'Unable to contact the circulation system.  Please try again in a few minutes 2.';
 				}
@@ -2651,7 +2644,6 @@ class MillenniumDriver implements DriverInterface
                     'message' => 'Your hold was updated successfully.');
 		}
 	}
-
 
 	/**
 	 * Batch Request added by markaduffy
@@ -2913,166 +2905,157 @@ class MillenniumDriver implements DriverInterface
 		return $hold_result;
 	}
 
-	public function curlLogin($url, $post_values, $cookieJar) {
-
-		global $memcache;
-
-		$timeout = 30;
-
-		$curl_connection = curl_init();
-
-		//echo $memcache->get('millenium_cookie');
-
-		//echo $memcache->get('millenium_cookie');
-
-		//if ($memcache->get('millenium_cookie') == false || filesize($memcache->get('millenium_cookie')) == 0){
-
-			curl_setopt($curl_connection, CURLOPT_URL, $url);
-			curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
-			curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-			curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
-			curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
-			curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
-			curl_setopt($curl_connection, CURLOPT_HEADER, 1);
-			curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_setopt($curl_connection, CURLOPT_POST, 1);
-			curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_values);
-			curl_setopt($curl_connection, CURLOPT_HTTPHEADER,
-			array("Content-type: application/x-www-form-urlencoded"));
-			curl_exec($curl_connection);
-
-		//}
-		
-		return $curl_connection;
-
-	}
-
-	public function curlPost($curl_connection, $url, $post_values, $cookieJar) {
-
-		$timeout = 30;
-
-		curl_setopt($curl_connection, CURLOPT_URL, $url);
-		curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
-		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-		//curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
-		curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
-		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
-		curl_setopt($curl_connection, CURLOPT_HEADER, 1);
-		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($curl_connection, CURLOPT_POST, 1);
-		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_values);
-		curl_setopt($curl_connection, CURLOPT_HTTPHEADER,
-		array("Content-type: application/x-www-form-urlencoded"));
-		$html = curl_exec($curl_connection);
-		return $html;
-
-	}
-
-	public function getPage($curl_connection, $url, $cookieJar){
-
-		$timeout=30;
-		$header = 1;
-		$referer = $url;
-
-		curl_setopt($curl_connection, CURLOPT_URL, $url);
-		curl_setopt($curl_connection, CURLOPT_TIMEOUT, $timeout);
-		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-		curl_setopt($curl_connection, CURLOPT_HEADER, (int)$header);
-		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, 0);
-		curl_setopt($curl_connection, CURLOPT_COOKIEFILE, $cookieJar);
-		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar);
-		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, 0);
-		$html = curl_exec($curl_connection);
-
-		if (strpos($html,'You are logged into eiNetwork') > 0){
-			//$memcache->set('millenium_auth', true);
-		}
-
-		return $html;
-	}
-
-	public function renewItem($patronId, $itemId, $itemIndex){
+	public function renewItem($patronId, $data){
 		global $logger;
 		global $configArray;
-		global $memcache;
 
 		//Setup the call to Millennium
 		$id2= $patronId;
 		$patronDump = $this->_getPatronDump($this->_getBarcode());
 
-		$extraGetInfo = array(
-            'currentsortorder' => 'current_checkout',
-            'renewsome' => 'YES',
-            'renew' . $itemIndex => $itemId,
-		);
+		$post_values['currentsortorder'] = 'current_checkout';
+		$post_values['renewsome'] = 'YES';
 
-		$get_items = array();
+		foreach($data as $key => $value){
 
-		foreach ($extraGetInfo as $key => $value) {
-			$get_items[] = $key . '=' . urlencode($value);
+			$itemIndex = $value['itemIndex'];
+			$itemId = $value['itemId'];
+
+			$post_values['renew' . $itemIndex] = $itemId;
+
 		}
 
-		$renewItemParams = implode ('&', $get_items);
+		foreach($post_values as $key => $value){
+			$post_string_build[] = $key . '=' . urlencode($value);
+		}
+
+		$renewItemParams = implode ('&', $post_string_build);
 
 		//Login to the patron's account
-
-		session_start();
-
-		if (!$_SESSION['millenium_cookie'] || !file_exists($_SESSION['millenium_cookie'])){
-			$cookieJar = tempnam("/usr/local/VuFind-plus/vufind/tmp/", "CURLCOOKIE");
-			$_SESSION['millenium_cookie'] = $cookieJar;
-		} else {
-			$cookieJar = $_SESSION['millenium_cookie'];
-		}
-
+		$cookieJar = tempnam ("/tmp", "CURLCOOKIE");
 		$success = false;
 
 		$curl_url = $configArray['Catalog']['url'] . "/patroninfo";
-		$logger->log('Loading page ' . $curl_url, PEAR_LOG_INFO);
 
+		$curl_connection = curl_init($curl_url);
+		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl_connection, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($curl_connection, CURLOPT_UNRESTRICTED_AUTH, true);
+		curl_setopt($curl_connection, CURLOPT_COOKIEJAR, $cookieJar );
+		curl_setopt($curl_connection, CURLOPT_COOKIESESSION, false);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
 		$post_data = $this->_getLoginFormValues($patronDump);
-		
 		foreach ($post_data as $key => $value) {
-			$post_values[] = $key . '=' . urlencode($value);
+			$post_items[] = $key . '=' . urlencode($value);
 		}
-		$post_values = implode ('&', $post_values);
-		
+		$post_string = implode ('&', $post_items);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+		$sresult = curl_exec($curl_connection);
+
 		$scope = $this->getDefaultScope();
 
-		$curl_connection = $this->curlLogin($configArray['Catalog']['url'] . "/patroninfo", $post_values, $cookieJar);
+		$curl_url = $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items";
+		curl_setopt($curl_connection, CURLOPT_URL, $curl_url);
+		curl_setopt($curl_connection, CURLOPT_POST, true);
+		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $renewItemParams);
 		
-		$result = $this->curlPost($curl_connection, $configArray['Catalog']['url'] . "/patroninfo~S{$scope}/" . $patronDump['RECORD_#'] ."/items", $renewItemParams, $cookieJar);
+		$html = curl_exec($curl_connection);
 
-		$logger->log('renew item post renewal info url ' . $curl_url. " postfields ".$renewItemParams, PEAR_LOG_INFO);
-
-		if (strpos($result,'RENEWED successfully') > 0) {
-			$success = true;
-			$message = 'Your item was successfully renewed';
-		}else if (strpos($result,'item is requested by another user') > 0){
-			$success = false;
-			$message = 'Your item could not be renewed because another user has requested it';
-		}else if (strpos($result,'Your record is in use by system. Please try again later.') > 0){
-			$success = false;
-			$message = 'Your item could not be renewed because your record is in use by the system';
-		}else{
-			$success = false;
-			$message = 'Your item could not be renewed because the renewal limit has been reached';
-		}
+		$parse_result = $this->parseRenewals($html);
 		
 		curl_close($curl_connection);
-		//unlink($cookieJar);
+		unlink($cookieJar);
 
+		/*
 		if ($success){
 			UsageTracking::logTrackingData('numRenewals');
-		}
+		}*/
 
-		return array(
-                    'itemId' => $itemId,
-                    'result'  => $success,
-                    'message' => $message);
+		return $parse_result;
+	}
+
+	private function parseRenewals($html){
+
+		require_once("/usr/local/mark/eiNetwork/vufind/web/phpQuery/phpQuery/phpQuery.php");
+
+		if (phpQuery::newDocumentHTML($html, $charset = 'utf-8')){
+
+			$success_count = 0;
+			$renew_limit_reached_count = 0;
+			$hold_request_count = 0;
+			$message = "";
+
+			$i = 0;
+			$n = 0;
+
+			if (strpos($html, 'Your record is in use by system. Please try again later')) return array('record_locked' => true);
+
+			if (strpos($html, 'patFuncStatus') > 0){
+
+				foreach(pq('table.patFunc tr') as $tr){
+
+					$renew_count = 0;
+					$renew_success = false;
+					$renew_limit_reached = false;
+					$hold_request = false;
+
+					if ($i > 1){
+
+						$status = pq($tr)->find('td.patFuncStatus')->text();
+
+						if (strpos($status, 'time') > 0){
+							
+							$splits = explode('time', $status);
+							$splits_count = count($splits);
+
+							$renew_count = str_replace(' ', '', substr($splits[0], -2));
+
+						}
+						
+						if (strpos($status, 'RENEWED successfully') > 0){
+							$renew_success = true;
+							$message = 'Your item was successfully renewed';
+							$success_count++;
+						} else if (strpos($status, 'There are too many renewals on this item') > 0){
+							$renew_success = false;
+							$message = 'Your item could not be renewed because the renewal limit has been reached';
+							$renew_limit_reached_count++;
+						} else if (strpos($status, 'Cannot renew; item is requested by another user') > 0){
+							$renew_success = false;
+							$message = 'Your item could not be renewed because another user has requested it';
+							$hold_request_count++;
+						}
+
+						//$test[$n]['raw'] = $status;
+						$items[$n]['id'] = pq($tr)->find('input:first')->attr('value');
+						$items[$n]['renew_count'] = $renew_count;
+						$items[$n]['renew_success'] = $renew_success;
+						$items[$n]['renew_message'] = $message;
+
+						$n++;
+
+					}
+
+					$i++;
+				}
+
+
+				return array(
+					'success_count' => $success_count, 
+					'renew_limit_reached_count' => $renew_limit_reached_count, 
+					'hold_request_count' => $hold_request_count,
+					'items' => $items);
+
+			} else {
+
+				return array('error' => true, 'error_message' => 'cannot parse html');
+
+			}
+
+		}
 
 	}
 
