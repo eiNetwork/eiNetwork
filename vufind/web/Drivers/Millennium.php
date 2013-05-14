@@ -2985,7 +2985,7 @@ class MillenniumDriver implements DriverInterface
 
 	private function parseRenewals($html){
 
-		require_once("/usr/local/mark/eiNetwork/vufind/web/phpQuery/phpQuery/phpQuery.php");
+		require_once 'phpQuery/phpQuery/phpQuery.php';
 
 		if (phpQuery::newDocumentHTML($html, $charset = 'utf-8')){
 
