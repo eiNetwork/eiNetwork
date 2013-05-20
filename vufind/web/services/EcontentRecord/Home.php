@@ -146,7 +146,9 @@ class Home extends Action{
 			$interface->assign('isbn10', $eContentRecord->getIsbn10());
 			$interface->assign('issnList', $eContentRecord->getPropertyArray('issn'));
 			$interface->assign('upcList', $eContentRecord->getPropertyArray('upc'));
-			$interface->assign('seriesList', $eContentRecord->getPropertyArray('series'));
+			
+			$seriesList = $eContentRecord->getPropertyArray('series');
+			$interface->assign('seriesList', $seriesList);
 			$interface->assign('topicList', $eContentRecord->getPropertyArray('topic'));
 			$interface->assign('genreList', $eContentRecord->getPropertyArray('genre'));
 			$interface->assign('regionList', $eContentRecord->getPropertyArray('region'));
@@ -159,6 +161,15 @@ class Home extends Action{
 			$eContentRating = new EContentRating();
 			$eContentRating->recordId = $eContentRecord->id;
 			$interface->assign('ratingData', $eContentRating->getRatingData($user, false));
+			
+			//Get Series from Novelist as a backup for the MARC record series
+			if (sizeof($seriesList) == 0 && ($this->isbn)) {
+				require_once 'Drivers/einetwork/novelist.php';
+				$novelist = new Novelist($this->isbn);
+				$series_titles = $novelist->getSeries();
+				//echo "number of series titles from Novelist ".sizeof($series_titles);
+				$interface->assign('series', $series_titles);
+			}
 
 			//Determine the cover to use
 			$bookCoverUrl = $configArray['Site']['coverUrl'] . "/bookcover.php?id={$eContentRecord->id}&amp;econtent=true&amp;isn={$eContentRecord->getIsbn()}&amp;size=large&amp;upc={$eContentRecord->getUpc()}&amp;category=" . urlencode($eContentRecord->format_category()) . "&amp;format=" . urlencode($eContentRecord->getFirstFormat());
@@ -169,10 +180,44 @@ class Home extends Action{
 				$interface->assign('defaultDetailsTab', $detail);
 			}
 
-			// Find Similar Records
-			$similar = $this->db->getMoreLikeThis('econtentRecord' . $eContentRecord->id);
-			$timer->logTime('Got More Like This');
+			// Find Similar Records -- check Novelist first
+			$similarTitles = array();
+			if ($this->isbn){
+				require_once 'Drivers/einetwork/novelist.php';
+				$novelist = new Novelist($this->isbn);
+				$isbn = ($this->isbn);
+				$similarTitles = $novelist->getSimilarTitles();
+				//echo " number of similar titles from Novelist for $isbn ".sizeof($similarTitles);
+				$interface->assign('similarTitles', $similarTitles);		
+				$timer->logTime('Loaded similar titles from Novelist');
+			}
+			// If nothing from Novelist, check for similar records in the index
+			if (sizeof($similarTitles) == 0) {
+				$similar = $this->db->getMoreLikeThis('econtentRecord' . $eContentRecord->id);
+				$interface->assign('similarRecords', $similar);
+				$timer->logTime('Got More Like This');
+			}
 
+			// find similar authors
+			if ($this->isbn){
+				require_once 'Drivers/einetwork/novelist.php';
+				$novelist = new Novelist($this->isbn);
+				$similarAuthors = $novelist->getSimilarAuthors();
+				//echo " number of similar authors from Novelist ".sizeof($similarAuthors);
+				$interface->assign('similarAuthors', $similarAuthors);		
+				$timer->logTime('Loaded similar authors from Novelist');
+			}
+
+			// find similar series
+			if ($this->isbn){
+				require_once 'Drivers/einetwork/novelist.php';
+				$novelist = new Novelist($this->isbn);
+				$similarSeries = $novelist->getSimilarSeries();
+				//echo " number of similar series from Novelist ".sizeof($similarSeries);
+				$interface->assign('similarSeries', $similarSeries);		
+				$timer->logTime('Loaded similar Series from Novelist');
+			}
+		
 			// Find Other Editions
 			if ($configArray['Content']['showOtherEditionsPopup'] == false){
 				$editions = OtherEditionHandler::getEditions($eContentRecord->solrId(), $eContentRecord->getIsbn(), null);
