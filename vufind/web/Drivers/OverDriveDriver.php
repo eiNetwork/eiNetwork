@@ -652,6 +652,7 @@ class OverDriveDriver {
 					curl_setopt($overDriveInfo['ch'], CURLOPT_URL, $secureBaseUrl . 'BANGAuthenticate.dll?Action=LibraryWaitingList');
 					$waitingListConfirm = curl_exec($overDriveInfo['ch']);
 					$logger->log("Submitting email for notification {$secureBaseUrl}BANGAuthenticate.dll?Action=LibraryWaitingList  $post_string"  , PEAR_LOG_INFO);
+					//$logger->log("overdrive waiting list confirm {$waitingListConfirm}"  , PEAR_LOG_INFO);
 					
 					$waitingListConfirm = strip_tags($waitingListConfirm, "'<p><a><li><ul><div><em><b>'");
 					if (preg_match('/<section id="mainContent" class=".*?">(.*?)<\/section>/is', $waitingListConfirm, $matches)){
@@ -683,7 +684,7 @@ class OverDriveDriver {
 							$logger->log("Placing hold on OverDrive item. OverDriveId ". $overDriveId, PEAR_LOG_INFO);
 							$logger->log('URL: '.$secureBaseUrl . "BANGAuthenticate.dll?Action=LibraryWaitingList $post_string\r\n" . $mainSection ,PEAR_LOG_INFO);
 						}
-					}elseif (preg_match('/You will receive an email when the title becomes available./', $waitingListConfirm)){
+					}elseif (preg_match('/You will receive an email from donotreply@overdrive.com when the title becomes available./', $waitingListConfirm)){
 						$holdResult['result'] = true;
 						$holdResult['message'] = 'Your hold was placed successfully.';
 
@@ -699,6 +700,7 @@ class OverDriveDriver {
 						global $logger;
 						$logger->log("Placing hold on OverDrive item. OverDriveId ". $overDriveId, PEAR_LOG_INFO);
 						$logger->log('URL: '.$secureBaseUrl . "BANGAuthenticate.dll?Action=LibraryWaitingList $post_string\r\n" . $waitingListConfirm ,PEAR_LOG_INFO);
+						//$logger->log("overdrive hold result ".$waitingListConfirm." end overdrive hold result", PEAR_LOG_INFO);
 					}
 				}
 			}
