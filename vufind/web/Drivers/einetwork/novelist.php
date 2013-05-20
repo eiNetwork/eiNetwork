@@ -22,7 +22,7 @@ class Novelist{
 
 		$this->novelist_data = isset($cached_novelist) ? $cached_novelist : null;
 
-		if (!isset($this->novelist_data)){
+		//if (!isset($this->novelist_data)){
 
 			$url = "http://novselect.ebscohost.com/Data/ContentByQuery?profile=$profile&password=$pwd&ClientIdentifier=$isbn&ISBN=$isbn&UPC=$upc&version=2.1";
 			
@@ -41,7 +41,7 @@ class Novelist{
 			
 			$memcache->set("novelist_data_$isbn", $this->novelist_data);
 
-		}
+		//}
 
 		$this->test = $this->novelist_data;
 	}
