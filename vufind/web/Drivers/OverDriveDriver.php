@@ -775,7 +775,7 @@ class OverDriveDriver {
 		$waitingListConfirm = curl_exec($overDriveInfo['ch']);
 		//$logger->log("waiting list ZZZ---> ". $waitingListConfirm, PEAR_LOG_INFO);
 		
-		 if (preg_match('/You will receive an email when the title becomes available/', $waitingListConfirm)){
+		 if (preg_match('/You will receive an email from donotreply@overdrive.com when the title becomes available/', $waitingListConfirm)){
 			$editResult['result'] = true;
 			$editResult['message'] = 'Your email was changed successfully.';
 			global $memcache;
