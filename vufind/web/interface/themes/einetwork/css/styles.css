@@ -44,7 +44,7 @@ html,body {
 	max-width:794px;
 	min-width:680px;
 	width:680px;
-	padding-left:20px;
+	padding-left:15px;
 	padding-top:20px;
 	background-color:#ffffff;
 	min-height: 880px;
@@ -786,7 +786,6 @@ ul.bulleted li {
 	min-height: 900px;
 	display: inline-block;
 	vertical-align: top;
-	float: left;
 }
 
 .filter-header{
@@ -2691,4 +2690,51 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 	color:#f00;
 	font-size:11pt;
 	font-weight:bold;
+}
+
+/* left bar on item page */
+
+#left-bar-series {
+	clear:both;
+}
+
+#left-bar-similar {
+	clear:both;
+}
+
+#left-bar-similar {
+	clear:both;
+}
+
+#left-bar-relatedTitles {
+	clear:both;
+}
+
+#left-bar-similarSeries {
+	clear: both;
+}
+
+#left-bar-similarAuthors {
+	clear: both;
+}
+
+.left-bar-bookcover {
+	float: left;
+	clear: left;
+	margin: 10px 10px 10px 20px;
+}
+
+.left-bar-title {
+	text-align: left; 
+	margin: 0 10px 0 0; 
+	padding: 20px 0 70px 0;
+}
+
+.sim_less_new_container {
+	display: none;
+}
+
+.sim_more_new_container a,
+.sim_less_new_container a {
+	cursor: pointer;
 }

@@ -1,3 +1,21 @@
+$( document ).ready(function() {
+
+	$('.sim_more_new').click(function(e){
+		e.preventDefault();
+		$(this).parent().siblings().show();
+		$(this).parent().parent().find('.sim_more_new_container').hide();
+		$(this).parent().parent().find('.sim_less_new_container').show();
+	});
+
+	$('.sim_less_new').click(function(e){
+		e.preventDefault();
+		$(this).parent().siblings('.sim_hid').hide();
+		$(this).parent().parent().find('.sim_less_new_container').hide();
+		$(this).parent().parent().find('.sim_more_new_container').show();
+	});
+
+});
+
 function mouseOver(event,color){
     var target = event.target;
     while(target.nodeName != "DIV")
