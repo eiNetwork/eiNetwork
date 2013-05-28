@@ -1097,8 +1097,8 @@ public class MarcRecordDetails {
 				}else if (functionName.equals("getAvailableLocations") && parms.length == 4){
 					retval = getAvailableLocations(parms[0], parms[1], parms[2], parms[3]);
 					returnType = Set.class;
-				}else if (functionName.equals("getAvailableLocationsMarmot")){
-					retval = getAvailableLocationsMarmot();
+				}else if (functionName.equals("getAvailableLocationsEIN")){
+					retval = getAvailableLocationsEIN();
 					returnType = Set.class;
 				}else if (functionName.equals("getAwardName") && parms.length == 1){
 					retval = getAwardName(parms[0]);
@@ -3088,6 +3088,50 @@ public class MarcRecordDetails {
 		List<VariableField> itemRecords = record.getVariableFields(itemField);
 		char statusSubFieldChar = 'g';
 		char locationSubFieldChar = 'd';
+		for (int i = 0; i < itemRecords.size(); i++) {
+			Object field = itemRecords.get(i);
+			if (field instanceof DataField) {
+				DataField dataField = (DataField) field;
+				// Get status
+				Subfield statusSubfield = dataField.getSubfield(statusSubFieldChar);
+				if (statusSubfield != null) {
+					String status = statusSubfield.getData().trim();
+					Subfield dueDateField = dataField.getSubfield('m');
+					String dueDate = dueDateField == null ? "" : dueDateField.getData().trim();
+					Subfield locationSubfield = dataField.getSubfield(locationSubFieldChar);
+					String location = locationSubfield == null ? "" : locationSubfield.getData().toLowerCase().trim();
+					if (status.matches(availableStatus)) {
+						// If the book is available (status of -)
+						// Check the due date subfield m to see if it is out
+						if (dueDate.length() == 0){
+							result.add(location);
+						}
+					}
+				//}else{
+					//logger.warn("No status field for " + this.getId() + " indicator " + statusSubFieldChar  );
+				}
+			}
+		}
+		return result;
+	}
+	/**
+	 * Determine Available Locations for EIN
+	 * 
+	 * @param Record
+	 *          record
+	 * @return Set format of record
+	 */
+	public Set<String> getAvailableLocationsEIN() {
+		String itemField = "945"; 
+		String availableStatus = "-";
+		Set<String> result = new LinkedHashSet<String>();
+		if (isEContent()){
+			return result;
+		}
+		@SuppressWarnings("unchecked")
+		List<VariableField> itemRecords = record.getVariableFields(itemField);
+		char statusSubFieldChar = 's';
+		char locationSubFieldChar = 'l';
 		for (int i = 0; i < itemRecords.size(); i++) {
 			Object field = itemRecords.get(i);
 			if (field instanceof DataField) {
