@@ -187,10 +187,7 @@ function redrawSaveStatus() {literal}{{/literal}
 			 <div class="resultInformation">
 				<div class="resultInformationLabel">{translate text='Community Reviews'}</div>
 				<div class="recordSubjects">
-					
-						{*include file="$module/view-comments.tpl"*}
-<!--						<div class="ltfl_reviews"></div>-->
-				
+					{include file="$module/view-goodreads.tpl"}
 				</div>
 			</div> 
 			{* <div class="resultInformation">

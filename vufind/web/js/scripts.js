@@ -43,6 +43,19 @@ $(document).ready(function(){
 			collapsible.addClass('fieldset-collapsed');
 		});
 	}
+
+	// Good Reads
+
+	$('#goodreads-link').click(function(e){
+		e.preventDefault();
+		getGoodReadsReview($(this).attr('href'));
+	})
+
+	$('#good-reads-iframe a').click(function(e){
+		e.preventDefault();
+		$('#good-reads-iframe').hide();
+	})
+
 });
 
 function getLightbox(module, action, id, lookfor, message, followupModule,
@@ -1076,6 +1089,14 @@ function preload(arrayOfImages) {
         // Alternatively you could use:
         // (new Image()).src = this;
     });
+
+}
+
+function getGoodReadsReview(url){
+
+	$('#good-reads-container iframe').attr('src', url)
+
+	$('#good-reads-container').show();
 
 }
 

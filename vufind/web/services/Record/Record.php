@@ -29,6 +29,7 @@ require_once 'services/MyResearch/lib/Resource.php';
 require_once 'services/MyResearch/lib/Resource_tags.php';
 require_once 'services/MyResearch/lib/Tags.php';
 require_once 'RecordDrivers/Factory.php';
+require_once 'Drivers/einetwork/novelist.php';
 
 class Record extends Action
 {
@@ -331,6 +332,11 @@ class Record extends Action
 			$interface->assign('isbns', $isbns);
 		}
 
+		// get novelist data
+		if ($this->isbn){
+			$novelist = new Novelist($this->isbn);
+		}
+
 		if ($upcField = $this->marcRecord->getField('024')) {
 			if ($upcField = $upcField->getSubfield('a')) {
 				$this->upc = trim($upcField->getData());
@@ -397,10 +403,6 @@ class Record extends Action
 				
 		if($useMarcSeries){
 			if ($this->isbn){
-
-				require_once 'Drivers/einetwork/novelist.php';
-
-				$novelist = new Novelist($this->isbn);
 
 				$series_titles = $novelist->getSeries();
 
@@ -634,8 +636,6 @@ class Record extends Action
 		// Find Similar Records
 		// Try Novelist first
 		if ($this->isbn){
-			require_once 'Drivers/einetwork/novelist.php';
-			$novelist = new Novelist($this->isbn);
 			$similarTitles = $novelist->getSimilarTitles();
 			//echo "number of similar titles from Novelist ".sizeof($similarTitles);
 			$interface->assign('similarTitles', $similarTitles);		
@@ -664,8 +664,6 @@ class Record extends Action
 		
 		// find similar authors
 		if ($this->isbn){
-			require_once 'Drivers/einetwork/novelist.php';
-			$novelist = new Novelist($this->isbn);
 			$similarAuthors = $novelist->getSimilarAuthors();
 			//echo " number of similar authors from Novelist ".sizeof($similarAuthors);
 			$interface->assign('similarAuthors', $similarAuthors);		
@@ -674,8 +672,6 @@ class Record extends Action
 
 		// find similar series
 		if ($this->isbn){
-			require_once 'Drivers/einetwork/novelist.php';
-			$novelist = new Novelist($this->isbn);
 			$similarSeries = $novelist->getSimilarSeries();
 			//echo " number of similar series from Novelist ".sizeof($similarSeries);
 			$interface->assign('similarSeries', $similarSeries);		
@@ -723,6 +719,19 @@ class Record extends Action
 
 		//Load Staff Details
 		$interface->assign('staffDetails', $this->recordDriver->getStaffView());
+
+
+		// load GoodReads
+		$goodreads_url = $novelist->novelist_data['FeatureContent']['GoodReads']['links'][0]['url'];
+		$goodreads_total_reviews =  number_format($novelist->novelist_data['FeatureContent']['GoodReads']['work_text_reviews_count']);
+		$goodreads_rating =  $novelist->novelist_data['FeatureContent']['GoodReads']['average_rating'];
+
+		$interface->assign(array(
+			'goodreads_link' => $goodreads_url, 
+			'goodreads_total_reviews' => $goodreads_total_reviews,
+			'goodreads_rating' => $goodreads_rating
+		));
+
 	}
 	
 	function getNextPrevLinks(){
@@ -948,4 +957,6 @@ class Record extends Action
     	}
     	return $internetLinks;
     }
+
+
 }

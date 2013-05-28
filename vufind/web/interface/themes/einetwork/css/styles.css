@@ -2738,3 +2738,46 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 .sim_less_new_container a {
 	cursor: pointer;
 }
+
+#good-reads-holder {
+	position: relative;
+}
+
+#good-reads-container {
+	display: none;
+	position: absolute;
+	top:600px;
+	left:500px;
+	z-index:100;
+	width:600px;
+	height:600px;
+	padding:5px 10px 10px 10px;
+	background-color:#eeeecc;
+	border:2px solid #909090;
+	-webkit-box-shadow:  -5px 5px 10px 2px rgba(0, 0, 0, 0.3);
+    box-shadow:  -5px 5px 10px 2px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+#good-reads-container iframe {
+	width:580px;
+	height:520px;
+	background-color:#fff;
+	padding:10px 10px 10px 10px;
+	border:0px;
+}
+
+#good-reads-container a {
+	float: right;
+	width:25px;
+	height:25px;
+	text-indent: -9999px;
+	background-image:url('/interface/themes/einetwork/images/closeHUDButton.png');
+}
+
+#good-reads-container h2 {
+	font-size:14pt;
+	font-weight: bold;
+	color:#256292;
+}
