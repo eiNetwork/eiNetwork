@@ -6,6 +6,7 @@
             <ul>
 <!--                <li style="margin-left: -35px"><a href="http://m.einetwork.net/">Mobile Catalog</a></li>-->
                 <li style="margin-left: -35px"><a href="http://www.einetwork.net/ils/acquire_web_ngc.html">Suggest a Purchase</a></li>
+                <li><a href="https://iiisy1.einetwork.net/webapp/iii/ecom/donate.do">Donate to Your Library</a></li>
             </ul>
         </div>
         <div id="middle">
