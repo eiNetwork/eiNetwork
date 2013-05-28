@@ -51,9 +51,9 @@ $(document).ready(function(){
 		getGoodReadsReview($(this).attr('href'));
 	})
 
-	$('#good-reads-iframe a').click(function(e){
+	$('#good-reads-container a').click(function(e){
 		e.preventDefault();
-		$('#good-reads-iframe').hide();
+		$('#good-reads-container').hide();
 	})
 
 });
