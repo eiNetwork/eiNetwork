@@ -29,13 +29,13 @@
 	<div class="loginHome-center">
 		<div class="login">
 			<form id="pinresetform" class="getacard" method="POST" action="{$path}/MyResearch/PinReset">
-				<div><b>Enter your barcode</b></div>
-				<div><p>Please enter your barcode.   An email from helpdesk@einetwork.net will be sent to the email address in your patron record with a link to reset your password.</p></div>
+				<div><b>Enter your Library Card Number</b></div>
+				<div><p>Please enter your library card number.   An email from helpdesk@einetwork.net will be sent to the email address in your patron record with a link to reset or create your PIN.</p></div>
 				<div>
-					<input name="barcode" type="text" class="text" title="Barcode for PIN Reset"/>
+					<input name="barcode" type="text" class="text" title="Library Card Number for PIN"/>
 				</div>
 				<div> 
-					<input class="button" type="submit" name="submit" value="Request PIN Reset" alt='{translate text="Login"}' />
+					<input class="button" type="submit" name="submit" value="Request PIN" alt='{translate text="Login"}' />
 				</div>
 			</form>
 		</div>
