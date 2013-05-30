@@ -3069,51 +3069,6 @@ public class MarcRecordDetails {
 		}
 		return result;
 	}
-	
-	/**
-	 * Determine Available Locations for Marmot
-	 * 
-	 * @param Record
-	 *          record
-	 * @return Set format of record
-	 */
-	public Set<String> getAvailableLocationsMarmot() {
-		String itemField = "989"; 
-		String availableStatus = "-";
-		Set<String> result = new LinkedHashSet<String>();
-		if (isEContent()){
-			return result;
-		}
-		@SuppressWarnings("unchecked")
-		List<VariableField> itemRecords = record.getVariableFields(itemField);
-		char statusSubFieldChar = 'g';
-		char locationSubFieldChar = 'd';
-		for (int i = 0; i < itemRecords.size(); i++) {
-			Object field = itemRecords.get(i);
-			if (field instanceof DataField) {
-				DataField dataField = (DataField) field;
-				// Get status
-				Subfield statusSubfield = dataField.getSubfield(statusSubFieldChar);
-				if (statusSubfield != null) {
-					String status = statusSubfield.getData().trim();
-					Subfield dueDateField = dataField.getSubfield('m');
-					String dueDate = dueDateField == null ? "" : dueDateField.getData().trim();
-					Subfield locationSubfield = dataField.getSubfield(locationSubFieldChar);
-					String location = locationSubfield == null ? "" : locationSubfield.getData().toLowerCase().trim();
-					if (status.matches(availableStatus)) {
-						// If the book is available (status of -)
-						// Check the due date subfield m to see if it is out
-						if (dueDate.length() == 0){
-							result.add(location);
-						}
-					}
-				//}else{
-					//logger.warn("No status field for " + this.getId() + " indicator " + statusSubFieldChar  );
-				}
-			}
-		}
-		return result;
-	}
 	/**
 	 * Determine Available Locations for EIN
 	 * 
@@ -3122,6 +3077,7 @@ public class MarcRecordDetails {
 	 * @return Set format of record
 	 */
 	public Set<String> getAvailableLocationsEIN() {
+		//logger.debug("Get available locations EIN for id" + this.getId());
 		String itemField = "945"; 
 		String availableStatus = "-";
 		Set<String> result = new LinkedHashSet<String>();
@@ -3148,7 +3104,9 @@ public class MarcRecordDetails {
 						// If the book is available (status of -)
 						// Check the due date subfield m to see if it is out
 						if (dueDate.length() == 0){
-							result.add(location);
+							String locationFacet = getLocationFacetForLocation(location);
+							result.add(locationFacet);
+							//logger.debug("adding available at location " + locationFacet  );
 						}
 					}
 				//}else{
@@ -3339,6 +3297,23 @@ public class MarcRecordDetails {
 			//logger.debug("Found locationId " + locationId + " for location " + locationCode + " " + locationFacet);
 		}
 		return locationId;
+	}
+	
+	protected String getLocationFacetForLocation(String locationCode) {
+		// Get the location facet the location using the location_map.properties table
+		locationCode = locationCode.trim();
+		Map<String, String> locationMap = marcProcessor.findMap("location_map");
+		if (locationMap == null){
+			logger.error("Unable to load location map!");
+		}
+		String locationFacet = Utils.remap(locationCode, locationMap, true);
+		if (locationFacet == null) {
+			//logger.debug("Did not get locationFacet for location " + locationCode + " " + locationFacet);
+			locationFacet = "Unknown";
+		}else{
+			//logger.debug("Found locationFacet " + locationFacet + " for location " + locationCode);
+		}
+		return locationFacet;
 	}
 	
 	public String createXmlDoc() throws ParserConfigurationException, FactoryConfigurationError, TransformerException { 
