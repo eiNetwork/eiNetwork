@@ -27,6 +27,8 @@
 	    
 	    {if $provider == "amazon" || $provider == "amazoneditorial"}
 	      <div class='reviewProvider'><a target="new" href="http://amazon.com/dp/{$isbn}">{translate text="Supplied by Amazon"}</a></div>
+	    {elseif $provider == "contentcafe"}
+	      <div class='reviewProvider'>{translate text="Powered by ContentCafe"}</div>
 	    {elseif $provider == "syndetics"}
 	      <div class='reviewProvider'>{translate text="Powered by Syndetics"}</div>
 	    {/if}

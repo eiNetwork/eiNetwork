@@ -38,6 +38,7 @@ if (!function_exists('vufind_autoloader')){
 global $timer;
 
 
+
 if (empty($timer)){
 	$timer = new Timer(microtime(false));
 }

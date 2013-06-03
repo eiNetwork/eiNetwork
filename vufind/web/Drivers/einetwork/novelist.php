@@ -25,7 +25,7 @@ class Novelist{
 		//if (!isset($this->novelist_data)){
 
 			$url = "http://novselect.ebscohost.com/Data/ContentByQuery?profile=$profile&password=$pwd&ClientIdentifier=$isbn&ISBN=$isbn&UPC=$upc&version=2.1";
-			
+
 			$curl_connection = curl_init();
 
 			curl_setopt($curl_connection, CURLOPT_URL, $url);
@@ -134,7 +134,15 @@ class Novelist{
 		
 		}
 
-	}	
+	}
+
+	function getGoodReads(){
+
+		echo "<pre>";
+		print_r($this->novelist_data['FeatureContent']);
+		echo "</pre>";
+
+	}
 }
 
 ?>

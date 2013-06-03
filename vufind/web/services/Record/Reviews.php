@@ -58,10 +58,13 @@ class Reviews extends Record
 		global $memcache;
 		
 		$reviews = $memcache->get("reviews_{$isbn}");
+		
 		if (!$reviews){
 			// Fetch from provider
 			if (isset($configArray['Content']['reviews'])) {
+				
 				$providers = explode(',', $configArray['Content']['reviews']);
+				
 				foreach ($providers as $provider) {
 					$provider = explode(':', trim($provider));
 					$func = strtolower($provider[0]);
@@ -123,6 +126,7 @@ class Reviews extends Record
 
 	function cleanupReview($reviewData){
 		//Cleanup the review data
+
 		$fullReview = strip_tags($reviewData['Content'], '<a><p><b><em>');
 		$reviewData['Content'] = $fullReview;
 		$reviewData['Copyright'] = strip_tags($reviewData['Copyright'], '<a><p><b><em>');
@@ -421,50 +425,57 @@ class Reviews extends Record
 	 * @param $id
 	 * @return unknown_type
 	 */
-	function contentcafe($isbn, $id){
-		global $library;
-		global $locationSingleton;
-		$location = $locationSingleton->getActiveLocation();
-		if (isset($library) && $location != null){
-			if ($library->showAmazonReviews == 0 || $location->showStandardReviews == 0){
-				return $result;
-			}
-		}else if ($location != null && ($location->showStandardReviews == 0)){
-			//return an empty review
-			return $result;
-		}else if (isset($library) && ($library->showStandardReviews == 0)){
-			//return an empty review
-			return $result;
-		}
+	function ContentCafe($isbn, $id = null){
 
-		//Setup the soap client to load the
-		$soapClient = new SoapClient('http://contentcafe.btol.com/ContentCafe/Review.asmx?WSDL', array('features' => SOAP_SINGLE_ELEMENT_ARRAYS));
-		 
-		$params = array(
-    	   'UserID'   => 'EBSMARMOT',
-    	   'Password' => $id,
-    	   'ItemKey'  => $isbn,
+		$soapClient = new SoapClient('http://contentcafe2.btol.com/contentcafe/contentcafe.asmx?wsdl', array("trace" => 1, "exception" => 0));
+
+		$auth = array(
+		   'userID'   => 'EBSEIN31402',
+		   'password' => 'CC90046',
+		   'key'  => $isbn,
+		   'content' => 'ReviewDetail'
 		);
-		 
-		try{
-			$response = $soapClient->fnDetailByItemKey($params);
 
-			$reviews = $response->fnDetailByItemKeyResult->Review;
-			if (!is_null($reviews)){
-				$review = array();
-				$i = 0;
-				foreach ($reviews as $reviewData){
-					$review[$i]['Content'] = $reviewData->ReviewText;
-					$review[$i]['Source'] = $reviewData->ReviewLiteral;
-					$review[$i]['Copyright'] = "Content Cafe Review";
-					$i++;
-				}
-				return $review;
-			}
+		try{
+
+			$reviews = array();
+
+		    $response = $soapClient->Single($auth);
+
+		    $review_response = $response->ContentCafe->RequestItems->RequestItem->ReviewItems->ReviewItem;
+
+		    $i = 0;
+
+		    if (count($review_response) > 1){
+
+		    	foreach($review_response as $key => $value){
+
+			    	$reviews[$i]['Content'] = $value->Review;
+			    	$reviews[$i]['Source'] = $value->Publication->_;
+			    	$reviews[$i]['Copyright'] = $value->Publication->_;
+
+			    	$i++;
+
+			    }
+
+		    } else {
+
+		    	$reviews[$i]['Content'] = $review_response->Review;
+		    	$reviews[$i]['Source'] = $review_response->Publication->_;
+		    	$reviews[$i]['Copyright'] = $review_response->Publication->_;
+
+		    }
+
+		   	return $reviews;
+
 		}catch (Exception $e) {
-			//TODO: Log the error someplace.
+		  
+		  $logger->log("Could not connect to ContentCafe", PEAR_LOG_ERR);
+
 		}
-		 
+
+
+
 	}
 
 	private function getAmazonCustomer($id, $customerId){

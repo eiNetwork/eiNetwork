@@ -23,9 +23,11 @@ class BookCoverProcessor{
 		$this->logger = $logger;
 		$this->log("Starting to load cover", PEAR_LOG_INFO);
 		$this->bookCoverPath = $configArray['Site']['coverPath'];
+
 		if (!$this->loadParameters()){
 			return;
 		}
+
 		if (!$this->reload){
 			$this->log("Looking for Cached cover", PEAR_LOG_INFO);
 			if ($this->getCachedCover()){
@@ -41,6 +43,7 @@ class BookCoverProcessor{
 		}
 
 		$this->log("Looking for cover from providers", PEAR_LOG_INFO);
+
 		if ($this->getCoverFromProvider()){
 			return;
 		}
@@ -269,6 +272,8 @@ class BookCoverProcessor{
 			// Fetch from provider
 			if (isset($this->configArray['Content']['coverimages'])) {
 				$providers = explode(',', $this->configArray['Content']['coverimages']);
+				
+
 				foreach ($providers as $provider) {
 					$this->log("Checking provider $provider", PEAR_LOG_INFO);
 					$provider = explode(':', $provider);
@@ -603,6 +608,17 @@ class BookCoverProcessor{
 			return false;
 		}
 		$url = 'http://covers.librarything.com/devkey/' . $id . '/' . $this->size . '/isbn/' . $this->isn;
+		return $this->processImageURL($url);
+	}
+
+	function contentcafe($id)
+	{
+
+		if (is_null($this->isn)){
+			return false;
+		}
+		$url = 'http://images.btol.com/ContentCafe/Jacket.aspx?UserID=' . $this->configArray['ContentCafe']['uname'] . '&Password=' . $this->configArray['ContentCafe']['pw'] . '&Return=T&Type=L&Value=' . $this->isn;
+
 		return $this->processImageURL($url);
 	}
 
