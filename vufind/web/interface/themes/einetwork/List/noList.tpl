@@ -9,7 +9,7 @@
   {* Narrow Search Options *}
   <div id="left-bar">
         {if $pageType eq 'WishList'}
-            <div class="filters" id="wishLists">
+            <div class="filters" id="wishLists" >
                     {if count($wishList)>1}
                      <dl class="narrowList navmenu narrowbegin">
                             <dt>{translate text='View Wish List'}</dt>
@@ -29,12 +29,12 @@
                                     </dd>
                      </dl>
                      {/if}
-                     <dl class="narrowList navmenu narrowbegin" {if count($wishList)<=1}style="margin-top:10px"{/if}>
+                     <dl class="narrowList navmenu narrowbegin" {if count($wishList)<=1}style="margin-top:10px" {/if}>
                             <dd>
                                     <input type="button" onclick="ajaxLightbox('/List/ListEdit?id=&amp;source=VuFind&amp;lightbox2',false,false,'400px',false,'200px'); return false;" class="button navmenu dd" value="Create New Wish List" style="width:180px"/>
                             </dd>
                             <dd>
-                            	<input type="button" onclick="window.location = '/List/Import';" class="button navmenu dd" value="Import a Wish List" style="width:180px"/>
+                            	<input type="button" class="button yellow" onclick="window.location = '/List/Import';" class="button navmenu dd" value="Import List From Old Catalog" style="width:auto"/>
                             </dd>
                      </dl>
             </div>
@@ -46,7 +46,7 @@
 	<input type="hidden" value="{$wishListID}" id="listId"/>
     <div id="searchInfo">
 	<div class="resulthead">
-            <div class="subPageTitle" style="height:40px;">{translate text="You don't have any wish lists."}</div>
+            <div class="subPageTitle" style="height:40px;">You dont have any wish lists. <br> <p style="color:red">You can import your wish lists from the old catalog by clicking on the Import List From Old Catalog button in the left hand column.</p></div>
             {* <div>Create a new List</div> *} 
             {*<div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>*}
 	</div>

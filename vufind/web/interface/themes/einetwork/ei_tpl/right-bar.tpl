@@ -25,7 +25,7 @@
             <a onclick='getReadingHistory()' >Reading History</a>
         </div>
         <div id="history">
-            <a href="/Search/History">Search History</a>
+            <a href="/Search/History">Saved Searches</a>
         </div>
         <div id="account-settings">
             <a onclick='getAccountSetting()'>Account Settings</a>
