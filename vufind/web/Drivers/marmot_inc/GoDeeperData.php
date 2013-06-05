@@ -1,5 +1,6 @@
 <?php
-require_once('Drivers/marmot_inc/ISBNConverter.php') ;
+require_once 'Drivers/marmot_inc/ISBNConverter.php';
+require_once 'Drivers/einetwork/contentcafe.php';
 
 class GoDeeperData{
 	function getGoDeeperOptions($isbn, $upc, $getDefaultData = false){
@@ -16,6 +17,7 @@ class GoDeeperData{
 		}
 
 		$goDeeperOptions = $memcache->get("go_deeper_options_{$isbn}_{$upc}");
+
 		if (!$goDeeperOptions){
 
 			//Marmot is maybe planning on using Syndetics Go-Deeper Data right now.
@@ -505,17 +507,31 @@ class GoDeeperData{
 
 	function getHtmlData($dataType, $isbn, $upc){
 		global $interface;
-		$interface->assign('recordType', $recordType);
+		global $configArray;
+
+		//$interface->assign('recordType', $recordType);
 		$interface->assign('id', $_REQUEST['id']);
 		$interface->assign('isbn', $isbn);
 		$interface->assign('upc', $upc);
 		if ($dataType == 'summary'){
-			$data = GoDeeperData::getSummary($isbn, $upc);
-			$interface->assign('summaryData', $data);
+			//$data = GoDeeperData::getSummary($isbn, $upc);
+
+			$contentcafe = new ContentCafe($configArray); // TODO @MD passing config array into new ContentCafe driver until globals and configArray are rewritten
+			$summaryInfo = $contentcafe->getSummary($isbn, $upc);
+
+			$interface->assign('summaryData', $summaryInfo);
 			return $interface->fetch('Record/view-syndetics-summary.tpl');
 		}else if ($dataType == 'tableOfContents'){
-			$data = GoDeeperData::getTableOfContents($isbn, $upc);
-			$interface->assign('tocData', $data);
+			//$data = GoDeeperData::getTableOfContents($isbn, $upc);
+
+			$contentcafe = new ContentCafe($configArray); // TODO @MD passing config array into new ContentCafe driver until globals and configArray are rewritten
+			$toc = $contentcafe->getToc($isbn, $upc);
+
+			echo "<pre>";
+			print_r($toc);
+			echo "</pre>";
+
+			$interface->assign('tocData', $toc);
 			return $interface->fetch('Record/view-syndetics-toc.tpl');
 		}else if ($dataType == 'fictionProfile'){
 			$data = GoDeeperData::getFictionProfile($isbn, $upc);

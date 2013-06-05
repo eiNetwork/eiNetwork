@@ -29,7 +29,9 @@ require_once 'services/MyResearch/lib/Resource.php';
 require_once 'services/MyResearch/lib/Resource_tags.php';
 require_once 'services/MyResearch/lib/Tags.php';
 require_once 'RecordDrivers/Factory.php';
+require_once 'Drivers/marmot_inc/GoDeeperData.php';
 require_once 'Drivers/einetwork/novelist.php';
+require_once 'Drivers/einetwork/contentcafe.php';
 
 class Record extends Action
 {
@@ -334,7 +336,7 @@ class Record extends Action
 
 		// get novelist data
 		if ($this->isbn){
-			$novelist = new Novelist($this->isbn);
+			$novelist = new NovelistNew($this->isbn);
 		}
 
 		if ($upcField = $this->marcRecord->getField('024')) {
@@ -423,14 +425,18 @@ class Record extends Action
 		//Load description from Syndetics
 		$useMarcSummary = true;
 		if ($this->isbn || $this->upc){
-			require_once 'Drivers/marmot_inc/GoDeeperData.php';
-			$summaryInfo = GoDeeperData::getSummary($this->isbn, $this->upc);
+			
+			$contentcafe = new ContentCafe($configArray); // TODO @MD passing config array into new ContentCafe driver until globals and configArray are rewritten
+			$summaryInfo = $contentcafe->getSummary($this->isbn, $this->upc);
+			
 			if (isset($summaryInfo['summary'])){
 				$interface->assign('summaryTeaser', $summaryInfo['summary']);
 				$interface->assign('summary', $summaryInfo['summary']);
 				$useMarcSummary = false;
 			}
+
 		}
+
 		if ($useMarcSummary){
 			if ($summaryField = $this->marcRecord->getField('520')) {
 				$interface->assign('summary', $this->getSubfieldData($summaryField, 'a'));

@@ -1,7 +1,8 @@
 <?php
+
 require_once('Drivers/marmot_inc/ISBNConverter.php') ;
 
-class Novelist{
+class NovelistNew {
 
 	function __construct($isbn){
 
