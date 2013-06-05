@@ -23,7 +23,7 @@ class NovelistNew {
 
 		$this->novelist_data = isset($cached_novelist) ? $cached_novelist : null;
 
-		//if (!isset($this->novelist_data)){
+		if (!isset($this->novelist_data)){
 
 			$url = "http://novselect.ebscohost.com/Data/ContentByQuery?profile=$profile&password=$pwd&ClientIdentifier=$isbn&ISBN=$isbn&UPC=$upc&version=2.1";
 
@@ -42,25 +42,18 @@ class NovelistNew {
 			
 			$memcache->set("novelist_data_$isbn", $this->novelist_data);
 
-		//}
+		}
 
 		$this->test = $this->novelist_data;
 	}
 
 	function getSeries(){
 
-		//echo "Series Information";
-		//echo "<pre>";
-		//print_r($this->test);
-		//echo "</pre>";
-	
-		$series_info = $this->novelist_data['FeatureContent']['SeriesInfo'];
+		if (isset($this->novelist_data['FeatureContent']['SeriesInfo'])){
+			$series_info = $this->novelist_data['FeatureContent']['SeriesInfo'];
+		}
 
 		if (isset($series_info)){
-
-			//echo "<pre>";
-			//print_r($series_info['series_titles']);
-			//echo "</pre>";
 
 			return $series_info['series_titles'];
 
@@ -73,19 +66,12 @@ class NovelistNew {
 	}
 
 	function getSimilarTitles(){
-		
-		//echo "Get Similar Titles novelist.php";
-		//echo "<pre>";
-		//print_r($this->test);
-		//echo "</pre>";
-		
-		$similarTitles = $this->novelist_data['FeatureContent']['SimilarTitles'];
+
+		if (isset($this->novelist_data['FeatureContent']['SimilarTitles'])){
+			$similarTitles = $this->novelist_data['FeatureContent']['SimilarTitles'];
+		}
 	
 		if (isset($similarTitles)){
-
-			//echo "<pre>";
-			//print_r($similarTitles['titles']);
-			//echo "</pre>";
 		
 			return $similarTitles['titles'];
 		
@@ -98,14 +84,12 @@ class NovelistNew {
 	}
 	
 	function getSimilarAuthors(){
-		
-		$similarAuthors = $this->novelist_data['FeatureContent']['SimilarAuthors'];
+
+		if (isset($this->novelist_data['FeatureContent']['SimilarAuthors'])){
+			$similarAuthors = $this->novelist_data['FeatureContent']['SimilarAuthors'];
+		}
 	
 		if (isset($similarAuthors)){
-
-			//echo "<pre>";
-			//print_r($similarAuthors['authors']);
-			//echo "</pre>";
 		
 			return $similarAuthors['authors'];
 		
@@ -119,13 +103,11 @@ class NovelistNew {
 
 	function getSimilarSeries(){
 		
-		$similarSeries = $this->novelist_data['FeatureContent']['SimilarSeries'];
+		if (isset($this->novelist_data['FeatureContent']['SimilarSeries'])){
+			$similarSeries = $this->novelist_data['FeatureContent']['SimilarSeries'];
+		}
 	
 		if (isset($similarSeries)){
-
-			//echo "<pre>";
-			//print_r($similarSeries['series']);
-			//echo "</pre>";
 		
 			return $similarSeries['series'];
 		

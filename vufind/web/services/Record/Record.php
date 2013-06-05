@@ -722,7 +722,7 @@ class Record extends Action
 		$interface->assign('ratingData', $ratingData);
 		$timer->logTime('Got 5 star data');
 
-		$this->getNextPrevLinks();
+		//$this->getNextPrevLinks(); @MD TODO commented out for now
 
 		//Load Staff Details
 		$interface->assign('staffDetails', $this->recordDriver->getStaffView());

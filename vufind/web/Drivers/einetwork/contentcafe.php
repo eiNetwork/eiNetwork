@@ -34,7 +34,7 @@ class ContentCafe {
 		} elseif ($upc){
 			$value = $upc;
 		} else {
-			$this->logger->logTime("ContentCafe - No UPC or ISBN provided");
+			$this->logger->log("ContentCafe - No UPC or ISBN provided", PEAR_LOG_ERR);
 			return false;
 		}
 
@@ -46,7 +46,7 @@ class ContentCafe {
 			$summaryInfo['summary'] = $annotation_items[0]->Annotation;
 		} else {
 			//TODO - Find test case where item that has only 1 and zero annotation items
-			$this->logger->logTime("ContentCafe - Cannot find a summary");
+			$this->logger->log("ContentCafe - Cannot find a summary", PEAR_LOG_ERR);
 			return false;
 
 		}
@@ -64,7 +64,7 @@ class ContentCafe {
 		} elseif ($upc){
 			$value = $upc;
 		} else {
-			$this->logger->logTime("ContentCafe - No UPC or ISBN provided");
+			$this->logger->log("ContentCafe - No UPC or ISBN provided", PEAR_LOG_ERR);
 			return false;
 		}
 
