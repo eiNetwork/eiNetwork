@@ -2263,9 +2263,9 @@ class MillenniumDriver implements DriverInterface
 			if (isset($_REQUEST['canceldate']) && !is_null($_REQUEST['canceldate']) && $_REQUEST['canceldate'] != ''){
 				$date = $_REQUEST['canceldate'];
 			}else{
-				//Default to a date 6 months (half a year) in the future.
-				$sixMonthsFromNow = time() + 182.5 * 24 * 60 * 60;
-				$date = date('m/d/Y', $sixMonthsFromNow);
+				//Default to a date 1 year in the future
+				$twelveMonthsFromNow = time() + 182.5 * 24 * 60 * 60 * 2;
+				$date = date('m/d/Y', $twelveMonthsFromNow);
 			}
 
 			if (isset($_POST['campus'])){
