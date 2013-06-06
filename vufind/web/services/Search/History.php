@@ -36,7 +36,7 @@ class History extends Action {
 			exit();
 		}
 
-		$interface->setPageTitle('Search History');
+		$interface->setPageTitle('Saved Searches');
 
 		// Retrieve search history
 		$s = new SearchEntry();

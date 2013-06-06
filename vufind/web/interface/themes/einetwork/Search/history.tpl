@@ -4,7 +4,7 @@
   </div>
   
   <div id="main-content">
-    <h2>Search History</h2>
+    <h2>Saved Searches</h2>
       {if !$noHistory}
       {if $saved}
         <div><h3>{translate text="history_saved_searches"}</h3></div>

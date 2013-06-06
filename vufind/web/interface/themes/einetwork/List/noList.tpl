@@ -46,7 +46,7 @@
 	<input type="hidden" value="{$wishListID}" id="listId"/>
     <div id="searchInfo">
 	<div class="resulthead">
-            <div class="subPageTitle" style="height:40px;">You dont have any wish lists. <br> <p style="color:red">You can import your wish lists from the old catalog by clicking on the Import List From Old Catalog button in the left hand column.</p></div>
+            <div class="subPageTitle" style="height:40px;">You dont have any wish lists. <br> <p style="color:red">You can import your wish lists from the old catalog by clicking on the Import list from old catalog button in the left hand column.</p></div>
             {* <div>Create a new List</div> *} 
             {*<div><a href="/List/Import">Import an existing list from your Classic Catalog account.</a></div>*}
 	</div>

@@ -30,8 +30,18 @@
         <div id="account-settings">
             <a onclick='getAccountSetting()'>Account Settings</a>
         </div>
+	<div id="first-time">
+            <a href="/MyResearch/Firsttime">First Time Using the Catalog?</a>
+        </div>
+	<div id="latest-updates">
+            <a href="/MyResearch/Latestupdates">Latest Website Updates</a>
+        </div>
     </div>
     {literal}
+    <br>
+    <br>
+    <br>
+    <br>
 	<script type="text/javascript">
 	    $("#my-item-PlaceHolder").ready(function(){
 		$.getJSON(path + '/MyResearch/AJAX?method=getAllItems', function (data){
