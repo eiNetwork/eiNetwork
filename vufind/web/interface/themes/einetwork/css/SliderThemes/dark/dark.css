@@ -12,6 +12,12 @@ Supports Thumbs: true
     background: #222;
     padding: 10px;
 }
+    
+.theme-dark.slider-wrapper2 {
+    background: #222;
+    padding: 10px;
+    
+}
 .theme-dark .nivoSlider {
 	position:relative;
 	background:#fff url(loading.gif) no-repeat 50% 50%;

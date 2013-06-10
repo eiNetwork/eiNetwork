@@ -113,7 +113,7 @@
 				<div id="password">
 					<input id="pin" class="text" type="text" name="password" title="4 digit PIN number" placeholder="4 digit PIN number" maxlength="8"/>
 					<div id="pinError">&nbsp;</div>
-					<div><a href="/MyResearch/PinReset"> I forgot or don't have my PIN /<br> I need to get a PIN for the first time.</a></div>
+					<div><a href="/MyResearch/PinReset"> I forgot or don't have my PIN <br> I need to get a PIN for the first time.</a></div>
 				</div>
 				<div>
 					<input class="button" type="submit" name="submit" value="Login" alt='{translate text="Login"}' />

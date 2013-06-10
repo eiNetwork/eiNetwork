@@ -11,7 +11,7 @@
      });
    });
  </script>
-    <script type="text/javascript" src="js/ei_js/jquery.nivo.slider.js"></script>
+    <script type="text/javascript" src="/js/ei_js/jquery.nivo.slider.js"></script>
     <script type="text/javascript">
     $(window).load(function() {
         $('#slider').nivoSlider();
@@ -19,12 +19,15 @@
     </script>
  {/literal}
    <div id="wrapper">
-      <div class="slider-wrapper theme-dark">
+      <div class="slider-wrapper2 theme-dark">
         <div id="slider" class="nivoSlider">
        <img src="/interface/themes/einetwork/images/Art/Slider/slider1.jpg"  data-transition="slideInLeft">
        <img src="/interface/themes/einetwork/images/Art/Slider/slider2.jpg"  data-transition="slideInLeft">
         <img src="/interface/themes/einetwork/images/Art/Slider/slider3.jpg"  data-transition="slideInLeft">
         <img src="/interface/themes/einetwork/images/Art/Slider/slider4.jpg"  data-transition="slideInLeft">
+        <img src="/interface/themes/einetwork/images/Art/Slider/slider5.jpg"  data-transition="slideInLeft">
+        <img src="/interface/themes/einetwork/images/Art/Slider/slider6.jpg"  data-transition="slideInLeft">
+        <img src="/interface/themes/einetwork/images/Art/Slider/slider7.jpg"  data-transition="slideInLeft">
        </div>
       </div>
     </div>

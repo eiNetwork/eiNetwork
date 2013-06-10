@@ -10,12 +10,12 @@
     Release date 6/10/2013
     <ul>
       <li></li>
-      <li>1. Improve messaging on My Account login page to accommodate users without PINs.</li>
-      <li>2. Improve design and messaging for all users who want to migrate wish lists from the old catalog to the new catalog.</li>
+      <li>1. Provided instructions on My Account login for users who haven’t set up a PIN.</li>
+      <li>2. Provided instructions for users to migrate wish lists from the old catalog to the new catalog.</li>
       <li>3. Added ''Latest Website Updates'' page to communicate new features and updates to users.</li>
       <li>4. Added ''First Time Using the Catalog?'' page to provide information about using the new catalog.</li>
       <li>5. Added ''Donate to Your Library'' link to the bottom of website pages.</li>
-      <li>6. Misc. bug fixes.</li>
+      <li>6. Miscellaneous bug fixes.</li>
     </ul>
   </div>
   <div>
@@ -27,7 +27,7 @@
       <li>2. Improve searching from within the library.</li>
       <li>3. Provide option for users to limit a search to available only items.</li>
       <li>4. Improve title phrase searching.</li>
-      <li>5. Misc. bug fixes.</li>
+      <li>5 Miscellaneous bug fixes.</li>
     </ul>
   </div>
   </div>
