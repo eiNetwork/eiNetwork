@@ -10,7 +10,7 @@
     Release date 6/10/2013
     <ul>
       <li></li>
-      <li>1. Provided instructions on My Account login for users who haven’t set up a PIN.</li>
+      <li>1. Provided instructions on My Account login for users who haven't set up a PIN.</li>
       <li>2. Provided instructions for users to migrate wish lists from the old catalog to the new catalog.</li>
       <li>3. Added ''Latest Website Updates'' page to communicate new features and updates to users.</li>
       <li>4. Added ''First Time Using the Catalog?'' page to provide information about using the new catalog.</li>
