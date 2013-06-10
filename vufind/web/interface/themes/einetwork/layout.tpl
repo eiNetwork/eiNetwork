@@ -93,7 +93,24 @@
   </head>
   
   <body class="{$module} {$action}">
-
+   {*google analytics*}
+    <div>
+        {literal}
+    <script type="text/javascript">
+    
+     var _gaq = _gaq || [];
+     _gaq.push(['_setAccount', 'UA-39529152-1']);
+     _gaq.push(['_trackPageview']);
+    
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+    
+    </script>
+  {/literal}     
+    </div>
     {*- Set focus to the correct location by default *}
     <script type="text/javascript">{literal}
     jQuery(function (){
@@ -127,7 +144,7 @@
 	    {else}
 		<div class="button yellow" style="margin-top:20px;height:38px;font-size:15px;padding:0px;" onclick='window.location.href="http://www.surveymonkey.com/s/NewLibraryCatalog"' >
 		    <p style="margin-top:10px;vertical-align:middle;text-align: center"><span style="vertical-align:middle">A Quick Survey</span></p>
-		</div>	    
+		</div>   
 	    {/if}
 	  </div>
 	  <div class ="center-header">
