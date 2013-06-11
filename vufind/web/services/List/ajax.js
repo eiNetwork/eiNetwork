@@ -240,13 +240,17 @@ function doGetStatusSummaries()
 	//alert(eContentUrl);
 	if (callGetEContentStatusSummaries)
 	{
+
+		console.log(eContentUrl)
+
 		$.ajax({
-			url: eContentUrl, 
+			url: eContentUrl,
 			success: function(data){
+				console.log(data)
 				var items = $(data).find('item');
 				$(items).each(function(index, item){
 					var elemId = $(item).attr("id") ;
-					$('#holdingsEContentSummary' + elemId).replaceWith($(item).find('formattedHoldingsSummary').text());
+					$('#holdingsSummary' + elemId).replaceWith($(item).find('formattedHoldingsSummary').text());
 					if ($(item).find('showplacehold').text() == 1){
 						$("#placeEcontentHold" + elemId).show();
 					}else if ($(item).find('showcheckout').text() == 1){
@@ -257,17 +261,22 @@ function doGetStatusSummaries()
 						$("#addToWishList" + elemId).show();
 					}
 				});
+			},
+			error: function(xhr, ajaxOptions, thrownError){
+				console.log('fail')
 			}
 		});
 	}
 	// Get OverDrive status summaries one at a time since they take several
 	// seconds to load
+
 	for (var j=0; j<GetOverDriveStatusList.length; j++) {
 		var overDriveUrl = path + "/List/AJAX?method=GetEContentStatusSummaries";
 		overDriveUrl += "&id[]=" + encodeURIComponent(GetOverDriveStatusList[j]);
 		$.ajax({
 			url: overDriveUrl, 
 			success: function(data){
+
 				var sta = $(data).find('status').text();
 				var items = $(data).find('item');
 				if(sta == "Not available yet"){

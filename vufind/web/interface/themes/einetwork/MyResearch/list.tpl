@@ -1,3 +1,11 @@
+{php}
+
+echo "<pre>";
+print_r($resourceList);
+echo "</pre>";
+
+{/php}
+
 <script type="text/javascript" src="{$path}/js/lists.js"></script>
 <script type="text/javascript" src="{$path}/services/EcontentRecord/ajax.js"></script>
 <script type="text/javascript" src="/js/ei_js/search.js"></script>

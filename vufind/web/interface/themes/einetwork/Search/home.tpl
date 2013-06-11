@@ -107,7 +107,7 @@
 
 	<div class="loginHome-center">
 		<div class="loginMessage2">
-			Welcome to the new and improved online catalog.
+			<p style="font-size:55%">We are receiving reports about some users not receiving email notices for upcoming due dates, hold pickups, or overdue items.         You may wish to check My Account or contact your local library for this information.   Please contact your email provider if you believe you are not receiving these notices.</p>
 		</div>
 		<div class="startMessage">
 			Get started by entering your search above.

@@ -19,11 +19,23 @@
  */
 
 require_once 'Action.php';
+require_once 'services/MyResearch/lib/User.php';
+require_once 'services/MyResearch/lib/User_list.php';
+require_once 'services/MyResearch/lib/Search.php';
+require_once 'Drivers/marmot_inc/Prospector.php';
+require_once 'services/List/lib/GetList.php';
+require_once 'sys/SolrStats.php';
+require_once 'sys/Pager.php';
+require_once 'Action.php';
+require_once 'services/Record/Record.php';
+require_once 'services/MyResearch/MyResearch.php';
+require_once 'services/MyResearch/lib/Suggestions.php';
 require_once 'services/MyResearch/lib/FavoriteHandler.php';
 require_once 'services/MyResearch/lib/User_list_solr.php';
 require_once 'services/MyResearch/lib/Resource.php';
 require_once 'services/MyResearch/lib/User_resource.php';
 require_once 'services/MyResearch/lib/Resource_tags.php';
+require_once 'sys/Mailer.php';
 
 /**
  * This class does not use MyResearch base class (we don't need to connect to
@@ -180,6 +192,7 @@ class MyList extends Action {
 		$allowEdit = (($user != false) && ($user->id == $list->user_id));
 		$interface->assign('allowEdit', $allowEdit);
 		$favList = new FavoriteHandler($favorites, $listUser, $list->id, $allowEdit);
+
 		$favList->assign();
 
 		//Need to add profile information from MyResearch to show profile data.
