@@ -7,15 +7,25 @@
     global $interface;
     
     $resource = $this->get_template_vars("resource");
+
     //print_r($resource->record_id);
     $shortID = trim( $resource->record_id, "." );
     //echo $shortID;
     $interface->assign( "shortID", $shortID );
+
+    if ($resource->source == 'eContent'){
+    	$is_econtent = true;
+	} else {
+		$is_econtent = false;
+	}
+
+	$interface->assign('is_econtent', $is_econtent);
+
     {/php}
 	<div class="imageColumn"> 
 		 {if $user->disableCoverArt != 1}
 		 <a href="{$url}/{if $resource->source == 'VuFind'}Record{else}EcontentRecord{/if}/{$resource->record_id|escape:"url"}" id="descriptionTrigger{$resource->record_id|regex_replace:"/\./":""|escape:"url"}">
-			<img src="{$path}/bookcover.php?id={$resource->record_id}&amp;isn={$resource->isbn|@formatISBN}&amp;size=small&amp;upc={$resource->upc}&amp;category={$resource->format_category|escape:"url"}" class="listResultImage" alt="{translate text='Cover Image'}"/>
+			<img src="{$path}/bookcover.php?id={$resource->record_id}&amp;isn={$resource->isbn|@formatISBN}&amp;size=small&amp;upc={$resource->upc}&amp;category={$resource->format_category|escape:"url"}&amp;econtent={$is_econtent}" class="listResultImage" alt="{translate text='Cover Image'}"/>
 			</a>
 			<div id='descriptionPlaceholder{$resource->record_id|regex_replace:"/\./":""|escape}' style='display:none'></div>
 		 {/if}
