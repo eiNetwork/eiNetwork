@@ -402,25 +402,13 @@ class Record extends Action
 					//echo "Use MARC Series is false series count ".sizeof($series);
 				}
 			}
-				
-		if($useMarcSeries){
-			if ($this->isbn){
 
-				$series_titles = $novelist->getSeries();
+		if ($this->isbn){
 
-				$interface->assign('series', $series_titles);
+			$series_titles = $novelist->getSeries();
 
-				/*
-				require_once 'Drivers/marmot_inc/GoDeeperData.php';
-				
-				$series = GoDeeperData::getSeries($this->isbn);
-				if (isset($series)){
-				$interface->assign('series', $series);
-
-				
-				}*/
-			}
-		}	
+			$interface->assign('series', $series_titles);
+		}
 
 		//Load description from Syndetics
 		$useMarcSummary = true;
@@ -679,8 +667,10 @@ class Record extends Action
 
 		// find similar series
 		if ($this->isbn){
+
 			$similarSeries = $novelist->getSimilarSeries();
 			//echo " number of similar series from Novelist ".sizeof($similarSeries);
+
 			$interface->assign('similarSeries', $similarSeries);		
 			$timer->logTime('Loaded similar Series from Novelist');
 		}
