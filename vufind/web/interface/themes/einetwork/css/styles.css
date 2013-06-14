@@ -259,14 +259,14 @@ b.bbot b,b.gbot b {
 .keepFilters {
 	color: #FDFDFD;
 	display: inline-block;
-	margin-top: 8px;
-	padding-right: 3px;
+	float:right;
+	padding-right: 16px;
 	font-size: 13px;
 	font-weight: bold;
 	text-shadow: 1px 1px 1px #553810;
 	vertical-align: top;
 	zoom: 1;
-	*display: inline;
+	display: inline;
 }
 
 .searchcontent {
@@ -1549,7 +1549,6 @@ img.centered {
 }
 
 .keepFilters input {
-	vertical-align: middle;
 }
 
 .facetsTop td,.facetsTop th {
