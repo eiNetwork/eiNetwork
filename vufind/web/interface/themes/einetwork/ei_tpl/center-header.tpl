@@ -43,17 +43,33 @@
       <input id="GoButton" class="button" type="submit" value=""/>
     </div>
 
-      {*
-      Do we have any checkbox filters? 
-      {assign var="hasCheckboxFilters" value="0"}
-      {if isset($checkboxFilters) && count($checkboxFilters) > 0}
-        {foreach from=$checkboxFilters item=current}
-          {if $current.selected}
-            {assign var="hasCheckboxFilters" value="1"}
-          {/if}
-        {/foreach}
+   {* Do we have any checkbox filters? *}
+  {assign var="hasCheckboxFilters" value="0"}
+  {if isset($checkboxFilters) && count($checkboxFilters) > 0}
+    {foreach from=$checkboxFilters item=current}
+      {if $current.selected}
+	{assign var="hasCheckboxFilters" value="1"}
       {/if}
-      *}
+    {/foreach}
+  {/if}
+  {if $filterList || $hasCheckboxFilters}
+    <div class="keepFilters">
+      <input type="checkbox" checked="checked" onclick="filterAll(this);" /> {translate text="basic_search_keep_filters"}
+      <div style="display:none;">
+	{foreach from=$filterList item=data key=field}
+	  {foreach from=$data item=value}
+	    <input type="checkbox" checked="checked" name="filter[]" value='{$value.field}:"{$value.value|escape}"' />
+	  {/foreach}
+	{/foreach}
+	{foreach from=$checkboxFilters item=current}
+	  {if $current.selected}
+	    <input type="checkbox" checked="checked" name="filter[]" value="{$current.filter|escape}" />
+	  {/if}
+	{/foreach}
+      </div>
+    </div>
+  {/if}
+  
   </form>
     {if false && strlen($lookfor) > 0 && count($repeatSearchOptions) > 0}
     <div class='repeatSearchBox'>
@@ -67,7 +83,5 @@
     </div>
     {/if}
 </div>
-
-
 <div class="center-header-buttom">&nbsp;</div>
 
