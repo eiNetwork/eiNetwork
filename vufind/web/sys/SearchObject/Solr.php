@@ -183,16 +183,9 @@ class SearchObject_Solr extends SearchObject_Base
 	 */
 	protected function initFilters()
 	{
-		// Use the default behavior of the parent class, but add support for the
-		// special illustrations filter.
+		// Use the default behavior of the parent class,
 		parent::initFilters();
-		if (isset($_REQUEST['illustration'])) {
-			if ($_REQUEST['illustration'] == 1) {
-				$this->addFilter('illustrated:Illustrated');
-			} else if ($_REQUEST['illustration'] == 0) {
-				$this->addFilter('illustrated:"Not Illustrated"');
-			}
-		}
+                
                 //Current location add building filter by default
 		$searchLocation = Location::getSearchLocation();
 		if ($searchLocation != null){
@@ -1145,32 +1138,34 @@ class SearchObject_Solr extends SearchObject_Base
 		$recordStart = ($this->page - 1) * $this->limit;
 		
 		// ANDRE LESSA DEBUG
-		// echo '<pre>';		
-		// echo $this->query;      // Query string
-		// echo '<br/>';
-		// echo $this->index;      // DisMax Handler
-		// echo '<br/>';
-		// print_r ($filterQuery);      // Filter query
-		// echo '<br/>';
-		// echo $recordStart;      // Starting record
-		// echo '<br/>';
-		// echo $this->limit;      // Records per page
-		// echo '<br/>';
-		// print_r ($facetSet);         // Fields to facet on
-		// echo '<br/>';
-		// echo $spellcheck;       // Spellcheck query
-		// echo '<br/>';
-		// echo $this->dictionary; // Spellcheck dictionary
-		// echo '<br/>';
-		// echo $finalSort;        // Field to sort on
-		// echo '<br/>';
-		// echo $this->fields;     // Fields to return
-		// echo '<br/>';
-		// echo $this->method;     // HTTP Request method
-		// echo '<br/>';
-		// echo $returnIndexErrors; // Include errors in response?
-		// echo '<br/>';
-		// echo '</pre>';		
+		//echo '<pre>';		
+		//echo $this->query;      // Query string
+		//echo '<br/>';
+		//echo $this->index;      // DisMax Handler
+		//echo '<br/>';
+                //print_r ($this->filterList);  // Filter List
+                //echo '<br />';
+		//print_r ($filterQuery);      // Filter query
+		//echo '<br/>';
+		//echo $recordStart;      // Starting record
+		//echo '<br/>';
+		//echo $this->limit;      // Records per page
+		//echo '<br/>';
+		//print_r ($facetSet);         // Fields to facet on
+		//echo '<br/>';
+		//echo $spellcheck;       // Spellcheck query
+		//echo '<br/>';
+		//echo $this->dictionary; // Spellcheck dictionary
+		//echo '<br/>';
+		//echo $finalSort;        // Field to sort on
+		//echo '<br/>';
+		//echo $this->fields;     // Fields to return
+		//echo '<br/>';
+		//echo $this->method;     // HTTP Request method
+		//echo '<br/>';
+		//echo $returnIndexErrors; // Include errors in response?
+		//echo '<br/>';
+		//echo '</pre>';		
 		
 		$this->indexResult = $this->indexEngine->search(
 		$this->query,      // Query string
@@ -1577,7 +1572,7 @@ class SearchObject_Solr extends SearchObject_Base
 						}elseif (!empty($locationList2) &&  in_array($facet[0], $locationList2)){
 							$valueKey = '4' . $valueKey;
 							$numValidRelatedLocations++;
-						}elseif ($facet[0] == 'Marmot Digital Library' || $facet[0] == 'Digital Collection' || $facet[0] == 'OverDrive' || $facet[0] == 'Online'){
+						}elseif ($facet[0] == 'Digital Collection' || $facet[0] == 'OverDrive' || $facet[0] == 'Online'){
 							//$valueKey = isset($currentLibrary)?'2' . $valueKey:'4'.$valueKey;
                                                         $valueKey = '5' . $valueKey;
 							$numValidRelatedLocations++;

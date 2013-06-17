@@ -244,11 +244,19 @@ abstract class SearchObject_Base
 				// Add to the list unless it's in the list of fields to skip:
 				if (!in_array($field, $skipList)) {
 					$facetLabel = $this->getFacetLabel($field);
-					if ($field == 'veteranOf' && $value == '[* TO *]'){
-						$display = 'Any War';
+					if ($field == 'available_at' && $value == "['' TO *]"){
+						$display = 'Any Location';
 					}else{
 						$display = $translate ? translate($value) : $value;
 					}
+                                        //copy the building filter to the available_at filter
+                                        if ($field == 'building') {
+                                            $list['Available At'][] = array(
+                                                'display' => $value,
+                                                'field' => 'available_at',
+                                                'removalUrl' => $this->renderLinkWithoutFilter('available_at:'.$value)
+                                                );
+                                        }
 					
 					$list[$facetLabel][] = array(
                         'value'      => $value,     // raw value for use with Solr
@@ -599,7 +607,7 @@ abstract class SearchObject_Base
 	 */
 	protected function initFilters()
 	{
-		if (isset($_REQUEST['filter'])) {
+                if (isset($_REQUEST['filter'])) {
 			if (is_array($_REQUEST['filter'])) {
 				foreach($_REQUEST['filter'] as $filter) {
 					$this->addFilter(strip_tags($filter));
@@ -608,6 +616,9 @@ abstract class SearchObject_Base
 				$this->addFilter(strip_tags($_REQUEST['filter']));
 			}
 		}
+                
+            // hardcoded now for limit to available
+            //$this->addFilter("available_at:['' TO *]");    
 	}
 
 	/**
