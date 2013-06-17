@@ -6,31 +6,7 @@
 	alert("{$title}");
 </script>
 {/if}
-{if $recordCount}
-<script>
-{literal}
-function checkFilters(){
-	return window.location.search.toString().indexOf("filter");
-}
-function showRemove(){
-	if(checkFilters() != -1){
-		$("#removeFilters").show();
-	}  
-}
-function removeFilters(){
-	var qs = parseQS();
-	if(qs["filter[]"]){
-		delete qs["filter[]"];
-	}
-	window.location = "/Search/Results?"+serialize(qs);
-}
-$(document).ready(function() {
- 	showRemove();
- 	setTimeout('getHeight();', 1500);
-});
-{/literal}
-</script>
-{/if}
+
 <div id="page-content" class="content">
   {* Narrow Search Options *}
   <div id="left-bar">
@@ -49,13 +25,13 @@ $(document).ready(function() {
 	<div class="resulthead" style="height:30px; ">
 		<div class="yui-u first" style="float:left; width:75%">
 		{if $recordCount}
-		{$recordCount}{translate text=" items found for"}{/if}
-		{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span>  <span style="display:none" id="removeFilters">with current filters. <div style="float:right"><a href="#" onclick="removeFilters();">remove all filters</a></div></span>{/if}
-		{if $searchType == 'advanced'}
-			<span style="font-style:italic; font-weight:570;">"{$lookfor|escape:"html"}"</span>
-			<a  style="margin-left: 10px" href="{$path}/Search/Advanced?edit={$searchId}" class="small">{translate text="Edit this Advanced Search"}</a>
+			{translate text='Sort by'}
+			<select name="sort" onchange="document.location.href = this.options[this.selectedIndex].value;">
+				{foreach from=$sortList item=sortData key=sortLabel}
+					<option value="{$sortData.sortUrl|escape}"{if $sortData.selected} selected="selected"{/if}>{translate text=$sortData.desc}</option>
+				{/foreach}
+			</select>
 		{/if}
-		<br/><br/>
 		{if $spellingSuggestions}
 		{/if}
 		</div>
@@ -68,7 +44,15 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	{if $pageLinks.all}<div class="pagination" style="border-bottom: 1px solid #999999; padding-bottom:3px;">{$pageLinks.all}</div>{/if}
+	{if $recordCount}
+		{$recordCount}{translate text=" items found for"}{/if}
+	{if $searchType == 'basic'}<span style="font-style:italic; font-weight:570;">'{$lookfor|escape:"html"}'</span>{/if}
+	{if $searchType == 'advanced'}
+			<span style="font-style:italic; font-weight:570;">"{$lookfor|escape:"html"}"</span>
+			<a  style="margin-left: 10px" href="{$path}/Search/Advanced?edit={$searchId}" class="small">{translate text="Edit this Advanced Search"}</a>
+	{/if}
+
+	{if $pageLinks.all}<span class="pagination" style="border-bottom: 0px; padding-bottom:3px; float: right">{$pageLinks.all}</span>{/if}
 
 <!--	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
 -->	
