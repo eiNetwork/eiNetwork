@@ -53,6 +53,7 @@
 	{/if}
 
 	{if $pageLinks.all}<span class="pagination" style="border-bottom: 0px; padding-bottom:3px; float: right">{$pageLinks.all}</span>{/if}
+	<hr></hr>
 
 <!--	<input class="button" style="width: 105px; padding-left: 2px; padding-right: 2px; text-align: center" value="Advanced Search" onclick="window.location.href='/Search/Advanced'">
 -->	
